@@ -1,0 +1,26 @@
+[general]
+numserver = 2
+
+[search_provider1]
+url = NA 
+type = NZB
+api = NA
+valid = 1
+
+[search_provider2]
+url = NA 
+type = NZX
+api = NA
+valid = 1
+
+[search_provider3]
+url = http://www.nzbfactor.com/spotweb/api
+type = NAB
+api = 9d56759671fc3c8084b09402349dc80a
+valid = 1
+
+[search_provider4]
+url = https://findnzbs.info/
+type = NAB
+api = 4fbb6c204b14fc27971ffa85a5f6cf23
+valid = 1
