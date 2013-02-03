@@ -4,7 +4,7 @@ import datetime
 import time
 import dateutil.relativedelta
 from operator import itemgetter
-
+from urllib2 import urlparse
 from BeautifulSoup import BeautifulSoup
 
 def sanitize_html(value):
@@ -48,7 +48,7 @@ def summary_results(results):
 			
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-def summary_results2(results,results_provid,strsearch):
+def summary_results2(results,strsearch):
 	
 	#~ sanitize
 	for provid in xrange(len(results)):
@@ -58,10 +58,8 @@ def summary_results2(results,results_provid,strsearch):
 	results2 =[]
 	ptr = []
 	#~ all in one array
-	#~ success is nospace matching on top of the other.
 	for provid in xrange(len(results)):
 		for z in xrange(len(results[provid])):
-			results[provid][z]['provider'] = results_provid[provid]
 			results2.append(results[provid][z])
 			ptr.append([provid, z])
 	
@@ -85,9 +83,8 @@ def summary_results2(results,results_provid,strsearch):
 		results2[z]  ['ignore'] = 0			
 		#~ then update
 		if(findone==0):
-			results[ptr[z][0]] [ ptr[z][1] ] ['ignore'] = 1		
+			#~ results[ptr[z][0]] [ ptr[z][1] ] ['ignore'] = 1		
 			results2[z]  ['ignore'] = 1		
-		#~ resultsn[ptr[z][0]] = 	results[ptr[z][0]] [ ptr[z][1] ]
 		#~ print results2[z]['title']
 		#~ print findone
 			
@@ -134,7 +131,7 @@ def html_foot():
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
     
-def html_output(results,results_provid): 
+def html_output(results): 
 
 	buf= ''
 	#~ for provid in xrange(len(results)):
@@ -152,12 +149,15 @@ def html_output(results,results_provid):
 			rd = dateutil.relativedelta.relativedelta (dt2, dt1)
 			#~ approximated date, whatev
 			totdays = rd.years * 365  + rd.months * 31  + rd.days
+			#~ homemade lazy stuff
+			hname = urlparse.urlparse(results[i]['provider']).hostname			
+			hname = hname.replace("www.", "")
 			
 			buf = buf+'<tr>\n'
 			buf = buf+'<td class=titlecell> <a href= "'+ results[i]['url']+ '"> ' + results[i]['title'] + '</a>'		
 			buf = buf+'<td class=sizecell> %.1f' % szf + mgsz + ' </td>\n'
 			buf = buf+'<td class=datecell>' + str(totdays) + ' days </td>\n'
-			buf = buf+'<td class=providercell>' + results[i]['provider'] + '</td>\n'
+			buf = buf+'<td class=providercell> <a href= "' + results[i]['provider'] + '"> ' +hname + '</a></td>\n'
 			buf = buf+'</tr>\n'
 	return buf
 #~ 
@@ -175,9 +175,9 @@ def dosearch(strsearch, cfg):
 	webbuf_head = html_head()
 	webbuf_body = ''
 	if(len(strsearch)):
-		results, results_provid = search_scrappers.search_request(strsearch, cfg)
-		results = summary_results2(results,results_provid,strsearch)
-		webbuf_body = html_output(results,results_provid)
+		results = search_scrappers.search_request(strsearch, cfg)
+		results = summary_results2(results,strsearch)
+		webbuf_body = html_output(results)
 	webbuf_foot = html_foot()	
 	webbuf_ret = webbuf_head+webbuf_body+webbuf_foot	
 	return webbuf_ret

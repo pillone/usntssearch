@@ -70,12 +70,14 @@ def html_head():
 	buf = buf+'</style>\n'
 	buf = buf+'</head>\n'
 	buf = buf+'<body>\n'
+	buf = buf+'<form action="/" method="post">\n'	
 	return buf	
 
 def html_foot(): 	
-
-	buf =  '<input type="submit" value="Save" class="delServer">\n'
-	buf =  buf + '<input type="button" value="Cancel" class="delServer" onclick="location.href=\'\/\';">\n'
+	buf = '<div style="margin: 45px">'
+	buf = buf +'<input type="submit" value="Save" style = "width: 80px; font: bold 16px \'Lucida Sans Unicode\', \'Lucida Grande\', Sans-Serif; ">\n'
+	buf = buf + '<input type="button" style = "width: 80px; font: 16px \'Lucida Sans Unicode\', \'Lucida Grande\', Sans-Serif; " value="Cancel" onclick="location.href=\'\/\';">\n'
+	buf = buf + '</div>'
 	buf = buf+ '</form></body></html>\n'	
 	
 	return buf
@@ -86,7 +88,6 @@ def html_foot():
 def html_output(cffile): 
 
 	buf= ''
-	buf = buf+'<form action="/" method="post">\n'	
 	#~ default search providers
 	option0='checked="yes"'
 	option1=option0
@@ -94,14 +95,25 @@ def html_output(cffile):
 		option0=''
 	if(cffile[1]['valid'] == '0'):
 		option1=''		
-	buf = buf+'<input type="checkbox" name="host0active" id="host0" value="1" size="40" %s> %s <br>\n' % (option0,cffile[0]['type'])
+
+	buf = buf + '<table id="hor-minimalist-b" summary="Config"><thead>\n'
+	buf = buf+'<tr><th scope="col">Specially supported engines</th></tr></thead><tbody>\n'
+	buf = buf+'<tr>\n'	
+	buf = buf+'<td><input type="checkbox" name="host0active" id="host0" value="1" size="40" %s> %s\n' % (option0,cffile[0]['url'])
 	buf = buf+'<input type="hidden" name="host0" id="host0" value="%s" size="40">\n' % cffile[0]['url']
 	buf = buf+'<input type="hidden" name="API0" id="API0" value="%s" size="40">\n' % cffile[0]['api']
-	buf = buf+'<input type="hidden" name="type0" id="type0" value="%s" size="40">\n' % cffile[0]['type']
-	buf = buf+'<input type="checkbox" name="host1active" id="host1" value="1" size="40" %s> %s <br>\n'  % (option1,cffile[1]['type'])
+	buf = buf+'<input type="hidden" name="type0" id="type0" value="%s" size="40"></td>\n' % cffile[0]['type']
+	buf = buf+'</tr>\n'	
+	buf = buf+'<tr>\n'	
+	buf = buf+'<td><input type="checkbox" name="host1active" id="host1" value="1" size="40" %s> %s \n'  % (option1,cffile[1]['url'])
 	buf = buf+'<input type="hidden" name="host1" id="host1" value="%s" size="40">\n' % cffile[1]['url']
 	buf = buf+'<input type="hidden" name="API1" id="API1" value="%s" size="40">\n' % cffile[1]['api']
-	buf = buf+'<input type="hidden" name="type1" id="type1" value="%s" size="40"><br>\n' % cffile[1]['type']
+	buf = buf+'<input type="hidden" name="type1" id="type1" value="%s" size="40"></td>\n' % cffile[1]['type']
+	buf = buf+'</tr>\n'
+	buf = buf+'</tbody></table>'
+
+	buf = buf + '<table id="hor-minimalist-b" summary="Config"><thead>\n'
+	buf = buf+'<tr><th scope="col">Newznab Host</th><th scope="col" >API</th></tr></thead><tbody>\n'
 
 	for i in xrange(2,MAX_PROVIDER_NUMBER):
 		surl = ''
@@ -111,18 +123,15 @@ def html_output(cffile):
 			if(cffile[i]['type'] == 'NAB' ):
 				surl = cffile[i]['url']
 				sapi = cffile[i]['api']
-				
-		buf = buf+'<div class="field-pair">\n'
-		buf = buf+'<label class="config" for="hostx">Url</label>\n'
-		buf = buf+'<input type="text" name="host%d" id="host" value="%s" size="40">\n' % (i,surl)
-		buf = buf+'</div>\n'
-		buf = buf+'<div class="field-pair">\n'
-		buf = buf+'<label class="config" for="APIx">API</label>\n'
-		buf = buf+'<input type="text" name="API%d" id="API" value="%s" size="40">\n' % (i,sapi)
-		buf = buf+'<input type="hidden" name="type%d" id="type%d" value="NAB" size="40">\n' % (i,i)
-		buf = buf+'<input type="hidden" name="host%dactive" id="host%dactive" value="1" size="40">\n' % (i,i)
-		buf = buf+'</div><br>\n'
 		
+		buf = buf+'<tr>\n'
+		buf = buf+'<td><input type="text" name="host%d" id="host" value="%s" size="40"></td>\n' % (i,surl)
+		buf = buf+'<td><input type="text" name="API%d" id="API" value="%s" size="40">\n' % (i,sapi)
+		buf = buf+'<input type="hidden" name="type%d" id="type%d" value="NAB" size="40">\n' % (i,i)
+		buf = buf+'<input type="hidden" name="host%dactive" id="host%dactive" value="1" size="40"></td>\n' % (i,i)		
+		buf = buf+'</tr>\n'
+	 
+	buf = buf+'</tbody></table>'	
 	return buf
 
 

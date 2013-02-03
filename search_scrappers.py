@@ -8,7 +8,6 @@ from threading import Thread
 #~ gets reset every time
 results_total_glob = []
 
-
 def search_request(strtosearch, cfg):	
 	#~ lazy solution for threading
 	global results_total_glob 
@@ -20,12 +19,6 @@ def search_request(strtosearch, cfg):
 		if(cfg[index]['valid']== '1'):
 			try:
 				t = Thread(target=search_request_thread, args=(strtosearch,cfg[index],index))
-				if(cfg[index]['type'] == 'NZX' ):
-						providers_total.append('NZBX.CO')
-				if(cfg[index]['type'] == 'NZB' ):
-						providers_total.append('NZB.CC')
-				if(cfg[index]['type'] == 'NAB' ):						
-						providers_total.append('NAB%d' % index)
 				t.start()
 				threadlist.append(t)
 			except Exception, errtxt:
@@ -34,7 +27,7 @@ def search_request(strtosearch, cfg):
 		t.join()
 	print "=== Search threads ended ==="	
 	results_total = results_total_glob
-	return results_total, providers_total
+	return results_total
         
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
@@ -43,10 +36,10 @@ def search_request_thread(strtosearch, cfg, i ):
 	results = []	
 	if(cfg['type'] == 'NZX' ):
 		print "Searching w nzbx"
-		results = parse_nzbx(strtosearch)
+		results = parse_nzbx(strtosearch, cfg['url'], cfg['api'])
 	if(cfg['type'] == 'NZB' ):
 		print "Searching w nzbcc"
-		results = parse_nzbcc(strtosearch)
+		results = parse_nzbcc(strtosearch, cfg['url'], cfg['api'])
 	if(cfg['type'] == 'NAB' ):
 		print "Searching w nab"	
 		results = parse_newznab(strtosearch, cfg['url'], cfg['api'])
@@ -83,8 +76,9 @@ def search_request_monothread(strtosearch, cfg):
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-def parse_nzbcc(strtosearch):
+def parse_nzbcc(strtosearch, url, api):
 	
+	urlbase = "https://nzb.cc"
 	#~ valid for nzbx.co
 	url = 'https://nzb.cc/q.php';
 
@@ -162,7 +156,8 @@ def parse_nzbcc(strtosearch):
 				'group': group,
 				'posting_date_timestamp': posting_date_timestamp,
 				'release_comments': release_comments,
-				'ignore':0
+				'ignore':0,
+				'provider':urlbase
 				}
 		
 		parsed_data.append(d1)
@@ -175,7 +170,8 @@ def parse_nzbcc(strtosearch):
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-def parse_nzbx(strtosearch):
+def parse_nzbx(strtosearch, url, api):
+	urlbase = "https://nzbx.co"
 
 	#~ valid for nzbx.co
 	url = 'https://nzbx.co/api/search';
@@ -198,16 +194,17 @@ def parse_nzbx(strtosearch):
 						'group': data[i]['groupid'],
 						'posting_date_timestamp': int(data[i]['postdate']),
 						'release_comments': '',
-						'ignore':0}
+						'ignore':0,
+						'provider':urlbase
+						}
 
-		#~ print d1['size']
 		parsed_data.append(d1)
 	return parsed_data
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 def parse_newznab(strtosearch, url, api):
-
+	urlbase = url
 	url = url+'/api'
 	#~ valid for all newznab and spotweb (findnzb), always put api
 	#~ url = 'http://findnzbs.info/api';
@@ -257,7 +254,9 @@ def parse_newznab(strtosearch, url, api):
 							'group': '',
 							'posting_date_timestamp': float(elem_postdate),
 							'release_comments': '',
-							'ignore':0}
+							'ignore':0,
+							'provider':urlbase
+							}
 		parsed_data.append(d1)
 	return parsed_data		
 	#~ search_request('pino')
