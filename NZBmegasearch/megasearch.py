@@ -1,3 +1,20 @@
+# # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
+#~ This file is part of NZBmegasearch by pillone.
+#~ 
+#~ NZBmegasearch is free software: you can redistribute it and/or modify
+#~ it under the terms of the GNU General Public License as published by
+#~ the Free Software Foundation, either version 3 of the License, or
+#~ (at your option) any later version.
+#~ 
+#~ Foobar is distributed in the hope that it will be useful,
+#~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+#~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#~ GNU General Public License for more details.
+#~ 
+#~ You should have received a copy of the GNU General Public License
+#~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
+# # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
+
 import search_scrappers
 import decimal
 import datetime
@@ -101,10 +118,10 @@ def html_head():
 	buf = buf+'<html xmlns="http://www.w3.org/1999/xhtml">\n'
 	buf = buf+'<head>\n'
 	buf = buf+'<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n'
-	buf = buf+'<title>NZB MegasearcH - 0byte</title>\n'
+	buf = buf+'<title>NZB MegasearcH</title>\n'
 	buf = buf+'<style type="text/css">\n'
 	buf = buf+'<!--\n'
-	buf = buf+'@import url("/static/style.css");\n'
+	buf = buf+'@import url("static/style.css");\n'
 	buf = buf+'-->\n'
 	buf = buf+'</style>\n'
 	buf = buf+'<script src="/static/overlay.js"></script>'
