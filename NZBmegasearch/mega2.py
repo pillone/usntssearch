@@ -15,14 +15,15 @@
 #~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
 
-import megasearch
-import config_settings
 from flask import Flask
 from flask import request
 
+import megasearch
+import config_settings
+
 app = Flask(__name__)
 cfg = config_settings.read_conf()
-	
+
 @app.route('/s', methods=['GET'])
 def search():
 	cfg = config_settings.read_conf()

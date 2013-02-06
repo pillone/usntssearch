@@ -24,7 +24,7 @@ import os
 import threading
 
 # Perform a search using all available modules
-def performSearch(queryString):
+def performSearch(queryString, configOptions = None):
 	# Find search modules
 	searchModules = [];
 	searchModuleNames = [];
@@ -39,7 +39,8 @@ def performSearch(queryString):
 	else:
 		print 'Found ' + str(len(searchModuleNames)) + ' modules'
 	# Import the modules that the user has enabled
-	#settings = config_settings.read_conf()
+	if configOptions != None:
+		pass # Not implemented
 	print 'Importing: ' + ', '.join(searchModuleNames)
 	try:
 		for module in searchModuleNames:

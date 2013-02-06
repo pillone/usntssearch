@@ -1,3 +1,20 @@
+/* Reset styles */
+@import url(reset.css);
+
+/* Typography */
+body
+{
+	line-height: 1.6em;
+}
+
+/* Container Div */
+div#container
+{
+	margin: 0 auto;
+	max-width: 1400px;
+	min-width: 960px;
+	width: 100%;
+}
 /* ------------------
  styling for the tables 
    ------------------   */
@@ -11,215 +28,197 @@
     top:0;
     right:0;
     width:80px;
-    
-    /*give it some background and border*/
-/*
-    background:#eee;
-    border:1px solid #ddd;
-
-*/
-}
-
-.titlecell {
-width: 450px;
-}
-
-.sizecell {
-width: 60px;
-}
-
-.datecell {
-width: 60px;
-}
-
-.providercell {
-width: 60px;
 }
 
 .form-wrapper-01 {
-width: 450px;
-margin: 5px auto;
-padding: 5px;
-overflow: hidden;
-border-width: 1px;
-border-style: solid;
-border-color: #dedede #bababa #aaa #bababa;
--moz-border-radius: 5px;
--webkit-border-radius: 5px;
-border-radius: 5px;
-background-color: #f6f6f6;
-background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#eae8e8));
-background-image: -webkit-linear-gradient(top, #f6f6f6, #eae8e8);
-background-image: -moz-linear-gradient(top, #f6f6f6, #eae8e8);
-background-image: -ms-linear-gradient(top, #f6f6f6, #eae8e8);
-background-image: -o-linear-gradient(top, #f6f6f6, #eae8e8);
-background-image: linear-gradient(top, #f6f6f6, #eae8e8);
+	width: 450px;
+	margin: 5px auto;
+	padding: 5px;
+	overflow: hidden;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #dedede #bababa #aaa #bababa;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	background-color: #f6f6f6;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#eae8e8));
+	background-image: -webkit-linear-gradient(top, #f6f6f6, #eae8e8);
+	background-image: -moz-linear-gradient(top, #f6f6f6, #eae8e8);
+	background-image: -ms-linear-gradient(top, #f6f6f6, #eae8e8);
+	background-image: -o-linear-gradient(top, #f6f6f6, #eae8e8);
+	background-image: linear-gradient(top, #f6f6f6, #eae8e8);
 }
 
 .form-wrapper-01 #search {
-width: 330px;
-height: 20px;
-padding: 10px 5px;
-float: left;
-font: bold 16px 'Lucida Sans Unicode', '"Lucida Grande', Sans-Serif;
-border: 1px solid #ccc;
--moz-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
--webkit-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
--moz-border-radius: 3px;
--webkit-border-radius: 3px;
-border-radius: 3px;
+	width: 330px;
+	height: 20px;
+	padding: 10px 5px;
+	float: left;
+	font: bold 16px 'Lucida Sans Unicode', '"Lucida Grande', Sans-Serif;
+	border: 1px solid #ccc;
+	-moz-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
+	-webkit-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
+	box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
  
 .form-wrapper-01 #search:focus {
-outline: 0;
-border-color: #aaa;
--moz-box-shadow: 0 1px 1px #bbb inset;
--webkit-box-shadow: 0 1px 1px #bbb inset;
-box-shadow: 0 1px 1px #bbb inset;
+	outline: 0;
+	border-color: #aaa;
+	-moz-box-shadow: 0 1px 1px #bbb inset;
+	-webkit-box-shadow: 0 1px 1px #bbb inset;
+	box-shadow: 0 1px 1px #bbb inset;
 }
  
 .form-wrapper-01 #search::-webkit-input-placeholder {
-color: #999;
-font-weight: normal;
-font-size:12px;
-font-style:italic;
+	color: #999;
+	font-weight: normal;
+	font-size:12px;
+	font-style:italic;
 }
  
 .form-wrapper-01 #search:-moz-placeholder {
-color: #999;
-font-weight: normal;
-font-size:12px;
-font-style:italic;
+	color: #999;
+	font-weight: normal;
+	font-size:12px;
+	font-style:italic;
 }
  
 .form-wrapper-01 #search:-ms-input-placeholder {
-color: #999;
-font-weight: normal;
-font-size:12px;
-font-style:italic;
+	color: #999;
+	font-weight: normal;
+	font-size:12px;
+	font-style:italic;
 }
  
 .form-wrapper-01 #submit {
-float: right;
-border: 1px solid #00748f;
-height: 42px;
-width: 100px;
-padding: 0;
-cursor: pointer;
-font: bold 15px Arial, Helvetica;
-color: #fafafa;
-text-transform: none;
-background-color: #0483a0;
-background-image: -webkit-gradient(linear, left top, left bottom, from(#31b2c3), to(#0483a0));
-background-image: -webkit-linear-gradient(top, #31b2c3, #0483a0);
-background-image: -moz-linear-gradient(top, #31b2c3, #0483a0);
-background-image: -ms-linear-gradient(top, #31b2c3, #0483a0);
-background-image: -o-linear-gradient(top, #31b2c3, #0483a0);
-background-image: linear-gradient(top, #31b2c3, #0483a0);
--moz-border-radius: 3px;
--webkit-border-radius: 3px;
-border-radius: 3px;
-text-shadow: 0 1px 0 rgba(0, 0 ,0, .3);
--moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;
--webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;
-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;
+	float: right;
+	border: 1px solid #00748f;
+	height: 42px;
+	width: 100px;
+	padding: 0;
+	cursor: pointer;
+	font: bold 15px Arial, Helvetica;
+	color: #fafafa;
+	text-transform: none;
+	background-color: #0483a0;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#31b2c3), to(#0483a0));
+	background-image: -webkit-linear-gradient(top, #31b2c3, #0483a0);
+	background-image: -moz-linear-gradient(top, #31b2c3, #0483a0);
+	background-image: -ms-linear-gradient(top, #31b2c3, #0483a0);
+	background-image: -o-linear-gradient(top, #31b2c3, #0483a0);
+	background-image: linear-gradient(top, #31b2c3, #0483a0);
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	text-shadow: 0 1px 0 rgba(0, 0 ,0, .3);
+	-moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;
+	-webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;
 }
  
 .form-wrapper-01 #submit:hover,
 .form-wrapper-01 #submit:focus {
-background-color: #31b2c3;
-background-image: -webkit-gradient(linear, left top, left bottom, from(#0483a0), to(#31b2c3));
-background-image: -webkit-linear-gradient(top, #0483a0, #31b2c3);
-background-image: -moz-linear-gradient(top, #0483a0, #31b2c3);
-background-image: -ms-linear-gradient(top, #0483a0, #31b2c3);
-background-image: -o-linear-gradient(top, #0483a0, #31b2c3);
-background-image: linear-gradient(top, #0483a0, #31b2c3);
+	background-color: #31b2c3;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#0483a0), to(#31b2c3));
+	background-image: -webkit-linear-gradient(top, #0483a0, #31b2c3);
+	background-image: -moz-linear-gradient(top, #0483a0, #31b2c3);
+	background-image: -ms-linear-gradient(top, #0483a0, #31b2c3);
+	background-image: -o-linear-gradient(top, #0483a0, #31b2c3);
+	background-image: linear-gradient(top, #0483a0, #31b2c3);
 }
  
 .form-wrapper-01 #submit:active {
-outline: 0;
--moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
--webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
+	outline: 0;
+	-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
+	-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
 }
  
 .form-wrapper-01 #submit::-moz-focus-inner {
-border: 0;
+	border: 0;
 }
 
- 
 #search {
-width: 230px; /*--- we will change this width on hover effect ---*/
-height: 20px;
-padding: 10px 5px;
-float: right;
-font: bold 16px 'lucida sans', 'trebuchet MS', 'Tahoma';
-border: 1px solid #ccc;
--moz-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
--webkit-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
--moz-border-radius: 3px;
--webkit-border-radius: 3px;
-border-radius: 3px;
--moz-transition:all 1s ease;
--webkit-transition:all 1s ease;
--o-transition:all 1s ease;
--ms-transition:all 1s ease;
-transition:all 1s ease; /*--- These transition effect will give an animated expanding effect to the search box ---*/
+	width: 230px; /*--- we will change this width on hover effect ---*/
+	height: 20px;
+	padding: 10px 5px;
+	float: right;
+	font: bold 16px 'lucida sans', 'trebuchet MS', 'Tahoma';
+	border: 1px solid #ccc;
+	-moz-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
+	-webkit-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
+	box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	-moz-transition:all 1s ease;
+	-webkit-transition:all 1s ease;
+	-o-transition:all 1s ease;
+	-ms-transition:all 1s ease;
+	transition:all 1s ease; /*--- These transition effect will give an animated expanding effect to the search box ---*/
 }
  
 #search:focus,
 #search:hover{
-outline: 0;
-border-color: #aaa;
--moz-box-shadow: 0 1px 1px #bbb inset;
--webkit-box-shadow: 0 1px 1px #bbb inset;
-box-shadow: 0 1px 1px #bbb inset;
-width:330px; /*--- We have change the width from 100px to 330px ---*/
-}
-
-body
-{
-	line-height: 1.6em;
+	outline: 0;
+	border-color: #aaa;
+	-moz-box-shadow: 0 1px 1px #bbb inset;
+	-webkit-box-shadow: 0 1px 1px #bbb inset;
+	box-shadow: 0 1px 1px #bbb inset;
+	width:330px; /*--- We have change the width from 100px to 330px ---*/
 }
  
-
-#hor-minimalist-b
+/* Results Table Styles */
+#results
 {
 	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 	font-size: 12px;
 	background: #fff;
 	margin: 45px;
-	width: 700px;
+	width: 100%;
 	border-collapse: collapse;
 	text-align: left;
 }
-#hor-minimalist-b th
+#results th
 {
 	font-size: 14px;
 	font-weight: normal;
 	color: #039;
-/*
-	padding: 10px 8px;
-*/
 	padding: 2px 2px;
 	border-bottom: 2px solid #6678b1;
 }
-#hor-minimalist-b td
+#results td
 {
 	border-bottom: 1px solid #ccc;
 	color: #669;
 	padding: 2px 2px;
-/*
-	padding: 6px 8px;
-*/
 }
-#hor-minimalist-b tbody tr:hover td
+#results tbody tr:hover td
 {
 	color: #009;
 }
+#results tbody tr:hover {
+	background: #f0f0f0 none;
+}
+.titlecell {
+	width: 450px;
+}
 
+.sizecell {
+	width: 60px;
+}
+
+.datecell {
+	width: 60px;
+}
+
+.providercell {
+	width: 60px;
+}
 
  
 
