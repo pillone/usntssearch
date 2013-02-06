@@ -25,7 +25,8 @@ from threading import Thread
 #~ gets reset every time
 results_total_glob = []
 
-def search_request(strtosearch, cfg):	
+def search_request(strtosearch, cfg):
+
 	#~ lazy solution for threading
 	global results_total_glob 
 	results_total_glob = []
@@ -92,7 +93,7 @@ def search_request_monothread(strtosearch, cfg):
 	return results_total, providers_total
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
+'''
 def parse_nzbcc(strtosearch, url, api):
 	
 	urlbase = "https://nzb.cc"
@@ -183,10 +184,10 @@ def parse_nzbcc(strtosearch, url, api):
 		#~ print "=======" +str(inc)
 
 	return parsed_data
-
+'''
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
+'''
 def parse_nzbx(strtosearch, url, api):
 	urlbase = "https://nzbx.co"
 
@@ -217,9 +218,9 @@ def parse_nzbx(strtosearch, url, api):
 
 		parsed_data.append(d1)
 	return parsed_data
-
+'''
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
+'''
 def parse_newznab(strtosearch, url, api):
 	urlbase = url
 	url = url+'/api'
@@ -277,3 +278,4 @@ def parse_newznab(strtosearch, url, api):
 		parsed_data.append(d1)
 	return parsed_data		
 	#~ search_request('pino')
+'''
