@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>NZB MegasearcH</title>
+		<link rel="stylesheet" type="text/css" href="/static/style.css" />
+		<script src="/static/overlay.js"></script>
+	</head>
+	<body>
+		<div id="container">
+			<h1>Configuration Options</h1>
+			<form action="/" method="post">
+				<fieldset id="generalOptions">
+					<h2>General Options</h2>
+					{% for key in configOptions -%}
+					{% if key in optionNames -%}
+					<p><label for="{{ key }}">{{ optionNames[key] }}</label><input type="text" id="{{ key }}" name="{{ key }}" value="{{ configOptions[key] }}" />
+					{%- endif %}
+					{%- endfor %}
+				</fieldset>
+				<div id="searchModuleConfig">
+					<h2>Search Module Configuration</h2>
+					{{ modulesHTML|safe }}
+				</div>
+				<input type="submit" value="Save" />
+				<input type="button" value="Back" onclick="location.href='';">
+			</form>
+		</div>
+	</body>
+</html>

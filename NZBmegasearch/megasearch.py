@@ -21,27 +21,27 @@ import time
 import dateutil.relativedelta
 from operator import itemgetter
 from urllib2 import urlparse
+from flask import render_template
 
 try:
-	from bs4 import BeautifulSoup
+	from BeautifulSoup import BeautifulSoup
 except Exception:
-	from BeautifulSoup import BeautifulSoup # Older BS versions
-	print 'Falling back to older BeautifulSoup version'
+	from bs4 import BeautifulSoup # BeautifulSoup 4
 
 import SearchModule
 
-def dosearch(strsearch, cfg):
+def dosearch(strsearch, cfg=None):
+	if cfg == None:
+		cfg = {'enabledModules':['nzbX.co','NZB.cc']}
 	strsearch = strsearch.strip()
-	webbuf_head = html_head()
-	webbuf_body = ''
 		
 	if(len(strsearch)):
 		results = SearchModule.performSearch(strsearch, cfg['enabledModules'])
 		results = summary_results(results,strsearch)
-		webbuf_body = html_output(results)
-	webbuf_foot = html_foot()	
-	webbuf_ret = webbuf_head+webbuf_body+webbuf_foot	
-	return webbuf_ret
+	else:
+		return render_template('main_page.html')
+	
+	return cleanUpResults(results)
 
 def sanitize_html(value):
 	VALID_TAGS = []
@@ -54,81 +54,42 @@ def sanitize_html(value):
 	return soup.renderContents()
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-def summary_results(results,strsearch):
+def summary_results(rawResults,strsearch):
 	#~ sanitize
-	for provid in xrange(len(results)):
-		for i in xrange(len(results[provid])):
-			results[provid][i]['title'] = sanitize_html(results[provid][i]['title'])
+	for provid in xrange(len(rawResults)):
+		for i in xrange(len(rawResults[provid])):
+			rawResults[provid][i]['title'] = sanitize_html(rawResults[provid][i]['title'])
 
-	results2 =[]
+	results =[]
 	ptr = []
 	#~ all in one array
-	for provid in xrange(len(results)):
-		for z in xrange(len(results[provid])):
-			results2.append(results[provid][z])
+	for provid in xrange(len(rawResults)):
+		for z in xrange(len(rawResults[provid])):
+			results.append(rawResults[provid][z])
 			ptr.append([provid, z])
 	
 	strsearch1 = strsearch.replace(" ", ".")
 	
-	print "Processing data..."	
-	results2 = sorted(results2, key=itemgetter('posting_date_timestamp'), reverse=True) 	
-	for z in xrange(len(results2)):
+	results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 	
+	for z in xrange(len(results)):
 		findone = 0
-		if(results2[z]['title'].lower().find( strsearch.lower() ) != -1):
+		if(results[z]['title'].lower().find( strsearch.lower() ) != -1):
 			findone = 1
-		if(results2[z]['title'].lower().find( strsearch1.lower()) != -1 ):
+		if(results[z]['title'].lower().find( strsearch1.lower()) != -1 ):
 			findone = 1 
 	
 		#~ check same name, == takes too much time
-		results2[z]  ['ignore'] = 0			
+		results[z]  ['ignore'] = 0			
 		#~ then update
 		if(findone==0):
-			results2[z]  ['ignore'] = 1		
+			results[z]  ['ignore'] = 1		
 
-	return results2
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
-# Generate page header HTML
-def html_head(): 		
-	buf = '<!DOCTYPE html>\n'
-	buf = buf+'<html>\n'
-	buf = buf+'<head>\n'
-	buf = buf+'<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n'
-	buf = buf+'<title>NZB MegasearcH</title>\n'
-	buf = buf+'<style type="text/css">\n'
-	buf = buf+'<!--\n'
-	buf = buf+'@import url("static/style.css");\n'
-	buf = buf+'-->\n'
-	buf = buf+'</style>\n'
-	buf = buf+'<script src="/static/overlay.js"></script>'
-	buf = buf+'</head>\n'
-	buf = buf+'<body>\n'
-	buf = buf+'<div id="container">\n'
-	buf = buf+'<span id="loader" style="visibility:hidden;"><img src="static/loadingicon.gif" width="75" height="75" /></span>'
-	buf = buf+'<form action="/s" method="get"  class="form-wrapper-01">'		
-	buf = buf+'<input type="text" id="search" placeholder="Enter your keyword" name="q"><input type="submit" value="Search" id="submit" onclick="show_loader()">'
-	buf = buf+'</form>'	
-	buf = buf+ '<table id="results" summary="Search Results"><thead>\n'
-	buf = buf+'<tr><th scope="col" class=titlecell>Title</th><th scope="col" class=sizecell>Size</th> <th scope="col" class=datecell>Age</th> <th scope="col" class=providercell>Provider</th> </tr></thead><tbody>\n'
-	return buf	
-
-# Generate page footer HTML
-def html_foot():
-	buf = '</tbody></table>'
-	buf = buf+'</div>\n';
-	buf = buf+'<div class="topright">'
-	buf = buf+'<a href= "config">Configure</a></div>'
-	buf = buf+'</body></html>\n'	
-	
-	return buf
+	return results
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 # Generate HTML for the results
-def html_output(results): 
-	buf= ''
-	#~ for provid in xrange(len(results)):
-		#~ for i in xrange(len(results[provid])):
-	
+def cleanUpResults(results):
+	niceResults = []
 	for i in xrange(len(results)):
 		if(results[i]['ignore'] == 0):
 			# Convert sized to smallest SI unit (note that these are powers of 10, not powers of 2, i.e. OS X file sizes rather than Windows/Linux file sizes)
@@ -147,13 +108,16 @@ def html_output(results):
 			hname = urlparse.urlparse(results[i]['provider']).hostname			
 			hname = hname.replace("www.", "")
 			
-			buf = buf+'<tr>\n'
-			buf = buf+'<td class="titlecell"> <a href= "'+ results[i]['url']+ '"> ' + results[i]['title'] + '</a>'		
-			buf = buf+'<td class="sizecell"> %.1f' % szf + mgsz + ' </td>\n'
-			buf = buf+'<td class="datecell">' + str(totdays) + ' days </td>\n'
-			buf = buf+'<td class="providercell"> <a href= "' + results[i]['provider'] + '"> ' +hname + '</a></td>\n'
-			buf = buf+'</tr>\n'
-	return buf
+			niceResults.append({
+				'url':results[i]['url'],
+				'title':results[i]['title'],
+				'filesize':str(round(szf,1)) + mgsz,
+				'age':totdays,
+				'providerurl':results[i]['provider'],
+				'providertitle':hname
+			})
+	
+	return render_template('main_page.html',results=niceResults)
 
 #~ debug
 if __name__ == "__main__":

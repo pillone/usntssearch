@@ -28,7 +28,7 @@ SearchModule.loadSearchModules()
 @app.route('/s', methods=['GET'])
 def search():
 	cfg = config_settings.read_conf()
-	return megasearch.dosearch(request.args.get('q'), cfg)
+	return megasearch.dosearch(request.args['q'], cfg)
 
 @app.route('/config', methods=['GET','POST'])
 def config():

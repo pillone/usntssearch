@@ -66,6 +66,8 @@ def loadSearchModules(moduleDir = None):
 def performSearch(queryString, enabledModules = None, configOptions = None):
 	# Perform the search using every module
 	global globalResults
+	if 'loadedModules' not in globals():
+		loadSearchModules()
 	globalResults = []
 	threadHandles = []
 	lock = threading.Lock()

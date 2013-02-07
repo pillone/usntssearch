@@ -15,6 +15,7 @@
 #~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
 
+from flask import render_template
 from ConfigParser import SafeConfigParser
 import sys
 import os
@@ -91,37 +92,25 @@ def html_foot():
 def html_output(configOptions, optionNames=None):
 	if optionNames == None:
 		optionNames = {'host':'Host','port':'Port (1024-65535)'}
-	buf = '<div class="config-tab">\n'
-	buf = buf+'<h2>General Configuration</h2>\n'
-	buf = buf+'<p>Restart NZBmegasearch for these options to take effect.</p>'
-	
-	for key in configOptions:
-		if key in optionNames:
-			buf = buf + '<p><label for="' + key + '">' + optionNames[key] + '</label><input type="text" id="' + key + '" name="' + key + '" value="' + configOptions[key] + '" /></p>'
-	
-	buf = buf+'<h2>Search Module Configuration</h2>\n'
-	buf = buf+'<p>Checked modules are enabled.</p>\n'
-	
+
+	modulesHTML = '<p>Checked modules are enabled.</p>\n'
+
 	for module in SearchModule.loadedModules:
 		modName = module.name
 		moduleEnabledStr = ''
 		if modName in configOptions['enabledModules']:
 			moduleEnabledStr = ' checked="checked"'
-		buf = buf + '<h3><input type="checkbox"' + moduleEnabledStr + '" name="modules" id="' + modName + '" value="' + modName + '" /><label for="' + modName + '">' + modName + '</label></h3>'
-		#buf = buf + module.configHTML()
-	buf = buf+'</div>'
-	return buf
+		modulesHTML = modulesHTML + '<h3><input type="checkbox"' + moduleEnabledStr + '" name="modules" id="' + modName + '" value="' + modName + '" /><label for="' + modName + '">' + modName + '</label></h3>'
+		#modulesHTML = modulesHTML + module.configHTML()
+	return render_template('config.html',configOptions=configOptions,optionNames=optionNames,modulesHTML=modulesHTML)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 
 def config_read():
 	cf = read_conf()
-	webbuf_head = html_head()
 	webbuf_body = html_output(cf)
-	webbuf_foot = html_foot()	
-	webbuf_ret = webbuf_head+webbuf_body+webbuf_foot	
-	return webbuf_ret
+	return webbuf_body
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
