@@ -170,7 +170,7 @@ def dosearch(strsearch, cfg):
 	webbuf_body = ''
 		
 	if(len(strsearch)):
-		results = SearchModule.performSearch(strsearch)
+		results = SearchModule.performSearch(strsearch, cfg['enabledModules'])
 		results = summary_results2(results,strsearch)
 		webbuf_body = html_output(results)
 	webbuf_foot = html_foot()	

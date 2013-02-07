@@ -27,7 +27,8 @@ class Newznab(SearchModule):
 		# Parse config file
 		parser = ConfigParser.SafeConfigParser()
 		parser.read(configFile)
-				
+		
+		self.name = 'Newznab'
 		self.baseURL = parser.get('NewznabConfig','baseURL')
 		self.queryURL = self.baseURL + '/api'
 		self.apiKey = parser.get('NewznabConfig','apiKey')

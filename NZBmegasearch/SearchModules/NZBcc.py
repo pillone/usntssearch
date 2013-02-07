@@ -21,6 +21,7 @@ class NZBcc(SearchModule):
 	# Set up class variables
 	def __init__(self):
 		super(NZBcc, self).__init__()
+		self.name = 'NZB.cc'
 		self.queryURL = 'https://nzb.cc/q.php'
 		self.baseURL = 'https://nzb.cc'
 		self.nzbDownloadBaseURL = 'http://nzb.cc/nzb.php?c='

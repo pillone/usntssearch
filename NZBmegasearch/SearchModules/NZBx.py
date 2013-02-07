@@ -21,6 +21,7 @@ class NZBx(SearchModule):
 	# Set up class variables
 	def __init__(self):
 		super(NZBx, self).__init__()
+		self.name = 'nzbX.co'
 		self.queryURL = 'https://nzbx.co/api/search'
 		self.baseURL = 'https://nzbx.co'
 	# Perform a search using the given query string

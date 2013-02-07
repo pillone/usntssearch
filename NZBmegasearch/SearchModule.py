@@ -23,31 +23,30 @@ import xml.etree.cElementTree as ET
 import os
 import threading
 
-# Perform a search using all available modules
-def performSearch(queryString, configOptions = None):
+def loadSearchModules(moduleDir = None):
+	global loadedModules
 	# Find search modules
-	searchModules = [];
+	loadedModules = [];
 	searchModuleNames = [];
-	moduleDir = os.path.join(os.path.dirname(__file__),'SearchModules');
+	if moduleDir == None:
+		moduleDir = os.path.join(os.path.dirname(__file__),'SearchModules');
 	print 'Loading modules from: ' + moduleDir
 	for file in os.listdir(moduleDir):
 		if file.endswith('.py') and file != '__init__.py':
 			searchModuleNames.append(file[0:-3])
 	if len(searchModuleNames) == 0:
 		print 'No search modules found.'
-		return []
+		return
 	else:
 		print 'Found ' + str(len(searchModuleNames)) + ' modules'
 	# Import the modules that the user has enabled
-	if configOptions != None:
-		pass # Not implemented
 	print 'Importing: ' + ', '.join(searchModuleNames)
 	try:
 		for module in searchModuleNames:
 			importedModules = __import__('SearchModules.' + module)
 	except Exception as e:
 		print 'Failed to import search modules: ' + str(e)
-		return []
+		return
 	
 	print 'instantiating module classes'
 	# Instantiate the modules
@@ -59,20 +58,23 @@ def performSearch(queryString, configOptions = None):
 			print 'Unable to load search module ' + module + ': ' + str(e)
 		
 		try:
-			searchModules.append(targetClass())
+			loadedModules.append(targetClass())
 		except Exception as e:
 			print 'Error instantiating search module ' + module + ': ' + str(e)
-	
+
+# Perform a search using all available modules
+def performSearch(queryString, enabledModules = None, configOptions = None):
 	# Perform the search using every module
 	global globalResults
 	globalResults = []
 	threadHandles = []
 	lock = threading.Lock()
-	for module in searchModules:
+	for module in loadedModules:
 		try:
-			t = threading.Thread(target=performSearchThread, args=(queryString,module,lock))
-			t.start()
-			threadHandles.append(t)
+			if enabledModules == None or module.name in enabledModules:
+				t = threading.Thread(target=performSearchThread, args=(queryString,module,lock))
+				t.start()
+				threadHandles.append(t)
 		except Exception as e:
 			print 'Error starting thread for search module ' + module + ': ' + str(e)
 
@@ -103,10 +105,14 @@ class NotImplementedException(Exception):
 class SearchModule(object):
 	# Set up class variables
 	def __init__(self):
+		self.name = 'Unnamed'
 		self.queryURL = ''
 		self.baseURL = ''
 		self.nzbDownloadBaseURL = ''
 		self.apiKey = ''
+	# Show the configuration options for this module
+	def configurationHTML(self):
+		return ''
 	# Perform a search using the given query string
 	def search(self, queryString):
 		raise NotImplementedException('This scraper does not have a search function.')
