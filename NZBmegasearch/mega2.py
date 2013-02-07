@@ -23,7 +23,6 @@ import megasearch
 import config_settings
 
 app = Flask(__name__)
-cfg = config_settings.read_conf()
 SearchModule.loadSearchModules()
 
 @app.route('/s', methods=['GET'])
@@ -41,6 +40,9 @@ def config():
 def main_index():
 	if request.method == 'POST':
 		config_settings.config_write(request.form)
+	cfg = config_settings.read_conf()
+	if cfg['firstRun'] == '1':
+		return config_settings.config_read()
 	return megasearch.dosearch('', cfg)
 
 @app.errorhandler(404)
@@ -48,4 +50,7 @@ def generic_error(error):
 	return main_index()
 	
 if __name__ == "__main__":
-	app.run(host='0.0.0.0')
+	cfg = config_settings.read_conf()
+	chost = cfg['host']
+	cport = int(cfg['port'])
+	app.run(host=chost,port=cport)

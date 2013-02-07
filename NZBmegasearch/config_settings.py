@@ -28,8 +28,14 @@ def	write_conf(requestForm):
 	parser = SafeConfigParser()
 	parser.read('settings.ini')
 	
+	# Search modules
 	postedEnabledModules = requestForm.getlist('modules')
 	parser.set('searchModules','enabledModules',','.join(postedEnabledModules))
+	
+	# General Settings
+	parser.set('general','host',requestForm['host'])
+	parser.set('general','port',requestForm['port'])
+	parser.set('general','firstRun','0')
 
 	with open('settings.ini', 'wt') as configfile:
 		parser.write(configfile)
@@ -41,8 +47,13 @@ def read_conf():
 	cfg_struct = {}
 	parser = SafeConfigParser()		
 	parser.read('settings.ini')
-	
+	# General settings
+	cfg_struct['host'] = parser.get('general','host')
+	cfg_struct['port'] = parser.get('general','port')
+	cfg_struct['firstRun'] = parser.get('general','firstRun')
+	# Enabled search modules
 	cfg_struct['enabledModules'] = parser.get('searchModules','enabledModules').split(',')
+
 	return cfg_struct
 
 
@@ -64,7 +75,7 @@ def html_head():
 	buf = buf+'<body>\n'
 	buf = buf+'<div id="container">\n'
 	buf = buf+'<h1>Configuration</h1>\n'
-	buf = buf+'<form action="/config" method="post">\n'
+	buf = buf+'<form action="/" method="post">\n'
 	
 	return buf	
 
@@ -77,10 +88,20 @@ def html_foot():
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
     
-def html_output(configOptions): 
+def html_output(configOptions, optionNames=None):
+	if optionNames == None:
+		optionNames = {'host':'Host','port':'Port (1024-65535)'}
 	buf = '<div class="config-tab">\n'
+	buf = buf+'<h2>General Configuration</h2>\n'
+	buf = buf+'<p>Restart NZBmegasearch for these options to take effect.</p>'
+	
+	for key in configOptions:
+		if key in optionNames:
+			buf = buf + '<p><label for="' + key + '">' + optionNames[key] + '</label><input type="text" id="' + key + '" name="' + key + '" value="' + configOptions[key] + '" /></p>'
+	
 	buf = buf+'<h2>Search Module Configuration</h2>\n'
 	buf = buf+'<p>Checked modules are enabled.</p>\n'
+	
 	for module in SearchModule.loadedModules:
 		modName = module.name
 		moduleEnabledStr = ''
@@ -120,4 +141,4 @@ if __name__ == "__main__":
 	myFile = open('results.html', 'w')
 	myFile.write(webbuf_ret)
 	myFile.close()
-	
+
