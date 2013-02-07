@@ -30,6 +30,19 @@ except Exception:
 
 import SearchModule
 
+def dosearch(strsearch, cfg):
+	strsearch = strsearch.strip()
+	webbuf_head = html_head()
+	webbuf_body = ''
+		
+	if(len(strsearch)):
+		results = SearchModule.performSearch(strsearch, cfg['enabledModules'])
+		results = summary_results(results,strsearch)
+		webbuf_body = html_output(results)
+	webbuf_foot = html_foot()	
+	webbuf_ret = webbuf_head+webbuf_body+webbuf_foot	
+	return webbuf_ret
+
 def sanitize_html(value):
 	VALID_TAGS = []
 	soup = BeautifulSoup(value.replace("<\/b>", ""))
@@ -41,27 +54,7 @@ def sanitize_html(value):
 	return soup.renderContents()
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-def summary_results(results):
-	#~ sanitize
-	for provid in xrange(len(results)):
-		for i in xrange(len(results[provid])):
-			results[provid][i]['title'] = sanitize_html(results[provid][i]['title'])
-
-	#~ search one on top of the other
-	#~ success is nospace matching on top of the other.
-	for provid in xrange(len(results)):
-		for z in xrange(len(results[provid])):
-			for providj in xrange(provid+1,len(results)):
-				for i in xrange(len(results[providj])):
-					ret = results[providj][i]['title'].find( results[provid][z]['title'])
-					if(ret != -1):
-						#~ print 'duplicate ==========' 
-						results[providj][i]['ignore'] = 1
-					#~ print '))))))))))))))))' 
-	return results
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
-def summary_results2(results,strsearch):
+def summary_results(results,strsearch):
 	#~ sanitize
 	for provid in xrange(len(results)):
 		for i in xrange(len(results[provid])):
@@ -161,23 +154,7 @@ def html_output(results):
 			buf = buf+'<td class="providercell"> <a href= "' + results[i]['provider'] + '"> ' +hname + '</a></td>\n'
 			buf = buf+'</tr>\n'
 	return buf
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-
-def dosearch(strsearch, cfg):
-	strsearch = strsearch.strip()
-	webbuf_head = html_head()
-	webbuf_body = ''
-		
-	if(len(strsearch)):
-		results = SearchModule.performSearch(strsearch, cfg['enabledModules'])
-		results = summary_results2(results,strsearch)
-		webbuf_body = html_output(results)
-	webbuf_foot = html_foot()	
-	webbuf_ret = webbuf_head+webbuf_body+webbuf_foot	
-	return webbuf_ret
-
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 #~ debug
 if __name__ == "__main__":
 	print 'Save to file'
