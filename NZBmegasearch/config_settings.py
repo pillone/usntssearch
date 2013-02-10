@@ -18,116 +18,189 @@
 from flask import render_template
 from ConfigParser import SafeConfigParser
 import sys
-import os
 import SearchModule
+
 MAX_PROVIDER_NUMBER = 10
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-def	write_conf(requestForm):
+def	write_conf(request_form):
 	parser = SafeConfigParser()
-	parser.read('settings.ini')
+
+	#~ custom
+	counter = 1
+	for i in xrange(MAX_PROVIDER_NUMBER):
+		if (request_form.has_key('host%d' % i)  == True):
+			if(request_form['host%d' % i].replace(" ", "")): 
+				parser.add_section('search_provider%s' % counter)
+				parser.set('search_provider%s' % counter, 'url',request_form['host%d' % i].replace(" ", ""))
+				parser.set('search_provider%s' % counter, 'api',request_form['API%d' % i].replace(" ", ""))
+				parser.set('search_provider%s' % counter, 'type', request_form['type%d' % i].replace(" ", ""))
+				parser.set('search_provider%s' % counter, 'valid', '1')
+				counter = counter + 1
+	parser.add_section('general')
+	parser.set('general', 'numserver', str(counter-1))
+
 	
-	# Search modules
-	postedEnabledModules = requestForm.getlist('modules')
-	parser.set('searchModules','enabledModules',','.join(postedEnabledModules))
-	
-	# General Settings
-	parser.set('general','host',requestForm['host'])
-	parser.set('general','port',requestForm['port'])
-	parser.set('general','firstRun','0')
-
-	with open('settings.ini', 'wt') as configfile:
-		parser.write(configfile)
-   
-
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-     
-def read_conf(): 
-	cfg_struct = {}
-	parser = SafeConfigParser()		
-	parser.read('settings.ini')
-	# General settings
-	cfg_struct['host'] = parser.get('general','host')
-	cfg_struct['port'] = parser.get('general','port')
-	cfg_struct['firstRun'] = parser.get('general','firstRun')
-	# Enabled search modules
-	cfg_struct['enabledModules'] = parser.get('searchModules','enabledModules').split(',')
-
-	return cfg_struct
-
-
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
+	counter2 = 1
+	for i in xrange(MAX_PROVIDER_NUMBER):
+		if (request_form.has_key('bi_host%d' % i)  == True):
+			parser.add_section('bi_search_provider%s' % counter2)
+			parser.set('bi_search_provider%s' % counter2, 'type', request_form['bi_host%d' % i].replace(" ", ""))
+			if (request_form.has_key('bi_host%dactive' % i)  == True):
+				parser.set('bi_search_provider%s' % counter2, 'valid', '1')
+			else:
+				parser.set('bi_search_provider%s' % counter2, 'valid', '0')
 			
-def html_head(): 
-	buf = '<!DOCTYPE html>\n'
-	buf = buf+'<html>\n'
-	buf = buf+'<head>\n'
-	buf = buf+'<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n'
-	buf = buf+'<title>NZB MegasearcH</title>\n'
-	buf = buf+'<style type="text/css">\n'
-	buf = buf+'<!--\n'
-	buf = buf+'@import url("static/style.css");\n'
-	buf = buf+'-->\n'
-	buf = buf+'</style>\n'
-	buf = buf+'</head>\n'
-	buf = buf+'<body>\n'
-	buf = buf+'<div id="container">\n'
-	buf = buf+'<h1>Configuration</h1>\n'
-	buf = buf+'<form action="/" method="post">\n'
-	
-	return buf	
+			if (request_form.has_key('bi_host%dlogin' % i)  == True):	
+				blgin = request_form['bi_host%dlogin' % i].replace(" ", "")
+				bpwd = request_form['bi_host%dpwd' % i].replace(" ", "")
+				parser.set('bi_search_provider%s' % counter2, 'login', blgin)
+				parser.set('bi_search_provider%s' % counter2, 'pwd', bpwd)
+				if(len(blgin) == 0 and len(bpwd) == 0):
+					parser.set('bi_search_provider%s' % counter2, 'valid', '0')
 
-def html_foot():
-	buf = '<input type="submit" value="Save" /><input type="button" value="Back" onclick="location.href=\'\/\';">\n'
-	buf = buf+ '</form></div></body></html>\n'	
+			counter2 = counter2 + 1	
 	
-	return buf
+	parser.set('general', 'builtin_numserver', str(counter2-1))
 	
+
+	#~ bi_parser.write(sys.stdout)	
+	with open('custom_params.ini', 'wt') as configfile:
+		parser.write(configfile)
+
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-    
-def html_output(configOptions, optionNames=None):
-	if optionNames == None:
-		optionNames = {'host':'Host','port':'Port (1024-65535)'}
+def read_conf(): 
+	cf1 = read_conf_fn()
+	#~ print cf1
+	#~ if 'loadedModules' not in globals():
+		#~ loadSearchModules()
+		
+	#~ cf2,co2 = read_conf_fn('custom_providers.ini')
+#~ 
+	#~ for i in xrange(len(co2)):
+		#~ for j in xrange(len(cf1)):			
+			#~ if(	int(cf1[j]['unique']) == int(co2[i]['unique'])):
+				#~ cf1[j]['valid'] = co2[j]['valid'] 
+		#~ 
+	#~ for i in xrange(len(cf2)):
+		#~ cf2[i]['builtin']  = 0
+		#~ cf1.append(cf2[i])
+		
+	return cf1
 
-	modulesHTML = '<p>Checked modules are enabled.</p>\n'
+ #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    
+def read_conf_fn(): 
+	cfg_struct = []
+	parser = SafeConfigParser()
+	parser.read('builtin_params.ini')
+	portno = parser.get('general', 'port')	
+	
+	#~ chk if exists
+	cst_parser = SafeConfigParser()
+	cst_parser.read('custom_params.ini')
+	try:
+		numserver = cst_parser.get('general', 'numserver')	
+		#~ custom	 NAB
+		for i in xrange(int(numserver)):
+			d1 = {'url': cst_parser.get('search_provider%d' % (i+1)  , 'url'),
+				  'type': cst_parser.get('search_provider%d' % (i+1)  , 'type'),
+				  'api': cst_parser.get('search_provider%d' % (i+1)  , 'api'),
+				  'valid': cst_parser.get('search_provider%d' % (i+1)  , 'valid'),
+				  'builtin': 0
+				  }
+			cfg_struct.append(d1)	
+	except Exception:
+		return cfg_struct
+	
+	try:
+		builtin_numserver = cst_parser.get('general', 'builtin_numserver')
+		for i in xrange(int(builtin_numserver)):	
+			ret = cst_parser.has_option('bi_search_provider%d' % (i+1), 'login')			
+			lgn= ''
+			pwd= ''
+			if(ret == True): 
+				 lgn = cst_parser.get('bi_search_provider%d' % (i+1)  , 'login')
+				 pwd = cst_parser.get('bi_search_provider%d' % (i+1)  , 'pwd')
+			
+			d1 = {'valid': cst_parser.get('bi_search_provider%d' % (i+1)  , 'valid'),
+				  'type': cst_parser.get('bi_search_provider%d' % (i+1)  , 'type'),
+				  'login': lgn,
+				  'pwd': pwd,
+				  'builtin': 1}
+			cfg_struct.append(d1)
+	except Exception:
+			pass
+				
+	#~ cst_parser.write(sys.stdout)	
+	return cfg_struct
+ 
 
+ 
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+def html_builtin_output(cffile): 
+	count = 0
+	
+	if 'SearchModule.loadedModules' not in globals():
+		SearchModule.loadSearchModules()
+	
+	cffileb = []		
 	for module in SearchModule.loadedModules:
-		modName = module.name
-		moduleEnabledStr = ''
-		if modName in configOptions['enabledModules']:
-			moduleEnabledStr = ' checked="checked"'
-		modulesHTML = modulesHTML + '<h3><input type="checkbox"' + moduleEnabledStr + '" name="modules" id="' + modName + '" value="' + modName + '" /><label for="' + modName + '">' + modName + '</label></h3>'
-		#modulesHTML = modulesHTML + module.configHTML()
-	return render_template('config.html',configOptions=configOptions,optionNames=optionNames,modulesHTML=modulesHTML)
+		if(module.builtin):
+			option='checked=yes'
+			flogin=0
+			login_name =  ''
+			login_pwd = ''
+			if(module.active == 0):
+				option=''
+			for i in xrange(len(cffile)):
+				if(cffile[i]['type'] == module.typesrch):
+					if(cffile[i]['valid'] == '0'):
+						option=''
+					else: 	
+						option='checked=yes'
+					
+					login_name=cffile[i]['login']
+					login_pwd=cffile[i]['pwd']
+					
+			if(module.login == 1):
+				flogin = 1
+			
+			tmpcfg= {'stchk' : option,
+					'humanname' : module.name,
+					'idx' : count,
+					'type' : module.typesrch,
+					'flogin': flogin,
+					'loginname': login_name,
+					'loginpwd': login_pwd,
+					}
+			cffileb.append(tmpcfg)
+			count = count + 1
+
+	count = 0
+	for i in xrange(len(cffile)):
+		if(cffile[i]['builtin'] == 0):
+			cffile[i]['idx'] =  count
+			count = count + 1
+		
+	return render_template('config.html', cfg=cffile, cnt=count,  cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
+
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 
 def config_read():
 	cf = read_conf()
-	webbuf_body = html_output(cf)
-	return webbuf_body
+	webbuf_body_bi = html_builtin_output(cf)
+	
+	return webbuf_body_bi
+
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 def config_write(request_form):
-	cf = write_conf(request_form)
-
-if __name__ == "__main__":
-	#~ debug
-	cf = read_conf()
-	print cf
-
-	webbuf_head = html_head()
-	webbuf_body = html_output(cf)
-	webbuf_foot = html_foot()	
-	webbuf_ret = webbuf_head+webbuf_body+webbuf_foot	
-	
-	myFile = open('results.html', 'w')
-	myFile.write(webbuf_ret)
-	myFile.close()
-
+	write_conf(request_form)	
+	#~ return config_read()

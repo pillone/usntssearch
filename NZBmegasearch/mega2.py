@@ -17,6 +17,7 @@
 
 from flask import Flask
 from flask import request
+import os
 
 import SearchModule
 import megasearch
@@ -24,6 +25,17 @@ import config_settings
 
 app = Flask(__name__)
 SearchModule.loadSearchModules()
+mega_version=0.2
+print '~*~ ~*~ NZBMegasearcH (v. '+ str(mega_version) + ') ~*~ ~*~'
+
+#~ 
+first_time = 1
+if os.path.exists("custom_params.ini"):
+	first_time = 0
+	print '>> NZBMegasearcH is configured'
+else:	
+	print '>> NZBMegasearcH will be configured'
+#~ 
 
 @app.route('/s', methods=['GET'])
 def search():
@@ -38,10 +50,12 @@ def config():
 			
 @app.route('/', methods=['GET','POST'])
 def main_index():
+	global first_time
 	if request.method == 'POST':
 		config_settings.config_write(request.form)
+		first_time = 0
 	cfg = config_settings.read_conf()
-	if cfg['firstRun'] == '1':
+	if first_time == 1:
 		return config_settings.config_read()
 	return megasearch.dosearch('', cfg)
 
@@ -51,6 +65,6 @@ def generic_error(error):
 	
 if __name__ == "__main__":
 	cfg = config_settings.read_conf()
-	chost = cfg['host']
-	cport = int(cfg['port'])
-	app.run(host=chost,port=cport)
+	chost = '0.0.0.0'
+	cport = 5000
+	app.run(host=chost,port=cport,debug=True)

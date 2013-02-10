@@ -31,6 +31,7 @@ def loadSearchModules(moduleDir = None):
 	if moduleDir == None:
 		moduleDir = os.path.join(os.path.dirname(__file__),'SearchModules');
 	print 'Loading modules from: ' + moduleDir
+
 	for file in os.listdir(moduleDir):
 		if file.endswith('.py') and file != '__init__.py':
 			searchModuleNames.append(file[0:-3])
@@ -39,6 +40,8 @@ def loadSearchModules(moduleDir = None):
 		return
 	else:
 		print 'Found ' + str(len(searchModuleNames)) + ' modules'
+		
+	searchModuleNames = sorted(searchModuleNames)
 	# Import the modules that the user has enabled
 	print 'Importing: ' + ', '.join(searchModuleNames)
 	try:
@@ -63,7 +66,7 @@ def loadSearchModules(moduleDir = None):
 			print 'Error instantiating search module ' + module + ': ' + str(e)
 
 # Perform a search using all available modules
-def performSearch(queryString, enabledModules = None, configOptions = None):
+def performSearch(queryString,  cfg):
 	# Perform the search using every module
 	global globalResults
 	if 'loadedModules' not in globals():
@@ -71,23 +74,40 @@ def performSearch(queryString, enabledModules = None, configOptions = None):
 	globalResults = []
 	threadHandles = []
 	lock = threading.Lock()
-	for module in loadedModules:
-		try:
-			if enabledModules == None or module.name in enabledModules:
-				t = threading.Thread(target=performSearchThread, args=(queryString,module,lock))
+	
+	for index in xrange(len(cfg)):
+		if(cfg[index]['valid']== '1'):
+			try:
+				t = threading.Thread(target=performSearchThread, args=(queryString,loadedModules,lock,cfg[index]))
 				t.start()
 				threadHandles.append(t)
-		except Exception as e:
-			print 'Error starting thread for search module ' + module + ': ' + str(e)
+			except Exception as e:
+				print 'Error starting thread  : ' + str(e)
 
 	for t in threadHandles:
 		t.join()
 	print '=== All Search Threads Finished ==='
 	return globalResults
+
+def performSearchThread(queryString, loadedModules, lock,cfg):
+	localResults = []
+	print "Searching w " + cfg['type']
+	for module in loadedModules:
+		if( module.typesrch == cfg['type']):
+			localResults = module.search(queryString, cfg)
+	lock.acquire()
+	globalResults.append(localResults)
+	try:
+		lock.release()
+	except Exception as e:
+		print e
+
 	
-def performSearchThread(queryString, module, lock):
+def performSearchThread2(queryString, module, lock,configOptions):
 	print 'starting search thread'
-	localResults = module.search(queryString)
+	print module.typesrch
+	localResults = []
+	#~ module.search(queryString)
 	lock.acquire()
 	globalResults.append(localResults)
 	try:
