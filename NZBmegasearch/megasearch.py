@@ -63,7 +63,7 @@ def summary_results(rawResults,strsearch):
 	for provid in xrange(len(rawResults)):
 		for z in xrange(len(rawResults[provid])):
 			title = rawResults[provid][z]['title'].lower().replace(" ", ".")
-			titles.append(title);
+			titles.append(title)
 			sptitle_collection.append(Set(title.split(".")))
 			results.append(rawResults[provid][z])
 			
@@ -72,13 +72,18 @@ def summary_results(rawResults,strsearch):
 
 	for z in xrange(len(results)):
 		findone = 0 
-		results[z]  ['ignore'] = 0			
+		results[z]['ignore'] = 0			
 		intrs = strsearch1_collection.intersection(sptitle_collection[z])
-		if ( len(intrs) ==  len(strsearch1_collection)):
+		if ( len(intrs) ==  len(strsearch1_collection)):			
 			findone = 1
-		
+		else:
+			results[z]['ignore'] = 1	
+		#~ print findone
+		#~ print strsearch1_collection
 		#~ print sptitle_collection[z]
 		#~ print str(len(intrs)) + " " + str(len(strsearch1_collection))
+		#~ print '========'
+		
 		if(findone):
 			#~ print titles[z]
 			for v in xrange(z+1,len(results)):
