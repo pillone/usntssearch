@@ -22,25 +22,32 @@ import os
 import SearchModule
 import megasearch
 import config_settings
+import check_version
 
 app = Flask(__name__)
 SearchModule.loadSearchModules()
-mega_version=0.2
-print '~*~ ~*~ NZBMegasearcH (v. '+ str(mega_version) + ') ~*~ ~*~'
 
-#~ 
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+#~ versioning check
+ver_notify= { 'chk':-1, 
+			  'curver': 0.21}
+print '~*~ ~*~ NZBMegasearcH (v. '+ str(ver_notify['curver']) + ') ~*~ ~*~'
+	
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+#~ first time configuration check
+
 first_time = 1
 if os.path.exists("custom_params.ini"):
 	first_time = 0
 	print '>> NZBMegasearcH is configured'
 else:	
 	print '>> NZBMegasearcH will be configured'
-#~ 
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/s', methods=['GET'])
 def search():
 	cfg = config_settings.read_conf()
-	return megasearch.dosearch(request.args['q'], cfg)
+	return megasearch.dosearch(request.args['q'], cfg, ver_notify)
 
 @app.route('/config', methods=['GET','POST'])
 def config():
@@ -57,14 +64,16 @@ def main_index():
 	cfg = config_settings.read_conf()
 	if first_time == 1:
 		return config_settings.config_read()
-	return megasearch.dosearch('', cfg)
+	return megasearch.dosearch('', cfg, ver_notify)
 
 @app.errorhandler(404)
 def generic_error(error):
 	return main_index()
-	
-if __name__ == "__main__":
+
+if __name__ == "__main__":	
+	if( ver_notify['chk'] == -1):
+		ver_notify['chk'] = check_version.chk(ver_notify['curver'])
 	cfg = config_settings.read_conf()
 	chost = '0.0.0.0'
 	cport = 5000
-	app.run(host=chost,port=cport,debug=True)
+	app.run(host=chost,port=cport)

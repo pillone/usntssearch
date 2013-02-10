@@ -35,7 +35,26 @@ div#container
  /*this is what we want the div to look like*/
 .topright{
     display:block;
-	font: bold 14px 'Lucida Sans Unicode', '"Lucida Grande', Sans-Serif;
+	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+
+    /*set the div in the top right corner*/
+    position:absolute;
+    top:0;
+    right:0;
+    width:250px;
+}
+
+.bottomcenter{
+   display:block;
+	font: 8px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+    position:absolute;
+	color: #039;
+    right: 50%
+}
+
+.topright_tight{
+    display:block;
+	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
 
     /*set the div in the top right corner*/
     position:absolute;

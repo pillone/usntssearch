@@ -25,17 +25,16 @@ from flask import render_template
 
 import SearchModule
 
-def dosearch(strsearch, cfg):
-	
+def dosearch(strsearch, cfg, ver_notify):
 	strsearch = strsearch.strip()
 		
 	if(len(strsearch)):
 		results = SearchModule.performSearch(strsearch, cfg )
 		results = summary_results(results,strsearch)
 	else:
-		return render_template('main_page.html')
+		return render_template('main_page.html', vr=ver_notify)
 	
-	return cleanUpResults(results)
+	return cleanUpResults(results, ver_notify)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
@@ -132,7 +131,7 @@ def summary_results2(rawResults,strsearch):
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 # Generate HTML for the results
-def cleanUpResults(results):
+def cleanUpResults(results, ver_notify):
 	niceResults = []
 	existduplicates = 0
 	for i in xrange(len(results)):
@@ -162,7 +161,7 @@ def cleanUpResults(results):
 			'ignore' : results[i]['ignore']
 		})
 
-	return render_template('main_page.html',results=niceResults,exist=existduplicates )
+	return render_template('main_page.html',results=niceResults,exist=existduplicates, vr=ver_notify )
 
 #~ debug
 if __name__ == "__main__":
