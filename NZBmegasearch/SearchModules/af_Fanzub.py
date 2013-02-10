@@ -16,57 +16,44 @@
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #
 import ConfigParser
 from SearchModule import *
-from urllib2 import urlparse
-
 
 # Search on Newznab
-class Newznab(SearchModule):
+class af_Fanzub(SearchModule):
 	# Set up class variables
 	def __init__(self, configFile=None):
-		super(Newznab, self).__init__()
+		super(af_Fanzub, self).__init__()
 		# Parse config file		
-		self.name = 'Newznab'
-		self.typesrch = 'NAB'
-		self.queryURL = 'xxxx'
-		self.baseURL = 'xxxx'
-		self.nzbDownloadBaseURL = 'NA'
-		self.builtin = 0
-	 
-	# Perform a search using the given query string
-	def search(self, queryString, cfg):
-		# Get text
-		urlParams = dict(
-			t='search',
-			q=queryString,
-			o='xml',
-			apikey=cfg['api']
-		)
-		baseURL = cfg['url'] + '/api'
+		self.name = 'Fanzub'
+		self.typesrch = 'FAN'
+		self.queryURL = 'https://www.fanzub.com/rss'
+		self.baseURL = 'https://www.fanzub.com'
+		self.active = 0
+		self.builtin = 1
+		self.login = 0
 		
+	# Perform a search using the given query string
+	def search(self, queryString, cfg):		
+		urlParams = dict(
+			q=queryString
+		)
+
 		try:
-			http_result = requests.get(url=baseURL, params=urlParams, verify=False)
+			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False)
 		except Exception as e:
 			print e
 			return []
 		data = http_result.text
 		data = data.replace("<newznab:attr", "<newznab_attr")
 		parsed_data = []
-		tree = ET.fromstring(data)
-			
 		#~ parse errors
 		try:
-			tree = ET.fromstring(data)
+			tree = ET.fromstring(data.encode('utf-8'))
 		except BaseException:
 			print "ERROR: Wrong API?"
 			return parsed_data
 		except Exception as e:
 			print e
 			return parsed_data
-
-		#~ homemade lazy stuff
-		humanprovider = urlparse.urlparse(cfg['url']).hostname			
-		humanprovider = humanprovider.replace("www.", "")
-
 
 		#~ successful parsing
 		for elem in tree.iter('item'):
@@ -94,8 +81,8 @@ class Newznab(SearchModule):
 				'posting_date_timestamp': float(elem_postdate),
 				'release_comments': '',
 				'ignore':0,
-				'provider':cfg['url'],
-				'providertitle':humanprovider
+				'provider':self.baseURL,
+				'providertitle':self.name
 			}
 			parsed_data.append(d1)
 		return parsed_data		

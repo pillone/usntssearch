@@ -44,6 +44,12 @@ div#container
     width:80px;
 }
 
+.titlemain {
+	width: 310px;
+	margin: 0px auto;
+	padding: 0px;
+}
+
 .form-wrapper-01 {
 	width: 450px;
 	margin: 5px auto;
@@ -64,12 +70,15 @@ div#container
 	background-image: linear-gradient(top, #f6f6f6, #eae8e8);
 }
 
+/*
+ text search box #378b96 
+*/
 .form-wrapper-01 #search {
 	width: 330px;
 	height: 20px;
 	padding: 10px 5px;
 	float: left;
-	font: bold 16px 'Lucida Sans Unicode', '"Lucida Grande', Sans-Serif;
+	font: 16px 'Lucida Sans Unicode', '"Lucida Grande', Sans-Serif;
 	border: 1px solid #ccc;
 	-moz-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
 	-webkit-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
@@ -77,6 +86,8 @@ div#container
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
+	color: #378b96 
+
 }
  
 .form-wrapper-01 #search:focus {
@@ -107,7 +118,10 @@ div#container
 	font-size:12px;
 	font-style:italic;
 }
- 
+
+/*
+ button
+*/
 .form-wrapper-01 #submit {
 	float: right;
 	border: 1px solid #00748f;
@@ -161,7 +175,7 @@ div#container
 	height: 20px;
 	padding: 10px 5px;
 	float: right;
-	font: bold 16px 'lucida sans', 'trebuchet MS', 'Tahoma';
+	font:  bold 16px 'lucida sans', 'trebuchet MS', 'Tahoma';
 	border: 1px solid #ccc;
 	-moz-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
 	-webkit-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
@@ -193,7 +207,7 @@ div#container
 	font-size: 12px;
 	background: #fff;
 	margin: 45px;
-	width: 100%;
+	width: 90%;
 	border-collapse: collapse;
 	text-align: left;
 }
@@ -219,19 +233,19 @@ div#container
 	background: #f0f0f0 none;
 }
 .titlecell {
-	width: 450px;
+	width: 60%;
 }
 
 .sizecell {
-	width: 60px;
+	width: 10%;
 }
 
 .datecell {
-	width: 60px;
+	width: 10%;
 }
 
 .providercell {
-	width: 60px;
+	width: 10%;
 }
 
  

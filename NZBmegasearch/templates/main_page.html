@@ -3,32 +3,57 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>NZB MegasearcH</title>
-		<link rel="stylesheet" type="text/css" href="/static/style.css" />
-		<script src="/static/overlay.js"></script>
+		<link rel="stylesheet" type="text/css" href="static/style.css" />
+		<script src="static/overlay.js"></script>
 	</head>
 	<body>
 		<div id="container">
 			<span id="loader" style="visibility:hidden;"><img src="static/loadingicon.gif" width="75" height="75" /></span>
+			<div  class="titlemain"><img src="static/title.png" width="302" height="33" /></div>
 			<form action="/s" method="get" class="form-wrapper-01">
 				<input type="text" id="search" placeholder="Enter your keyword" name="q"><input type="submit" value="Search" id="submit" onclick="show_loader()">
 			</form>
 			{% if results -%}
 			<table id="results" summary="Search Results">
 				<thead>
-					<tr><th scope="col" class=titlecell>Title</th><th scope="col" class=sizecell>Size</th> <th scope="col" class=datecell>Age</th> <th scope="col" class=providercell>Provider</th></tr>
+					<tr><th scope="col" class=titlecell>Title</th><th scope="col" class=sizecell>Size</th> <th scope="col" class=datecell>Days</th> <th scope="col" class=providercell>Provider</th></tr>
 				</thead>
 				<tbody>
 				{% for row in results -%}
-				<tr>
-					<td class="titlecell"><a href= "{{ row['url'] }}">{{ row['title'] }}</a></td>
-					<td class="sizecell">{{ row['filesize'] }}</td>
-					<td class="datecell">{{ row['age'] }}</td>
-					<td class="providercell"> <a href= "{{ row['providerurl'] }}">{{ row['providertitle'] }}</a></td>
-				</tr>
+					{% if row['ignore'] == 0  -%}
+					<tr>
+						<td class="titlecell"><a href= "{{ row['url'] }}">{{ row['title'] }}</a></td>
+						<td class="sizecell">{{ row['filesize'] }}</td>
+						<td class="datecell">{{ row['age'] }}</td>
+						<td class="providercell"> <a href= "{{ row['providerurl'] }}">{{ row['providertitle'] }}</a></td>
+					</tr>
+					{%- endif %}
 				{%- endfor %}
 				</tbody>
 			</table>
 			{%- endif %}
+
+
+			{% if exist -%}
+			<table id="results" summary="Detected duplicates">
+				<thead>
+					<tr><th scope="col" class=titlecell>Detected duplicates</th><th scope="col" class=sizecell>Size</th> <th scope="col" class=datecell>Days</th> <th scope="col" class=providercell>Provider</th></tr>
+				</thead>
+				<tbody>
+				{% for row in results -%}
+					{% if row['ignore']  -%}
+					<tr>
+						<td class="titlecell"><a href= "{{ row['url'] }}">{{ row['title'] }}</a></td>
+						<td class="sizecell">{{ row['filesize'] }}</td>
+						<td class="datecell">{{ row['age'] }}</td>
+						<td class="providercell"> <a href= "{{ row['providerurl'] }}">{{ row['providertitle'] }}</a></td>
+					</tr>
+					{%- endif %}
+				{%- endfor %}
+				</tbody>
+			</table>
+			{%- endif %}
+						
 		</div>
 		<div class="topright"><a href= "config">Configure</a></div>
 	</body>
