@@ -11,6 +11,14 @@ Install
 - Go to localhost:5000 to configure
 
 
+
+Changes in v0.23
+================
+- Change port
+- Support username and pwd
+- Timeout for long responses
+
+
 Changes in v0.21
 ================
 - Added automatic notification of newer versions

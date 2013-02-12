@@ -101,19 +101,7 @@ def performSearchThread(queryString, loadedModules, lock,cfg):
 		lock.release()
 	except Exception as e:
 		print e
-
-	
-def performSearchThread2(queryString, module, lock,configOptions):
-	print 'starting search thread'
-	print module.typesrch
-	localResults = []
-	#~ module.search(queryString)
-	lock.acquire()
-	globalResults.append(localResults)
-	try:
-		lock.release()
-	except Exception as e:
-		print e
+ 
 
 # Exception to be raised when a search function is not implemented
 class NotImplementedException(Exception):

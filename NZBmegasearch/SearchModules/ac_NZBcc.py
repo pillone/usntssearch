@@ -37,7 +37,7 @@ class ac_NZBcc(SearchModule):
 			q=queryString
 		)
 		try:
-			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False)
+			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=cfg['timeout'])
 		except Exception as e:
 			print e
 			return []

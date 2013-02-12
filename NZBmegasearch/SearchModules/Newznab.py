@@ -44,18 +44,17 @@ class Newznab(SearchModule):
 		baseURL = cfg['url'] + '/api'
 		
 		try:
-			http_result = requests.get(url=baseURL, params=urlParams, verify=False)
+			http_result = requests.get(url=baseURL, params=urlParams, verify=False, timeout=cfg['timeout'])
 		except Exception as e:
 			print e
 			return []
 		data = http_result.text
 		data = data.replace("<newznab:attr", "<newznab_attr")
 		parsed_data = []
-		tree = ET.fromstring(data)
 			
 		#~ parse errors
 		try:
-			tree = ET.fromstring(data)
+			tree = ET.fromstring(data.encode('utf-8'))
 		except BaseException:
 			print "ERROR: Wrong API?"
 			return parsed_data

@@ -21,6 +21,7 @@ import sys
 import SearchModule
 
 MAX_PROVIDER_NUMBER = 10
+MAX_TIMEOUT = 10
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -41,6 +42,11 @@ def	write_conf(request_form):
 				counter = counter + 1
 	parser.add_section('general')
 	parser.set('general', 'numserver', str(counter-1))
+	
+	#~ they exist for sure
+	parser.set('general', 'port', request_form['port'].replace(" ", ""))
+	parser.set('general', 'general_user', request_form['general_usr'].replace(" ", ""))
+	parser.set('general', 'general_pwd', request_form['general_pwd'].replace(" ", ""))
 
 	
 	counter2 = 1
@@ -73,23 +79,8 @@ def	write_conf(request_form):
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 def read_conf(): 
-	cf1 = read_conf_fn()
-	#~ print cf1
-	#~ if 'loadedModules' not in globals():
-		#~ loadSearchModules()
-		
-	#~ cf2,co2 = read_conf_fn('custom_providers.ini')
-#~ 
-	#~ for i in xrange(len(co2)):
-		#~ for j in xrange(len(cf1)):			
-			#~ if(	int(cf1[j]['unique']) == int(co2[i]['unique'])):
-				#~ cf1[j]['valid'] = co2[j]['valid'] 
-		#~ 
-	#~ for i in xrange(len(cf2)):
-		#~ cf2[i]['builtin']  = 0
-		#~ cf1.append(cf2[i])
-		
-	return cf1
+	cf1, co1 = read_conf_fn()
+	return cf1,co1
 
  #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    
 def read_conf_fn(): 
@@ -97,6 +88,8 @@ def read_conf_fn():
 	parser = SafeConfigParser()
 	parser.read('builtin_params.ini')
 	portno = parser.get('general', 'port')	
+	gen_user = parser.get('general', 'general_user')	
+	gen_pwd = parser.get('general', 'general_pwd')	
 	
 	#~ chk if exists
 	cst_parser = SafeConfigParser()
@@ -109,11 +102,24 @@ def read_conf_fn():
 				  'type': cst_parser.get('search_provider%d' % (i+1)  , 'type'),
 				  'api': cst_parser.get('search_provider%d' % (i+1)  , 'api'),
 				  'valid': cst_parser.get('search_provider%d' % (i+1)  , 'valid'),
+				  'timeout':  MAX_TIMEOUT,
 				  'builtin': 0
 				  }
-			cfg_struct.append(d1)	
+			cfg_struct.append(d1)
+			
+		ret1 = cst_parser.has_option('general', 'port')
+		if(ret1 == True): 
+			portno = cst_parser.get('general', 'port')			
+		ret1 = cst_parser.has_option('general', 'general_user')
+		if(ret1 == True): 
+			gen_user = cst_parser.get('general', 'general_user')	
+			gen_pwd = cst_parser.get('general', 'general_pwd')	
+		
+		co1 = {'portno': portno, 'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd}
+	
 	except Exception:
-		return cfg_struct
+		co1 = {'portno': portno, 'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd}
+		return cfg_struct, co1
 	
 	try:
 		builtin_numserver = cst_parser.get('general', 'builtin_numserver')
@@ -129,19 +135,20 @@ def read_conf_fn():
 				  'type': cst_parser.get('bi_search_provider%d' % (i+1)  , 'type'),
 				  'login': lgn,
 				  'pwd': pwd,
+				  'timeout':  MAX_TIMEOUT,
 				  'builtin': 1}
 			cfg_struct.append(d1)
 	except Exception:
 			pass
 				
 	#~ cst_parser.write(sys.stdout)	
-	return cfg_struct
+	return cfg_struct, co1
  
 
  
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-def html_builtin_output(cffile): 
+def html_builtin_output(cffile, genopt): 
 	count = 0
 	
 	if 'SearchModule.loadedModules' not in globals():
@@ -185,16 +192,16 @@ def html_builtin_output(cffile):
 		if(cffile[i]['builtin'] == 0):
 			cffile[i]['idx'] =  count
 			count = count + 1
-		
-	return render_template('config.html', cfg=cffile, cnt=count,  cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
+
+	return render_template('config.html', cfg=cffile, cnt=count,  genopt = genopt, cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 
 def config_read():
-	cf = read_conf()
-	webbuf_body_bi = html_builtin_output(cf)
+	cf,co = read_conf()
+	webbuf_body_bi = html_builtin_output(cf,co)
 	
 	return webbuf_body_bi
 
