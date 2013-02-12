@@ -16,6 +16,50 @@
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #
 
 import requests
+from functools import wraps
+from flask import Response,request
+import config_settings
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+def check_auth(username, password, cgen):
+	if(username == cgen['general_usr'] and password == cgen['general_pwd']):
+		return True
+		
+
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+    'Could not verify your access level for that URL.\n'
+    'You have to login with proper credentials', 401,
+    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+		cfg,cgen = config_settings.read_conf()		
+		if(len(cgen['general_usr']) != 0):
+			auth = request.authorization
+			if not auth or not check_auth(auth.username, auth.password, cgen):
+				return authenticate()
+			return f(*args, **kwargs)
+		else:
+			return f(*args, **kwargs)
+    return decorated
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+def chk_current_ver(): 
+	ver_notify= { 'chk':-1, 
+			  'curver': -1}
+	verify_str = '80801102808011028080110280801102'
+
+	with open('vernum.num') as f:
+		content = f.readlines()
+	vals = content[0].split(' ')
+	if(vals[0] == verify_str):
+		ver_notify['curver'] = float(vals[1])
+
+	return ver_notify
+
 
 def chk(version_here): 
 	verify_str = '80801102808011028080110280801102'
@@ -27,6 +71,8 @@ def chk(version_here):
 		cur_ver = float(vals[1])
 		if(vals[0] == verify_str):
 			print '>> Newest version available is ' + (vals[1])
+		else:
+			return  -1
 
 		if(version_here < cur_ver):
 			print '>> A newer version is available. User notification on.'
