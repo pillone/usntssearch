@@ -11,6 +11,17 @@
 <body>
 <form action="/" method="post">
 <table id="results" summary="Config" style="width: 420px;"><thead>
+<tr><th scope="col">General Options</th></tr></thead><tbody>
+	<tr>
+		<td>Port: <input type="input" name="port" value="{{ genopt['portno'] }}" size="10"></td>
+	</tr>	
+	<tr>
+		<td>	User: <input type="input" name="general_usr" value="{{ genopt['general_usr'] }}" size="12">
+			Pass: <input type="password" name="general_pwd" value="{{ genopt['general_pwd'] }}" size="12"></td>
+	</tr>
+</tbody></table>
+
+<table id="results" summary="Config" style="width: 420px;"><thead>
 <tr><th scope="col">Specially supported engines</th></tr></thead><tbody>
 {% for c in cfg_bi -%}
 	<tr>
