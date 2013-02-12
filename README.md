@@ -12,11 +12,16 @@ Install
 
 
 
+Changes in v0.24
+================
+- Sort in title, age, size, provider
+
 Changes in v0.23
 ================
 - Change port
-- Support username and pwd
+- Support username and pwd, thanks to userpasscombine
 - Timeout for long responses
+- Improved ver. checking
 
 
 Changes in v0.21
