@@ -48,7 +48,7 @@ else:
 @app.route('/s', methods=['GET'])
 @miscdefs.requires_auth
 def search():
-	return megasearch.dosearch(request.args['q'], cfg, ver_notify)
+	return megasearch.dosearch(request.args, cfg, ver_notify)
 
 @app.route('/config', methods=['GET','POST'])
 @miscdefs.requires_auth

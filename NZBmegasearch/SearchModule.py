@@ -67,6 +67,7 @@ def loadSearchModules(moduleDir = None):
 
 # Perform a search using all available modules
 def performSearch(queryString,  cfg):
+	queryString = queryString.strip()
 	# Perform the search using every module
 	global globalResults
 	if 'loadedModules' not in globals():

@@ -25,16 +25,14 @@ from flask import render_template
 
 import SearchModule
 
-def dosearch(strsearch, cfg, ver_notify):
-	strsearch = strsearch.strip()
-		
-	if(len(strsearch)):
-		results = SearchModule.performSearch(strsearch, cfg )
-		results = summary_results(results,strsearch)
+def dosearch(args, cfg, ver_notify):
+	if(len(args)):
+		results = SearchModule.performSearch(args['q'], cfg )
+		results = summary_results(results,args['q'])
+		return cleanUpResults(results, ver_notify, args)
 	else:
-		return render_template('main_page.html', vr=ver_notify)
-	
-	return cleanUpResults(results, ver_notify)
+		return render_template('main_page.html', vr=ver_notify )
+		
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
@@ -93,52 +91,33 @@ def summary_results(rawResults,strsearch):
 					if( abs(sz1-sz2) < 5000000):
 						results[z]  ['ignore'] = 1
 
-	results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
+	#~ no sort
+	#~ results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
 					
 	return results
 
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
-def summary_results2(rawResults,strsearch):
-	#~ sanitize
-	for provid in xrange(len(rawResults)):
-		for i in xrange(len(rawResults[provid])):
-			rawResults[provid][i]['title'] = sanitize_html(rawResults[provid][i]['title'])
-
-	results =[]
-	ptr = []
-	#~ all in one array
-	for provid in xrange(len(rawResults)):
-		for z in xrange(len(rawResults[provid])):
-			results.append(rawResults[provid][z])
-			ptr.append([provid, z])
-	
-	strsearch1 = strsearch.replace(" ", ".")
-	strsearch1_low =strsearch1.lower()
-	strsearch_low =strsearch.lower()
-	
-	results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 	
-	#~ remove only perfect duplicates 
-	for z in xrange(len(results)):
-		findone = 0
-		res_low = results[z]['title'].lower()
-		if(res_low.find(strsearch_low) != -1):
-			findone = 1
-		if(res_low.find(strsearch1_low) != -1 ):
-			findone = 1 
-	
-		results[z]  ['ignore'] = 0			
-		#~ then update
-		if(findone==0):
-			results[z]  ['ignore'] = 1		
-
-	return results
+ 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 # Generate HTML for the results
-def cleanUpResults(results, ver_notify):
+def cleanUpResults(results, ver_notify, args):
 	niceResults = []
 	existduplicates = 0
+	
+	#~ sorting
+	if 'order' not in args:
+		results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
+	else:
+		if	(args['order']=='t'):
+			results = sorted(results, key=itemgetter('title'))
+		if	(args['order']=='s'):
+			results = sorted(results, key=itemgetter('size'), reverse=True)
+		if	(args['order']=='p'):
+			results = sorted(results, key=itemgetter('providertitle'))
+		if	(args['order']=='d'):
+			results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
+			
+	#~ do nice 
 	for i in xrange(len(results)):
 		if(results[i]['ignore'] == 1):
 			existduplicates = 1
@@ -166,7 +145,7 @@ def cleanUpResults(results, ver_notify):
 			'ignore' : results[i]['ignore']
 		})
 
-	return render_template('main_page.html',results=niceResults,exist=existduplicates, vr=ver_notify )
+	return render_template('main_page.html',results=niceResults, exist=existduplicates, vr=ver_notify, args=args )
 
 #~ debug
 if __name__ == "__main__":

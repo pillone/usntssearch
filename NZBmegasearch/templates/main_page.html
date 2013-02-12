@@ -16,7 +16,7 @@
 			{% if results -%}
 			<table id="results" summary="Search Results">
 				<thead>
-					<tr><th scope="col" class=titlecell>Title</th><th scope="col" class=sizecell>Size</th> <th scope="col" class=datecell>Days</th> <th scope="col" class=providercell>Provider</th></tr>
+					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t">Title</a></th><th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s">Size</a></th> <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d">Days</a></th> <th scope="col" class=providercell><a href="s?q={{ args['q'] }}&order=p">Provider</a></th></tr>
 				</thead>
 				<tbody>
 				{% for row in results -%}
