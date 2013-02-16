@@ -10,7 +10,10 @@ Install
 - Enter in the NZBmegasearch directory and run "python mega2.py" to start NZBmegasearch
 - Go to localhost:5000 to configure
 
-
+Changes in v0.25
+================
+- SICKBEARD connectivity complete
+- Improvements in search providers
 
 Changes in v0.24
 ================
