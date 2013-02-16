@@ -1,5 +1,5 @@
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
-#~ This file is part of NZBmegasearch by pillone.
+#~ This file is part of NZBmegasearch by 0byte.
 #~ 
 #~ NZBmegasearch is free software: you can redistribute it and/or modify
 #~ it under the terms of the GNU General Public License as published by
@@ -25,6 +25,11 @@ from flask import render_template
 
 import SearchModule
 
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+def legal():
+	return render_template('legal.html')
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+	
 def dosearch(args, cfg, ver_notify):
 	if(len(args)):
 		results = SearchModule.performSearch(args['q'], cfg )
@@ -48,10 +53,10 @@ def sanitize_html(value):
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 def summary_results(rawResults,strsearch):
+
 	results =[]
 	titles = []
 	sptitle_collection =[]
-
 	#~ sanitize
 	for provid in xrange(len(rawResults)):
 		for i in xrange(len(rawResults[provid])):

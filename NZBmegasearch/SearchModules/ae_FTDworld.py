@@ -31,7 +31,8 @@ class ae_FTDworld(SearchModule):
 		self.builtin = 1
 		self.login = 0
 		self.cookie=0
-		
+		self.inapi = 0
+				
 	def dologin(self, cfg):			
 		loginurl='http://ftdworld.net/api/login.php'
 		urlParams = dict(
@@ -66,7 +67,14 @@ class ae_FTDworld(SearchModule):
 			print e
 			return []
 		
-		dataglob = http_result.json()
+		try:
+			dataglob = http_result.json()
+		except Exception as e:
+			print e
+			return []
+		
+		if('data' not in dataglob ):
+			return []
 		data = dataglob['data'];	
 				
 		parsed_data = []

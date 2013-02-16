@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:newznab="http://www.newznab.com/DTD/2010/feeds/attributes/">
+<channel>
+<atom:link href="http://bogusurl.info/api?age=1500&amp;t=tvsearch&amp;cat=5040%2C5030" rel="self" type="application/rss+xml" />
+<title>NZBMegasearch</title>
+<description>NZBMegasearch Feed</description>
+<link>mega.nzbx.co</link>
+<language>en-gb</language>
+<webMaster>0byte</webMaster>
+<category></category>
+<image>
+	<url>http://mega.nzbx.co</url>
+	<title>NZBMegasearch</title>
+	<link>http://mega.nzbx.co</link>
+	<description>Visit mega.nzbx.co - We stand on the shoulders of giants</description>
+</image>
+
+<newznab:response offset="0" total="{{ num_results }}" />
+
+{% for row in results -%}
+<item>
+	<title>{{ row['title'] }}</title>
+	<guid isPermaLink="true">8888</guid>
+	<link>{{ row['url'] }}</link>
+	<comments>{{ row['providerurl'] }}</comments> 	
+	<pubDate>{{ row['age'] }}</pubDate> 	
+	<description>{{ row['title'] }} -- NZBMegasearch: {{ row['providertitle'] }}</description>
+	<enclosure url="{{ row['url'] }}" length="{{ row['filesize'] }}" type="application/x-nzb" />
+	<newznab:attr name="size" value="{{ row['filesize'] }}" />
+	<newznab:attr name="guid" value="123456" />
+	
+	{% if typeres == 1  -%}
+	<category>TV</category> 	
+	<newznab:attr name="category" value="5000" />
+	{%- endif %}
+		
+	{% if typeres == 0  -%}
+	<category>Movies</category> 	
+	<newznab:attr name="category" value="2000" />
+	<newznab:attr name="files" value="107" />
+	<newznab:attr name="poster" value="nzbmegasearch@mailinator.com (Maesterio)" />
+	<newznab:attr name="imdb" value="{{ idb }}" />
+	<newznab:attr name="imdbtitle" value="{{ row['title'] }}" />
+	<newznab:attr name="imdbtagline" value="" />
+	<newznab:attr name="imdbplot" value="" />
+	<newznab:attr name="imdbscore" value="" />
+	<newznab:attr name="genre" value="Adventure, Fantasy, Drama, Romance, Family" />
+	<newznab:attr name="imdbyear" value="" />
+	<newznab:attr name="imdbdirector" value="" />
+	<newznab:attr name="imdbactors" value="" />
+	<newznab:attr name="coverurl" value="" />
+	<newznab:attr name="backdropurl" value="" />
+	<newznab:attr name="grabs" value="20" />
+	<newznab:attr name="comments" value="20" />
+	<newznab:attr name="password" value="0" />
+	<newznab:attr name="usenetdate" value="{{ row['age'] }}" />
+	<newznab:attr name="group" value="" />
+	{%- endif %}	
+
+
+</item>
+{%- endfor %}
+	
+</channel>
+</rss>

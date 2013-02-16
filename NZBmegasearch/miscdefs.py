@@ -19,7 +19,12 @@ import requests
 from functools import wraps
 from flask import Response,request
 import config_settings
+from flask import render_template
 
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+def connectinfo():
+	return render_template('connectinfo.html')
+	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 def check_auth(username, password, cgen):
 	if(username == cgen['general_usr'] and password == cgen['general_pwd']):

@@ -59,16 +59,16 @@
 			<div class="topright">
 			
 			{% if vr['chk']  == 1 -%} 
-				<a href='https://github.com/pillone/usntssearch' style='color: #ff0000;'> Newer version available</a>
+				<a href='https://github.com/pillone/usntssearch' style='color: #ff0000;'> New ver. available</a>
 			{%- endif %}
 			
 			{% if vr['chk']  == -1 -%} 
 				<span style='color: #ff0000'> Error checking updates </span> 
 			{%- endif %}			
-			<a href= "config">Configure</a></div>		
+			<a href= "config">[Configure]</a> <a href= "connect">[Sickbeard]</a></div>		
 		{%- endif %}
 		{% if vr['chk']  == 0 -%} 
-			<div class="topright_tight"><a href= "config">Configure</a></div>
+			<div class="topright_tight"><a href= "config">[Configure]</a> <a href= "connect">[Sickbeard]</a></div>
 		{%- endif %}
 		<div class="bottomcenter">ver. {{ vr['curver'] }} -- 0byte</div>
 

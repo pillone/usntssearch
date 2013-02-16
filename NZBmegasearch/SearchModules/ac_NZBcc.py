@@ -29,6 +29,7 @@ class ac_NZBcc(SearchModule):
 		self.active = 1
 		self.builtin = 1
 		self.login = 0
+		self.inapi = 1
 		
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):

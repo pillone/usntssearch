@@ -19,8 +19,8 @@ from flask import Flask
 from flask import request, Response
 import os
 
-
 import SearchModule
+from ApiModule import ApiResponses
 import megasearch
 import config_settings
 import miscdefs
@@ -33,6 +33,7 @@ cfg,cgen = config_settings.read_conf()
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 #~ versioning check
 ver_notify = miscdefs.chk_current_ver() 
+
 print '~*~ ~*~ NZBMegasearcH (v. '+ str(ver_notify['curver']) + ') ~*~ ~*~'
 	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -67,6 +68,18 @@ def main_index():
 		return config_settings.config_read()
 	return megasearch.dosearch('', cfg, ver_notify)
 
+@app.route('/api', methods=['GET'])
+def api():
+	#~ print request.args
+	api = ApiResponses(cfg, ver_notify)
+	return api.dosearch(request.args)
+
+@app.route('/connect', methods=['GET'])
+def connect():
+	return miscdefs.connectinfo()
+ 
+ 
+
 @app.errorhandler(404)
 def generic_error(error):
 	return main_index()
@@ -75,9 +88,10 @@ def generic_error(error):
 if __name__ == "__main__":	
 	if( ver_notify['chk'] == -1):
 		ver_notify['chk'] = miscdefs.chk(ver_notify['curver'])
+
 	chost = '0.0.0.0'
 	cport = int(cgen['portno'])
 
 	print '>> Running on port '	+ str(cport)
-	app.run(host=chost,port=cport)
+	app.run(host=chost,port=cport, debug= True)
 

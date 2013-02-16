@@ -31,7 +31,7 @@ class Newznab(SearchModule):
 		self.baseURL = 'xxxx'
 		self.nzbDownloadBaseURL = 'NA'
 		self.builtin = 0
-	 
+		self.inapi = 1
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):
 		# Get text
@@ -41,60 +41,11 @@ class Newznab(SearchModule):
 			o='xml',
 			apikey=cfg['api']
 		)
-		baseURL = cfg['url'] + '/api'
-		
-		try:
-			http_result = requests.get(url=baseURL, params=urlParams, verify=False, timeout=cfg['timeout'])
-		except Exception as e:
-			print e
-			return []
-		data = http_result.text
-		data = data.replace("<newznab:attr", "<newznab_attr")
-		parsed_data = []
-			
-		#~ parse errors
-		try:
-			tree = ET.fromstring(data.encode('utf-8'))
-		except BaseException:
-			print "ERROR: Wrong API?"
-			return parsed_data
-		except Exception as e:
-			print e
-			return parsed_data
-
+		self.queryURL = cfg['url'] + '/api'
+		self.baseURL = cfg['url']
 		#~ homemade lazy stuff
 		humanprovider = urlparse.urlparse(cfg['url']).hostname			
-		humanprovider = humanprovider.replace("www.", "")
+		self.name = humanprovider.replace("www.", "")
 
-
-		#~ successful parsing
-		for elem in tree.iter('item'):
-			elem_title = elem.find("title")
-			elem_url = elem.find("enclosure")
-			elem_pubdate = elem.find("pubDate")
-			len_elem_pubdate = len(elem_pubdate.text)
-			#~ Tue, 22 Jan 2013 17:36:23 +0000
-			#~ removes gmt shift
-			elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate-6], "%a, %d %b %Y %H:%M:%S").timetuple())
-			elem_poster = ''
-			
-			for attr in elem.iter('newznab_attr'):
-				if('name' in attr.attrib):
-					if (attr.attrib['name'] == 'poster'): 
-						elem_poster = attr.attrib['value']
-
-			d1 = { 
-				'title': elem_title.text,
-				'poster': elem_poster,
-				'size': int(elem_url.attrib['length']),
-				'url': elem_url.attrib['url'],
-				'filelist_preview': '',
-				'group': '',
-				'posting_date_timestamp': float(elem_postdate),
-				'release_comments': '',
-				'ignore':0,
-				'provider':cfg['url'],
-				'providertitle':humanprovider
-			}
-			parsed_data.append(d1)
+		parsed_data = parse_xmlsearch(self, urlParams, cfg['timeout'])	
 		return parsed_data		

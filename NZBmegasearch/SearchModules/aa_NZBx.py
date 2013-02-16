@@ -28,6 +28,7 @@ class aa_NZBx(SearchModule):
 		self.active = 1
 		self.builtin = 1
 		self.login = 0
+		self.inapi = 1
 		
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):
@@ -41,11 +42,17 @@ class aa_NZBx(SearchModule):
 			print e
 			return []
 		
-		data = http_result.json()
+		try:
+			data = http_result.json()
+		except Exception as e:
+			print e
+			return []
 			
 		parsed_data = []
 		#~ data[i]['fromname'] removed for stability
 		for i in xrange(len(data)):
+			if('name' not in data[i]):
+				return []
 			d1 = {
 				'title': data[i]['name'],
 				'poster': 'poster',

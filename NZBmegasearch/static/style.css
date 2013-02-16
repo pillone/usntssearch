@@ -33,16 +33,7 @@ div#container
  styling for the tables 
    ------------------   */
  /*this is what we want the div to look like*/
-.topright{
-    display:block;
-	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
 
-    /*set the div in the top right corner*/
-    position:absolute;
-    top:0;
-    right:0;
-    width:250px;
-}
 
 .bottomcenter{
    display:block;
@@ -52,15 +43,43 @@ div#container
     right: 50%
 }
 
-.topright_tight{
+.topright{
     display:block;
-	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	font: bold 12px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
 
     /*set the div in the top right corner*/
     position:absolute;
     top:0;
     right:0;
-    width:80px;
+    width:240px;
+}
+
+.singleparagraph{
+	font-size: 14px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	color: #039;
+    margin: 45px auto;
+	width: 90%;
+	text-align: left;
+}
+
+.headers_singleparagraph{
+	font-size: 28px;
+	margin: 45px auto;
+	font-family:bold  "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	color: #039;
+}
+
+
+.topright_tight{
+    display:block;
+	font: bold 12px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+
+    /*set the div in the top right corner*/
+    position:absolute;
+    top:0;
+    right:0;
+    width:140px;
 }
 
 .titlemain {

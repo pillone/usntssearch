@@ -23,6 +23,63 @@ import xml.etree.cElementTree as ET
 import os
 import threading
 
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+def parse_xmlsearch(s_class, urlParams, tout): 
+	parsed_data = []
+
+	try:
+		http_result = requests.get(url=s_class.queryURL, params=urlParams, verify=False, timeout=tout)
+	except Exception as e:
+		print e
+		return []
+	data = http_result.text
+	data = data.replace("<newznab:attr", "<newznab_attr")
+
+	#~ parse errors
+	try:
+		tree = ET.fromstring(data.encode('utf-8'))
+	#~ except BaseException:
+		#~ print "ERROR: Wrong API?"
+		#~ return parsed_data
+	except Exception as e:
+		print e
+		return parsed_data
+
+	#~ successful parsing
+	for elem in tree.iter('item'):
+		elem_title = elem.find("title")
+		elem_url = elem.find("enclosure")
+		elem_pubdate = elem.find("pubDate")
+		len_elem_pubdate = len(elem_pubdate.text)
+		#~ Tue, 22 Jan 2013 17:36:23 +0000
+		#~ removes gmt shift
+		elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate-6], "%a, %d %b %Y %H:%M:%S").timetuple())
+		elem_poster = ''
+		
+		for attr in elem.iter('newznab_attr'):
+			if('name' in attr.attrib):
+				if (attr.attrib['name'] == 'poster'): 
+					elem_poster = attr.attrib['value']
+
+		d1 = { 
+			'title': elem_title.text,
+			'poster': elem_poster,
+			'size': int(elem_url.attrib['length']),
+			'url': elem_url.attrib['url'],
+			'filelist_preview': '',
+			'group': '',
+			'posting_date_timestamp': float(elem_postdate),
+			'release_comments': '',
+			'ignore':0,
+			'provider':s_class.baseURL,
+			'providertitle':s_class.name
+		}
+		parsed_data.append(d1)
+	return parsed_data		
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
 def loadSearchModules(moduleDir = None):
 	global loadedModules
 	# Find search modules
@@ -87,12 +144,12 @@ def performSearch(queryString,  cfg):
 
 	for t in threadHandles:
 		t.join()
-	print '=== All Search Threads Finished ==='
+	#~ print '** All Search Threads Finished **'
 	return globalResults
 
 def performSearchThread(queryString, loadedModules, lock,cfg):
 	localResults = []
-	print "Searching w " + cfg['type']
+	#~ print "Searching w " + cfg['type']
 	for module in loadedModules:
 		if( module.typesrch == cfg['type']):
 			localResults = module.search(queryString, cfg)
