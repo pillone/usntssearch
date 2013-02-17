@@ -41,5 +41,5 @@ class ad_NZBclub(SearchModule):
             sp= 1,
             ns= 1	)
            
-   		parsed_data = parse_xmlsearch(self, urlParams, cfg['timeout'])	
+   		parsed_data = self.parse_xmlsearch(urlParams, cfg['timeout'])	
 		return parsed_data

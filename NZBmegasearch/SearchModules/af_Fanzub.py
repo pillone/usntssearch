@@ -38,5 +38,5 @@ class af_Fanzub(SearchModule):
 			q=queryString
 		)
 
-		parsed_data = parse_xmlsearch(self, urlParams, cfg['timeout'])		
+		parsed_data = self.parse_xmlsearch(urlParams, cfg['timeout'])		
 		return parsed_data		

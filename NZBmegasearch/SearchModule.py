@@ -16,67 +16,15 @@
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #
 import requests
 import json
+import sys
 import datetime
 import time
 import config_settings
 import xml.etree.cElementTree as ET
 import os
+import copy
 import threading
 
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-def parse_xmlsearch(s_class, urlParams, tout): 
-	parsed_data = []
-
-	try:
-		http_result = requests.get(url=s_class.queryURL, params=urlParams, verify=False, timeout=tout)
-	except Exception as e:
-		print e
-		return []
-	data = http_result.text
-	data = data.replace("<newznab:attr", "<newznab_attr")
-
-	#~ parse errors
-	try:
-		tree = ET.fromstring(data.encode('utf-8'))
-	#~ except BaseException:
-		#~ print "ERROR: Wrong API?"
-		#~ return parsed_data
-	except Exception as e:
-		print e
-		return parsed_data
-
-	#~ successful parsing
-	for elem in tree.iter('item'):
-		elem_title = elem.find("title")
-		elem_url = elem.find("enclosure")
-		elem_pubdate = elem.find("pubDate")
-		len_elem_pubdate = len(elem_pubdate.text)
-		#~ Tue, 22 Jan 2013 17:36:23 +0000
-		#~ removes gmt shift
-		elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate-6], "%a, %d %b %Y %H:%M:%S").timetuple())
-		elem_poster = ''
-		
-		for attr in elem.iter('newznab_attr'):
-			if('name' in attr.attrib):
-				if (attr.attrib['name'] == 'poster'): 
-					elem_poster = attr.attrib['value']
-
-		d1 = { 
-			'title': elem_title.text,
-			'poster': elem_poster,
-			'size': int(elem_url.attrib['length']),
-			'url': elem_url.attrib['url'],
-			'filelist_preview': '',
-			'group': '',
-			'posting_date_timestamp': float(elem_postdate),
-			'release_comments': '',
-			'ignore':0,
-			'provider':s_class.baseURL,
-			'providertitle':s_class.name
-		}
-		parsed_data.append(d1)
-	return parsed_data		
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
@@ -132,11 +80,19 @@ def performSearch(queryString,  cfg):
 	globalResults = []
 	threadHandles = []
 	lock = threading.Lock()
-	
+
+	#~ prepare cpy modules (thread safety), not nice
+	neededModules = []
+	for index in xrange(len(cfg)):
+		for module in loadedModules:
+			if( module.typesrch == cfg[index]['type']):
+				neededModules.append(copy.copy(module))
+
 	for index in xrange(len(cfg)):
 		if(cfg[index]['valid']== '1'):
 			try:
-				t = threading.Thread(target=performSearchThread, args=(queryString,loadedModules,lock,cfg[index]))
+				#~ print neededModule 
+				t = threading.Thread(target=performSearchThread, args=(queryString,neededModules[index],lock,cfg[index]))
 				t.start()
 				threadHandles.append(t)
 			except Exception as e:
@@ -144,15 +100,12 @@ def performSearch(queryString,  cfg):
 
 	for t in threadHandles:
 		t.join()
-	#~ print '** All Search Threads Finished **'
+	#~ print '=== All Search Threads Finished ==='
 	return globalResults
 
-def performSearchThread(queryString, loadedModules, lock,cfg):
-	localResults = []
-	#~ print "Searching w " + cfg['type']
-	for module in loadedModules:
-		if( module.typesrch == cfg['type']):
-			localResults = module.search(queryString, cfg)
+def performSearchThread(queryString, neededModule, lock, cfg):
+	
+	localResults = neededModule.search(queryString, cfg)
 	lock.acquire()
 	globalResults.append(localResults)
 	try:
@@ -184,3 +137,72 @@ class SearchModule(object):
 	# Perform a search using the given query string
 	def search(self, queryString):
 		raise NotImplementedException('This scraper does not have a search function.')
+
+
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+	def parse_xmlsearch(self, urlParams, tout): 
+		parsed_data = []
+		#~ print self.queryURL  + ' ' + urlParams['apikey']
+		
+		try:
+			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=tout)
+					
+		except Exception as e:
+			print self.queryURL + ' -- ' + str(e)
+			#~ error_rlimit = str(e.args[0]).find('Max retries exceeded')
+			#~ print error_rlimit
+			return parsed_data
+					
+		data = http_result.text
+		data = data.replace("<newznab:attr", "<newznab_attr")
+
+		try:
+			tree = ET.fromstring(data.encode('utf-8'))
+		except Exception as e:
+			print e
+			return parsed_data
+
+		#~ successful parsing
+		for elem in tree.iter('item'):
+			elem_title = elem.find("title")
+			elem_url = elem.find("enclosure")
+			elem_pubdate = elem.find("pubDate")
+			len_elem_pubdate = len(elem_pubdate.text)
+			#~ Tue, 22 Jan 2013 17:36:23 +0000
+			#~ removes gmt shift
+			elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate-6], "%a, %d %b %Y %H:%M:%S").timetuple())
+			elem_poster = ''
+			
+			for attr in elem.iter('newznab_attr'):
+				if('name' in attr.attrib):
+					if (attr.attrib['name'] == 'poster'): 
+						elem_poster = attr.attrib['value']
+
+			d1 = { 
+				'title': elem_title.text,
+				'poster': elem_poster,
+				'size': int(elem_url.attrib['length']),
+				'url': elem_url.attrib['url'],
+				'filelist_preview': '',
+				'group': '',
+				'posting_date_timestamp': float(elem_postdate),
+				'release_comments': '',
+				'ignore':0,
+				'provider':self.baseURL,
+				'providertitle':self.name
+			}
+			parsed_data.append(d1)
+		
+		#~ print len(data)
+		#~ print self.name
+		#~ that's dirty
+
+		if(	len(parsed_data) == 0 and len(data) < 100):
+			limitpos = data.encode('utf-8').find('<error code="500"')
+			if(limitpos != -1):
+				print 'ERROR: Download/Search limit reached ' + self.queryURL
+		
+		return parsed_data		
+

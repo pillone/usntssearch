@@ -32,6 +32,7 @@ class Newznab(SearchModule):
 		self.nzbDownloadBaseURL = 'NA'
 		self.builtin = 0
 		self.inapi = 1
+		
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):
 		# Get text
@@ -43,9 +44,10 @@ class Newznab(SearchModule):
 		)
 		self.queryURL = cfg['url'] + '/api'
 		self.baseURL = cfg['url']
+		
 		#~ homemade lazy stuff
 		humanprovider = urlparse.urlparse(cfg['url']).hostname			
 		self.name = humanprovider.replace("www.", "")
-
-		parsed_data = parse_xmlsearch(self, urlParams, cfg['timeout'])	
+		parsed_data = self.parse_xmlsearch(urlParams, cfg['timeout'])	
+		
 		return parsed_data		

@@ -42,5 +42,5 @@ class ab_Findnzb(SearchModule):
 			apikey=self.api
 		)
 		
-		parsed_data = parse_xmlsearch(self, urlParams, cfg['timeout'])		
+		parsed_data = self.parse_xmlsearch(urlParams, cfg['timeout'])		
 		return parsed_data		
