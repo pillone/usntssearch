@@ -74,7 +74,7 @@ class ApiResponses:
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def sickbeard_req(self):	
 		if(self.args.has_key('rid')):
-			print 'requested series ID'
+			#~ print 'requested series ID'
 			#~ request rage
 			tvrage_show = self.tvrage_getshowinfo(self.args['rid'])	
 			if(len(tvrage_show['showtitle'])): 
@@ -162,12 +162,12 @@ class ApiResponses:
 	def generate_tvserie_nabresponse(self,tvrage_show ):
 		#~ compile string
 		season_num = self.args.get('season',-1, type=int)
-		serie_search_str = " ".join(tvrage_show['showtitle'].split()).replace(" ", ".").lower()
+		serie_search_str = SearchModule.sanitize_strings(tvrage_show['showtitle'])
 		if(self.args.has_key('ep')):
 			ep_num = self.args.get('ep',-1, type=int)			
-			serie_search_str = serie_search_str.replace("'", "") + '.s%02d' % season_num + 'e%02d' % ep_num
+			serie_search_str = serie_search_str + '.s%02d' % season_num + 'e%02d' % ep_num
 		else:	
-			serie_search_str = serie_search_str.replace("'", "") + '.s%02d' % season_num 
+			serie_search_str = serie_search_str + '.s%02d' % season_num 
 		self.typesearch = 1
 		self.searchstring = serie_search_str
 		#~ compile results				

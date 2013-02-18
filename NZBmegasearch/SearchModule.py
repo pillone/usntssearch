@@ -1,5 +1,5 @@
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
-#~ This file is part of NZBmegasearch by pillone.
+#~ This file is part of NZBmegasearch by 0byte.
 #~ 
 #~ NZBmegasearch is free software: you can redistribute it and/or modify
 #~ it under the terms of the GNU General Public License as published by
@@ -25,9 +25,9 @@ import os
 import copy
 import threading
 
-
+	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
+	
 def loadSearchModules(moduleDir = None):
 	global loadedModules
 	# Find search modules
@@ -73,6 +73,10 @@ def loadSearchModules(moduleDir = None):
 # Perform a search using all available modules
 def performSearch(queryString,  cfg):
 	queryString = queryString.strip()
+
+	queryString = sanitize_strings(queryString)
+	#~ print queryString
+	
 	# Perform the search using every module
 	global globalResults
 	if 'loadedModules' not in globals():
@@ -101,8 +105,27 @@ def performSearch(queryString,  cfg):
 	for t in threadHandles:
 		t.join()
 	#~ print '=== All Search Threads Finished ==='
+
 	return globalResults
 
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+def sanitize_html(value):
+	if(len(value)):		
+		value = value.lower().replace("<\/b>", "").replace("<b>", "").replace("&quot;", "").replace("&lt;", "").replace("&gt;", "")
+	return value
+		
+def sanitize_strings(value):
+	if(len(value)):
+		value = sanitize_html(value)
+		value = value.replace(".", " ").replace("'", "").replace("-", " ").replace(":", " ").replace('"', " ").replace('(', " ").replace(')', ' ').replace('-', ' ').replace('*', ' ').replace('&', ' ').replace(';', ' ')
+		value = " ".join(value.split()).replace(" ", ".") 
+		#~ print value
+	return value
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	
 def performSearchThread(queryString, neededModule, lock, cfg):
 	
 	localResults = neededModule.search(queryString, cfg)

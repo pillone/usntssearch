@@ -10,6 +10,11 @@ Install
 - Enter in the NZBmegasearch directory and run "python mega2.py" to start NZBmegasearch
 - Go to localhost:5000 to configure
 
+Changes in v0.252
+================
+- Improved search query sanitizing for better provider search 
+- Improved SICKBEARD search queries for shows with duplicates, thanks judhat2
+
 Changes in v0.251
 ================
 - Big bug fixed in searches with many Newsznab providers (a bad one)

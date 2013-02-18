@@ -37,22 +37,51 @@ def dosearch(args, cfg, ver_notify):
 		return cleanUpResults(results, ver_notify, args)
 	else:
 		return render_template('main_page.html', vr=ver_notify )
-		
+		 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
-
-def sanitize_html(value):
-	if(len(value)):
-		value = value.replace("<\/b>", "")
-		value = value.replace("<b>", "")
-		value = value.replace("&quot;", "")	
-	return value
-
-
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
 def summary_results(rawResults,strsearch):
+
+	results =[]
+	titles = []
+	sptitle_collection =[]
+
+	#~ all in one array
+	for provid in xrange(len(rawResults)):
+		for z in xrange(len(rawResults[provid])):
+			rawResults[provid][z]['title'] = SearchModule.sanitize_html(rawResults[provid][z]['title'])
+			title = SearchModule.sanitize_strings(rawResults[provid][z]['title'])
+			titles.append(title)
+			sptitle_collection.append(Set(title.split(".")))
+			results.append(rawResults[provid][z])
+			
+	strsearch1 = SearchModule.sanitize_strings(strsearch)
+	strsearch1_collection = Set(strsearch1.split("."))	
+	
+	print 'Sanitized Query: [' + strsearch1 + ']'
+	
+	for z in xrange(len(results)):
+		findone = 0 
+		results[z]['ignore'] = 0			
+		intrs = strsearch1_collection.intersection(sptitle_collection[z])
+		if ( len(intrs) ==  len(strsearch1_collection)):			
+			findone = 1
+		else:
+			results[z]['ignore'] = 1	
+
+		if(findone):
+			#~ print titles[z]
+			for v in xrange(z+1,len(results)):
+				if(titles[z] == titles[v]):
+					sz1 = float(results[z]['size'])
+					sz2 = float(results[v]['size'])
+					if( abs(sz1-sz2) < 5000000):
+						results[z]  ['ignore'] = 1
+
+	return results
+	
+'''	
+def summary_results2(rawResults,strsearch):
 
 	results =[]
 	titles = []
@@ -100,7 +129,7 @@ def summary_results(rawResults,strsearch):
 	#~ results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
 					
 	return results
-
+'''
  
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
