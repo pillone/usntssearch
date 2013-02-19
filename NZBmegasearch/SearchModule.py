@@ -119,7 +119,7 @@ def sanitize_html(value):
 def sanitize_strings(value):
 	if(len(value)):
 		value = sanitize_html(value)
-		value = value.replace(".", " ").replace("'", "").replace("-", " ").replace(":", " ").replace('"', " ").replace('(', " ").replace(')', ' ').replace('-', ' ').replace('*', ' ').replace('&', ' ').replace(';', ' ')
+		value = value.replace(".", " ").replace("'", "").replace("-", " ").replace(":", " ").replace('"', " ").replace('(', " ").replace(')', ' ').replace('-', ' ').replace('*', ' ').replace('&', ' ').replace(';', ' ').replace('!', ' ')
 		value = " ".join(value.split()).replace(" ", ".") 
 		#~ print value
 	return value
@@ -197,7 +197,12 @@ class SearchModule(object):
 			#~ removes gmt shift
 			elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate-6], "%a, %d %b %Y %H:%M:%S").timetuple())
 			elem_poster = ''
-			
+
+			elem_guid = elem.find("guid")
+			release_details = self.baseURL
+			if(elem_guid is not None):
+				release_details = elem_guid.text
+						
 			for attr in elem.iter('newznab_attr'):
 				if('name' in attr.attrib):
 					if (attr.attrib['name'] == 'poster'): 
@@ -211,7 +216,7 @@ class SearchModule(object):
 				'filelist_preview': '',
 				'group': '',
 				'posting_date_timestamp': float(elem_postdate),
-				'release_comments': '',
+				'release_comments': release_details,
 				'ignore':0,
 				'provider':self.baseURL,
 				'providertitle':self.name

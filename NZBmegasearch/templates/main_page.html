@@ -16,7 +16,11 @@
 			{% if results -%}
 			<table id="results" summary="Search Results">
 				<thead>
-					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t">Title</a></th><th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s">Size</a></th> <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d">Days</a></th> <th scope="col" class=providercell><a href="s?q={{ args['q'] }}&order=p">Provider</a></th></tr>
+					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t">Title</a></th>
+					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s">Size</a></th> 
+					    <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d">Days</a></th> 
+					    <th scope="col" class=providercell><a href="s?q={{ args['q'] }}&order=p">Provider Link</a></th>
+					</tr>
 				</thead>
 				<tbody>
 				{% for row in results -%}
@@ -25,7 +29,7 @@
 						<td class="titlecell"><a href= "{{ row['url'] }}">{{ row['title'] }}</a></td>
 						<td class="sizecell">{{ row['filesize'] }}</td>
 						<td class="datecell">{{ row['age'] }}</td>
-						<td class="providercell"> <a href= "{{ row['providerurl'] }}">{{ row['providertitle'] }}</a></td>
+						<td class="providercell"> <a href= "{{ row['details'] }}">{{ row['providertitle'] }}</a></td>
 					</tr>
 					{%- endif %}
 				{%- endfor %}
@@ -37,7 +41,10 @@
 			{% if exist -%}
 			<table id="results" summary="Detected duplicates">
 				<thead>
-					<tr><th scope="col" class=titlecell>Detected duplicates and weak matches</th><th scope="col" class=sizecell>Size</th> <th scope="col" class=datecell>Days</th> <th scope="col" class=providercell>Provider</th></tr>
+					<tr><th scope="col" class=titlecell>Detected duplicates and weak matches</th>
+						<th scope="col" class=sizecell>Size</th> 
+						<th scope="col" class=datecell>Days</th> 
+						<th scope="col" class=providercell>Provider</th></tr>
 				</thead>
 				<tbody>
 				{% for row in results -%}
@@ -46,7 +53,7 @@
 						<td class="titlecell"><a href= "{{ row['url'] }}">{{ row['title'] }}</a></td>
 						<td class="sizecell">{{ row['filesize'] }}</td>
 						<td class="datecell">{{ row['age'] }}</td>
-						<td class="providercell"> <a href= "{{ row['providerurl'] }}">{{ row['providertitle'] }}</a></td>
+						<td class="providercell"> <a href= "{{ row['details'] }}">{{ row['providertitle'] }}</a></td>
 					</tr>
 					{%- endif %}
 				{%- endfor %}

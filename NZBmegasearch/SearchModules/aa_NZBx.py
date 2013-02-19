@@ -1,5 +1,5 @@
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
-#~ This file is part of NZBmegasearch by pillone.
+#~ This file is part of NZBmegasearch by 0byte.
 #~ 
 #~ NZBmegasearch is free software: you can redistribute it and/or modify
 #~ it under the terms of the GNU General Public License as published by
@@ -18,6 +18,9 @@ from SearchModule import *
 
 # Search on NZBx.co
 class aa_NZBx(SearchModule):
+	
+	
+	
 	# Set up class variables
 	def __init__(self):
 		super(aa_NZBx, self).__init__()
@@ -53,6 +56,7 @@ class aa_NZBx(SearchModule):
 		for i in xrange(len(data)):
 			if('name' not in data[i]):
 				return []
+			release_details = 'https://nzbx.co/d?'+data[i]['guid']
 			d1 = {
 				'title': data[i]['name'],
 				'poster': 'poster',
@@ -61,7 +65,7 @@ class aa_NZBx(SearchModule):
 				'filelist_preview': '',
 				'group': data[i]['groupid'],
 				'posting_date_timestamp': int(data[i]['postdate']),
-				'release_comments': '',
+				'release_comments': release_details,
 				'ignore':0,
 				'provider':self.baseURL,
 				'providertitle':self.name
@@ -69,6 +73,6 @@ class aa_NZBx(SearchModule):
 
 			if d1['title'] is None:
 				d1['title'] = 'None'
-
+			
 			parsed_data.append(d1)
 		return parsed_data

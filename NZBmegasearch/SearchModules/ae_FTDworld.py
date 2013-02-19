@@ -86,7 +86,7 @@ class ae_FTDworld(SearchModule):
 							'filelist_preview': '',
 							'group': '',
 							'posting_date_timestamp': int(data[i]['Created']),
-							'release_comments': '',
+							'release_comments': self.nzbDownloadBaseURL + data[i]['id'],
 							'ignore':0,
 							'provider':self.baseURL,
 							'providertitle':self.name

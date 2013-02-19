@@ -108,7 +108,7 @@ class ac_NZBcc(SearchModule):
 					'filelist_preview': filelist_preview,
 					'group': group,
 					'posting_date_timestamp': posting_date_timestamp,
-					'release_comments': release_comments,
+					'release_comments': self.baseURL,
 					'ignore':0,
 					'provider':self.baseURL,
 					'providertitle':self.name

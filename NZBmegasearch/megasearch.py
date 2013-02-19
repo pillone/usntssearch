@@ -168,12 +168,14 @@ def cleanUpResults(results, ver_notify, args):
 		rd = dateutil.relativedelta.relativedelta(dt2, dt1)
 		#~ approximated date, whatev
 		totdays = rd.years * 365  + rd.months * 31  + rd.days
+		#~ print results[i]['release_comments']
 		
 		niceResults.append({
 			'url':results[i]['url'],
 			'title':results[i]['title'],
 			'filesize':str(round(szf,1)) + mgsz,
 			'age':totdays,
+			'details':results[i]['release_comments'],
 			'providerurl':results[i]['provider'],
 			'providertitle':results[i]['providertitle'],
 			'ignore' : results[i]['ignore']
