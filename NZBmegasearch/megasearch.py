@@ -150,6 +150,8 @@ def cleanUpResults(results, ver_notify, args):
 			results = sorted(results, key=itemgetter('providertitle'))
 		if	(args['order']=='d'):
 			results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
+		if	(args['order']=='c'):
+			results = sorted(results, key=itemgetter('categ'), reverse=True) 
 			
 	#~ do nice 
 	for i in xrange(len(results)):
@@ -169,11 +171,21 @@ def cleanUpResults(results, ver_notify, args):
 		#~ approximated date, whatev
 		totdays = rd.years * 365  + rd.months * 31  + rd.days
 		#~ print results[i]['release_comments']
-		
+
+		category_str = '' 
+		keynum = len(results[i]['categ'])
+		keycount = 0
+		for key in results[i]['categ'].keys():
+			category_str = category_str + key
+			keycount = keycount + 1
+			if (keycount < 	keynum):
+			 	 category_str =  category_str + ' - ' 
+
 		niceResults.append({
 			'url':results[i]['url'],
 			'title':results[i]['title'],
 			'filesize':str(round(szf,1)) + mgsz,
+			'cat' : category_str,
 			'age':totdays,
 			'details':results[i]['release_comments'],
 			'providerurl':results[i]['provider'],

@@ -17,9 +17,10 @@
 			<table id="results" summary="Search Results">
 				<thead>
 					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t">Title</a></th>
+					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=c">Type</a></th> 
 					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s">Size</a></th> 
 					    <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d">Days</a></th> 
-					    <th scope="col" class=providercell><a href="s?q={{ args['q'] }}&order=p">Provider Link</a></th>
+					    <th scope="col" class=providercell><a href="s?q={{ args['q'] }}&order=p">Comments</a></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -27,6 +28,7 @@
 					{% if row['ignore'] == 0  -%}
 					<tr>
 						<td class="titlecell"><a href= "{{ row['url'] }}">{{ row['title'] }}</a></td>
+						<td class="sizecell">{{ row['cat'] }}</td>
 						<td class="sizecell">{{ row['filesize'] }}</td>
 						<td class="datecell">{{ row['age'] }}</td>
 						<td class="providercell"> <a href= "{{ row['details'] }}">{{ row['providertitle'] }}</a></td>
@@ -42,15 +44,17 @@
 			<table id="results" summary="Detected duplicates">
 				<thead>
 					<tr><th scope="col" class=titlecell>Detected duplicates and weak matches</th>
+					    <th scope="col" class=sizecell>Type</a></th> 					
 						<th scope="col" class=sizecell>Size</th> 
 						<th scope="col" class=datecell>Days</th> 
-						<th scope="col" class=providercell>Provider</th></tr>
+						<th scope="col" class=providercell>Comments</th></tr>
 				</thead>
 				<tbody>
 				{% for row in results -%}
 					{% if row['ignore']  -%}
 					<tr>
 						<td class="titlecell"><a href= "{{ row['url'] }}">{{ row['title'] }}</a></td>
+						<td class="sizecell">{{ row['cat'] }}</td>						
 						<td class="sizecell">{{ row['filesize'] }}</td>
 						<td class="datecell">{{ row['age'] }}</td>
 						<td class="providercell"> <a href= "{{ row['details'] }}">{{ row['providertitle'] }}</a></td>

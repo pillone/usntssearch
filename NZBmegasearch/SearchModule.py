@@ -189,6 +189,8 @@ class SearchModule(object):
 
 		#~ successful parsing
 		for elem in tree.iter('item'):
+			category_found= {}
+
 			elem_title = elem.find("title")
 			elem_url = elem.find("enclosure")
 			elem_pubdate = elem.find("pubDate")
@@ -202,11 +204,17 @@ class SearchModule(object):
 			release_details = self.baseURL
 			if(elem_guid is not None):
 				release_details = elem_guid.text
-						
+
 			for attr in elem.iter('newznab_attr'):
 				if('name' in attr.attrib):
 					if (attr.attrib['name'] == 'poster'): 
 						elem_poster = attr.attrib['value']
+					if (attr.attrib['name'] == 'category'): 						
+						val = attr.attrib['value']
+						if(val in self.category_inv):
+							category_found[self.category_inv[val]] = 1
+			if(len(category_found) == 0):
+				category_found['N/A'] = 1
 
 			d1 = { 
 				'title': elem_title.text,
@@ -217,16 +225,14 @@ class SearchModule(object):
 				'group': '',
 				'posting_date_timestamp': float(elem_postdate),
 				'release_comments': release_details,
+				'categ':category_found,
 				'ignore':0,
 				'provider':self.baseURL,
 				'providertitle':self.name
 			}
 			parsed_data.append(d1)
-		
-		#~ print len(data)
-		#~ print self.name
-		#~ that's dirty
-
+			
+		#~ that's dirty but effective
 		if(	len(parsed_data) == 0 and len(data) < 100):
 			limitpos = data.encode('utf-8').find('<error code="500"')
 			if(limitpos != -1):
@@ -234,3 +240,11 @@ class SearchModule(object):
 		
 		return parsed_data		
 
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+	#~ def human_cat(self, parsed_data): 
+		#~ 
+		#~ for i in xrange(len(parsed_data))
+			#~ for c in xrange(len(self.categories))
+				#~ for j in xrange(len(self.categories))
+			

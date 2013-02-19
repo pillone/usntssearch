@@ -32,7 +32,26 @@ class aa_NZBx(SearchModule):
 		self.builtin = 1
 		self.login = 0
 		self.inapi = 1
-		
+		self.categories = {'Console': [1000,1010,1020,1030,1040,1050,1060,1070,1080],
+							'Movie' : [2000, 2010, 2020, 2040, 2050, 2060, 2030],
+							'HD' : [2040, 2050, 2060],
+							'SD' : [2030],
+							'Audio' : [3000, 3010, 3020, 3030, 3040],
+							'PC' : [4000, 4010, 4020, 4030, 4040, 4050, 4060, 4070],
+							'TV' : [5000, 5010, 5020, 5030, 5050, 5060, 5070, 5080],
+							'SD' : [5030],
+							'HD' : [5040],
+							'XXX' : [6000, 6010, 6020, 6030, 6040, 6050, 6060],
+							'Other' : [7000, 7010],
+							'Ebook' : [7020],
+							'Comics' : [7030],
+							} 
+		self.category_inv= {}
+		for key in self.categories.keys():
+			for i in xrange(len(self.categories[key])):
+				val = self.categories[key][i]
+				self.category_inv[str(val)] = key
+
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):
 		# Get JSON
@@ -56,6 +75,17 @@ class aa_NZBx(SearchModule):
 		for i in xrange(len(data)):
 			if('name' not in data[i]):
 				return []
+
+			category_found = {}
+			if('categoryid' in data[i]):
+				val = str(data[i]['categoryid'])
+				if(val in self.category_inv):
+					category_found[self.category_inv[val]] = 1
+
+			if(len(category_found) == 0):
+				category_found['N/A'] = 1
+
+	
 			release_details = 'https://nzbx.co/d?'+data[i]['guid']
 			d1 = {
 				'title': data[i]['name'],
@@ -66,6 +96,7 @@ class aa_NZBx(SearchModule):
 				'group': data[i]['groupid'],
 				'posting_date_timestamp': int(data[i]['postdate']),
 				'release_comments': release_details,
+				'categ':category_found,				
 				'ignore':0,
 				'provider':self.baseURL,
 				'providertitle':self.name
