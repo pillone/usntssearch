@@ -137,7 +137,7 @@ def summary_results2(rawResults,strsearch):
 def cleanUpResults(results, ver_notify, args):
 	niceResults = []
 	existduplicates = 0
-	
+	 
 	#~ sorting
 	if 'order' not in args:
 		results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
