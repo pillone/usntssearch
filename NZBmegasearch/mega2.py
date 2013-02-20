@@ -93,5 +93,5 @@ if __name__ == "__main__":
 	cport = int(cgen['portno'])
 
 	print '>> Running on port '	+ str(cport)
-	app.run(host=chost,port=cport,debug=True)
+	app.run(host=chost,port=cport)
 
