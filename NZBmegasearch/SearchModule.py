@@ -24,7 +24,7 @@ import xml.etree.cElementTree as ET
 import os
 import copy
 import threading
-
+import re
 	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	
@@ -113,13 +113,14 @@ def performSearch(queryString,  cfg):
 
 def sanitize_html(value):
 	if(len(value)):		
-		value = value.lower().replace("<\/b>", "").replace("<b>", "").replace("&quot;", "").replace("&lt;", "").replace("&gt;", "")
+		value = value.replace("<\/b>", "").replace("<b>", "").replace("&quot;", "").replace("&lt;", "").replace("&gt;", "")
 	return value
 		
 def sanitize_strings(value):
 	if(len(value)):
-		value = sanitize_html(value)
-		value = value.replace(".", " ").replace("'", "").replace("-", " ").replace(":", " ").replace('"', " ").replace('(', " ").replace(')', ' ').replace('-', ' ').replace('*', ' ').replace('&', ' ').replace(';', ' ').replace('!', ' ')
+		value = sanitize_html(value).lower()
+		#~ value = value.replace(".", " ").replace("'", "").replace("-", " ").replace(":", " ").replace('"', " ").replace('(', " ").replace(')', ' ').replace('-', ' ').replace('*', ' ').replace('&', ' ').replace(';', ' ').replace('!', ' ')
+		value = re.compile("[^A-Za-z0-99]").sub(" ",value)
 		value = " ".join(value.split()).replace(" ", ".") 
 		#~ print value
 	return value
@@ -204,18 +205,21 @@ class SearchModule(object):
 			release_details = self.baseURL
 			if(elem_guid is not None):
 				release_details = elem_guid.text
-
 			for attr in elem.iter('newznab_attr'):
 				if('name' in attr.attrib):
 					if (attr.attrib['name'] == 'poster'): 
 						elem_poster = attr.attrib['value']
-					if (attr.attrib['name'] == 'category'): 						
+					if (attr.attrib['name'] == 'category'):
 						val = attr.attrib['value']
 						if(val in self.category_inv):
 							category_found[self.category_inv[val]] = 1
+						#~ print elem_title.text	
+						#~ print val	
+						#~ print category_found
+						#~ print '=========='
 			if(len(category_found) == 0):
 				category_found['N/A'] = 1
-
+			
 			d1 = { 
 				'title': elem_title.text,
 				'poster': elem_poster,
@@ -230,6 +234,7 @@ class SearchModule(object):
 				'provider':self.baseURL,
 				'providertitle':self.name
 			}
+
 			parsed_data.append(d1)
 			
 		#~ that's dirty but effective
@@ -240,11 +245,3 @@ class SearchModule(object):
 		
 		return parsed_data		
 
-	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-	#~ def human_cat(self, parsed_data): 
-		#~ 
-		#~ for i in xrange(len(parsed_data))
-			#~ for c in xrange(len(self.categories))
-				#~ for j in xrange(len(self.categories))
-			

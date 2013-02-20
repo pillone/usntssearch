@@ -32,7 +32,7 @@ class ae_FTDworld(SearchModule):
 		self.login = 0
 		self.cookie=0
 		self.inapi = 0
-				
+ 	
 	def dologin(self, cfg):			
 		loginurl='http://ftdworld.net/api/login.php'
 		urlParams = dict(
@@ -85,6 +85,7 @@ class ae_FTDworld(SearchModule):
 							'url': self.nzbDownloadBaseURL + data[i]['id'],
 							'filelist_preview': '',
 							'group': '',
+							'categ': {'N/A':1},
 							'posting_date_timestamp': int(data[i]['Created']),
 							'release_comments': self.nzbDownloadBaseURL + data[i]['id'],
 							'ignore':0,

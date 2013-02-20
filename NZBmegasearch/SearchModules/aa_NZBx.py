@@ -82,7 +82,6 @@ class aa_NZBx(SearchModule):
 			category_found = {}
 			if('categoryid' in data[i]):
 				val = str(data[i]['categoryid'])
-				print val
 				if(val in self.category_inv):
 					category_found[self.category_inv[val]] = 1
 			if(len(category_found) == 0):

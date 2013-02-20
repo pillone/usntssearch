@@ -34,28 +34,26 @@ class ab_Findnzb(SearchModule):
 		self.login = 0
 		self.inapi = 1
 
-		self.categories = {'Console': [1000,1010,1020,1030,1040,1050,1060,1070,1080],
-							'Movie' : [2000, 2010, 2020, 2040, 2050, 2060, 2030],
-							'HD' : [2040, 2050, 2060],
-							'SD' : [2030],
-							'Audio' : [3000, 3010, 3020, 3030, 3040],
-							'PC' : [4000, 4010, 4020, 4030, 4040, 4050, 4060, 4070],
-							'TV' : [5000,  5020, 5030, 5050, 5060],
-							'SD' : [5030],
-							'HD' : [5040],
-							'XXX' : [6000, 6010, 6020, 6030, 6040],
-							'Other' : [7000, 7010],
-							'Ebook' : [7020],
-							'Comics' : [7030],
+		self.categories = {'Console': {'code':[1000,1010,1020,1030,1040,1050,1060,1070,1080], 'pretty': 'Console'},
+							'Movie' : {'code': [2000, 2010, 2020], 'pretty': 'Movie'},
+ 							'Movie_HD' : {'code': [2040, 2050, 2060], 'pretty': 'HD'},
+							'Movie_SD' : {'code': [2030], 'pretty': 'SD'},
+							'Audio' : {'code': [3000, 3010, 3020, 3030, 3040], 'pretty': 'Audio'},
+							'PC' : {'code': [4000, 4010, 4020, 4030, 4040, 4050, 4060, 4070], 'pretty': 'PC'},
+							'TV' : {'code': [5000,  5020], 'pretty': 'TV'},
+							'TV_SD' : {'code': [5030], 'pretty': 'SD'},
+							'TV_HD' : {'code': [5040], 'pretty': 'HD'},
+							'XXX' : {'code': [6000, 6010, 6020, 6030, 6040], 'pretty': 'XXX'},
+							'Other' : {'code': [7000, 7010], 'pretty': 'Other'},
+							'Ebook' : {'code': [7020], 'pretty': 'Ebook'},
+							'Comics' : {'code': [7030], 'pretty': 'Comics'},
 							} 
 		self.category_inv= {}
 		for key in self.categories.keys():
-			for i in xrange(len(self.categories[key])):
-				val = self.categories[key][i]
-				self.category_inv[str(val)] = key
-		#~ print self.category_inv
-		#~ if ('2030' in self.category_inv):
-			#~ print 'IJDSOAJSsssssssssssssssssssssssssssssss'
+			prettyval = self.categories[key]['pretty']
+			for i in xrange(len(self.categories[key]['code'])):
+				val = self.categories[key]['code'][i]
+				self.category_inv[str(val)] = prettyval
 		
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):		

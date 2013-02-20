@@ -1,5 +1,5 @@
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
-#~ This file is part of NZBmegasearch by pillone.
+#~ This file is part of NZBmegasearch by 0byte.
 #~ 
 #~ NZBmegasearch is free software: you can redistribute it and/or modify
 #~ it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ import sys
 import SearchModule
 
 MAX_PROVIDER_NUMBER = 10
-MAX_TIMEOUT = 15
+MAX_TIMEOUT = 5
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 

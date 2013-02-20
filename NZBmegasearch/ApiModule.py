@@ -58,7 +58,7 @@ class ApiResponses:
 	def couchpotato_req(self):	
 	
 		if(self.args.has_key('imdbid')):
-			print 'requested movie ID'
+			# print 'requested movie ID'
 			#~ request imdb
 			#~ http://deanclatworthy.com/imdb/?id=tt1673434
 			#~ http://imdbapi.org/?id=tt1673434
@@ -224,15 +224,15 @@ class ApiResponses:
 					'providerurl':results[i]['provider']
 				})
 		
-		kindofreq = ''
+		kindofreq = datetime.datetime.now().strftime("%Y-%m-%d %H:%M ") 
 		idbinfo = ''
 		if(self.typesearch == 0):
 			idbinfo = self.args['imdbid']
-			kindofreq = '>>  COUCHPOTATO REQ: '
+			kindofreq = kindofreq + ' CP '
 		if(self.typesearch == 1):
 			idbinfo = ''
-			kindofreq = '>>  SICKBEARD REQ: '
+			kindofreq = kindofreq + ' SB ' + self.args['rid'] + ' '
 			
-		print kindofreq + self.searchstring + ' ' + str(len(niceResults)) + '/' +  str(len(results))
+		print kindofreq + self.searchstring + ' ' + str(len(niceResults)) + ' ' +  str(len(results))
 		return render_template('api.html',results=niceResults, num_results=len(niceResults), typeres= self.typesearch, idb = idbinfo)
 	

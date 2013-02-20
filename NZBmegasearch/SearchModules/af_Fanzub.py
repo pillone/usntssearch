@@ -1,5 +1,5 @@
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
-#~ This file is part of NZBmegasearch by pillone.
+#~ This file is part of NZBmegasearch by 0byte.
 #~ 
 #~ NZBmegasearch is free software: you can redistribute it and/or modify
 #~ it under the terms of the GNU General Public License as published by
@@ -31,7 +31,28 @@ class af_Fanzub(SearchModule):
 		self.builtin = 1
 		self.login = 0
 		self.inapi = 1
-		
+
+		self.categories = {'Console': {'code':[], 'pretty': ''},
+							'Movie' : {'code': ['Anime'], 'pretty': 'Anime'},
+ 							'Movie_HD' : {'code': ['Anime'], 'pretty': 'Anime'},
+							'Movie_SD' : {'code': ['Anime'], 'pretty': 'Anime'},
+							'Audio' : {'code': [], 'pretty': ''},
+							'PC' : {'code': [], 'pretty': ''},
+							'TV' : {'code': ['Anime'], 'pretty': 'Anime'},
+							'TV_SD' : {'code': ['Anime'], 'pretty': 'Anime'},
+							'TV_HD' : {'code': ['Anime'], 'pretty': 'Anime'},
+							'XXX' : {'code': [], 'pretty': ''},
+							'Other' : {'code': [], 'pretty': ''},
+							'Ebook' : {'code': [], 'pretty': ''},
+							'Comics' : {'code': [], 'pretty': ''},
+							} 
+		self.category_inv= {}
+		for key in self.categories.keys():
+			prettyval = self.categories[key]['pretty']
+			for i in xrange(len(self.categories[key]['code'])):
+				val = self.categories[key]['code'][i]
+				self.category_inv[str(val)] = prettyval
+						
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):		
 		urlParams = dict(
@@ -39,4 +60,7 @@ class af_Fanzub(SearchModule):
 		)
 
 		parsed_data = self.parse_xmlsearch(urlParams, cfg['timeout'])		
+		for i in xrange(len(parsed_data)):
+			parsed_data[i]['categ'] = {'Anime': 1}
+
 		return parsed_data		

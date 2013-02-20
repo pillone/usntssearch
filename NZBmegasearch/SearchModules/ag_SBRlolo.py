@@ -31,7 +31,26 @@ class ag_SBRlolo(SearchModule):
 		self.builtin = 1
 		self.login = 0
 		self.inapi = 1
-		
+		self.categories = {'Console': {'code':[], 'pretty': 'Console'},
+							'Movie' : {'code': [], 'pretty': 'Movie'},
+ 							'Movie_HD' : {'code': [], 'pretty': 'HD'},
+							'Movie_SD' : {'code': [], 'pretty': 'SD'},
+							'Audio' : {'code': [], 'pretty': 'Audio'},
+							'PC' : {'code': [], 'pretty': 'PC'},
+							'TV' : {'code': [5000,  5020], 'pretty': 'TV'},
+							'TV_SD' : {'code': [5030], 'pretty': 'SD'},
+							'TV_HD' : {'code': [5040], 'pretty': 'HD'},
+							'XXX' : {'code': [], 'pretty': 'XXX'},
+							'Other' : {'code': [], 'pretty': 'Other'},
+							'Ebook' : {'code': [], 'pretty': 'Ebook'},
+							'Comics' : {'code': [], 'pretty': 'Comics'},
+							} 
+		self.category_inv= {}
+		for key in self.categories.keys():
+			prettyval = self.categories[key]['pretty']
+			for i in xrange(len(self.categories[key]['code'])):
+				val = self.categories[key]['code'][i]
+				self.category_inv[str(val)] = prettyval		
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):		
 		urlParams = dict(

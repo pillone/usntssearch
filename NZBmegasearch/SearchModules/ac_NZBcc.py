@@ -31,6 +31,26 @@ class ac_NZBcc(SearchModule):
 		self.login = 0
 		self.inapi = 1
 		
+		self.categories = {'Console': {'code':[], 'pretty': 'Console'},
+							'Movie' : {'code': [], 'pretty': 'Movie'},
+ 							'Movie_HD' : {'code': [], 'pretty': 'HD'},
+							'Movie_SD' : {'code': [], 'pretty': 'SD'},
+							'Audio' : {'code': [], 'pretty': 'Audio'},
+							'PC' : {'code': [], 'pretty': 'PC'},
+							'TV' : {'code': [], 'pretty': 'TV'},
+							'TV_SD' : {'code': [], 'pretty': 'SD'},
+							'TV_HD' : {'code': [], 'pretty': 'HD'},
+							'XXX' : {'code': [], 'pretty': 'XXX'},
+							'Other' : {'code': [], 'pretty': 'Other'},
+							'Ebook' : {'code': [], 'pretty': 'Ebook'},
+							'Comics' : {'code': [], 'pretty': 'Comics'},
+							} 
+		self.category_inv= {}
+		for key in self.categories.keys():
+			prettyval = self.categories[key]['pretty']
+			for i in xrange(len(self.categories[key]['code'])):
+				val = self.categories[key]['code'][i]
+				self.category_inv[str(val)] = prettyval
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):
 		# Get HTML
@@ -109,6 +129,7 @@ class ac_NZBcc(SearchModule):
 					'group': group,
 					'posting_date_timestamp': posting_date_timestamp,
 					'release_comments': self.baseURL,
+					'categ':{'N/A' : 1},
 					'ignore':0,
 					'provider':self.baseURL,
 					'providertitle':self.name

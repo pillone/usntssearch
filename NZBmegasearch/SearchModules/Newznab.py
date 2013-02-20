@@ -55,7 +55,7 @@ class Newznab(SearchModule):
 			for i in xrange(len(self.categories[key]['code'])):
 				val = self.categories[key]['code'][i]
 				self.category_inv[str(val)] = prettyval
-		print self.category_inv
+		#~ print self.category_inv
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):
 		# Get text

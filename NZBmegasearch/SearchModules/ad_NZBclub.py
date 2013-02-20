@@ -32,6 +32,27 @@ class ad_NZBclub(SearchModule):
 		self.login = 0
 		self.inapi = 1
 		
+		self.categories = {'Console': {'code':[], 'pretty': 'Console'},
+							'Movie' : {'code': [], 'pretty': 'Movie'},
+ 							'Movie_HD' : {'code': [], 'pretty': 'HD'},
+							'Movie_SD' : {'code': [], 'pretty': 'SD'},
+							'Audio' : {'code': [], 'pretty': 'Audio'},
+							'PC' : {'code': [], 'pretty': 'PC'},
+							'TV' : {'code': [], 'pretty': 'TV'},
+							'TV_SD' : {'code': [], 'pretty': 'SD'},
+							'TV_HD' : {'code': [], 'pretty': 'HD'},
+							'XXX' : {'code': [], 'pretty': 'XXX'},
+							'Other' : {'code': [], 'pretty': 'Other'},
+							'Ebook' : {'code': [], 'pretty': 'Ebook'},
+							'Comics' : {'code': [], 'pretty': 'Comics'},
+							} 
+		self.category_inv= {}
+		for key in self.categories.keys():
+			prettyval = self.categories[key]['pretty']
+			for i in xrange(len(self.categories[key]['code'])):
+				val = self.categories[key]['code'][i]
+				self.category_inv[str(val)] = prettyval
+		
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):		
 		urlParams = dict(q =queryString,
@@ -40,6 +61,6 @@ class ad_NZBclub(SearchModule):
             st= 5,
             sp= 1,
             ns= 1	)
-           
-   		parsed_data = self.parse_xmlsearch(urlParams, cfg['timeout'])	
+         
+		parsed_data = self.parse_xmlsearch(urlParams, cfg['timeout'])	
 		return parsed_data
