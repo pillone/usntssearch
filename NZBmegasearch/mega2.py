@@ -21,6 +21,7 @@ import os
 
 import SearchModule
 from ApiModule import ApiResponses
+from SuggestionModule import SuggestionResponses
 import megasearch
 import config_settings
 import miscdefs
@@ -49,6 +50,9 @@ else:
 @app.route('/s', methods=['GET'])
 @miscdefs.requires_auth
 def search():
+	sugg = SuggestionResponses(request.args, cfg)
+	sugg.ask()
+	return 'taco'
 	return megasearch.dosearch(request.args, cfg, ver_notify)
 
 @app.route('/config', methods=['GET','POST'])
@@ -78,7 +82,7 @@ def api():
 def connect():
 	return miscdefs.connectinfo()
  
- 
+  
 
 @app.errorhandler(404)
 def generic_error(error):
@@ -93,5 +97,5 @@ if __name__ == "__main__":
 	cport = int(cgen['portno'])
 
 	print '>> Running on port '	+ str(cport)
-	app.run(host=chost,port=cport)
+	app.run(host=chost,port=cport, debug=True)
 
