@@ -30,13 +30,18 @@ def legal():
 	return render_template('legal.html')
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	
-def dosearch(args, cfg, ver_notify):
+def dosearch(args, sugg_list, cfg, ver_notify):
+	svalid = 0
+	for i in xrange(len(cfg)):
+		if(cfg[i]['valid']):
+			svalid = svalid + 1
+
 	if(len(args)):
 		results = SearchModule.performSearch(args['q'], cfg )
 		results = summary_results(results,args['q'])
-		return cleanUpResults(results, ver_notify, args)
+		return cleanUpResults(results, sugg_list, ver_notify, args, nactive)
 	else:
-		return render_template('main_page.html', vr=ver_notify )
+		return render_template('main_page.html', vr=ver_notify, nc=svalid )
 		 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -84,10 +89,10 @@ def summary_results(rawResults,strsearch):
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 # Generate HTML for the results
-def cleanUpResults(results, ver_notify, args):
+def cleanUpResults(results, sugg_list, ver_notify, args, svalid):
 	niceResults = []
 	existduplicates = 0
-	 
+			
 	#~ sorting
 	if 'order' not in args:
 		results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
@@ -143,7 +148,7 @@ def cleanUpResults(results, ver_notify, args):
 			'ignore' : results[i]['ignore']
 		})
 
-	return render_template('main_page.html',results=niceResults, exist=existduplicates, vr=ver_notify, args=args )
+	return render_template('main_page.html',results=niceResults, exist=existduplicates, vr=ver_notify, args=args, nc = svalid )
 
 #~ debug
 if __name__ == "__main__":

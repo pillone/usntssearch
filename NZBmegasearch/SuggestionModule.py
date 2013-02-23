@@ -22,6 +22,10 @@ import megasearch
 import xml.etree.cElementTree as ET
 import SearchModule
 import datetime
+from operator import itemgetter
+
+BEST_K_YEAR = 5
+BEST_K_VOTES = 3
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 class SuggestionResponses:
@@ -33,18 +37,40 @@ class SuggestionResponses:
 		self.search_str = SearchModule.sanitize_strings(self.args['q'])
 		self.timeout = self.config[0]['timeout']
 		
-		print self.search_str
-		 
 	def ask(self):
 
 		movieinfo = self.imdb_titlemovieinfo()
-		self.movie_bestmatch()
-		return 'a'	
+		sugg_info_raw = self.movie_bestmatch(movieinfo)
+		sugg_info = self.prepareforquery(sugg_info_raw)
+		return sugg_info
 
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	def prepareforquery(self, sugg_info_raw):	
+		
+		sugg_info = [{}]
+		for i in xrange(len(sugg_info_raw)):
+			si = {'searchstr': SearchModule.sanitize_strings(sugg_info_raw[i]['title']) +  '.' + sugg_info_raw[i]['year'] ,
+				  'prettytxt': sugg_info_raw[i]['title'] + ' (' + sugg_info_raw[i]['year'] + ')',
+				  'imdb_url': sugg_info_raw[i]['imdb_url']}
+			
+			sugg_info.append(si)	  			
+			print si
+		return sugg_info
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	def movie_bestmatch(self, movieinfo):	
+	
+		#~ trivial heuristic on release date and popularity
+		movieinfo_sorted = sorted(movieinfo, key=itemgetter('year'), reverse=True) 
+		ntocheck = min(len(movieinfo_sorted), BEST_K_YEAR)
+		movieinfo_sorted_final = sorted(movieinfo_sorted[0:ntocheck], key=itemgetter('rating_count'), reverse=True) 
+		return movieinfo_sorted_final
+		
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
  
 	def imdb_titlemovieinfo(self):	
 		parsed_data = [{ 'rating_count':  '',
+						'title': '',
 						'year': '',
 						'imdb_url': '',
 						'valid': 0}]
@@ -78,7 +104,8 @@ class SuggestionResponses:
 		
 		#~ no movie found
 		if('code' in datablob):
-			print 'ERROR IMDB:' + self.search_str
+			print 'ERROR IMDB [' + self.search_str + ']'
+			return parsed_data
 
 		for i in xrange(len(datablob)):
 			data = datablob[i]
@@ -95,7 +122,8 @@ class SuggestionResponses:
 				imdb_url = data['imdb_url']
 
 			if (toprocess):
-				p_data = { 'rating_count': data['rating_count'],
+				p_data = { 'title': data['title'],
+							'rating_count': data['rating_count'],
 								'year': str(data['year']),
 								'imdb_url': imdb_url,
 								'valid': 1}

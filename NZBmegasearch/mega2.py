@@ -51,9 +51,9 @@ else:
 @miscdefs.requires_auth
 def search():
 	sugg = SuggestionResponses(request.args, cfg)
-	sugg.ask()
-	return 'taco'
-	return megasearch.dosearch(request.args, cfg, ver_notify)
+	sugg_list = sugg.ask()
+	#~ return 'a'
+	return megasearch.dosearch(request.args, sugg_list, cfg, ver_notify)
 
 @app.route('/config', methods=['GET','POST'])
 @miscdefs.requires_auth
@@ -69,8 +69,8 @@ def main_index():
 		first_time = 0
 	cfg,cgen = config_settings.read_conf()
 	if first_time == 1:
-		return config_settings.config_read()
-	return megasearch.dosearch('', cfg, ver_notify)
+		return config_settings.config_read()	
+	return megasearch.dosearch('', [], cfg, ver_notify)
 
 @app.route('/api', methods=['GET'])
 def api():
@@ -90,8 +90,8 @@ def generic_error(error):
 
 
 if __name__ == "__main__":	
-	if( ver_notify['chk'] == -1):
-		ver_notify['chk'] = miscdefs.chk(ver_notify['curver'])
+	#~ if( ver_notify['chk'] == -1):
+		#~ ver_notify['chk'] = miscdefs.chk(ver_notify['curver'])
 
 	chost = '0.0.0.0'
 	cport = int(cgen['portno'])

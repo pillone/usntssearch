@@ -33,16 +33,6 @@ div#container
  styling for the tables 
    ------------------   */
  /*this is what we want the div to look like*/
-
-
-.bottomcenter{
-   display:block;
-	font: 8px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
-    position:absolute;
-	color: #039;
-    right: 50%
-}
-
 .topright{
     display:block;
 	font: bold 12px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
@@ -51,16 +41,48 @@ div#container
     position:absolute;
     top:0;
     right:0;
-    width:240px;
+    width:250px;
 }
 
-.singleparagraph{
-	font-size: 14px;
-	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+.rollingwheel {
+	width: 450px;
+	margin: 0px auto;
+	padding: 0px;
+	text-align: center;
+}
+
+.message{
+   display:block;
+	font: 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+    position:absolute;
 	color: #039;
-    margin: 45px auto;
-	width: 90%;
-	text-align: left;
+ 
+}
+
+.bottomcenter{
+	font: 8px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	text-align: center;	
+	color: #039;
+	width: 450px;
+	margin: 5px auto;
+}
+
+.providerlist{
+	font: 12px bold 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	text-align: center;	
+	color: #039;
+	width: 450px;
+	margin: 5px auto;
+}
+.topright_tight{
+    display:block;
+	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+
+    /*set the div in the top right corner*/
+    position:absolute;
+    top:0;
+    right:0;
+    width:150px;
 }
 
 .headers_singleparagraph{
@@ -71,21 +93,20 @@ div#container
 }
 
 
-.topright_tight{
-    display:block;
-	font: bold 12px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
-
-    /*set the div in the top right corner*/
-    position:absolute;
-    top:0;
-    right:0;
-    width:140px;
+.singleparagraph{
+	font-size: 14px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	color: #039;
+    margin: 45px auto;
+	width: 90%;
+	text-align: left;
 }
-
 .titlemain {
-	width: 310px;
+	width: 450px;
 	margin: 0px auto;
 	padding: 0px;
+	text-align: center;
+
 }
 
 .form-wrapper-01 {
@@ -286,6 +307,21 @@ div#container
 	width: 10%;
 }
 
+.alert-info {
+	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	padding: 8px 35px 8px 14px;
+	color: #ffffff;
+	text-shadow: none;
+	background-color: #a2bcc0;
+	text-align: center;
+	width: 420px;
+	margin: 10px auto;
+	margin-bottom: 18px;
+	overflow: hidden;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+}
  
 
 
