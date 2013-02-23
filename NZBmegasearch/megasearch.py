@@ -36,12 +36,16 @@ def dosearch(args, sugg_list, cfg, ver_notify):
 		if(cfg[i]['valid']):
 			svalid = svalid + 1
 
+	#~ sugg_listq = [{'searchstr': 'papu' ,
+				  #~ 'prettytxt': 'Papu va caccia',
+				  #~ 'imdb_url': 'google.com'}]
 	if(len(args)):
 		results = SearchModule.performSearch(args['q'], cfg )
 		results = summary_results(results,args['q'])
-		return cleanUpResults(results, sugg_list, ver_notify, args, nactive)
+		return cleanUpResults(results, sugg_list, ver_notify, args, svalid)
 	else:
-		return render_template('main_page.html', vr=ver_notify, nc=svalid )
+		return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = [] )
+		#~ return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = sugg_listq )
 		 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -148,7 +152,7 @@ def cleanUpResults(results, sugg_list, ver_notify, args, svalid):
 			'ignore' : results[i]['ignore']
 		})
 
-	return render_template('main_page.html',results=niceResults, exist=existduplicates, vr=ver_notify, args=args, nc = svalid )
+	return render_template('main_page.html',results=niceResults, exist=existduplicates, vr=ver_notify, args=args, nc = svalid, sugg = sugg_list )
 
 #~ debug
 if __name__ == "__main__":

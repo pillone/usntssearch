@@ -47,7 +47,7 @@ class SuggestionResponses:
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def prepareforquery(self, sugg_info_raw):	
 		
-		sugg_info = [{}]
+		sugg_info = []
 		for i in xrange(len(sugg_info_raw)):
 			si = {'searchstr': SearchModule.sanitize_strings(sugg_info_raw[i]['title']) +  '.' + sugg_info_raw[i]['year'] ,
 				  'prettytxt': sugg_info_raw[i]['title'] + ' (' + sugg_info_raw[i]['year'] + ')',
@@ -55,25 +55,24 @@ class SuggestionResponses:
 			
 			sugg_info.append(si)	  			
 			print si
+			print 'dcdddddddddddddddd'
+
 		return sugg_info
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def movie_bestmatch(self, movieinfo):	
 	
 		#~ trivial heuristic on release date and popularity
-		movieinfo_sorted = sorted(movieinfo, key=itemgetter('year'), reverse=True) 
+		print movieinfo
+		movieinfo_sorted = sorted(movieinfo, key=itemgetter('release_date'), reverse=True) 
 		ntocheck = min(len(movieinfo_sorted), BEST_K_YEAR)
-		movieinfo_sorted_final = sorted(movieinfo_sorted[0:ntocheck], key=itemgetter('rating_count'), reverse=True) 
+		movieinfo_sorted_final = sorted(movieinfo_sorted[0:ntocheck-1], key=itemgetter('rating_count'), reverse=True) 
 		return movieinfo_sorted_final
 		
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
  
 	def imdb_titlemovieinfo(self):	
-		parsed_data = [{ 'rating_count':  '',
-						'title': '',
-						'year': '',
-						'imdb_url': '',
-						'valid': 0}]
+		parsed_data = []
 						
 		url_imdb  = 'http://imdbapi.org/'
 		urlParams = dict( title = self.search_str,
@@ -110,7 +109,8 @@ class SuggestionResponses:
 		for i in xrange(len(datablob)):
 			data = datablob[i]
 			toprocess = 1
-			if('rating_count' not in data):
+			
+			if ('release_date' not in data ):
 				toprocess = 0
 			if('year' not in data):
 				toprocess = 0
@@ -118,16 +118,23 @@ class SuggestionResponses:
 				toprocess = 0
 			
 			imdb_url = ''	
+			rating = 0
+	
 			if('imdb_url' in data):
 				imdb_url = data['imdb_url']
+			if('rating_count' in data ):
+				rating = data['rating_count']
 
 			if (toprocess):
 				p_data = { 'title': data['title'],
-							'rating_count': data['rating_count'],
+							'rating_count': rating,
 								'year': str(data['year']),
 								'imdb_url': imdb_url,
+								'release_date':data['release_date'],
 								'valid': 1}
 				
+				#~ print p_data
+				#~ print '~~~~~~~~~~'
 				parsed_data.append(p_data)
 
 		return parsed_data

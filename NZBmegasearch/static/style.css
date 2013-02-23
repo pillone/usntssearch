@@ -21,6 +21,11 @@ h4 {
 	font-size: 1.1em;
 }
 
+a {
+	color: #039;
+    text-decoration: underline;
+}
+
 /* Container Div */
 div#container
 {
@@ -108,6 +113,23 @@ div#container
 	text-align: center;
 
 }
+ 
+
+.suggarea_table {
+ 
+	width: 450px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 14px;
+	margin: 20px auto;
+	text-align: right;
+	}
+.suggarea_title {
+	width: 95%;
+}
+
+.suggarea_imbd {
+	width: 5%;
+ }
 
 .form-wrapper-01 {
 	width: 450px;

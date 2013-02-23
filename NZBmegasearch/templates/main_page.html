@@ -8,9 +8,10 @@
 	</head>
 	<body>
 		<div id="container">
-<div class="alert-info">
-			Standing on the shoulders of giants<br>
-			</div>
+
+<!--
+			<div class="alert-info">	</div>
+-->
 			<div id="loader" class="titlemain" style="visibility:hidden;"> <img src="static/loadingicon.gif" width="32" height="32" /></div>
 			<div  class="titlemain"><img src="static/title.png" width="387" height="45" /> 	</div>
 			
@@ -18,10 +19,22 @@
 				<input type="text" id="search" placeholder="Enter your keyword" name="q"><input type="submit" value="Search" id="submit" onclick="show_loader()">
 			</form>
 			<div class="providerlist">  {{ nc  }} NZB indeces are searched each time you hit the button :)	</div>
-			{% for row in results+++++++++++++++++++++++++++++++++++ -%}
-			{% if results -%}
-			<div  class="titlemain"> <>
-				
+			{% if sugg -%}			
+				<table class ="suggarea_table"  >
+					<tr>	<TH COLSPAN="2" style="text-align: right;" >
+					Did you mean ...
+					</TH></tr>	
+				{% for sl in sugg -%}
+					<tr>	
+					<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"> {{ sl['prettytxt'] }} </a></td>
+					<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
+					</tr>
+				{%- endfor %}
+				</table>			
+			{%- endif %}
+
+			{% if results -%}			
+
 			<table id="results" summary="Search Results">
 				<thead>
 					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t">Title</a></th>
