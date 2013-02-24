@@ -43,15 +43,17 @@ def dosearch(params):
 			svalid = svalid + 1
 
 	sugg_list = [{'searchstr': 'papu' ,
-				  'prettytxt': 'Papu va caccia',
+				  'prettytxt': 'Papu va caccia dsa asd',
 				  'imdb_url': 'google.com'}]
-	if(len(args)):
+	return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = sugg_list )
+				  
+	if(len(args['q'])):
 		results = SearchModule.performSearch(args['q'], cfg )
 		results = summary_results(results,args['q'])
 		return cleanUpResults(results, sugg_list, ver_notify, args, svalid)
 	else:
-		#~ return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = [] )
-		return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = sugg_listq )
+		return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = [] )
+		
 		 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 

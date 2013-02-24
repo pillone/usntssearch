@@ -115,20 +115,45 @@ div#container
 }
  
 
-.suggarea_table {
- 
-	width: 450px;
+.suggarea_macro {
+	width: 650px;
 	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 	font-size: 14px;
-	margin: 20px auto;
+	margin: 20px auto auto 320px;
+/*
+	border:1px solid black;
 	text-align: right;
+*/
+}
+
+.trend_table {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 14px;
+	text-align: right;
+	float: right
 	}
+
+
+.suggarea_table {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 14px;
+/*
+	margin: 20px auto;
+*/
+	text-align: right;
+	float: right
+	}
+	
 .suggarea_title {
+/*
 	width: 95%;
+*/
 }
 
 .suggarea_imbd {
+/*
 	width: 5%;
+*/
  }
 
 .form-wrapper-01 {
@@ -343,6 +368,19 @@ div#container
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
+}
+ 
+/*
+ 	border:1px solid black;
+*/
+.alert-flex {
+	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	color: #ffffff;
+	background-color: #a2bcc0;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	padding: 2px 4px 2px 4px;
 }
  
 

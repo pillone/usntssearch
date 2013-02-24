@@ -59,7 +59,8 @@ def search():
 						'sugg': sugg_list, 
 						'configr': cfg,
 						'trend': trends_list, 
-						'ver', ver_notify}
+						'ver': ver_notify
+						}
 	return megasearch.dosearch(params_dosearch)
 
 @app.route('/config', methods=['GET','POST'])
@@ -82,7 +83,7 @@ def main_index():
 						'sugg': [], 
 						'trend': [], 
 						'configr': cfg,
-						'ver', ver_notify}
+						'ver': ver_notify}
 	return megasearch.dosearch(params_dosearch)
 
 @app.route('/api', methods=['GET'])

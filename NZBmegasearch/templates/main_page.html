@@ -19,19 +19,58 @@
 				<input type="text" id="search" placeholder="Enter your keyword" name="q"><input type="submit" value="Search" id="submit" onclick="show_loader()">
 			</form>
 			<div class="providerlist">  {{ nc  }} NZB indeces are searched each time you hit the button :)	</div>
-			{% if sugg -%}			
-				<table class ="suggarea_table"  >
-					<tr>	<TH COLSPAN="2" style="text-align: right;" >
-					Did you mean ...
-					</TH></tr>	
-				{% for sl in sugg -%}
-					<tr>	
-					<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"> {{ sl['prettytxt'] }} </a></td>
-					<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
-					</tr>
-				{%- endfor %}
-				</table>			
-			{%- endif %}
+			<table class ="suggarea_macro">
+				
+				<td >
+				{% if sugg -%}			
+					<table class ="trend_table"  >
+						<tr>	<TH COLSPAN="2" style="text-align: right;">
+						  <div class='alert-flex'> Movies Trending </div>
+						</TH></tr>	
+					{% for sl in sugg -%}
+						<tr>	
+						<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"> {{ sl['prettytxt'] }} </a></td>
+						<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
+						</tr>
+					{%- endfor %}
+					</table>			
+				{%- endif %}
+				</td>
+
+
+				<td >
+				{% if sugg -%}			
+					<table class ="trend_table"  >
+						<tr>	<TH COLSPAN="2" style="text-align: right;">
+						<div class='alert-flex'> Shows Trending  </div>
+						</TH></tr>	
+					{% for sl in sugg -%}
+						<tr>	
+						<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"> {{ sl['prettytxt'] }} </a></td>
+						<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
+						</tr>
+					{%- endfor %}
+					</table>			
+				{%- endif %}
+				</td>
+
+				<td >
+				{%  if sugg -%}			
+					<table class ="suggarea_table"  >
+						<tr>	<TH COLSPAN="2" style="text-align: right;">
+						<div class='alert-flex'>Did you mean ... </div>
+						</TH></tr>	
+					{% for sl in sugg -%}
+						<tr>	
+						<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"> {{ sl['prettytxt'] }} </a></td>
+						<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
+						</tr>
+					{%- endfor %}
+					</table>			
+				{%- endif %}
+				</td>
+				
+			</table>			
 
 			{% if results -%}			
 
