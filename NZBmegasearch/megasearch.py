@@ -30,22 +30,28 @@ def legal():
 	return render_template('legal.html')
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	
-def dosearch(args, sugg_list, cfg, ver_notify):
+def dosearch(params):
+	args = params['args']
+	sugg_list = params['sugg']
+	trends_list  = params['trend']
+	cfg = params['configr']
+	ver_notify  = params['configr']
 	svalid = 0
+
 	for i in xrange(len(cfg)):
 		if(cfg[i]['valid']):
 			svalid = svalid + 1
 
-	#~ sugg_listq = [{'searchstr': 'papu' ,
-				  #~ 'prettytxt': 'Papu va caccia',
-				  #~ 'imdb_url': 'google.com'}]
+	sugg_list = [{'searchstr': 'papu' ,
+				  'prettytxt': 'Papu va caccia',
+				  'imdb_url': 'google.com'}]
 	if(len(args)):
 		results = SearchModule.performSearch(args['q'], cfg )
 		results = summary_results(results,args['q'])
 		return cleanUpResults(results, sugg_list, ver_notify, args, svalid)
 	else:
-		return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = [] )
-		#~ return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = sugg_listq )
+		#~ return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = [] )
+		return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = sugg_listq )
 		 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 

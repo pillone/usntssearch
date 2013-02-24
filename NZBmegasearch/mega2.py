@@ -52,10 +52,15 @@ else:
 def search():
 	sugg = SuggestionResponses(request.args, cfg)
 	#~ sugg_list = sugg.ask()
-	sugg.asktrends()
-
-	return 'a'
-	#~ return megasearch.dosearch(request.args, sugg_list, cfg, ver_notify)
+	#~ trends_list = sugg.asktrends()
+	sugg_list = []
+	trends_list = []
+	params_dosearch = {'args': request.args, 
+						'sugg': sugg_list, 
+						'configr': cfg,
+						'trend': trends_list, 
+						'ver', ver_notify}
+	return megasearch.dosearch(params_dosearch)
 
 @app.route('/config', methods=['GET','POST'])
 @miscdefs.requires_auth
@@ -72,7 +77,13 @@ def main_index():
 	cfg,cgen = config_settings.read_conf()
 	if first_time == 1:
 		return config_settings.config_read()	
-	return megasearch.dosearch('', [], cfg, ver_notify)
+
+	params_dosearch = {'args': '', 
+						'sugg': [], 
+						'trend': [], 
+						'configr': cfg,
+						'ver', ver_notify}
+	return megasearch.dosearch(params_dosearch)
 
 @app.route('/api', methods=['GET'])
 def api():
