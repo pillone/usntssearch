@@ -374,6 +374,7 @@ div#container
  	border:1px solid black;
 */
 .alert-flex {
+	width: 50px;
 	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
 	color: #ffffff;
 	background-color: #a2bcc0;
