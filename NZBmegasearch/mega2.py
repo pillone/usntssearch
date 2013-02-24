@@ -35,7 +35,6 @@ sugg = SuggestionResponses(cfg)
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 #~ versioning check
 ver_notify = miscdefs.chk_current_ver() 
-
 print '~*~ ~*~ NZBMegasearcH (v. '+ str(ver_notify['curver']) + ') ~*~ ~*~'
 	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -46,23 +45,21 @@ if os.path.exists("custom_params.ini"):
 	print '>> NZBMegasearcH is configured'
 else:	
 	print '>> NZBMegasearcH will be configured'	
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
-def infoboxes:
-	trend_movie = sugg.asktrend_movie()
-	trend_show = sugg.asktrend_show()
-
+	 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/s', methods=['GET'])
 @miscdefs.requires_auth
 def search():
 	sugg_list = sugg.ask(request.args)
+	sugg.asktrend_movie()
+	sugg.asktrend_show()
+
 	params_dosearch = {'args': request.args, 
 						'sugg': sugg_list, 
 						'configr': cfg,
-						'trend_movie': trend_movie, 
-						'trend_show': trend_show, 
+						'trend_movie': sugg.movie_trend, 
+						'trend_show': sugg.show_trend, 
 						'ver': ver_notify
 						}
 	return megasearch.dosearch(params_dosearch)
@@ -87,12 +84,14 @@ def main_index():
 	if first_time == 1:
 		return config_settings.config_read()	
 
+	sugg.asktrend_movie()
+	sugg.asktrend_show()
 	params_dosearch = {'args': '', 
 						'sugg': [], 
 						'trend': [], 
 						'configr': cfg,
-						'trend_show': [], 
-						'trend_movie': [], 
+						'trend_movie': sugg.movie_trend, 
+						'trend_show': sugg.show_trend, 
 						'ver': ver_notify}
 	return megasearch.dosearch(params_dosearch)
 
@@ -126,23 +125,3 @@ if __name__ == "__main__":
 	print '>> Running on port '	+ str(cport)
 	app.run(host=chost,port=cport, debug=True)
 
-
-	#~ trend_movie = [{'searchstr': 'papu' ,
-				  #~ 'prettytxt': 'Papu va caccia dsa asd',
-				  #~ 'imdb_url': 'google.com'},{'searchstr': 'papu' ,
-				  #~ 'prettytxt': 'Papu va caccia dsa asd',
-				  #~ 'imdb_url': 'google.com'},{'searchstr': 'papu' ,
-				  #~ 'prettytxt': 'Papu va caccia dsa asd',
-				  #~ 'imdb_url': 'google.com'},{'searchstr': 'papu' ,
-				  #~ 'prettytxt': 'Papu va caccia dsa asd',
-				  #~ 'imdb_url': 'google.com'}]
-	#~ trend_show = [{'searchstr': 'papu' ,
-				  #~ 'prettytxt': 'Papu va caccia dsa asd',
-				  #~ 'imdb_url': 'google.com'},{'searchstr': 'papu' ,
-				  #~ 'prettytxt': 'Papu va caccia dsa asd',
-				  #~ 'imdb_url': 'google.com'},{'searchstr': 'papu' ,
-				  #~ 'prettytxt': 'Papu va caccia dsa asd',
-				  #~ 'imdb_url': 'google.com'}]
-	#~ sugg_list = [{'searchstr': 'papu' ,
-				  #~ 'prettytxt': 'Papu va caccia dsa asd',
-				  #~ 'imdb_url': 'google.com'}]

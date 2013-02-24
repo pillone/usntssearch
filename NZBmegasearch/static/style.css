@@ -142,6 +142,7 @@ div#container
 	}
 	
 .suggarea_title {
+	word-break:break-all;
 /*
 	width: 95%;
 */

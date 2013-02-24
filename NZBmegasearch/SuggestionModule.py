@@ -22,11 +22,14 @@ import megasearch
 import xml.etree.cElementTree as ET
 import SearchModule
 import datetime
+import time
 from operator import itemgetter
 
 BEST_K_YEAR = 5
 BEST_K_VOTES = 3
 MAX_TRENDS = 50
+MAX_CHAR_LEN = 22
+MIN_REFRESHRATE_S = 1800
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 class SuggestionResponses:
@@ -35,7 +38,13 @@ class SuggestionResponses:
 	def __init__(self, conf):
 		self.config = conf
 		self.timeout = 10
+		self.movie_trend = []
+		self.movie_trend_ts = 0
+		self.show_trend = []
+		self.show_trend_ts = 0
 		#~ self.config[0]['timeout']
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 		
 	def ask(self, arguments):
 		self.args = arguments		
@@ -46,24 +55,44 @@ class SuggestionResponses:
 		return sugg_info
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	#~ def asktrend_allparallel(self):
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
 	def asktrend_movie(self):
-		movieinfo_trend = self.get_trends_movie()
-		sugg_trend_raw = self.show_bestmatch(movieinfo_trend)
-		sugg_trend = self.prepareforquery(sugg_trend_raw)
-		return sugg_trend
+
+		dt1 =  (datetime.datetime.now() - datetime.datetime.fromtimestamp(self.movie_trend_ts)).seconds
+		if(dt1 > MIN_REFRESHRATE_S):
+			movieinfo_trend = self.get_trends_movie()
+			sugg_trend_raw = self.movie_bestmatch(movieinfo_trend)
+			self.movie_trend = self.prepareforquery(sugg_trend_raw)
+			print datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + ' MVT ' + str(len(self.movie_trend))
+			
+			if(len(self.movie_trend)):
+				self.movie_trend_ts = time.time()
+		#~ return sugg_trend
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 				
 	def asktrend_show(self):		
-		showinfo_trend = self.get_trends_show()
-		show_trend = self.show_bestmatch(showinfo_trend)
-		show_trend_fullinfo = []
-		for i in xrange(len(show_trend)):
-			lastepisode = self.get_show_lastepisode(show_trend[i]['tvrage_id'])
-			if(len(lastepisode)):
-				show_trend_fullinfo =  self.prepareforquery_show(show_trend[i], lastepisode, show_trend_fullinfo)
-		return show_trend_fullinfo
+
+		dt1 =  (datetime.datetime.now() - datetime.datetime.fromtimestamp(self.show_trend_ts)).seconds
+		if(dt1 > MIN_REFRESHRATE_S):
+			showinfo_trend = self.get_trends_show()
+			show_trend_raw = self.show_bestmatch(showinfo_trend)
+			self.show_trend = []
+			for i in xrange(len(show_trend_raw)):
+				lastepisode = self.get_show_lastepisode(show_trend_raw[i]['tvrage_id'])
+				if(len(lastepisode)):
+					self.show_trend =  self.prepareforquery_show(show_trend_raw[i], lastepisode, self.show_trend)
+			print datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + ' SHT ' + str(len(self.show_trend))
+			
+			if(len(self.show_trend)):			
+				self.show_trend_ts = time.time()
+		
+		
+		#~ return show_trend_fullinfo
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def prepareforquery_show(self, sugg_info_raw, lastepisode, sugg_info):	
@@ -233,8 +262,11 @@ class SuggestionResponses:
 		
 		sugg_info = []
 		for i in xrange(len(sugg_info_raw)):
+			shorinfo = sugg_info_raw[i]['title']
+			if (len(shorinfo) > MAX_CHAR_LEN):
+				shorinfo = shorinfo[0:MAX_CHAR_LEN-2] + '..'
 			si = {'searchstr': SearchModule.sanitize_strings(sugg_info_raw[i]['title']) +  '.' + sugg_info_raw[i]['year'] ,
-				  'prettytxt': sugg_info_raw[i]['title'] + ' (' + sugg_info_raw[i]['year'] + ')',
+				  'prettytxt': shorinfo + '('+ sugg_info_raw[i]['year'] + ')',
 				  'imdb_url': sugg_info_raw[i]['imdb_url']}
 			
 			sugg_info.append(si)	  			
@@ -247,7 +279,6 @@ class SuggestionResponses:
 	def movie_bestmatch(self, movieinfo):	
 	
 		#~ trivial heuristic on release date and popularity
-		#~ print movieinfo
 		movieinfo_sorted = sorted(movieinfo, key=itemgetter('release_date'), reverse=True) 
 		ntocheck = min(len(movieinfo_sorted), BEST_K_YEAR)
 		movieinfo_sorted_final = sorted(movieinfo_sorted[0:ntocheck-1], key=itemgetter('rating_count'), reverse=True) 

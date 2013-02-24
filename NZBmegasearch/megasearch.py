@@ -41,16 +41,14 @@ def dosearch(params):
 		if(cfg[i]['valid']):
 			svalid = svalid + 1
 	
-	print params['trend_show']
-	return render_template('main_page.html', vr=ver_notify, nc=svalid, 
-											sugg = sugg_list, trend_show = params['trend_show'], trend_movie = params['trend_movie'])
-				  
-	if(len(args['q'])):
+	#~ return render_template('main_page.html', vr=ver_notify, nc=svalid, 
+											#~ sugg = sugg_list, trend_show = params['trend_show'], trend_movie = params['trend_movie'])
+	if(len(args)):
 		results = SearchModule.performSearch(args['q'], cfg )
 		results = summary_results(results,args['q'])
-		return cleanUpResults(results, sugg_list, ver_notify, args, svalid)
+		return cleanUpResults(results, sugg_list, ver_notify, args, svalid, params)
 	else:
-		return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = [], trend_show = [], trend_movie = [] )
+		return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = [], trend_show = params['trend_show'], trend_movie = params['trend_movie'] )
 		
 		 
 
@@ -99,7 +97,7 @@ def summary_results(rawResults,strsearch):
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 # Generate HTML for the results
-def cleanUpResults(results, sugg_list, ver_notify, args, svalid):
+def cleanUpResults(results, sugg_list, ver_notify, args, svalid, params):
 	niceResults = []
 	existduplicates = 0
 			
@@ -158,7 +156,9 @@ def cleanUpResults(results, sugg_list, ver_notify, args, svalid):
 			'ignore' : results[i]['ignore']
 		})
 
-	return render_template('main_page.html',results=niceResults, exist=existduplicates, vr=ver_notify, args=args, nc = svalid, sugg = sugg_list )
+	return render_template('main_page.html',results=niceResults, exist=existduplicates, 
+											vr=ver_notify, args=args, nc = svalid, sugg = sugg_list,
+											trend_show = params['trend_show'], trend_movie = params['trend_movie'])
 
 #~ debug
 if __name__ == "__main__":
