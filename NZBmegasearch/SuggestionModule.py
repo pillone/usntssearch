@@ -55,7 +55,15 @@ class SuggestionResponses:
 		return sugg_info
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-	#~ def asktrend_allparallel(self):
+	def asktrend_allparallel(self):
+		
+		t1 = threading.Thread(target=asktrend_movie).start()
+		print 'PINZ'
+		t2 = threading.Thread(target=asktrend_show).start()
+		print 'PONZ'
+		t1.join()
+		t2.join()
+
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
