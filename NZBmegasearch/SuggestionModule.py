@@ -52,15 +52,34 @@ class SuggestionResponses:
 		#~ sugg_trend_raw = self.show_bestmatch(movieinfo_trend)
 		#~ sugg_trend = self.prepareforquery(sugg_trend_raw)
 		
-		#~ showinfo_trend = self.get_trends_show()
-		#~ show_trend = self.show_bestmatch(showinfo_trend)
+		showinfo_trend = self.get_trends_show()
+		show_trend = self.show_bestmatch(showinfo_trend)
 		
-		#~ for i in xrange(show_trend):
-		for i in xrange(1):
-			self.get_show_lastepisode(8511)
-			#~ show_trend[i] = self.get_show_lastepisode(show_trend[i]['tvrage_id'])
+		show_trend_fullinfo = []
+		for i in xrange(len(show_trend)):
+			lastepisode = self.get_show_lastepisode(show_trend[i]['tvrage_id'])
+			if(len(lastepisode)):
+				show_trend_fullinfo.append(self.prepareforquery_show(show_trend[i], lastepisode))
+			
+		print show_trend_fullinfo
+		return show_trend_fullinfo
 
-
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	def prepareforquery_show(self, sugg_info_raw, lastepisode):	
+		
+		sugg_info = []
+		for i in xrange(len(lastepisode)):
+			si = {'searchstr': SearchModule.sanitize_strings(sugg_info_raw['title']) 
+								+ '.S%02d' % int(lastepisode[i]['season']) 
+								+  '.E%02d' %  int(lastepisode[i]['ep']),
+				  'prettytxt': sugg_info_raw['title'] +  ' S%02d ' %  int(lastepisode[i]['season']) 
+								+ 'E%02d' %  int(lastepisode[i]['ep']),
+				  'imdb_url': sugg_info_raw['tvdb_url']}
+			#~ print si	  
+			sugg_info.append(si)
+		
+		return sugg_info 
+				  
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def show_bestmatch(self, showinfo):	
@@ -96,16 +115,32 @@ class SuggestionResponses:
 
 		eps = []	
 		for seas in tree.iter('Season'):
-			if(int(seas.attrib['no'])== numseasons-1):
+			if(int(seas.attrib['no']) >= numseasons-1):
 				for episode in seas.iter('episode'):
 					aird = episode.find('airdate')
 					epnum = episode.find('seasonnum')
 					if( (aird is not None) and (epnum is not None)):
-						print aird.text + ' ' + epnum.text
-						print datetime.datetime.strptime(aird.text, "%Y-%b-%d")
-			#~ print seas.attrib
+						#~ print aird.text + ' ' + epnum.text
+						#~ print datetime.datetime.strptime(aird.text, "%Y-%m-%d")
+						epinfo = {'aired':aird.text, 
+								  'ep': epnum.text,
+								  'season': int(seas.attrib['no'])}
+						eps.append(epinfo)
 		
-		return parsed_data
+		#~ take last ep, or immediatly upcoming 0days
+		#~ fixes offsets, lazy approx way of US episodes
+		eps_sorted = sorted(eps, key=itemgetter('aired'), reverse=True) 		
+		eps_sorted_sel = []
+		nxtbest = -1
+		for i in xrange(len(eps_sorted)):
+			rd = (datetime.datetime.strptime(eps_sorted[i]['aired'], "%Y-%m-%d") - datetime.datetime.today()).days + 1
+			if(rd <= 0):
+				eps_sorted_sel.append(eps_sorted[i])
+			if(rd < 0):
+				break	
+
+		#~ print eps_sorted_sel
+		return eps_sorted_sel
 		
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def get_trends_show(self):
