@@ -30,6 +30,7 @@ from multiprocessing import Process
 app = Flask(__name__)
 SearchModule.loadSearchModules()
 cfg,cgen = config_settings.read_conf()
+sugg = SuggestionResponses(cfg)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 #~ versioning check
@@ -47,26 +48,33 @@ else:
 	print '>> NZBMegasearcH will be configured'	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
+def infoboxes:
+	trend_movie = sugg.asktrend_movie()
+	trend_show = sugg.asktrend_show()
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
 @app.route('/s', methods=['GET'])
 @miscdefs.requires_auth
 def search():
-	sugg = SuggestionResponses(request.args, cfg)
-	#~ sugg_list = sugg.ask()
-	#~ trends_list = sugg.asktrends()
-	sugg_list = []
-	trends_list = []
+	sugg_list = sugg.ask(request.args)
 	params_dosearch = {'args': request.args, 
 						'sugg': sugg_list, 
 						'configr': cfg,
-						'trend': trends_list, 
+						'trend_movie': trend_movie, 
+						'trend_show': trend_show, 
 						'ver': ver_notify
 						}
 	return megasearch.dosearch(params_dosearch)
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/config', methods=['GET','POST'])
 @miscdefs.requires_auth
 def config():
 	return config_settings.config_read()
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 			
 @app.route('/', methods=['GET','POST'])
 @miscdefs.requires_auth
@@ -83,8 +91,12 @@ def main_index():
 						'sugg': [], 
 						'trend': [], 
 						'configr': cfg,
+						'trend_show': [], 
+						'trend_movie': [], 
 						'ver': ver_notify}
 	return megasearch.dosearch(params_dosearch)
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/api', methods=['GET'])
 def api():
@@ -96,12 +108,13 @@ def api():
 def connect():
 	return miscdefs.connectinfo()
  
-  
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~   
 
 @app.errorhandler(404)
 def generic_error(error):
 	return main_index()
 
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 if __name__ == "__main__":	
 	#~ if( ver_notify['chk'] == -1):
@@ -113,3 +126,23 @@ if __name__ == "__main__":
 	print '>> Running on port '	+ str(cport)
 	app.run(host=chost,port=cport, debug=True)
 
+
+	#~ trend_movie = [{'searchstr': 'papu' ,
+				  #~ 'prettytxt': 'Papu va caccia dsa asd',
+				  #~ 'imdb_url': 'google.com'},{'searchstr': 'papu' ,
+				  #~ 'prettytxt': 'Papu va caccia dsa asd',
+				  #~ 'imdb_url': 'google.com'},{'searchstr': 'papu' ,
+				  #~ 'prettytxt': 'Papu va caccia dsa asd',
+				  #~ 'imdb_url': 'google.com'},{'searchstr': 'papu' ,
+				  #~ 'prettytxt': 'Papu va caccia dsa asd',
+				  #~ 'imdb_url': 'google.com'}]
+	#~ trend_show = [{'searchstr': 'papu' ,
+				  #~ 'prettytxt': 'Papu va caccia dsa asd',
+				  #~ 'imdb_url': 'google.com'},{'searchstr': 'papu' ,
+				  #~ 'prettytxt': 'Papu va caccia dsa asd',
+				  #~ 'imdb_url': 'google.com'},{'searchstr': 'papu' ,
+				  #~ 'prettytxt': 'Papu va caccia dsa asd',
+				  #~ 'imdb_url': 'google.com'}]
+	#~ sugg_list = [{'searchstr': 'papu' ,
+				  #~ 'prettytxt': 'Papu va caccia dsa asd',
+				  #~ 'imdb_url': 'google.com'}]

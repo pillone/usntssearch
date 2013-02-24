@@ -21,16 +21,16 @@
 			<div class="providerlist">  {{ nc  }} NZB indeces are searched each time you hit the button :)	</div>
 			<table class ="suggarea_macro">
 				
-				<td >
-				{% if sugg -%}			
+				<td style='vertical-align: top;'>
+				{% if trend_movie -%}			
 					<table class ="trend_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
-						  <div class='alert-flex'> Movies Trending </div>
+						  <div class='alert-flex'> Movies Trending Now </div>
 						</TH></tr>	
-					{% for sl in sugg -%}
+					{% for tm in trend_movie -%}
 						<tr>	
-						<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"> {{ sl['prettytxt'] }} </a></td>
-						<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
+						<td  class ="suggarea_title"> <a href="s?q={{ tm['searchstr'] }}"> {{ tm['prettytxt'] }} </a></td>
+						<td class ="suggarea_imbd"> <a href="{{ tm['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
 						</tr>
 					{%- endfor %}
 					</table>			
@@ -38,27 +38,27 @@
 				</td>
 
 
-				<td >
-				{% if sugg -%}			
+				<td style='vertical-align: top;'>
+				{% if trend_show -%}			
 					<table class ="trend_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
-						<div class='alert-flex'> Shows Trending  </div>
+						<div class='alert-flex'> Shows Trending Now </div>
 						</TH></tr>	
-					{% for sl in sugg -%}
+					{% for ts in trend_show -%}
 						<tr>	
-						<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"> {{ sl['prettytxt'] }} </a></td>
-						<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
+						<td  class ="suggarea_title"> <a href="s?q={{ ts['searchstr'] }}"> {{ ts['prettytxt'] }} </a></td>
+						<td class ="suggarea_imbd"> <a href="{{ ts['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
 						</tr>
 					{%- endfor %}
 					</table>			
 				{%- endif %}
 				</td>
 
-				<td >
+				<td style='vertical-align: top;'>
 				{%  if sugg -%}			
 					<table class ="suggarea_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
-						<div class='alert-flex'>Did you mean ... </div>
+						<div class='alert-red'>Did you mean ... </div>
 						</TH></tr>	
 					{% for sl in sugg -%}
 						<tr>	

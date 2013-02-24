@@ -32,42 +32,42 @@ MAX_TRENDS = 50
 class SuggestionResponses:
 
 	# Set up class variables
-	def __init__(self, arguments, conf):
+	def __init__(self, conf):
 		self.config = conf
-		self.args = arguments
-		self.search_str = SearchModule.sanitize_strings(self.args['q'])
 		self.timeout = 10
 		#~ self.config[0]['timeout']
 		
-	def ask(self):
-
+	def ask(self, arguments):
+		self.args = arguments		
+		self.search_str = SearchModule.sanitize_strings(self.args['q'])
 		movieinfo = self.imdb_titlemovieinfo()
 		sugg_info_raw = self.movie_bestmatch(movieinfo)
 		sugg_info = self.prepareforquery(sugg_info_raw)
 		return sugg_info
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-	def asktrends(self):
-		#~ movieinfo_trend = self.get_trends_movie()
-		#~ sugg_trend_raw = self.show_bestmatch(movieinfo_trend)
-		#~ sugg_trend = self.prepareforquery(sugg_trend_raw)
-		
+	def asktrend_movie(self):
+		movieinfo_trend = self.get_trends_movie()
+		sugg_trend_raw = self.show_bestmatch(movieinfo_trend)
+		sugg_trend = self.prepareforquery(sugg_trend_raw)
+		return sugg_trend
+
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+				
+	def asktrend_show(self):		
 		showinfo_trend = self.get_trends_show()
 		show_trend = self.show_bestmatch(showinfo_trend)
-		
 		show_trend_fullinfo = []
 		for i in xrange(len(show_trend)):
 			lastepisode = self.get_show_lastepisode(show_trend[i]['tvrage_id'])
 			if(len(lastepisode)):
-				show_trend_fullinfo.append(self.prepareforquery_show(show_trend[i], lastepisode))
-			
-		print show_trend_fullinfo
+				show_trend_fullinfo =  self.prepareforquery_show(show_trend[i], lastepisode, show_trend_fullinfo)
 		return show_trend_fullinfo
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-	def prepareforquery_show(self, sugg_info_raw, lastepisode):	
+	def prepareforquery_show(self, sugg_info_raw, lastepisode, sugg_info):	
 		
-		sugg_info = []
 		for i in xrange(len(lastepisode)):
 			si = {'searchstr': SearchModule.sanitize_strings(sugg_info_raw['title']) 
 								+ '.S%02d' % int(lastepisode[i]['season']) 
@@ -75,7 +75,6 @@ class SuggestionResponses:
 				  'prettytxt': sugg_info_raw['title'] +  ' S%02d ' %  int(lastepisode[i]['season']) 
 								+ 'E%02d' %  int(lastepisode[i]['ep']),
 				  'imdb_url': sugg_info_raw['tvdb_url']}
-			#~ print si	  
 			sugg_info.append(si)
 		
 		return sugg_info 
@@ -95,7 +94,7 @@ class SuggestionResponses:
 		parsed_data = []
 		url_tvrage = 'http://services.tvrage.com/feeds/episode_list.php'
 		urlParams = dict( sid=rid )			
-		print urlParams
+		#~ print urlParams
 		try:
 			http_result = requests.get(url=url_tvrage, params=urlParams, verify=False, timeout=self.timeout)
 		except Exception as e:
@@ -238,7 +237,7 @@ class SuggestionResponses:
 				  'prettytxt': sugg_info_raw[i]['title'] + ' (' + sugg_info_raw[i]['year'] + ')',
 				  'imdb_url': sugg_info_raw[i]['imdb_url']}
 			
-			#~ sugg_info.append(si)	  			
+			sugg_info.append(si)	  			
 			#~ print si
 			#~ print 'dcdddddddddddddddd'
 

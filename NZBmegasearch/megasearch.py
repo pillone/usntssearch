@@ -33,7 +33,6 @@ def legal():
 def dosearch(params):
 	args = params['args']
 	sugg_list = params['sugg']
-	trends_list  = params['trend']
 	cfg = params['configr']
 	ver_notify  = params['configr']
 	svalid = 0
@@ -41,18 +40,17 @@ def dosearch(params):
 	for i in xrange(len(cfg)):
 		if(cfg[i]['valid']):
 			svalid = svalid + 1
-
-	sugg_list = [{'searchstr': 'papu' ,
-				  'prettytxt': 'Papu va caccia dsa asd',
-				  'imdb_url': 'google.com'}]
-	return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = sugg_list )
+	
+	print params['trend_show']
+	return render_template('main_page.html', vr=ver_notify, nc=svalid, 
+											sugg = sugg_list, trend_show = params['trend_show'], trend_movie = params['trend_movie'])
 				  
 	if(len(args['q'])):
 		results = SearchModule.performSearch(args['q'], cfg )
 		results = summary_results(results,args['q'])
 		return cleanUpResults(results, sugg_list, ver_notify, args, svalid)
 	else:
-		return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = [] )
+		return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = [], trend_show = [], trend_movie = [] )
 		
 		 
 

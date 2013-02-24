@@ -137,9 +137,6 @@ div#container
 .suggarea_table {
 	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 	font-size: 14px;
-/*
-	margin: 20px auto;
-*/
 	text-align: right;
 	float: right
 	}
@@ -374,7 +371,7 @@ div#container
  	border:1px solid black;
 */
 .alert-flex {
-	width: 50px;
+	width: 150px;
 	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
 	color: #ffffff;
 	background-color: #a2bcc0;
@@ -382,7 +379,18 @@ div#container
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
 	padding: 2px 4px 2px 4px;
+	float: right
 }
  
 
-
+.alert-red {
+	width: 150px;
+	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	color: #ffffff;
+	background-color: #ff0000;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	padding: 2px 4px 2px 4px;
+	float: right
+}
