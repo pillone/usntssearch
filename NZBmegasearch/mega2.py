@@ -51,9 +51,11 @@ else:
 @miscdefs.requires_auth
 def search():
 	sugg = SuggestionResponses(request.args, cfg)
-	sugg_list = sugg.ask()
-	#~ return 'a'
-	return megasearch.dosearch(request.args, sugg_list, cfg, ver_notify)
+	#~ sugg_list = sugg.ask()
+	sugg.asktrends()
+
+	return 'a'
+	#~ return megasearch.dosearch(request.args, sugg_list, cfg, ver_notify)
 
 @app.route('/config', methods=['GET','POST'])
 @miscdefs.requires_auth
