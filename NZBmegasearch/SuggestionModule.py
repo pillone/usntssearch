@@ -45,7 +45,7 @@ class SuggestionResponses:
 		self.show_trend_ts = 0
 		self.sugg_info = []
 		self.active_trend = 1
-		if(cgen['general_trend'] == 0):
+		if(int(cgen['general_trend']) == 0):
 		 self.active_trend = 0
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -60,7 +60,7 @@ class SuggestionResponses:
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def asktrend_allparallel(self):
-		if(self.active_trend):
+		if(self.active_trend == 1):
 			t1 = threading.Thread(target=self.asktrend_movie)
 			t2 = threading.Thread(target=self.asktrend_show)
 			t1.start()

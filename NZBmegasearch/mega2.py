@@ -125,10 +125,9 @@ if __name__ == "__main__":
 	if( ver_notify['chk'] == -1):
 		ver_notify['chk'] = miscdefs.chk(ver_notify['curver'])
 	sugg.asktrend_allparallel()
-
 	chost = '0.0.0.0'
 	cport = int(cgen['portno'])
 
 	print '>> Running on port '	+ str(cport)
-	app.run(host=chost,port=cport)
+	app.run(host=chost,port=cport, debug = True)
 

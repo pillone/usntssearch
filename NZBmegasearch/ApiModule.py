@@ -16,13 +16,14 @@
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
 
 
-from flask import  Flask, render_template, redirect
+from flask import  Flask, render_template, redirect, send_file
 import requests
 import megasearch
 import xml.etree.cElementTree as ET
 import SearchModule
 import datetime
-
+import base64
+import urllib2
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 class ApiResponses:
 
@@ -43,16 +44,46 @@ class ApiResponses:
 			if (typesearch == 'tvsearch'):
 				response = self.sickbeard_req()
 			#~ COUCHPOTATO is in DEV
-			#~ elif (typesearch == 'movie'):
-				#~ response = self.couchpotato_req()	
-			#~ elif (typesearch == 'get'):				
-				#~ return redirect("http://www.google.com")
+			elif (typesearch == 'movie'):
+				response = self.couchpotato_req()	
+			elif (typesearch == 'get'):				
+				filetosend = self.proxy_NZB_file()
+				return filetosend
 			else:
 				print '>> UNKNOWN REQ -- ignore' 
 				response = render_template('api_error.html')
 		else:
 			response = render_template('api_error.html')
 		return response	
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	def proxy_NZB_file(self):
+		#~ api?t=get&id=8888&apikey=12345
+		#~ /api?t=get&id=aHR0cDovL256Yi5jYy9uemIucGhwP2M9Njk2ODMwOTk%3D&apikey=12345
+		print self.args
+		fullurl = base64.b64decode(self.args['id'])
+		print fullurl
+		response = urllib2.urlopen(fullurl)
+		print response.info()
+		file = open("/tmp/test.bin","wb")
+		file.write(response.read())
+		file.close()
+		fresponse = send_file("/tmp/test.bin", mimetype='application/x-nzb;', as_attachment=True, 
+						attachment_filename=None, add_etags=False, cache_timeout=None, conditional=False)
+		fresponse.headers["Content-Encoding"] = 'gzip'
+		return fresponse				
+		#~ print len(tempfile)
+#~ http://nzb.cc/nzb.php?c=69683099
+#~ X-Powered-By: PHP/5.3.3-1ubuntu9.7
+#~ Content-Type: application/x-nzb
+#~ Content-Disposition: attachment; filename="The_Notebook_2004_DvDRip_XviD-AMIABLE.nzb"
+#~ Robots: NOINDEX
+#~ Content-Encoding: gzip
+#~ Content-Length: 50164
+#~ Connection: close
+#~ Date: Mon, 25 Feb 2013 20:29:16 GMT
+#~ Server: lighttpd/1.4.26
+
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def couchpotato_req(self):	
@@ -216,7 +247,8 @@ class ApiResponses:
 				#~ category = self.crude_subcategory_identifier(results[i]['title'])
 				#~ print human_readable_time
 				niceResults.append({
-					'url':results[i]['url'],
+					'url': results[i]['url'],
+					'encodedurl': base64.b64encode(results[i]['url']),
 					'title':results[i]['title'],
 					'filesize':results[i]['size'],
 					'age':human_readable_time,
