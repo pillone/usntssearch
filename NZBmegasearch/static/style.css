@@ -81,7 +81,7 @@ div#container
 }
 .topright_tight{
     display:block;
-	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	font: bold 12px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
 
     /*set the div in the top right corner*/
     position:absolute;

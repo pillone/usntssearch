@@ -28,8 +28,32 @@ import SearchModule
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 def legal():
 	return render_template('legal.html')
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+class DoParallelSearch:
 	
+	# Set up class variables
+	def __init__(self, conf):
+		self.results = []
+		self.cfg = conf
+		self.svalid = 0
+		for i in xrange(len(self.cfg)):
+			if(self.cfg[i]['valid'] == '1'):
+				self.svalid = self.svalid + 1
+
+	def dosearch(self, args):
+		results = SearchModule.performSearch(args['q'], self.cfg )
+		self.results = summary_results(results, args['q'])
+		
+	def renderit(self,params):
+		return cleanUpResults(self.results, params['sugg'], params['ver'], params['args'], self.svalid, params)
+	
+	def renderit_empty(self,params):	
+		return render_template('main_page.html', vr=params['ver'], nc=self.svalid, sugg = [], 
+								trend_show = params['trend_show'], trend_movie = params['trend_movie'] )
+		
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+'''	
 def dosearch(params):
 	args = params['args']
 	sugg_list = params['sugg']
@@ -49,7 +73,7 @@ def dosearch(params):
 		return cleanUpResults(results, sugg_list, ver_notify, args, svalid, params)
 	else:
 		return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = [], trend_show = params['trend_show'], trend_movie = params['trend_movie'] )
-		
+'''		
 		 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -127,14 +151,7 @@ def cleanUpResults(results, sugg_list, ver_notify, args, svalid, params):
 		if (szf > 1000.0): 
 			szf = szf /1000
 			mgsz = ' GB '
-		# Calculate the age of the post
-		dt1 =  datetime.datetime.fromtimestamp(results[i]['posting_date_timestamp'])
-		dt2 =  datetime.datetime.today()
-		rd = dateutil.relativedelta.relativedelta(dt2, dt1)
-		#~ approximated date, whatev
-		totdays = rd.years * 365  + rd.months * 31  + rd.days
-		#~ print results[i]['release_comments']
-
+		totdays = (datetime.datetime.today() - datetime.datetime.fromtimestamp(results[i]['posting_date_timestamp'])).days + 1		
 		category_str = '' 
 		keynum = len(results[i]['categ'])
 		keycount = 0

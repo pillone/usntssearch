@@ -18,7 +18,7 @@
 from flask import Flask
 from flask import request, Response
 import os
-
+import threading
 import SearchModule
 from ApiModule import ApiResponses
 from SuggestionModule import SuggestionResponses
@@ -30,7 +30,8 @@ from multiprocessing import Process
 app = Flask(__name__)
 SearchModule.loadSearchModules()
 cfg,cgen = config_settings.read_conf()
-sugg = SuggestionResponses(cfg)
+sugg = SuggestionResponses(cfg, cgen)
+mega_parall = megasearch.DoParallelSearch(cfg)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 #~ versioning check
@@ -51,18 +52,23 @@ else:
 @app.route('/s', methods=['GET'])
 @miscdefs.requires_auth
 def search():
-	sugg_list = sugg.ask(request.args)
-	sugg.asktrend_movie()
-	sugg.asktrend_show()
+	sugg.asktrend_allparallel()	
+	#~ parallel suggestion and search
+	t1 = threading.Thread(target=sugg.ask, args=(request.args,) )
+	t2 = threading.Thread(target=mega_parall.dosearch, args=(request.args,)   )
+	t1.start()
+	t2.start()
+	t1.join()
+	t2.join()
 
 	params_dosearch = {'args': request.args, 
-						'sugg': sugg_list, 
+						'sugg': sugg.sugg_info, 
 						'configr': cfg,
 						'trend_movie': sugg.movie_trend, 
 						'trend_show': sugg.show_trend, 
 						'ver': ver_notify
 						}
-	return megasearch.dosearch(params_dosearch)
+	return mega_parall.renderit(params_dosearch)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
@@ -76,16 +82,16 @@ def config():
 @app.route('/', methods=['GET','POST'])
 @miscdefs.requires_auth
 def main_index():
-	global first_time,cfg,cgen
+	global first_time,cfg,cgen,mega_parall
 	if request.method == 'POST':
 		config_settings.config_write(request.form)
 		first_time = 0
-	cfg,cgen = config_settings.read_conf()
+		cfg,cgen = config_settings.read_conf()
+		mega_parall = megasearch.DoParallelSearch(cfg)
 	if first_time == 1:
 		return config_settings.config_read()	
 
-	sugg.asktrend_movie()
-	sugg.asktrend_show()
+	sugg.asktrend_allparallel()
 	params_dosearch = {'args': '', 
 						'sugg': [], 
 						'trend': [], 
@@ -93,7 +99,7 @@ def main_index():
 						'trend_movie': sugg.movie_trend, 
 						'trend_show': sugg.show_trend, 
 						'ver': ver_notify}
-	return megasearch.dosearch(params_dosearch)
+	return mega_parall.renderit_empty(params_dosearch)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
@@ -116,12 +122,13 @@ def generic_error(error):
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 if __name__ == "__main__":	
-	#~ if( ver_notify['chk'] == -1):
-		#~ ver_notify['chk'] = miscdefs.chk(ver_notify['curver'])
+	if( ver_notify['chk'] == -1):
+		ver_notify['chk'] = miscdefs.chk(ver_notify['curver'])
+	sugg.asktrend_allparallel()
 
 	chost = '0.0.0.0'
 	cport = int(cgen['portno'])
 
 	print '>> Running on port '	+ str(cport)
-	app.run(host=chost,port=cport, debug=True)
+	app.run(host=chost,port=cport)
 

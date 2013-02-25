@@ -26,7 +26,7 @@
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
 						  <div class='alert-flex'> Movies Trending Now </div>
 						</TH></tr>	
-						{% if trend_movie==0 -%}
+						{% if not trend_movie -%}
 							<tr>	
 							<td  class ="suggarea_title"> Not retreived </td>
 							</tr>	
@@ -46,7 +46,7 @@
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
 						<div class='alert-flex'> Shows Trending Now </div>
 						</TH></tr>	
-						{% if trend_show==0 -%}
+						{% if not trend_show -%}
 							<tr>	
 							<td  class ="suggarea_title"> Not retreived </td>
 							</tr>	
@@ -61,19 +61,24 @@
 				</td>
 
 				<td style='vertical-align: top;'>
-				{%  if sugg -%}			
+
 					<table class ="suggarea_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
 						<div class='alert-red'>Did you mean ... </div>
 						</TH></tr>	
-					{% for sl in sugg -%}
-						<tr>	
-						<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"  style="color:#ff0000;"> {{ sl['prettytxt'] }} </a></td>
-						<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
-						</tr>
-					{%- endfor %}
+						{%  if not sugg -%}
+							<tr>	
+							<td  class ="suggarea_title"> No suggestions </td>
+							</tr>							
+						{%- endif %}
+						{% for sl in sugg -%}
+							<tr>	
+							<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"  style="color:#ff0000;"> {{ sl['prettytxt'] }} </a></td>
+							<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
+							</tr>
+						{%- endfor %}
 					</table>			
-				{%- endif %}
+
 				</td>
 				
 			</table>			

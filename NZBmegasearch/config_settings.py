@@ -90,6 +90,7 @@ def read_conf_fn():
 	portno = parser.get('general', 'port')	
 	gen_user = parser.get('general', 'general_user')	
 	gen_pwd = parser.get('general', 'general_pwd')	
+	gen_trd = parser.get('general', 'trends')	
 	
 	#~ chk if exists
 	cst_parser = SafeConfigParser()
@@ -115,10 +116,10 @@ def read_conf_fn():
 			gen_user = cst_parser.get('general', 'general_user')	
 			gen_pwd = cst_parser.get('general', 'general_pwd')	
 		
-		co1 = {'portno': portno, 'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd}
+		co1 = {'portno': portno, 'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd}
 	
 	except Exception:
-		co1 = {'portno': portno, 'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd}
+		co1 = {'portno': portno, 'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd}
 		return cfg_struct, co1
 	
 	try:

@@ -24,6 +24,7 @@ import SearchModule
 import datetime
 import time
 from operator import itemgetter
+import threading
 
 BEST_K_YEAR = 5
 BEST_K_VOTES = 3
@@ -35,34 +36,37 @@ MIN_REFRESHRATE_S = 1800
 class SuggestionResponses:
 
 	# Set up class variables
-	def __init__(self, conf):
+	def __init__(self, conf, cgen):
 		self.config = conf
-		self.timeout = 10
+		self.timeout = self.config[0]['timeout']
 		self.movie_trend = []
 		self.movie_trend_ts = 0
 		self.show_trend = []
 		self.show_trend_ts = 0
-		#~ self.config[0]['timeout']
+		self.sugg_info = []
+		self.active_trend = 1
+		if(cgen['general_trend'] == 0):
+		 self.active_trend = 0
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 		
 	def ask(self, arguments):
-		self.args = arguments		
+		self.args = arguments
 		self.search_str = SearchModule.sanitize_strings(self.args['q'])
 		movieinfo = self.imdb_titlemovieinfo()
 		sugg_info_raw = self.movie_bestmatch(movieinfo)
-		sugg_info = self.prepareforquery(sugg_info_raw)
-		return sugg_info
+		self.sugg_info = self.prepareforquery(sugg_info_raw)
+		#~ return sugg_info
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def asktrend_allparallel(self):
-		
-		t1 = threading.Thread(target=asktrend_movie).start()
-		print 'PINZ'
-		t2 = threading.Thread(target=asktrend_show).start()
-		print 'PONZ'
-		t1.join()
-		t2.join()
+		if(self.active_trend):
+			t1 = threading.Thread(target=self.asktrend_movie)
+			t2 = threading.Thread(target=self.asktrend_show)
+			t1.start()
+			t2.start()
+			t1.join()
+			t2.join()
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

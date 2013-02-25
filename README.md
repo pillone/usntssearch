@@ -10,6 +10,13 @@ Install
 - Enter in the NZBmegasearch directory and run "python mega2.py" to start NZBmegasearch
 - Go to localhost:5000 to configure
 
+Changes in v0.26
+================
+- Suggestions over search (only movies for now...)
+- Display trending movies
+- Display trending shows with autosearch current episodes
+- Lots of coding and fixes
+
 Changes in v0.252
 ================
 - Improved search query sanitizing for better provider search 
