@@ -25,10 +25,6 @@ from flask import render_template
 
 import SearchModule
 
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-def legal():
-	return render_template('legal.html')
-
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 class DoParallelSearch:
 	

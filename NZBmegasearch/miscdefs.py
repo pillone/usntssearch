@@ -21,6 +21,12 @@ from flask import Response,request
 import config_settings
 from flask import render_template
 
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+def legal():
+	return render_template('legal.html')
+
+
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 def connectinfo():
 	return render_template('connectinfo.html')

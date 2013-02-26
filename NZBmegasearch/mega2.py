@@ -46,6 +46,15 @@ if os.path.exists("custom_params.ini"):
 	print '>> NZBMegasearcH is configured'
 else:	
 	print '>> NZBMegasearcH will be configured'	
+
+	 
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+@app.route('/legal')
+@miscdefs.requires_auth
+def legal():
+	return (miscdefs.legal())
+
 	 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
