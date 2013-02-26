@@ -46,9 +46,10 @@ class ApiResponses:
 			typesearch=self.args['t']
 			if (typesearch == 'tvsearch'):
 				response = self.sickbeard_req()
-			#~ COUCHPOTATO is in DEV
 			elif (typesearch == 'movie'):
 				response = self.couchpotato_req()	
+			#~ elif (typesearch == 'music'):
+				#~ response = self.headphones_req()	
 			elif (typesearch == 'get'):				
 				filetosend = self.proxy_NZB_file()
 				return filetosend
@@ -60,6 +61,45 @@ class ApiResponses:
 		return response	
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	def headphones_req(self):	
+		print self.args
+		if(self.args.has_key('album') or self.args.has_key('artist')  or self.args.has_key('track')):
+			return self.generate_music_nabresponse()
+		else:	
+			return render_template('api_error.html')
+			
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+	def generate_music_nabresponse(self):
+		dstring = []
+		if(self.args.has_key('artist')):
+			dstring.append(SearchModule.sanitize_strings(self.args['artist']))
+		if(self.args.has_key('album')):
+			dstring.append(SearchModule.sanitize_strings(self.args['album']))
+		if(self.args.has_key('track')):
+			dstring.append(SearchModule.sanitize_strings(self.args['track']))
+		if(self.args.has_key('year')):
+			dstring.append(SearchModule.sanitize_strings(self.args['year']))
+			
+		music_search_str = ''	
+		for i in xrange(len(dstring)):
+			if(len(dstring[i]) and i<len(dstring)-1):
+				music_search_str = music_search_str + dstring[i]
+		
+		print music_search_str
+		#~ print movie_search_str
+		self.searchstring = music_search_str
+		self.typesearch = 0
+		#~ compile results				
+		#~ results = SearchModule.performSearch(movie_search_str, self.cfg )		
+		#~ flatten and summarize them
+		#~ cleaned_results = megasearch.summary_results(results,movie_search_str)
+		#~ render XML
+		#~ return self.cleanUpResultsXML(cleaned_results)
+		return 'm'
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~		
+		
 	def proxy_NZB_file(self):
 		fullurl = base64.b64decode(self.args['id'])
 		response = urllib2.urlopen(fullurl)
@@ -70,10 +110,16 @@ class ApiResponses:
 		f.write(fcontent)
 		f.close()	
 		fresponse = send_file(f.name, mimetype='application/x-nzb;', as_attachment=True, 
-						attachment_filename=None, add_etags=False, cache_timeout=None, conditional=False)
+						attachment_filename='yourmovie.nzb', add_etags=False, cache_timeout=None, conditional=False)
 		os.remove(f.name)
 		#~ not needed
-		#~ fresponse.headers["Content-Encoding"] = 'gzip'		
+		#~ print response.info()
+		#~ brutal but works
+		for i in xrange(len(response.info().headers)):
+			if(response.info().headers[i].find('Content-Encoding')  != -1):
+				fresponse.headers["Content-Encoding"] = 'gzip'
+				break
+		#~ print fresponse.headers
 		return fresponse				
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
