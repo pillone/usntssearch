@@ -21,7 +21,7 @@ import sys
 import SearchModule
 
 MAX_PROVIDER_NUMBER = 10
-MAX_TIMEOUT = 5
+#~ MAX_TIMEOUT = 5
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -91,6 +91,7 @@ def read_conf_fn():
 	gen_user = parser.get('general', 'general_user')	
 	gen_pwd = parser.get('general', 'general_pwd')	
 	gen_trd = parser.get('general', 'trends')	
+	gen_timeout = int(parser.get('general', 'default_timeout'))
 	
 	#~ chk if exists
 	cst_parser = SafeConfigParser()
@@ -103,7 +104,7 @@ def read_conf_fn():
 				  'type': cst_parser.get('search_provider%d' % (i+1)  , 'type'),
 				  'api': cst_parser.get('search_provider%d' % (i+1)  , 'api'),
 				  'valid': cst_parser.get('search_provider%d' % (i+1)  , 'valid'),
-				  'timeout':  MAX_TIMEOUT,
+				  'timeout':  gen_timeout,
 				  'builtin': 0
 				  }
 			cfg_struct.append(d1)
@@ -116,10 +117,10 @@ def read_conf_fn():
 			gen_user = cst_parser.get('general', 'general_user')	
 			gen_pwd = cst_parser.get('general', 'general_pwd')	
 		
-		co1 = {'portno': portno, 'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd}
+		co1 = {'portno': portno, 'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd, 'default_timeout' : gen_timeout}
 	
 	except Exception:
-		co1 = {'portno': portno, 'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd}
+		co1 = {'portno': portno, 'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd, 'default_timeout' : gen_timeout}
 		return cfg_struct, co1
 	
 	try:
@@ -136,7 +137,7 @@ def read_conf_fn():
 				  'type': cst_parser.get('bi_search_provider%d' % (i+1)  , 'type'),
 				  'login': lgn,
 				  'pwd': pwd,
-				  'timeout':  MAX_TIMEOUT,
+				  'timeout':  gen_timeout,
 				  'builtin': 1}
 			cfg_struct.append(d1)
 	except Exception:

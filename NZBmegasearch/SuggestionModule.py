@@ -37,8 +37,7 @@ class SuggestionResponses:
 
 	# Set up class variables
 	def __init__(self, conf, cgen):
-		self.config = conf
-		self.timeout = self.config[0]['timeout']
+		self.timeout = cgen['default_timeout']
 		self.movie_trend = []
 		self.movie_trend_ts = 0
 		self.show_trend = []
@@ -112,7 +111,7 @@ class SuggestionResponses:
 		for i in xrange(len(lastepisode)):
 			si = {'searchstr': SearchModule.sanitize_strings(sugg_info_raw['title']) 
 								+ '.S%02d' % int(lastepisode[i]['season']) 
-								+  '.E%02d' %  int(lastepisode[i]['ep']),
+								+  'E%02d' %  int(lastepisode[i]['ep']),
 				  'prettytxt': sugg_info_raw['title'] +  ' S%02d ' %  int(lastepisode[i]['season']) 
 								+ 'E%02d' %  int(lastepisode[i]['ep']),
 				  'imdb_url': sugg_info_raw['tvdb_url']}

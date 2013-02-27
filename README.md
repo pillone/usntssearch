@@ -10,6 +10,10 @@ Install
 - Enter in the NZBmegasearch directory and run "python mega2.py" to start NZBmegasearch
 - Go to localhost:5000 to configure
 
+Changes in v0.271
+================
+- Superbug introduced and fixed. Sorry everybody.
+
 Changes in v0.27
 ================
 - COUCHPOTATO support added

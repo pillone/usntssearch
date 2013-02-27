@@ -30,6 +30,7 @@ from multiprocessing import Process
 app = Flask(__name__)
 SearchModule.loadSearchModules()
 cfg,cgen = config_settings.read_conf()
+print cgen
 sugg = SuggestionResponses(cfg, cgen)
 mega_parall = megasearch.DoParallelSearch(cfg)
 
