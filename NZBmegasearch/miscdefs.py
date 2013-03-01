@@ -83,7 +83,8 @@ class ChkVersion:
 		#~ linux only, sorry win users
 		if sys.platform.startswith('linux'):
 			#~ subprocess.call(["git", "fetch"])
-			#~ subprocess.call(["git", "reset --hard origin/master"])
+			#~ subprocess.call(["git", "reset", "--hard", "origin/master"])
+			print 'nothings done'
 			time.sleep(3)
 			pythonscr = sys.executable
 			os.execl(pythonscr, pythonscr, * sys.argv)
