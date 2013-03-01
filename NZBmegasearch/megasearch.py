@@ -18,7 +18,7 @@ from sets import Set
 import decimal
 import datetime
 import time
-import dateutil.relativedelta
+#~ import dateutil.relativedelta
 from operator import itemgetter
 from urllib2 import urlparse
 from flask import render_template

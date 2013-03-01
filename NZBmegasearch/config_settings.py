@@ -21,8 +21,6 @@ import sys
 import SearchModule
 
 MAX_PROVIDER_NUMBER = 10
-#~ MAX_TIMEOUT = 5
-
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 

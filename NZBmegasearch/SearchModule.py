@@ -20,23 +20,32 @@ import sys
 import datetime
 import time
 import config_settings
+import xml.etree.ElementTree
 import xml.etree.cElementTree as ET
 import os
 import copy
 import threading
 import re
-	
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+    
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	
 def loadSearchModules(moduleDir = None):
 	global loadedModules
-	# Find search modules
 	loadedModules = [];
 	searchModuleNames = [];
 	if moduleDir == None:
-		moduleDir = os.path.join(os.path.dirname(__file__),'SearchModules');
+		moduleDir = resource_path('SearchModules/')
 	print 'Loading modules from: ' + moduleDir
-
 	for file in os.listdir(moduleDir):
 		if file.endswith('.py') and file != '__init__.py':
 			searchModuleNames.append(file[0:-3])
@@ -47,6 +56,9 @@ def loadSearchModules(moduleDir = None):
 		print 'Found ' + str(len(searchModuleNames)) + ' modules'
 		
 	searchModuleNames = sorted(searchModuleNames)
+	path = list(sys.path)
+	sys.path.insert(0, moduleDir)
+
 	# Import the modules that the user has enabled
 	print 'Importing: ' + ', '.join(searchModuleNames)
 	try:
@@ -69,7 +81,7 @@ def loadSearchModules(moduleDir = None):
 			loadedModules.append(targetClass())
 		except Exception as e:
 			print 'Error instantiating search module ' + module + ': ' + str(e)
-
+	
 # Perform a search using all available modules
 def performSearch(queryString,  cfg):
 	queryString = queryString.strip()

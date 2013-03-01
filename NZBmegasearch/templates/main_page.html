@@ -3,6 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>NZB MegasearcH</title>
+		<link rel="stylesheet" type="text/css" href="static/reset2.css" />
 		<link rel="stylesheet" type="text/css" href="static/style.css" />
 		<script src="static/overlay.js"></script>
 	</head>
@@ -13,7 +14,7 @@
 			<div class="alert-info">	</div>
 -->
 			<div id="loader" class="titlemain" style="visibility:hidden;"> <img src="static/loadingicon.gif" width="32" height="32" /></div>
-			<div  class="titlemain"><img src="static/title.png" width="387" height="45" /> 	</div>
+			<div  class="titlemain"><img src="static/title.png" width="387" height="" /> 	</div>
 			
 			<form action="/s" method="get" class="form-wrapper-01">
 				<input type="text" id="search" placeholder="Enter your keyword" name="q"><input type="submit" value="Search" id="submit" onclick="show_loader()">
@@ -24,7 +25,7 @@
 				<td style='vertical-align: top;'>
 					<table class ="trend_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
-						  <div class='alert-flex'> Movies Trending Now </div>
+						  <div class='alert-flex'> Movies Trending</div>
 						</TH></tr>	
 						{% if not trend_movie -%}
 							<tr>	
@@ -44,7 +45,7 @@
 				<td style='vertical-align: top;'>
 					<table class ="trend_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
-						<div class='alert-flex'> Shows Trending Now </div>
+						<div class='alert-flex'> Shows Trending</div>
 						</TH></tr>	
 						{% if not trend_show -%}
 							<tr>	
@@ -87,11 +88,11 @@
 
 			<table id="results" summary="Search Results">
 				<thead>
-					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t">Title</a></th>
-					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=c">Type</a></th> 
-					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s">Size</a></th> 
-					    <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d">Days</a></th> 
-					    <th scope="col" class=providercell><a href="s?q={{ args['q'] }}&order=p">Comments</a></th>
+					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th>
+					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=c"><b>Type <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th> 
+					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s"><b>Size <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th> 
+					    <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d"><b>Days <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th> 
+					    <th scope="col" class=providercell><a href="s?q={{ args['q'] }}&order=p"><b>Comments <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -114,11 +115,11 @@
 			{% if exist -%}
 			<table id="results" summary="Detected duplicates">
 				<thead>
-					<tr><th scope="col" class=titlecell>Detected duplicates and weak matches</th>
-					    <th scope="col" class=sizecell>Type</a></th> 					
-						<th scope="col" class=sizecell>Size</th> 
-						<th scope="col" class=datecell>Days</th> 
-						<th scope="col" class=providercell>Comments</th></tr>
+					<tr><th scope="col" class=titlecell><b>Detected duplicates and weak matches</b></th>
+					    <th scope="col" class=sizecell><b>Type</b></th> 					
+						<th scope="col" class=sizecell><b>Size</b></th> 
+						<th scope="col" class=datecell><b>Days</b></th> 
+						<th scope="col" class=providercell><b>Comments</b></th></tr>
 				</thead>
 				<tbody>
 				{% for row in results -%}
@@ -145,7 +146,7 @@
 			{%- endif %}
 			
 			{% if vr['chk']  == -1 -%} 
-				<span style='color: #ff0000'> Error checking updates </span> 
+				<span style='color: #ff0000'> Err. chk. updates </span> 
 			{%- endif %}			
 			[ <a href= "config"><img src="static/options.png" width="" height="16" style='vertical-align: bottom;' /></a> ] 
 			[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' /><img src="static/cp_logo.png" width="" height="16" /></a> ] 			</div>		

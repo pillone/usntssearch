@@ -20,6 +20,7 @@ from flask import  Flask, render_template, redirect, send_file
 import requests
 import tempfile
 import megasearch
+import xml.etree.ElementTree
 import xml.etree.cElementTree as ET
 import SearchModule
 import datetime

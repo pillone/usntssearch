@@ -1,5 +1,7 @@
 /* Reset styles */
+/*
 @import url(reset.css);
+*/
 
 /* Typography */
 body
@@ -40,7 +42,7 @@ div#container
  /*this is what we want the div to look like*/
 .topright{
     display:block;
-	font: bold 12px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	font: bold 12px Helvetica, Arial, Sans-Serif;;
 
     /*set the div in the top right corner*/
     position:absolute;
@@ -58,14 +60,14 @@ div#container
 
 .message{
    display:block;
-	font: 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	font: 14px Helvetica, Arial, Sans-Serif;;
     position:absolute;
 	color: #039;
  
 }
 
 .bottomcenter{
-	font: 8px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	font: 8px Helvetica, Arial, Sans-Serif;;
 	text-align: center;	
 	color: #039;
 	width: 450px;
@@ -73,7 +75,7 @@ div#container
 }
 
 .providerlist{
-	font: 12px bold 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	font: 12px Helvetica, Arial, Sans-Serif;;
 	text-align: center;	
 	color: #039;
 	width: 450px;
@@ -81,7 +83,7 @@ div#container
 }
 .topright_tight{
     display:block;
-	font: bold 12px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	font: bold 12px Helvetica, Arial, Sans-Serif;;
 
     /*set the div in the top right corner*/
     position:absolute;
@@ -93,14 +95,14 @@ div#container
 .headers_singleparagraph{
 	font-size: 28px;
 	margin: 45px auto;
-	font-family:bold  "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-family:bold  Helvetica, Arial, Sans-Serif;
 	color: #039;
 }
 
 
 .singleparagraph{
 	font-size: 14px;
-	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-family: Helvetica, Arial, Sans-Serif;
 	color: #039;
     margin: 45px 160px;
 	width: 60%;
@@ -117,7 +119,7 @@ div#container
 
 .suggarea_macro {
 	width: 650px;
-	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-family: Helvetica, Arial, Sans-Serif;
 	font-size: 14px;
 	margin: 20px auto auto 320px;
 /*
@@ -127,7 +129,7 @@ div#container
 }
 
 .trend_table {
-	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-family: Helvetica, Arial, Sans-Serif;
 	font-size: 14px;
 	text-align: right;
 	float: right
@@ -135,7 +137,7 @@ div#container
 
 
 .suggarea_table {
-	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-family: Helvetica, Arial, Sans-Serif;
 	font-size: 14px;
 	text-align: right;
 	float: right
@@ -182,7 +184,7 @@ div#container
 	height: 20px;
 	padding: 10px 5px;
 	float: left;
-	font: 16px 'Lucida Sans Unicode', '"Lucida Grande', Sans-Serif;
+	font: 16px Helvetica, Arial, Sans-Serif;
 	border: 1px solid #ccc;
 	-moz-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
 	-webkit-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
@@ -205,21 +207,21 @@ div#container
 .form-wrapper-01 #search::-webkit-input-placeholder {
 	color: #999;
 	font-weight: normal;
-	font-size:12px;
+	font-size:14px;
 	font-style:italic;
 }
  
 .form-wrapper-01 #search:-moz-placeholder {
 	color: #999;
 	font-weight: normal;
-	font-size:12px;
+	font-size:14px;
 	font-style:italic;
 }
  
 .form-wrapper-01 #search:-ms-input-placeholder {
 	color: #999;
 	font-weight: normal;
-	font-size:12px;
+	font-size:14px;
 	font-style:italic;
 }
 
@@ -233,7 +235,7 @@ div#container
 	width: 100px;
 	padding: 0;
 	cursor: pointer;
-	font: bold 15px Arial, Helvetica;
+	font: bold 16px Helvetica, Arial, Sans-Serif;
 	color: #fafafa;
 	text-transform: none;
 	background-color: #0483a0;
@@ -279,7 +281,7 @@ div#container
 	height: 20px;
 	padding: 10px 5px;
 	float: right;
-	font:  bold 16px 'lucida sans', 'trebuchet MS', 'Tahoma';
+	font:  bold 16px Helvetica, Arial, Sans-Serif;
 	border: 1px solid #ccc;
 	-moz-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
 	-webkit-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
@@ -307,7 +309,7 @@ div#container
 /* Results Table Styles */
 #results
 {
-	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-family: Helvetica, Arial, Sans-Serif;
 	font-size: 12px;
 	background: #fff;
 	margin: 45px;
@@ -353,7 +355,7 @@ div#container
 }
 
 .alert-info {
-	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	font: bold 14px Helvetica, Arial, Sans-Serif;;
 	padding: 8px 35px 8px 14px;
 	color: #ffffff;
 	text-shadow: none;
@@ -373,7 +375,11 @@ div#container
 */
 .alert-flex {
 	width: 150px;
-	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	font: bold 14px Helvetica, Arial, Sans-Serif;
+/*
+	font: bold 14px 'Sans-Serif';
+	font: bold 14px Helvetica, Arial, Sans-Serif;;
+*/
 	color: #ffffff;
 	background-color: #a2bcc0;
 	-moz-border-radius: 5px;
@@ -386,7 +392,7 @@ div#container
 
 .alert-red {
 	width: 150px;
-	font: bold 14px 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;
+	font: bold 14px Helvetica, Arial, Sans-Serif;;
 	color: #ffffff;
 	background-color: #ff0000;
 	-moz-border-radius: 5px;

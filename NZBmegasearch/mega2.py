@@ -27,17 +27,21 @@ import config_settings
 import miscdefs
 from multiprocessing import Process
 
-app = Flask(__name__)
-SearchModule.loadSearchModules()
-cfg,cgen = config_settings.read_conf()
-print cgen
-sugg = SuggestionResponses(cfg, cgen)
-mega_parall = megasearch.DoParallelSearch(cfg)
+templatedir = SearchModule.resource_path('templates')
+app = Flask(__name__, template_folder=templatedir)
+
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 #~ versioning check
-ver_notify = miscdefs.chk_current_ver() 
-print '~*~ ~*~ NZBMegasearcH (v. '+ str(ver_notify['curver']) + ') ~*~ ~*~'
+print '~*~ ~*~ NZBMegasearcH ~*~ ~*~'
+cver = miscdefs.ChkVersion() 
+print '>> version: '+ str(cver.ver_notify['curver'])
+exit()
+#~ startup
+SearchModule.loadSearchModules()
+cfg,cgen = config_settings.read_conf()
+sugg = SuggestionResponses(cfg, cgen)
+mega_parall = megasearch.DoParallelSearch(cfg)
 	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 #~ first time configuration check
@@ -76,7 +80,7 @@ def search():
 						'configr': cfg,
 						'trend_movie': sugg.movie_trend, 
 						'trend_show': sugg.show_trend, 
-						'ver': ver_notify
+						'ver': cver.ver_notify
 						}
 	return mega_parall.renderit(params_dosearch)
 
@@ -100,7 +104,7 @@ def main_index():
 		mega_parall = megasearch.DoParallelSearch(cfg)
 	if first_time == 1:
 		return config_settings.config_read()	
-
+	
 	sugg.asktrend_allparallel()
 	params_dosearch = {'args': '', 
 						'sugg': [], 
@@ -108,7 +112,7 @@ def main_index():
 						'configr': cfg,
 						'trend_movie': sugg.movie_trend, 
 						'trend_show': sugg.show_trend, 
-						'ver': ver_notify}
+						'ver': cver.ver_notify}
 	return mega_parall.renderit_empty(params_dosearch)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -116,7 +120,7 @@ def main_index():
 @app.route('/api', methods=['GET'])
 def api():
 	#~ print request.args
-	api = ApiResponses(cfg, ver_notify)
+	api = ApiResponses(cfg, cver.ver_notify)
 	return api.dosearch(request.args)
 
 @app.route('/connect', methods=['GET'])
@@ -132,8 +136,6 @@ def generic_error(error):
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 if __name__ == "__main__":	
-	if( ver_notify['chk'] == -1):
-		ver_notify['chk'] = miscdefs.chk(ver_notify['curver'])
 	sugg.asktrend_allparallel()
 	chost = '0.0.0.0'
 	cport = int(cgen['portno'])

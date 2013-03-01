@@ -19,6 +19,7 @@
 from flask import  Flask, render_template, redirect
 import requests
 import megasearch
+import xml.etree.ElementTree
 import xml.etree.cElementTree as ET
 import SearchModule
 import datetime
