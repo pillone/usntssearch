@@ -82,10 +82,9 @@ class ChkVersion:
 	def autoupdate(self): 
 		#~ linux only, sorry win users
 		if sys.platform.startswith('linux'):
+			print 'MISCDEFS: THIS LINE HAS TO BE REMOVED BEFORE DEPLOYMENT'
 			#~ subprocess.call(["git", "fetch"])
 			#~ subprocess.call(["git", "reset", "--hard", "origin/master"])
-			print 'nothings done'
-			time.sleep(3)
 			pythonscr = sys.executable
 			os.execl(pythonscr, pythonscr, * sys.argv)
 

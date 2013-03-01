@@ -27,19 +27,24 @@ import config_settings
 import miscdefs
 from multiprocessing import Process
 
+DEBUGFLAG = False
 templatedir = SearchModule.resource_path('templates')
 app = Flask(__name__, template_folder=templatedir)
-
-
+	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 #~ versioning check
 print '~*~ ~*~ NZBMegasearcH ~*~ ~*~'
 cver = miscdefs.ChkVersion() 
 print '>> version: '+ str(cver.ver_notify['curver'])
-exit()
+
 #~ startup
 SearchModule.loadSearchModules()
 cfg,cgen = config_settings.read_conf()
+
+if(DEBUGFLAG):
+	cgen['general_trend'] = 0
+	print 'MEGA2: DEBUGFLAG MUST BE SET TO FALSE BEFORE DEPLOYMENT'
+
 sugg = SuggestionResponses(cfg, cgen)
 mega_parall = megasearch.DoParallelSearch(cfg)
 	
@@ -141,5 +146,5 @@ if __name__ == "__main__":
 	cport = int(cgen['portno'])
 
 	print '>> Running on port '	+ str(cport)
-	app.run(host=chost,port=cport, debug = False)
+	app.run(host=chost,port=cport, debug = DEBUGFLAG)
 
