@@ -26,12 +26,15 @@ import datetime
 import time
 from operator import itemgetter
 import threading
+import logging
 
 BEST_K_YEAR = 5
 BEST_K_VOTES = 3
 MAX_TRENDS = 50
 MAX_CHAR_LEN = 22
 MIN_REFRESHRATE_S = 1800
+
+log = logging.getLogger(__name__)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 class SuggestionResponses:
@@ -79,6 +82,7 @@ class SuggestionResponses:
 			sugg_trend_raw = self.movie_bestmatch(movieinfo_trend)
 			self.movie_trend = self.prepareforquery(sugg_trend_raw)
 			print datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + ' MVT ' + str(len(self.movie_trend))
+			log.info('MVT ' + str(len(self.movie_trend)))
 			
 			if(len(self.movie_trend)):
 				self.movie_trend_ts = time.time()
@@ -98,7 +102,8 @@ class SuggestionResponses:
 				lastepisode = self.get_show_lastepisode(show_trend_raw[i]['tvrage_id'])
 				if(len(lastepisode)):
 					self.show_trend =  self.prepareforquery_show(show_trend_raw[i], lastepisode, self.show_trend)
-			print datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + ' SHT ' + str(len(self.show_trend))
+			mssg = datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + ' SHT ' + str(len(self.show_trend))
+			log.info('SHT ' + str(len(self.show_trend)))
 			
 			if(len(self.show_trend)):			
 				self.show_trend_ts = time.time()
@@ -140,6 +145,7 @@ class SuggestionResponses:
 			http_result = requests.get(url=url_tvrage, params=urlParams, verify=False, timeout=self.timeout)
 		except Exception as e:
 			print e
+			log.critical(str(e))
 			return parsed_data
 		
 		data = http_result.text
@@ -148,6 +154,7 @@ class SuggestionResponses:
 			tree = ET.fromstring(data.encode('utf-8'))
 		except Exception as e:
 			print e
+			log.critical(str(e))
 			return parsed_data
 
 		#~ check airdate, check latest episode
@@ -191,12 +198,14 @@ class SuggestionResponses:
 			http_result = requests.get(url=url_imdb, verify=False, timeout=self.timeout)
 		except Exception as e:
 			print e
+			log.critical(str(e))
 			return parsed_data
 		
 		try:
 			data = http_result.json()
 		except Exception as e:
 			print e
+			log.critical(str(e))
 			return parsed_data
 		
 		mxtrends = min(MAX_TRENDS, len(data))
@@ -234,12 +243,14 @@ class SuggestionResponses:
 			http_result = requests.get(url=url_imdb, verify=False, timeout=self.timeout)
 		except Exception as e:
 			print e
+			log.critical(str(e))
 			return parsed_data
 		
 		try:
 			data = http_result.json()
 		except Exception as e:
 			print e
+			log.critical(str(e))
 			return parsed_data
 		
 		mxtrends = min(MAX_TRENDS, len(data))
@@ -320,17 +331,22 @@ class SuggestionResponses:
 			http_result = requests.get(url=url_imdb , params=urlParams, verify=False, timeout=self.timeout)
 		except Exception as e:
 			print e
+			log.critical(str(e))
 			return parsed_data
 		
 		try:
 			datablob = http_result.json()
 		except Exception as e:
 			print e
+			log.critical(str(e))
 			return parsed_data
 		
 		#~ no movie found
 		if('code' in datablob):
-			print 'ERROR IMDB [' + self.search_str + ']'
+			mssg = 'IMDB sugg not found [' + self.search_str + ']'
+			print mssg
+			log.warning(mssg)
+
 			return parsed_data
 
 		for i in xrange(len(datablob)):

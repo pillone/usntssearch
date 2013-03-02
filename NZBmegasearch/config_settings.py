@@ -90,10 +90,15 @@ def read_conf_fn():
 	gen_pwd = parser.get('general', 'general_pwd')	
 	gen_trd = parser.get('general', 'trends')	
 	gen_timeout = int(parser.get('general', 'default_timeout'))
+	gen_cacheage = int(parser.get('general', 'max_cache_age'))
+	gen_log_size = int(parser.get('general', 'max_log_size'))
+	gen_log_backupcount = int(parser.get('general', 'max_log_backupcount'))
+	co1 = {'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd, 'default_timeout' : gen_timeout, 'max_cache_age' : gen_cacheage, 'log_backupcount': gen_log_backupcount, 'log_size' : gen_log_size}	
 	
 	#~ chk if exists
 	cst_parser = SafeConfigParser()
 	cst_parser.read('custom_params.ini')
+
 	try:
 		numserver = cst_parser.get('general', 'numserver')	
 		#~ custom	 NAB
@@ -114,11 +119,8 @@ def read_conf_fn():
 		if(ret1 == True): 
 			gen_user = cst_parser.get('general', 'general_user')	
 			gen_pwd = cst_parser.get('general', 'general_pwd')	
-		
-		co1 = {'portno': portno, 'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd, 'default_timeout' : gen_timeout}
-	
+
 	except Exception:
-		co1 = {'portno': portno, 'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd, 'default_timeout' : gen_timeout}
 		return cfg_struct, co1
 	
 	try:

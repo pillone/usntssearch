@@ -191,8 +191,8 @@ class HTTPConnectionPool(ConnectionPool, RequestMethods):
         Return a fresh :class:`httplib.HTTPConnection`.
         """
         self.num_connections += 1
-        log.info("Starting new HTTP connection (%d): %s" %
-                 (self.num_connections, self.host))
+        #~ log.info("Starting new HTTP connection (%d): %s" %
+                 #~ (self.num_connections, self.host))
         return HTTPConnection(host=self.host,
                               port=self.port,
                               strict=self.strict)
@@ -225,7 +225,7 @@ class HTTPConnectionPool(ConnectionPool, RequestMethods):
 
         # If this is a persistent connection, check if it got disconnected
         if conn and is_connection_dropped(conn):
-            log.info("Resetting dropped connection: %s" % self.host)
+            #~ log.info("Resetting dropped connection: %s" % self.host)
             conn.close()
 
         return conn or self._new_conn()
@@ -529,8 +529,8 @@ class HTTPSConnectionPool(HTTPConnectionPool):
         Return a fresh :class:`httplib.HTTPSConnection`.
         """
         self.num_connections += 1
-        log.info("Starting new HTTPS connection (%d): %s"
-                 % (self.num_connections, self.host))
+        #~ log.info("Starting new HTTPS connection (%d): %s"
+                 #~ % (self.num_connections, self.host))
 
         if not ssl: # Platform-specific: Python compiled without +ssl
             if not HTTPSConnection or HTTPSConnection is object:

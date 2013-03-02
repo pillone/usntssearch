@@ -65,6 +65,7 @@ class aa_NZBx(SearchModule):
 			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=cfg['timeout'])
 		except Exception as e:
 			print e
+			log.critical(str(e))
 			return []
 		
 		try:

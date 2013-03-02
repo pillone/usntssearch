@@ -234,7 +234,8 @@ class WSGIRequestHandler(BaseHTTPRequestHandler, object):
         return self.client_address[0]
 
     def log_request(self, code='-', size='-'):
-        self.log('info', '"%s" %s %s', self.requestline, code, size)
+		pass 
+        #~ self.log('info', '"%s" %s %s', self.requestline, code, size)
 
     def log_error(self, *args):
         self.log('error', *args)

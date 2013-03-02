@@ -24,6 +24,10 @@ from flask import render_template
 import os
 import subprocess
 import time
+import logging
+
+log = logging.getLogger(__name__)
+
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 def legal():
 	return render_template('legal.html')
@@ -83,6 +87,9 @@ class ChkVersion:
 		#~ linux only, sorry win users
 		if sys.platform.startswith('linux'):
 			print 'MISCDEFS: THIS LINE HAS TO BE REMOVED BEFORE DEPLOYMENT'
+			mssg = '>> Running autoupdate on Linux platform' 
+			print mssg
+			log.info(mssg)
 			#~ subprocess.call(["git", "fetch"])
 			#~ subprocess.call(["git", "reset", "--hard", "origin/master"])
 			pythonscr = sys.executable
@@ -91,6 +98,8 @@ class ChkVersion:
 	def chk_repos_ver(self): 
 		verify_str = '80801102808011028080110280801102'
 		url_versioning = 'https://raw.github.com/pillone/usntssearch/master/NZBmegasearch/vernum.num'
+		
+		print 'MISCDEFS: TO REMOVE  LINE IN AUTOUPD  BEFORE DEPLOYMENT'
 		try:
 			http_result = requests.get(url=url_versioning)
 			#~ print http_result.text
@@ -100,7 +109,8 @@ class ChkVersion:
 				return  -1
 
 			if(self.ver_notify['curver'] < cur_ver):
-				print '>> A newer version is available. User notification on.'
+				print '>> A newer version is available. User notification on.' 
+
 				#~ in case of supported platforms this is never executed, but autoupdated
 				self.autoupdate()
 				return 1
@@ -110,5 +120,7 @@ class ChkVersion:
 				return 0	
 
 		except Exception as e:
-			print e
+			mssg = str(e)
+			print mssg
+			log.critical(mssg)
 			return -1

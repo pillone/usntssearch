@@ -111,6 +111,7 @@ def _log(type, message, *args, **kwargs):
         # end-user application didn't set anything up.
         if not logging.root.handlers and _logger.level == logging.NOTSET:
             _logger.setLevel(logging.INFO)
+            #~ _logger.setLevel(logging.WARNING)
             handler = logging.StreamHandler()
             _logger.addHandler(handler)
     getattr(_logger, type)(message.rstrip(), *args, **kwargs)

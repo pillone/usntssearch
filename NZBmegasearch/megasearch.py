@@ -18,12 +18,13 @@ from sets import Set
 import decimal
 import datetime
 import time
-#~ import dateutil.relativedelta
 from operator import itemgetter
 from urllib2 import urlparse
 from flask import render_template
-
 import SearchModule
+import logging
+
+log = logging.getLogger(__name__)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 class DoParallelSearch:
@@ -48,29 +49,6 @@ class DoParallelSearch:
 		return render_template('main_page.html', vr=params['ver'], nc=self.svalid, sugg = [], 
 								trend_show = params['trend_show'], trend_movie = params['trend_movie'] )
 		
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-'''	
-def dosearch(params):
-	args = params['args']
-	sugg_list = params['sugg']
-	cfg = params['configr']
-	ver_notify  = params['configr']
-	svalid = 0
-
-	for i in xrange(len(cfg)):
-		if(cfg[i]['valid']):
-			svalid = svalid + 1
-	
-	#~ return render_template('main_page.html', vr=ver_notify, nc=svalid, 
-											#~ sugg = sugg_list, trend_show = params['trend_show'], trend_movie = params['trend_movie'])
-	if(len(args)):
-		results = SearchModule.performSearch(args['q'], cfg )
-		results = summary_results(results,args['q'])
-		return cleanUpResults(results, sugg_list, ver_notify, args, svalid, params)
-	else:
-		return render_template('main_page.html', vr=ver_notify, nc=svalid, sugg = [], trend_show = params['trend_show'], trend_movie = params['trend_movie'] )
-'''		
-		 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 def summary_results(rawResults,strsearch):
@@ -90,8 +68,8 @@ def summary_results(rawResults,strsearch):
 			
 	strsearch1 = SearchModule.sanitize_strings(strsearch)
 	strsearch1_collection = Set(strsearch1.split("."))	
-	print datetime.datetime.now().strftime("%Y-%m-%d %H:%M ") + ' [' + strsearch1 + ']'+ ' [' + strsearch + ']'
 	
+	rcount = [0]*2
 	for z in xrange(len(results)):
 		findone = 0 
 		results[z]['ignore'] = 0			
@@ -109,6 +87,12 @@ def summary_results(rawResults,strsearch):
 					sz2 = float(results[v]['size'])
 					if( abs(sz1-sz2) < 5000000):
 						results[z]  ['ignore'] = 1
+		#~ stats
+		rcount[	results[z]  ['ignore'] ] += 1			
+
+	mssg = '[' + strsearch1 + ']'+ ' [' + strsearch + '] ' + str(rcount[0]) + ' ' + str(rcount[1])
+	print mssg
+	log.info (mssg)
 
 	return results
 	
@@ -172,12 +156,3 @@ def cleanUpResults(results, sugg_list, ver_notify, args, svalid, params):
 	return render_template('main_page.html',results=niceResults, exist=existduplicates, 
 											vr=ver_notify, args=args, nc = svalid, sugg = sugg_list,
 											trend_show = params['trend_show'], trend_movie = params['trend_movie'])
-
-#~ debug
-if __name__ == "__main__":
-	print 'Save to file'
-	webbuf_ret = dosearch('Hotel.Impossible.S01E01')
-	myFile = open('results.html', 'w')
-	myFile.write(webbuf_ret)
-	myFile.close()
-

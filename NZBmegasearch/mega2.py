@@ -4,7 +4,7 @@
 #~ NZBmegasearch is free software: you can redistribute it and/or modify
 #~ it under the terms of the GNU General Public License as published by
 #~ the Free Software Foundation, either version 3 of the License, or
-#~ (at your option) any later version.
+#~ (at your option) any later version. 
 #~ 
 #~ NZBmegasearch is distributed in the hope that it will be useful,
 #~ but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,6 +17,8 @@
 
 from flask import Flask
 from flask import request, Response
+import logging
+import logging.handlers
 import os
 import threading
 import SearchModule
@@ -25,47 +27,44 @@ from SuggestionModule import SuggestionResponses
 import megasearch
 import config_settings
 import miscdefs
-from multiprocessing import Process
 
 DEBUGFLAG = False
-templatedir = SearchModule.resource_path('templates')
-app = Flask(__name__, template_folder=templatedir)
-	
+
+motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
+print motd
+
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-#~ versioning check
-print '~*~ ~*~ NZBMegasearcH ~*~ ~*~'
+#~ bootstrap datefmt='%Y-%m-%d %H:%M:%S'
+cfg,cgen = config_settings.read_conf()
+logsdir = SearchModule.resource_path('logs/')
+logging.basicConfig(filename=logsdir+'nzbmegasearch.log',level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+log = logging.getLogger(__name__)
+handler = logging.handlers.RotatingFileHandler(logsdir+'nzbmegasearch.log', maxBytes=cgen['log_size'], backupCount=cgen['log_backupcount'])
+log.addHandler(handler)
+log.info(motd)
+templatedir = SearchModule.resource_path('templates')
+app = Flask(__name__, template_folder=templatedir)	
 cver = miscdefs.ChkVersion() 
 print '>> version: '+ str(cver.ver_notify['curver'])
-
-#~ startup
 SearchModule.loadSearchModules()
-cfg,cgen = config_settings.read_conf()
-
 if(DEBUGFLAG):
 	cgen['general_trend'] = 0
 	print 'MEGA2: DEBUGFLAG MUST BE SET TO FALSE BEFORE DEPLOYMENT'
-
 sugg = SuggestionResponses(cfg, cgen)
-mega_parall = megasearch.DoParallelSearch(cfg)
-	
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-#~ first time configuration check
+mega_parall = megasearch.DoParallelSearch(cfg)	
 first_time = 1
 if os.path.exists("custom_params.ini"):
 	first_time = 0
 	print '>> NZBMegasearcH is configured'
 else:	
-	print '>> NZBMegasearcH will be configured'	
-
-	 
+	print '>> NZBMegasearcH will be configured'		 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/legal')
 @miscdefs.requires_auth
 def legal():
 	return (miscdefs.legal())
-
-	 
+	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/s', methods=['GET'])
@@ -90,7 +89,6 @@ def search():
 	return mega_parall.renderit(params_dosearch)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
 @app.route('/config', methods=['GET','POST'])
 @miscdefs.requires_auth
 def config():
@@ -144,7 +142,17 @@ if __name__ == "__main__":
 	sugg.asktrend_allparallel()
 	chost = '0.0.0.0'
 	cport = int(cgen['portno'])
-
 	print '>> Running on port '	+ str(cport)
-	app.run(host=chost,port=cport, debug = DEBUGFLAG)
 
+	try:
+		app.run(host=chost,port=cport, debug = DEBUGFLAG)
+	
+	except KeyboardInterrupt:
+		log.info('Shutting down server')
+		shutdown_function = request.environ.get('werkzeug.server.shutdown')
+		if shutdown_function is None:
+			raise RuntimeError('Not running with Werkzeug')
+		shutdown_function()
+	except Exception as e:
+		log.critical('Failed to start Flask app: ' + str(e))
+		print 'Failed to start Flask app: ' + str(e)	

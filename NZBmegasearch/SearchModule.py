@@ -26,6 +26,10 @@ import os
 import copy
 import threading
 import re
+import logging
+
+log = logging.getLogger(__name__)
+
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -45,30 +49,35 @@ def loadSearchModules(moduleDir = None):
 	searchModuleNames = [];
 	if moduleDir == None:
 		moduleDir = resource_path('SearchModules/')
-	print 'Loading modules from: ' + moduleDir
+	print '>> Loading modules from: ' + moduleDir
 	for file in os.listdir(moduleDir):
 		if file.endswith('.py') and file != '__init__.py':
 			searchModuleNames.append(file[0:-3])
 	if len(searchModuleNames) == 0:
-		print 'No search modules found.'
+		print '>> No search modules found.'
 		return
 	else:
-		print 'Found ' + str(len(searchModuleNames)) + ' modules'
+		print '>> Found ' + str(len(searchModuleNames)) + ' modules'
 		
 	searchModuleNames = sorted(searchModuleNames)
 	path = list(sys.path)
 	sys.path.insert(0, moduleDir)
 
 	# Import the modules that the user has enabled
-	print 'Importing: ' + ', '.join(searchModuleNames)
+	mssg = '>> Importing: ' + ', '.join(searchModuleNames)
+	print mssg
+	log.info (mssg)
+
 	try:
 		for module in searchModuleNames:
 			importedModules = __import__('SearchModules.' + module)
 	except Exception as e:
-		print 'Failed to import search modules: ' + str(e)
+		mssg = 'Failed to import search modules: ' + str(e)
+		print mssg
+		log.critical (mssg)
 		return
 	
-	print 'instantiating module classes'
+	#~ print 'instantiating module classes'
 	# Instantiate the modules
 	for module in searchModuleNames:
 		try:
@@ -186,7 +195,9 @@ class SearchModule(object):
 			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=tout)
 					
 		except Exception as e:
-			print self.queryURL + ' -- ' + str(e)
+			mssg = self.queryURL + ' -- ' + str(e)
+			print mssg
+			log.critical(mssg)
 			#~ error_rlimit = str(e.args[0]).find('Max retries exceeded')
 			#~ print error_rlimit
 			return parsed_data
@@ -253,7 +264,8 @@ class SearchModule(object):
 		if(	len(parsed_data) == 0 and len(data) < 100):
 			limitpos = data.encode('utf-8').find('<error code="500"')
 			if(limitpos != -1):
-				print 'ERROR: Download/Search limit reached ' + self.queryURL
-		
+				mssg = 'ERROR: Download/Search limit reached ' + self.queryURL
+				print mssg
+				log.error (mssg)
 		return parsed_data		
 

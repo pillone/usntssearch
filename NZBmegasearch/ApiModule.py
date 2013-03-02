@@ -27,6 +27,9 @@ import datetime
 import base64
 import urllib2
 import os
+import logging
+
+log = logging.getLogger(__name__)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 class ApiResponses:
@@ -167,12 +170,14 @@ class ApiResponses:
 			http_result = requests.get(url=url_imdb , params=urlParams, verify=False, timeout=self.timeout)
 		except Exception as e:
 			print e
+			log.critical(str(e))
 			return parsed_data
 		
 		try:
 			data = http_result.json()
 		except Exception as e:
 			print e
+			log.critical(str(e))	
 			return parsed_data
 			
 		parsed_data = { 'movietitle': data['title'],
@@ -193,6 +198,7 @@ class ApiResponses:
 			http_result = requests.get(url=url_tvrage, params=urlParams, verify=False, timeout=self.timeout)
 		except Exception as e:
 			print e
+			log.critical(str(e))
 			return parsed_data
 		
 		data = http_result.text
@@ -201,6 +207,7 @@ class ApiResponses:
 			tree = ET.fromstring(data.encode('utf-8'))
 		except Exception as e:
 			print e
+			log.critical(str(e))
 			return parsed_data
 
 		showtitle = tree.find("showname")	
@@ -303,6 +310,8 @@ class ApiResponses:
 			idbinfo = ''
 			kindofreq = kindofreq + ' SB ' + self.args['rid'] + ' '
 			
-		print kindofreq + self.searchstring + ' ' + str(len(niceResults)) + ' ' +  str(len(results))
+		mssg = kindofreq + self.searchstring + ' ' + str(len(niceResults)) + ' ' +  str(len(results))
+		print mssg
+		log.info (mssg)
 		return render_template('api.html',results=niceResults, num_results=len(niceResults), typeres= self.typesearch, idb = idbinfo)
 	
