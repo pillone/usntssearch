@@ -86,12 +86,12 @@ class ChkVersion:
 	def autoupdate(self): 
 		#~ linux only, sorry win users
 		if sys.platform.startswith('linux'):
-			print 'MISCDEFS: THIS LINE HAS TO BE REMOVED BEFORE DEPLOYMENT'
+			#~ print 'MISCDEFS: THIS LINE HAS TO BE REMOVED BEFORE DEPLOYMENT'
 			mssg = '>> Running autoupdate on Linux platform' 
 			print mssg
 			log.info(mssg)
-			#~ subprocess.call(["git", "fetch"])
-			#~ subprocess.call(["git", "reset", "--hard", "origin/master"])
+			subprocess.call(["git", "fetch"])
+			subprocess.call(["git", "reset", "--hard", "origin/master"])
 			pythonscr = sys.executable
 			os.execl(pythonscr, pythonscr, * sys.argv)
 
@@ -99,7 +99,7 @@ class ChkVersion:
 		verify_str = '80801102808011028080110280801102'
 		url_versioning = 'https://raw.github.com/pillone/usntssearch/master/NZBmegasearch/vernum.num'
 		
-		print 'MISCDEFS: TO REMOVE  LINE IN AUTOUPD  BEFORE DEPLOYMENT'
+		#~ print 'MISCDEFS: TO REMOVE  LINE IN AUTOUPD  BEFORE DEPLOYMENT'
 		try:
 			http_result = requests.get(url=url_versioning)
 			#~ print http_result.text
