@@ -1,20 +1,32 @@
 NZBmegasearcH
-[pillone@inbox.com]
 ===========
 Metasearch on state-of-the-art crawlers
 
-Install
-===========
-- Install python and setuptools
-- Run "python setup.py install" to install the software
-- Enter in the NZBmegasearch directory and run "python mega2.py" to start NZBmegasearch
-- Go to localhost:5000 to configure
+This project makes use of:
+
+- Python 2.7
+- [Flask] (http://flask.pocoo.org/)
+- [Requests] (http://docs.python-requests.org/en/latest/)
+
+Install Windows
+================
+- Download latest available binary from
+- Unzip in a folder and click on mega2.exe
+- Open browser to localhost:5000
+
+Install Linux 
+================
+- apt-get install python2.7 git 
+- git clone https://github.com/pillone/usntssearch.git
+- Enter in the usntssearch/NZBmegasearch directory and run "python mega2.py" to start 
+- Open browser to localhost:5000
 
 Changes in v0.28
 ================
 - Finally logging with autorotation
 - Finally linux version automatically updates
-- Windows binaries are available
+- No python lib dependencies
+- ** Windows binaries are available **
 
 Changes in v0.271
 ================
