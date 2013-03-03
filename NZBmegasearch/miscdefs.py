@@ -101,7 +101,7 @@ class ChkVersion:
 		
 		#~ print 'MISCDEFS: TO REMOVE  LINE IN AUTOUPD  BEFORE DEPLOYMENT'
 		try:
-			http_result = requests.get(url=url_versioning)
+			http_result = requests.get(url=url_versioning, verify=False)
 			#~ print http_result.text
 			vals = http_result.text.split(' ')
 			cur_ver = float(vals[1])
