@@ -1,6 +1,12 @@
-NZBmegasearcH
-===========
-Metasearch on state-of-the-art crawlers
+**NZBmegasearcH** 
+======================
+
+NZBmegasearcH performs metasearch on many state-of-the-art indices.
+
+It is fully customizable also with Newsznab or Spotweb-based indices. It supports CP and SB, retreives trending movies and shows, gives appropriate search suggestions.
+It is python based and it works on linux, mac, win. Windows binaries are also available.
+
+**Latest version is 0.28**
 
 This project makes use of:
 
@@ -8,62 +14,73 @@ This project makes use of:
 - [Flask] (http://flask.pocoo.org/)
 - [Requests] (http://docs.python-requests.org/en/latest/)
 
-Install Windows
+
+
+Install
 ================
-- Download latest available binary from
+
+**Windows**
+
+- Download latest available binary from [usntssearch-binaries/windows] (https://github.com/pillone/usntssearch-binaries/tree/master/windows)
 - Unzip in a folder and click on mega2.exe
 - Open browser to localhost:5000
 
-Install Linux 
-================
+**Linux**
+
 - apt-get install python2.7 git 
 - git clone https://github.com/pillone/usntssearch.git
 - Enter in the usntssearch/NZBmegasearch directory and run "python mega2.py" to start 
 - Open browser to localhost:5000
 
-Changes in v0.28
+
+Updates
 ================
-- Finally logging with autorotation
-- Finally linux version automatically updates
-- No python lib dependencies
-- ** Windows binaries are available **
+
+**Changes in v0.28**
+
+- **Finally logging with autorotation -- thanks PeterBeard**
+- **Finally linux version automatically updates**
+- **No more python lib dependencies. Everything is packed. No need to run setup.**
+- **Windows binaries are available**
+- **Unified graphics between Chrome and Firefox**
+- **Many undocumented and obscure interplatform bugs fixed. Countless hours spent.**
 
 Changes in v0.271
-================
+
 - Superbug introduced and fixed. Sorry everybody.
 
 Changes in v0.27
-================
+
 - COUCHPOTATO support added
 
 Changes in v0.26
-================
+
 - Suggestions over search (only movies for now...)
 - Display trending movies
 - Display trending shows with autosearch current episodes
 - Lots of coding and fixes
 
 Changes in v0.252
-================
+
 - Improved search query sanitizing for better provider search 
 - Improved SICKBEARD search queries for shows with duplicates, thanks judhat2
 
 Changes in v0.251
-================
+
 - Big bug fixed in searches with many Newsznab providers (a bad one)
 - Other fixes and improvements
 
 Changes in v0.25
-================
+
 - SICKBEARD connectivity complete
 - Improvements in search providers
 
 Changes in v0.24
-================
+
 - Sort in title, age, size, provider
 
 Changes in v0.23
-================
+
 - Change port
 - Support username and pwd, thanks to userpasscombine
 - Timeout for long responses
@@ -71,13 +88,12 @@ Changes in v0.23
 
 
 Changes in v0.21
-================
+
 - Added automatic notification of newer versions
 - Improved searches (faster, better)
 - bug fixes
 
 Changes in v0.20
-================
 
 - Added support for FTDworld.net, Fanzub
 - Findnzb does not need any API! thanks to the Findnzb team
