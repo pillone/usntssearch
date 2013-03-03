@@ -63,6 +63,7 @@ class SuggestionResponses:
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def asktrend_allparallel(self):
+
 		if(self.active_trend == 1):
 			t1 = threading.Thread(target=self.asktrend_movie)
 			t2 = threading.Thread(target=self.asktrend_show)
@@ -76,8 +77,9 @@ class SuggestionResponses:
 
 	def asktrend_movie(self):
 
-		dt1 =  (datetime.datetime.now() - datetime.datetime.fromtimestamp(self.movie_trend_ts)).seconds
-		if(dt1 > MIN_REFRESHRATE_S):
+		dt1 =  (datetime.datetime.now() - datetime.datetime.fromtimestamp(self.movie_trend_ts))
+		dl = (dt1.days+1) * dt1.seconds
+		if(dl > MIN_REFRESHRATE_S):
 			movieinfo_trend = self.get_trends_movie()
 			sugg_trend_raw = self.movie_bestmatch(movieinfo_trend)
 			self.movie_trend = self.prepareforquery(sugg_trend_raw)
@@ -93,8 +95,9 @@ class SuggestionResponses:
 				
 	def asktrend_show(self):		
 
-		dt1 =  (datetime.datetime.now() - datetime.datetime.fromtimestamp(self.show_trend_ts)).seconds
-		if(dt1 > MIN_REFRESHRATE_S):
+		dt1 =  (datetime.datetime.now() - datetime.datetime.fromtimestamp(self.show_trend_ts))
+		dl = (dt1.days+1) * dt1.seconds
+		if(dl > MIN_REFRESHRATE_S):
 			showinfo_trend = self.get_trends_show()
 			show_trend_raw = self.show_bestmatch(showinfo_trend)
 			self.show_trend = []
@@ -102,7 +105,7 @@ class SuggestionResponses:
 				lastepisode = self.get_show_lastepisode(show_trend_raw[i]['tvrage_id'])
 				if(len(lastepisode)):
 					self.show_trend =  self.prepareforquery_show(show_trend_raw[i], lastepisode, self.show_trend)
-			mssg = datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + ' SHT ' + str(len(self.show_trend))
+			print datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + ' SHT ' + str(len(self.show_trend))
 			log.info('SHT ' + str(len(self.show_trend)))
 			
 			if(len(self.show_trend)):			
