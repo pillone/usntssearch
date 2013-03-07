@@ -1,3 +1,7 @@
+<a title="hit counter" href="http://statcounter.com/"
+target="_blank"><img
+src="http://c.statcounter.com/8769563/0/45111251/1/"
+alt="hit counter" style="border:none;"></a>
 **NZBmegasearcH** 
 ======================
 
