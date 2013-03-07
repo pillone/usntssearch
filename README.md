@@ -1,8 +1,3 @@
-<a title="website statistics" href="http://statcounter.com/"
-target="_blank"><img
-src="http://c.statcounter.com/8769563/0/45111251/0/"
-alt="website statistics" style="border:none;"></a>
-
 **NZBmegasearcH** 
 ======================
 
@@ -108,3 +103,8 @@ Changes in v0.20
 - Search stability improvements
 - Improved look and feel
 
+
+<a title="website statistics" href="http://statcounter.com/"
+target="_blank"><img
+src="http://c.statcounter.com/8769563/0/45111251/0/"
+alt="website statistics" style="border:none;"></a>
