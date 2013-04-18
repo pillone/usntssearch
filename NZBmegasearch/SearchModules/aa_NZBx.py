@@ -15,7 +15,8 @@
 #~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #
 from SearchModule import *
-
+import time
+		
 # Search on NZBx.co
 class aa_NZBx(SearchModule):
 	
@@ -57,6 +58,8 @@ class aa_NZBx(SearchModule):
 
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):
+		timestamp_s = time.time()
+
 		# Get JSON
 		urlParams = dict(
 			q=queryString
@@ -67,6 +70,9 @@ class aa_NZBx(SearchModule):
 			print e
 			log.critical(str(e))
 			return []
+
+		timestamp_e = time.time()
+		log.info('TS ' + self.baseURL + " " + str(timestamp_e - timestamp_s))
 		
 		try:
 			data = http_result.json()

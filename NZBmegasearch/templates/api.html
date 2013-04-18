@@ -20,7 +20,7 @@
 {% for row in results -%}
 <item>
 	<title>{{ row['title'] }}</title>
-	<guid isPermaLink="true">{{ row['encodedurl'] }}</guid>
+	<guid isPermaLink="true">{{ row['encodedurl']|safe }}</guid>
 	<link>{{ row['url'] }}</link>
 	<comments>{{ row['providerurl'] }}</comments> 	
 	<pubDate>{{ row['age'] }}</pubDate> 	

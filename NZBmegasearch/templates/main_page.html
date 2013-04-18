@@ -5,21 +5,49 @@
 		<title>NZB MegasearcH</title>
 		<link rel="stylesheet" type="text/css" href="static/reset2.css" />
 		<link rel="stylesheet" type="text/css" href="static/style.css" />
-		<script src="static/overlay.js"></script>
+		<link rel="stylesheet" href="static/toggle-switch.css">
+		<script type="text/javascript" src="static/jquery.min.js"></script>		
+		<script type="text/javascript" src="static/block-ui.js"></script>		
+
+		
 	</head>
 	<body>
 		<div id="container">
-
-<!--
-			<div class="alert-info">	</div>
--->
-			<div id="loader" class="titlemain" style="visibility:hidden;"> <img src="static/loadingicon.gif" width="32" height="32" /></div>
+			<div class="alert-info">
+			{{ motd|safe  }}
+			</div>
 			<div  class="titlemain"><img src="static/title.png" width="387" height="" /> 	</div>
 			
 			<form action="/s" method="get" class="form-wrapper-01">
-				<input type="text" id="search" placeholder="Enter your keyword" name="q"><input type="submit" value="Search" id="submit" onclick="show_loader()">
+			<table><tr>
+					<td>
+						<input type="text" id="search" placeholder="" name="q" value="{{ sstring }}">
+						<span>
+						<select class="selcatstlye" name="selcat">
+							<option value="">No categ.</option>			
+							{% for sopt in selectable_opt -%}
+								<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
+							{%- endfor %}
+						</select>
+						</span>
+						<table><tr><td class='searchkind'>mode:</td>
+							<td>
+							<span class="switch switch-three candy blue">
+							{% for srchopt in search_opt -%}
+								<input id="search_option{{ srchopt[1] }}" name="tm" type="radio" value="{{ srchopt[1] }}" {{ srchopt[2] }}>
+								<label for="search_option{{ srchopt[1] }}" onclick="">{{ srchopt[0] }}</label>
+
+							{%- endfor %}
+							<span class="slide-button"></span>
+							</span>
+							</td></tr></table>
+					</td>
+					<td style='width: 42px;'>
+						<input type="submit" value="Go" id="submit">
+					</td>
+					</tr>
+			</table>
 			</form>
-			<div class="providerlist">  {{ nc  }} NZB indeces are searched each time you hit the button :)	</div>
 			<table class ="suggarea_macro">
 				
 				<td style='vertical-align: top;'>
@@ -34,8 +62,8 @@
 						{%- endif %}
 						{% for tm in trend_movie -%}
 							<tr>	
-							<td  class ="suggarea_title"> <a href="s?q={{ tm['searchstr'] }}"> {{ tm['prettytxt'] }} </a></td>
-							<td class ="suggarea_imbd"> <a href="{{ tm['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
+							<td  class ="suggarea_title"> <a href="s?q={{ tm['searchstr'] }}" class='sugglinx'> {{ tm['prettytxt'] }} </a></td>
+							<td class ="suggarea_imbd"> <a href="{{ tm['imdb_url'] }}" > <img src="static/imdb.png" width="16" height="16" /> </a> </td>
 							</tr>
 						{%- endfor %}
 					</table>			
@@ -54,7 +82,7 @@
 						{%- endif %}
 						{% for ts in trend_show -%}
 							<tr>	
-							<td  class ="suggarea_title"> <a href="s?q={{ ts['searchstr'] }}"> {{ ts['prettytxt'] }} </a></td>
+							<td  class ="suggarea_title"> <a href="s?q={{ ts['searchstr'] }}" class='sugglinx'> {{ ts['prettytxt'] }} </a></td>
 							<td class ="suggarea_imbd"> <a href="{{ ts['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
 							</tr>
 						{%- endfor %}
@@ -74,7 +102,7 @@
 						{%- endif %}
 						{% for sl in sugg -%}
 							<tr>	
-							<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"  style="color:#ff0000;"> {{ sl['prettytxt'] }} </a></td>
+							<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"  style="color:#ff0000;" class='sugglinx'> {{ sl['prettytxt'] }} </a></td>
 							<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
 							</tr>
 						{%- endfor %}
@@ -99,11 +127,11 @@
 				{% for row in results -%}
 					{% if row['ignore'] == 0  -%}
 					<tr>
-						<td class="titlecell"><a href= "{{ row['url'] }}">{{ row['title'] }}</a></td>
+						<td class="titlecell"><a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a></td>
 						<td class="sizecell">{{ row['cat'] }}</td>
 						<td class="sizecell">{{ row['filesize'] }}</td>
 						<td class="datecell">{{ row['age'] }}</td>
-						<td class="providercell"> <a href= "{{ row['details'] }}">{{ row['providertitle'] }}</a></td>
+						<td class="providercell"> <a href= "{{ row['details_deref'] }}">{{ row['providertitle'] }}</a></td>
 					</tr>
 					{%- endif %}
 				{%- endfor %}
@@ -115,7 +143,7 @@
 			{% if exist -%}
 			<table id="results" summary="Detected duplicates">
 				<thead>
-					<tr><th scope="col" class=titlecell><b>Detected duplicates and weak matches</b></th>
+					<tr><th scope="col" class=titlecell><b>Detected duplicates</b></th>
 					    <th scope="col" class=sizecell><b>Type</b></th> 					
 						<th scope="col" class=sizecell><b>Size</b></th> 
 						<th scope="col" class=datecell><b>Days</b></th> 
@@ -123,13 +151,13 @@
 				</thead>
 				<tbody>
 				{% for row in results -%}
-					{% if row['ignore']  -%}
+					{% if row['ignore'] == 1  -%}
 					<tr>
-						<td class="titlecell"><a href= "{{ row['url'] }}">{{ row['title'] }}</a></td>
+						<td class="titlecell"><a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a></td>
 						<td class="sizecell">{{ row['cat'] }}</td>						
 						<td class="sizecell">{{ row['filesize'] }}</td>
 						<td class="datecell">{{ row['age'] }}</td>
-						<td class="providercell"> <a href= "{{ row['details'] }}">{{ row['providertitle'] }}</a></td>
+						<td class="providercell"> <a href= "{{ row['details_deref'] }}">{{ row['providertitle'] }}</a></td>
 					</tr>
 					{%- endif %}
 				{%- endfor %}
@@ -138,25 +166,66 @@
 			{%- endif %}
 						
 		</div>
-		{% if vr['chk']  != 0 -%} 
-			<div class="topright">
-			
-			{% if vr['chk']  == 1 -%} 
-				<a href='https://github.com/pillone/usntssearch' style='color: #ff0000;'> New ver. available</a>
-			{%- endif %}
-			
-			{% if vr['chk']  == -1 -%} 
-				<span style='color: #ff0000'> Err. chk. updates </span> 
-			{%- endif %}			
-			[ <a href= "config"><img src="static/options.png" width="" height="16" style='vertical-align: bottom;' /></a> ] 
-			[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' /><img src="static/cp_logo.png" width="" height="16" /></a> ] 			</div>		
+		<div class="topright_tight">
+			[ <a href='https://github.com/pillone/usntssearch'>Offline version</a> ] 
+			[ <a href='legal'>DMCA</a> ] 
+			[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' /><img src="static/cp_logo.png" width="" height="16" /><img src="static/ch_logo.png" width="" height="13" /></a> ] 			</div>		
+		</div>
+	
+		<div class="bottomcenter">ver. {{ vr['curver'] }} -- {{ nc  }} <br/></div>
+
+		{% if debug_flag == False  -%}
+			<!-- Start of StatCounter Code for Default Guide -->
+			<script type="text/javascript">
+			var sc_project=8707188; 
+			var sc_invisible=1; 
+			var sc_security="f3bafd7f"; 
+			var scJsHost = (("https:" == document.location.protocol) ?
+			"https://secure." : "http://www.");
+			document.write("<sc"+"ript type='text/javascript' src='" +
+			scJsHost+
+			"statcounter.com/counter/counter.js'></"+"script>");
+			</script>
+			<noscript><div class="statcounter"><a title="web analytics"
+			href="http://statcounter.com/" target="_blank"><img
+			class="statcounter"
+			src="http://c.statcounter.com/8707188/0/f3bafd7f/1/"
+			alt="web analytics"></a></div></noscript>
+			<!-- End of StatCounter Code for Default Guide -->
 		{%- endif %}
-		{% if vr['chk']  == 0 -%} 
-			<div class="topright_tight">[ <a href= "config"><img src="static/options.png" width="" height="16" style='vertical-align: bottom;' /></a> ] 
-			[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' /><img src="static/cp_logo.png" width="" height="16" /></a> ] 
-			</div>
-		{%- endif %}
-		<div class="bottomcenter">ver. {{ vr['curver'] }} -- 0byte</div>
+
+	    <script type="text/javascript"> 
+	    $(document).ready(function() { 
+			$('#submit').click(function() { 
+
+				$.blockUI({ message: '<h1>PLEASE WAIT</h1><br><h2>this may take up to 20s...</h2>', css: { 
+					border: 'none', 
+					padding: '15px', 
+					backgroundColor: '#000', 
+					'-webkit-border-radius': '10px', 
+					'-moz-border-radius': '10px', 
+					opacity: .7, 
+					color: '#fff' 
+				} }
+						);
+            }); 
+            $('.sugglinx').click(function() { 
+
+				$.blockUI({ message: '<h1>PLEASE WAIT</h1><br><h2>this may take up to 20s...</h2>', css: { 
+					border: 'none', 
+					padding: '15px', 
+					backgroundColor: '#000', 
+					'-webkit-border-radius': '10px', 
+					'-moz-border-radius': '10px', 
+					opacity: .7, 
+					color: '#fff' 
+				} }
+						);
+            }); 
+			$.unblockUI();
+	     }); 
+   
+		</script>
 
 	</body>
 </html>

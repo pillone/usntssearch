@@ -26,7 +26,7 @@ class ab_Findnzb(SearchModule):
 		# Parse config file		
 		self.name = 'Findnzb'
 		self.typesrch = 'FNB'
-		self.queryURL = 'https://findnzbs.info/api'
+		self.queryURL = 'http://findnzbs.info/api'
 		self.baseURL = ' https://findnzbs.info'
 		self.api = '5b914645c6aa2a1c959113a5aafbb1a7'
 		self.active = 1

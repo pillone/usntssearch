@@ -90,11 +90,13 @@ def loadSearchModules(moduleDir = None):
 			loadedModules.append(targetClass())
 		except Exception as e:
 			print 'Error instantiating search module ' + module + ': ' + str(e)
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	
 # Perform a search using all available modules
-def performSearch(queryString,  cfg):
+def performSearch(queryString,  cfg, dsearch=None):
+		
 	queryString = queryString.strip()
-
 	queryString = sanitize_strings(queryString)
 	#~ print queryString
 	
@@ -114,7 +116,10 @@ def performSearch(queryString,  cfg):
 				neededModules.append(copy.copy(module))
 
 	for index in xrange(len(cfg)):
-		if(cfg[index]['valid']== '1'):
+		rval = False
+		if (((dsearch is not None) and (cfg[index]['valid'] == 2)) or (cfg[index]['valid'] == 1)):
+			rval = True
+		if(rval == True):
 			try:
 				#~ print neededModule 
 				t = threading.Thread(target=performSearchThread, args=(queryString,neededModules[index],lock,cfg[index]))
@@ -123,9 +128,18 @@ def performSearch(queryString,  cfg):
 			except Exception as e:
 				print 'Error starting thread  : ' + str(e)
 
+	if(dsearch is not None):
+		for index in xrange(len(dsearch.ds)):
+			if(dsearch.ds[index].cur_cfg['valid'] == 1):
+				try:
+					t = threading.Thread(target=performSearchThreadDS, args=(queryString,lock,dsearch.ds[index]))
+					t.start()
+					threadHandles.append(t)
+				except Exception as e:
+					print 'Error starting deepsearch thread  : ' + str(e)
+
 	for t in threadHandles:
 		t.join()
-	#~ print '=== All Search Threads Finished ==='
 
 	return globalResults
 
@@ -134,13 +148,15 @@ def performSearch(queryString,  cfg):
 
 def sanitize_html(value):
 	if(len(value)):		
-		value = value.replace("<\/b>", "").replace("<b>", "").replace("&quot;", "").replace("&lt;", "").replace("&gt;", "")
+		value = value.replace("<\/b>", "").replace("<b>", "").replace("&quot;", "").replace("&lt;", "").replace("&gt;", "").replace("&amp;", "'")
 	return value
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 		
 def sanitize_strings(value):
 	if(len(value)):
 		value = sanitize_html(value).lower()
-		#~ value = value.replace(".", " ").replace("'", "").replace("-", " ").replace(":", " ").replace('"', " ").replace('(', " ").replace(')', ' ').replace('-', ' ').replace('*', ' ').replace('&', ' ').replace(';', ' ').replace('!', ' ')
+		#~ value = unidecode.unidecode(sanitize_html(value).lower())
 		value = re.compile("[^A-Za-z0-99]").sub(" ",value)
 		value = " ".join(value.split()).replace(" ", ".") 
 		#~ print value
@@ -153,11 +169,26 @@ def performSearchThread(queryString, neededModule, lock, cfg):
 	localResults = neededModule.search(queryString, cfg)
 	lock.acquire()
 	globalResults.append(localResults)
+
 	try:
 		lock.release()
 	except Exception as e:
 		print e
  
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	
+def performSearchThreadDS(queryString, lock, dsearch_one):
+	
+	localResults = dsearch_one.search(queryString)
+	lock.acquire()
+	globalResults.append(localResults)
+
+	try:
+		lock.release()
+	except Exception as e:
+		print e
+ 
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 # Exception to be raised when a search function is not implemented
 class NotImplementedException(Exception):
@@ -176,9 +207,11 @@ class SearchModule(object):
 		self.baseURL = ''
 		self.nzbDownloadBaseURL = ''
 		self.apiKey = ''
+
 	# Show the configuration options for this module
 	def configurationHTML(self):
 		return ''
+
 	# Perform a search using the given query string
 	def search(self, queryString):
 		raise NotImplementedException('This scraper does not have a search function.')
@@ -190,7 +223,8 @@ class SearchModule(object):
 	def parse_xmlsearch(self, urlParams, tout): 
 		parsed_data = []
 		#~ print self.queryURL  + ' ' + urlParams['apikey']
-		
+		timestamp_s = time.time()
+
 		try:
 			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=tout)
 					
@@ -201,7 +235,10 @@ class SearchModule(object):
 			#~ error_rlimit = str(e.args[0]).find('Max retries exceeded')
 			#~ print error_rlimit
 			return parsed_data
-					
+		timestamp_e = time.time()	
+		#~ print "NABAPI " + self.queryURL + " " + str(timestamp_e - timestamp_s)
+		log.info('TS ' + self.baseURL + " " + str(timestamp_e - timestamp_s))
+							
 		data = http_result.text
 		data = data.replace("<newznab:attr", "<newznab_attr")
 

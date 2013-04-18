@@ -15,6 +15,7 @@
 #~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #
 from SearchModule import *
+import time
 
 # Search on NZB.cc
 class ac_NZBcc(SearchModule):
@@ -57,13 +58,17 @@ class ac_NZBcc(SearchModule):
 		urlParams = dict(
 			q=queryString
 		)
+		timestamp_s = time.time()	
 		try:
 			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=cfg['timeout'])
 		except Exception as e:
 			print e
 			log.critical(str(e))
 			return []
-			
+
+		timestamp_e = time.time()
+		log.info('TS ' + self.baseURL + " " + str(timestamp_e - timestamp_s))
+					
 		data = http_result.text
 		# Start parsing the text
 		cstart = 0

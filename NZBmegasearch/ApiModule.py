@@ -16,7 +16,7 @@
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
 
 
-from flask import  Flask, render_template, redirect, send_file
+from flask import  Flask, render_template, redirect, send_file, Response
 import requests
 import tempfile
 import megasearch
@@ -35,14 +35,25 @@ log = logging.getLogger(__name__)
 class ApiResponses:
 
 	# Set up class variables
-	def __init__(self, conf, version):
+	def __init__(self, conf, wrp):
 		self.response = []
-		self.cfg= conf
-		self.ver_notify = version
-		self.timeout = conf[0]['timeout']
 		self.serie_string = ''
 		self.typesearch = ''
-		
+		self.wrp = wrp
+		self.tvrage_rqheaders = {
+								'Connection': 'keep-alive;' ,
+								'Cache-Control': 'max-age=0',
+								'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+								'User-Agent': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.52 Safari/537.17',
+								'Referer': 'http://services.tvrage.com/info.php?page=main',
+								'Accept-Encoding': 'gzip,deflate,sdch',
+								'Accept-Language': 'en-US,en;q=0.8',
+								'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3'
+								 }
+		if(conf is not None):
+			self.timeout = conf[0]['timeout']
+			self.cfg= conf	 		
+			
 	def dosearch(self, arguments):
 		self.args = arguments
 		
@@ -54,7 +65,7 @@ class ApiResponses:
 				response = self.couchpotato_req()	
 			#~ elif (typesearch == 'music'):
 				#~ response = self.headphones_req()	
-			elif (typesearch == 'get'):				
+			elif (typesearch == 'get'):	
 				filetosend = self.proxy_NZB_file()
 				return filetosend
 			else:
@@ -105,11 +116,22 @@ class ApiResponses:
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~		
 		
 	def proxy_NZB_file(self):
-		fullurl = base64.b64decode(self.args['id'])
+		#~ fullurl = self.wrp.chash64_decode(self.args['id'])
+		#~ print fullurl
+		arguments={}
+		arguments['x'] = self.args['id']
+		print self.args
+		if('m' in self.args):
+			arguments['m'] = self.args['m']
+		return self.wrp.beam(arguments)
+
+		#~ LOCAL VERSION
+		'''
 		response = urllib2.urlopen(fullurl)
 		fcontent = response.read()
 		#~ print fullurl
 		#~ print response.info()
+		
 		f=tempfile.NamedTemporaryFile(delete=False)
 		f.write(fcontent)
 		f.close()	
@@ -126,6 +148,9 @@ class ApiResponses:
 		#~ print fresponse.headers
 		return fresponse				
 
+		'''
+		
+
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def couchpotato_req(self):	
 	
@@ -134,7 +159,7 @@ class ApiResponses:
 			#~ request imdb
 			#~ http://deanclatworthy.com/imdb/?id=tt1673434
 			#~ http://imdbapi.org/?id=tt1673434
-			imdb_show = self.imdb_movieinfo(self.args['imdbid'])	
+			imdb_show = self.imdb_movieinfo(self.args['imdbid'])
 			if(len(imdb_show['movietitle'])): 
 				return self.generate_movie_nabresponse(imdb_show)
 			else:
@@ -179,7 +204,11 @@ class ApiResponses:
 			print e
 			log.critical(str(e))	
 			return parsed_data
-			
+		#~ print data 	
+		
+		if('error' in data):
+			return parsed_data
+		
 		parsed_data = { 'movietitle': data['title'],
 						'year': str(data['year'])}
 		#~ print parsed_data
@@ -195,7 +224,7 @@ class ApiResponses:
 		urlParams = dict( sid=rid )			
 		#~ loading
 		try:
-			http_result = requests.get(url=url_tvrage, params=urlParams, verify=False, timeout=self.timeout)
+			http_result = requests.get(url=url_tvrage, params=urlParams, verify=False, timeout=self.timeout,  headers=self.tvrage_rqheaders)
 		except Exception as e:
 			print e
 			log.critical(str(e))
@@ -283,17 +312,24 @@ class ApiResponses:
 	# Generate XML for the results
 	def cleanUpResultsXML(self, results):
 		niceResults = []
+			
 		#~ no sorting
 		for i in xrange(len(results)):
 			if(results[i]['ignore'] == 0):
+				if (results[i]['url'] is None):
+					results[i]['url'] = ""
+
+				qryforwarp=self.wrp.chash64_encode(results[i]['url'])
+				if('req_pwd' in results[i]):
+					qryforwarp += '&m='+ results[i]['req_pwd']
+
+				#~ print qryforwarp
 				dt1 =  datetime.datetime.fromtimestamp(int(results[i]['posting_date_timestamp']))
 				human_readable_time = dt1.strftime("%a, %d %b %Y %H:%M:%S")
-				#~ nobody parses it
-				#~ category = self.crude_subcategory_identifier(results[i]['title'])
 				#~ print human_readable_time
 				niceResults.append({
 					'url': results[i]['url'],
-					'encodedurl': base64.b64encode(results[i]['url']),
+					'encodedurl': qryforwarp,
 					'title':results[i]['title'],
 					'filesize':results[i]['size'],
 					'age':human_readable_time,

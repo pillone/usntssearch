@@ -14,28 +14,38 @@
 #~ You should have received a copy of the GNU General Public License
 #~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
-
 from flask import Flask
-from flask import request, Response
+from flask import request, Response, redirect, send_from_directory
 import logging
 import logging.handlers
 import os
 import threading
 import SearchModule
+import DeepsearchModule
 from ApiModule import ApiResponses
 from SuggestionModule import SuggestionResponses
+from WarperModule import Warper
 import megasearch
 import config_settings
 import miscdefs
+import random
+import time
 
-DEBUGFLAG = False
+DEBUGFLAG = True
+SERVERSIDE = False
 
 motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
 print motd
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-#~ bootstrap datefmt='%Y-%m-%d %H:%M:%S'
 cfg,cgen = config_settings.read_conf()
+cfg_deep = config_settings.read_conf_deepsearch()
+first_time = 0
+
+if (cfg is None): 
+	first_time = 1
+	'>> It will be configured'	
+
 logsdir = SearchModule.resource_path('logs/')
 logging.basicConfig(filename=logsdir+'nzbmegasearch.log',level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
@@ -44,39 +54,59 @@ log.addHandler(handler)
 log.info(motd)
 templatedir = SearchModule.resource_path('templates')
 app = Flask(__name__, template_folder=templatedir)	
-cver = miscdefs.ChkVersion() 
-print '>> version: '+ str(cver.ver_notify['curver'])
+cver_ver_notify= { 'chk':1, 
+			  'curver': '--' }
+print '>> version: '+ str(cver_ver_notify['curver'])
 SearchModule.loadSearchModules()
 if(DEBUGFLAG):
 	cgen['general_trend'] = 0
 	print 'MEGA2: DEBUGFLAG MUST BE SET TO FALSE BEFORE DEPLOYMENT'
 sugg = SuggestionResponses(cfg, cgen)
-mega_parall = megasearch.DoParallelSearch(cfg)	
-first_time = 1
-if os.path.exists("custom_params.ini"):
-	first_time = 0
-	print '>> NZBMegasearcH is configured'
-else:	
-	print '>> NZBMegasearcH will be configured'		 
+#~ detached server for trends
+sugg.detached_trendpolling = 1
+
+#~ wait for login init
+if(DEBUGFLAG == False and SERVERSIDE == True):
+	random.seed()
+	sleeptime = random.randrange(0, 10)
+	log.info('Wait ' + str(sleeptime) + 's for initialization...')
+	time.sleep(sleeptime)	
+ds = DeepsearchModule.DeepSearch(cfg_deep, cgen)
+
+mega_parall = megasearch.DoParallelSearch(cfg, cgen, ds)
+wrp = Warper (cgen, ds)
+apiresp = ApiResponses(cfg, wrp)
+dwn = miscdefs.DownloadedStats()
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
+@app.route('/robots.txt')
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
+
+@app.route('/sts_gnr')
+def dstastgeneral():	
+	return dwn.get_generalstats(request.args)
+	
+
 @app.route('/legal')
-@miscdefs.requires_auth
 def legal():
 	return (miscdefs.legal())
 	
+		
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/s', methods=['GET'])
-@miscdefs.requires_auth
 def search():
 	sugg.asktrend_allparallel()	
 	#~ parallel suggestion and search
-	t1 = threading.Thread(target=sugg.ask, args=(request.args,) )
+	if(DEBUGFLAG == False):
+		t1 = threading.Thread(target=sugg.ask, args=(request.args,) )
 	t2 = threading.Thread(target=mega_parall.dosearch, args=(request.args,)   )
-	t1.start()
+	if(DEBUGFLAG == False):
+		t1.start()
 	t2.start()
-	t1.join()
+	if(DEBUGFLAG == False):	
+		t1.join()
 	t2.join()
 
 	params_dosearch = {'args': request.args, 
@@ -84,21 +114,34 @@ def search():
 						'configr': cfg,
 						'trend_movie': sugg.movie_trend, 
 						'trend_show': sugg.show_trend, 
-						'ver': cver.ver_notify
+						'ver': cver_ver_notify,
+						'wrp':wrp,
+						'debugflag':DEBUGFLAG
 						}
 	return mega_parall.renderit(params_dosearch)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 @app.route('/config', methods=['GET','POST'])
-@miscdefs.requires_auth
 def config():
 	return config_settings.config_read()
+
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+@app.route('/warp', methods=['GET'])
+def warpme():
+	res = wrp.beam(request.args)
+	
+	if(res == -1):
+		return main_index()
+	else: 	
+		return res
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 			
 @app.route('/', methods=['GET','POST'])
-@miscdefs.requires_auth
 def main_index():
+	
 	global first_time,cfg,cgen,mega_parall
 	if request.method == 'POST':
 		config_settings.config_write(request.form)
@@ -107,7 +150,7 @@ def main_index():
 		mega_parall = megasearch.DoParallelSearch(cfg)
 	if first_time == 1:
 		return config_settings.config_read()	
-	
+
 	sugg.asktrend_allparallel()
 	params_dosearch = {'args': '', 
 						'sugg': [], 
@@ -115,7 +158,8 @@ def main_index():
 						'configr': cfg,
 						'trend_movie': sugg.movie_trend, 
 						'trend_show': sugg.show_trend, 
-						'ver': cver.ver_notify}
+						'ver': cver_ver_notify,
+						'debugflag':DEBUGFLAG}
 	return mega_parall.renderit_empty(params_dosearch)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -123,8 +167,7 @@ def main_index():
 @app.route('/api', methods=['GET'])
 def api():
 	#~ print request.args
-	api = ApiResponses(cfg, cver.ver_notify)
-	return api.dosearch(request.args)
+	return apiresp.dosearch(request.args)
 
 @app.route('/connect', methods=['GET'])
 def connect():
@@ -135,8 +178,7 @@ def connect():
 @app.errorhandler(404)
 def generic_error(error):
 	return main_index()
-
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+ 
 
 if __name__ == "__main__":	
 	sugg.asktrend_allparallel()
@@ -144,15 +186,4 @@ if __name__ == "__main__":
 	cport = int(cgen['portno'])
 	print '>> Running on port '	+ str(cport)
 
-	try:
-		app.run(host=chost,port=cport, debug = DEBUGFLAG)
-	
-	except KeyboardInterrupt:
-		log.info('Shutting down server')
-		shutdown_function = request.environ.get('werkzeug.server.shutdown')
-		if shutdown_function is None:
-			raise RuntimeError('Not running with Werkzeug')
-		shutdown_function()
-	except Exception as e:
-		log.critical('Failed to start Flask app: ' + str(e))
-		print 'Failed to start Flask app: ' + str(e)	
+	app.run(host=chost,port=cport, debug = DEBUGFLAG)

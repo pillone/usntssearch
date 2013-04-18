@@ -16,7 +16,6 @@
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
 
 
-from flask import  Flask, render_template, redirect
 import requests
 import megasearch
 import xml.etree.ElementTree
@@ -27,12 +26,13 @@ import time
 from operator import itemgetter
 import threading
 import logging
+import json
 
 BEST_K_YEAR = 5
 BEST_K_VOTES = 3
 MAX_TRENDS = 50
 MAX_CHAR_LEN = 22
-MIN_REFRESHRATE_S = 1800
+#~ MIN_REFRESHRATE_S = 3600
 
 log = logging.getLogger(__name__)
 
@@ -41,6 +41,7 @@ class SuggestionResponses:
 
 	# Set up class variables
 	def __init__(self, conf, cgen):
+		self.trendsdir = SearchModule.resource_path('logs/')
 		self.timeout = cgen['default_timeout']
 		self.movie_trend = []
 		self.movie_trend_ts = 0
@@ -48,8 +49,22 @@ class SuggestionResponses:
 		self.show_trend_ts = 0
 		self.sugg_info = []
 		self.active_trend = 1
+		self.trends_refreshrate = cgen['trends_refreshrate']
+		self.detached_trendpolling = 0
+				
+		self.tvrage_rqheaders = {
+						'Connection': 'keep-alive;' ,
+						'Cache-Control': 'max-age=0',
+						'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+						'User-Agent': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.52 Safari/537.17',
+						'Referer': 'http://services.tvrage.com/info.php?page=main',
+						'Accept-Encoding': 'gzip,deflate,sdch',
+						'Accept-Language': 'en-US,en;q=0.8',
+						'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3'
+						 }
+
 		if(int(cgen['general_trend']) == 0):
-		 self.active_trend = 0
+			self.active_trend = 0
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 		
@@ -63,15 +78,52 @@ class SuggestionResponses:
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def asktrend_allparallel(self):
+		if(self.detached_trendpolling == 0):
+			if(self.active_trend == 1):
+				t1 = threading.Thread(target=self.asktrend_movie)
+				t2 = threading.Thread(target=self.asktrend_show)
+				t1.start()
+				t2.start()
+				t1.join()
+				t2.join()
+		else:
+			self.asktrend_loadondisk()
+				
 
-		if(self.active_trend == 1):
-			t1 = threading.Thread(target=self.asktrend_movie)
-			t2 = threading.Thread(target=self.asktrend_show)
-			t1.start()
-			t2.start()
-			t1.join()
-			t2.join()
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	def asktrend_saveondisk(self ):
 
+		if(len(self.movie_trend)):
+			with open(self.trendsdir+'trends_mv.json', 'wt') as fp:
+				json.dump(self.movie_trend, fp)
+		
+		if(len(self.show_trend)):
+			with open(self.trendsdir+'trends_tv.json', 'wt') as fp:
+				json.dump(self.show_trend, fp)
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	def asktrend_loadondisk(self):
+
+		dt1 =  (datetime.datetime.now() - datetime.datetime.fromtimestamp(self.movie_trend_ts))
+		dl = (dt1.days+1) * dt1.seconds
+		if(dl > self.trends_refreshrate):
+			print '>> Loading trends from disk now'
+			try:
+				with open(self.trendsdir+'trends_mv.json', 'rt') as fp:
+					self.movie_trend = json.load(fp)
+			except Exception as e:
+				return
+
+			try:
+				with open(self.trendsdir+'trends_tv.json', 'rt') as fp:
+					self.show_trend = json.load(fp)
+
+			except Exception as e:
+				return
+
+			if(len(self.movie_trend)):
+				self.movie_trend_ts = time.time()
+	
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
@@ -79,7 +131,7 @@ class SuggestionResponses:
 
 		dt1 =  (datetime.datetime.now() - datetime.datetime.fromtimestamp(self.movie_trend_ts))
 		dl = (dt1.days+1) * dt1.seconds
-		if(dl > MIN_REFRESHRATE_S):
+		if(dl > self.trends_refreshrate):
 			movieinfo_trend = self.get_trends_movie()
 			sugg_trend_raw = self.movie_bestmatch(movieinfo_trend)
 			self.movie_trend = self.prepareforquery(sugg_trend_raw)
@@ -97,7 +149,7 @@ class SuggestionResponses:
 
 		dt1 =  (datetime.datetime.now() - datetime.datetime.fromtimestamp(self.show_trend_ts))
 		dl = (dt1.days+1) * dt1.seconds
-		if(dl > MIN_REFRESHRATE_S):
+		if(dl > self.trends_refreshrate):
 			showinfo_trend = self.get_trends_show()
 			show_trend_raw = self.show_bestmatch(showinfo_trend)
 			self.show_trend = []
@@ -141,11 +193,11 @@ class SuggestionResponses:
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def get_show_lastepisode(self, rid):
 		parsed_data = []
-		url_tvrage = 'http://services.tvrage.com/feeds/episode_list.php'
+		url_tvrage = 'http://www.tvrage.com/feeds/episode_list.php'
 		urlParams = dict( sid=rid )			
 		#~ print urlParams
 		try:
-			http_result = requests.get(url=url_tvrage, params=urlParams, verify=False, timeout=self.timeout)
+			http_result = requests.get(url=url_tvrage, params=urlParams, verify=False, timeout=self.timeout,  headers=self.tvrage_rqheaders)
 		except Exception as e:
 			print e
 			log.critical(str(e))

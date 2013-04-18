@@ -28,6 +28,22 @@ a {
     text-decoration: underline;
 }
 
+
+.selcatstlye{
+	border: 1px solid #ccc;
+	height: 40px;
+	padding: 0px;
+
+	font: 16px Helvetica, Arial, Sans-Serif;
+	background:#fff;
+
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	color: #378b96 
+
+}
+
 /* Container Div */
 div#container
 {
@@ -89,7 +105,7 @@ div#container
     position:absolute;
     top:0;
     right:0;
-    width:150px;
+    width:250px;
 }
 
 .headers_singleparagraph{
@@ -157,41 +173,32 @@ div#container
  }
 
 .form-wrapper-01 {
-	width: 450px;
+	width: 505px;
 	margin: 5px auto;
 	padding: 5px;
 	overflow: hidden;
-	border-width: 1px;
+	border-width: 0px;
 	border-style: solid;
 	border-color: #dedede #bababa #aaa #bababa;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
-	background-color: #f6f6f6;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#eae8e8));
-	background-image: -webkit-linear-gradient(top, #f6f6f6, #eae8e8);
-	background-image: -moz-linear-gradient(top, #f6f6f6, #eae8e8);
-	background-image: -ms-linear-gradient(top, #f6f6f6, #eae8e8);
-	background-image: -o-linear-gradient(top, #f6f6f6, #eae8e8);
-	background-image: linear-gradient(top, #f6f6f6, #eae8e8);
 }
 
 /*
  text search box #378b96 
 */
 .form-wrapper-01 #search {
-	width: 330px;
-	height: 20px;
+	width: 320px;
+	height: 18px;
 	padding: 10px 5px;
 	float: left;
 	font: 16px Helvetica, Arial, Sans-Serif;
 	border: 1px solid #ccc;
-	-moz-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
-	-webkit-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
-	box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
+
 	color: #378b96 
 
 }
@@ -199,16 +206,19 @@ div#container
 .form-wrapper-01 #search:focus {
 	outline: 0;
 	border-color: #aaa;
+/*
 	-moz-box-shadow: 0 1px 1px #bbb inset;
 	-webkit-box-shadow: 0 1px 1px #bbb inset;
 	box-shadow: 0 1px 1px #bbb inset;
+*/
 }
  
 .form-wrapper-01 #search::-webkit-input-placeholder {
 	color: #999;
 	font-weight: normal;
-	font-size:14px;
+	font: 16px Helvetica, Arial, Sans-Serif;
 	font-style:italic;
+	color: #378b96 
 }
  
 .form-wrapper-01 #search:-moz-placeholder {
@@ -230,46 +240,28 @@ div#container
 */
 .form-wrapper-01 #submit {
 	float: right;
-	border: 1px solid #00748f;
-	height: 42px;
-	width: 100px;
+	border: 1px solid #a2bcc0;
+	height: 75px;
+	width: 40px;
 	padding: 0;
 	cursor: pointer;
 	font: bold 16px Helvetica, Arial, Sans-Serif;
 	color: #fafafa;
 	text-transform: none;
-	background-color: #0483a0;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#31b2c3), to(#0483a0));
-	background-image: -webkit-linear-gradient(top, #31b2c3, #0483a0);
-	background-image: -moz-linear-gradient(top, #31b2c3, #0483a0);
-	background-image: -ms-linear-gradient(top, #31b2c3, #0483a0);
-	background-image: -o-linear-gradient(top, #31b2c3, #0483a0);
-	background-image: linear-gradient(top, #31b2c3, #0483a0);
+	background-color: #a2bcc0;
+
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
-	text-shadow: 0 1px 0 rgba(0, 0 ,0, .3);
-	-moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;
-	-webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;
-	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;
 }
  
 .form-wrapper-01 #submit:hover,
 .form-wrapper-01 #submit:focus {
 	background-color: #31b2c3;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#0483a0), to(#31b2c3));
-	background-image: -webkit-linear-gradient(top, #0483a0, #31b2c3);
-	background-image: -moz-linear-gradient(top, #0483a0, #31b2c3);
-	background-image: -ms-linear-gradient(top, #0483a0, #31b2c3);
-	background-image: -o-linear-gradient(top, #0483a0, #31b2c3);
-	background-image: linear-gradient(top, #0483a0, #31b2c3);
 }
  
 .form-wrapper-01 #submit:active {
 	outline: 0;
-	-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
-	-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
 }
  
 .form-wrapper-01 #submit::-moz-focus-inner {
@@ -283,29 +275,8 @@ div#container
 	float: right;
 	font:  bold 16px Helvetica, Arial, Sans-Serif;
 	border: 1px solid #ccc;
-	-moz-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
-	-webkit-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
-	box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-	-moz-transition:all 1s ease;
-	-webkit-transition:all 1s ease;
-	-o-transition:all 1s ease;
-	-ms-transition:all 1s ease;
-	transition:all 1s ease; /*--- These transition effect will give an animated expanding effect to the search box ---*/
 }
- 
-#search:focus,
-#search:hover{
-	outline: 0;
-	border-color: #aaa;
-	-moz-box-shadow: 0 1px 1px #bbb inset;
-	-webkit-box-shadow: 0 1px 1px #bbb inset;
-	box-shadow: 0 1px 1px #bbb inset;
-	width:330px; /*--- We have change the width from 100px to 330px ---*/
-}
- 
+
 /* Results Table Styles */
 #results
 {
@@ -354,8 +325,19 @@ div#container
 	width: 10%;
 }
 
+
+
+.searchkind {
+	background-color: #ffffff;
+	text-align: center;
+	font: 16px Helvetica, Arial, Sans-Serif;
+	width: 93px;
+	color: #378b96; 
+	vertical-align: middle;
+}
+
 .alert-info {
-	font: bold 14px Helvetica, Arial, Sans-Serif;;
+	font: 14px Helvetica, Arial, Sans-Serif;;
 	padding: 8px 35px 8px 14px;
 	color: #ffffff;
 	text-shadow: none;
