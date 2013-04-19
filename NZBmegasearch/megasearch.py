@@ -68,10 +68,12 @@ class DoParallelSearch:
 				if(self.cfg[i]['valid'] != 0):
 					self.svalid_speed[ self.cfg[i]['speed_class'] ] = 1 + self.svalid_speed[ self.cfg[i]['speed_class'] ]
 
+		if(ds.cfg is not None):
 			for i in xrange(len(self.ds.cfg)):
 				if(self.cfg[i]['valid'] != 0):
 					self.svalid_speed[ self.ds.cfg[i]['speed_class'] ] = 1 + self.svalid_speed[ self.ds.cfg[i]['speed_class'] ]
 				
+		if( (self.cfg is not None) or (self.cgen is not None) ):
 			self.svalid_speed[1] += self.svalid_speed[0]
 			self.svalid_speed[2] += self.svalid_speed[1]
 			self.svalid = self.svalid_speed[2]

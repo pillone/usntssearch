@@ -192,7 +192,7 @@ def read_conf_fn(forcedcustom=''):
 			try:
 				d1 = {'valid': int(cst_parser.get('bi_search_provider%d' % (i+1)  , 'valid')),
 					  'type': cst_parser.get('bi_search_provider%d' % (i+1)  , 'type'),
-					  'speed_class': cst_parser.getint('bi_search_provider%d' % (i+1)  , 'speed_class'),
+					  'speed_class': spc,
 					  'login': lgn,
 					  'pwd': pwd,
 					  'timeout':  gen_timeout,
@@ -222,6 +222,10 @@ def html_builtin_output(cffile, genopt):
 		SearchModule.loadSearchModules()
 	
 	cffileb = []		
+	
+	if(cffile is None):
+		cffile = []
+		
 	for module in SearchModule.loadedModules:
 		if(module.builtin):
 			option='checked=yes'
@@ -260,7 +264,8 @@ def html_builtin_output(cffile, genopt):
 			cffile[i]['idx'] =  count
 			count = count + 1
 
-	return render_template('config.html', cfg=cffile, cnt=count,  genopt = genopt, cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
+	return render_template('config.html', cfg=cffile, cfg_dp=cfdsfile,  cnt=count,  genopt = genopt, 
+										  cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
