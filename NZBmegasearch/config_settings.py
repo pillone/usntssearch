@@ -20,7 +20,7 @@ from ConfigParser import SafeConfigParser
 import sys
 import SearchModule
 
-MAX_PROVIDER_NUMBER = 20
+MAX_PROVIDER_NUMBER = 8
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
@@ -82,9 +82,12 @@ def read_conf_deepsearch():
 	parser = SafeConfigParser()
 	parser.read('custom_params.ini')
 
+	
 	if(parser.has_option('general'  ,'deep_numserver') == 0):
 		return None
-
+		
+		print parser
+		
 		numserver = parser.get('general', 'deep_numserver')	
 
 		try:
@@ -215,7 +218,7 @@ def read_conf_fn(forcedcustom=''):
  
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-def html_builtin_output(cffile, genopt): 
+def html_builtin_output(cffile, cdsfile, genopt): 
 	count = 0
 	
 	if 'SearchModule.loadedModules' not in globals():
@@ -225,6 +228,9 @@ def html_builtin_output(cffile, genopt):
 	
 	if(cffile is None):
 		cffile = []
+
+	if(cdsfile is None):
+		cdsfile = []
 		
 	for module in SearchModule.loadedModules:
 		if(module.builtin):
@@ -264,7 +270,7 @@ def html_builtin_output(cffile, genopt):
 			cffile[i]['idx'] =  count
 			count = count + 1
 
-	return render_template('config.html', cfg=cffile, cfg_dp=cfdsfile,  cnt=count,  genopt = genopt, 
+	return render_template('config.html', cfg=cffile, cfg_dp=cdsfile,  cnt=count,  genopt = genopt, 
 										  cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
 
 
@@ -273,7 +279,8 @@ def html_builtin_output(cffile, genopt):
 
 def config_read():
 	cf,co = read_conf()
-	webbuf_body_bi = html_builtin_output(cf,co)
+	cfds = read_conf_deepsearch()
+	webbuf_body_bi = html_builtin_output(cf,cfds,co)
 	
 	return webbuf_body_bi
 
