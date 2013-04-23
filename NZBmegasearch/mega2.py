@@ -42,7 +42,7 @@ cfg,cgen = config_settings.read_conf()
 cfg_deep = config_settings.read_conf_deepsearch()
 first_time = 0
 
-print cfg_deep
+
 
 if (cfg is None): 
 	first_time = 1

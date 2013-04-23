@@ -45,6 +45,10 @@ def	write_conf(request_form):
 	parser.set('general', 'port', request_form['port'].replace(" ", ""))
 	parser.set('general', 'general_user', request_form['general_usr'].replace(" ", ""))
 	parser.set('general', 'general_pwd', request_form['general_pwd'].replace(" ", ""))
+	
+	parser.set('general', 'general_https', 0)
+	if('https' in request_form):
+		parser.set('general', 'general_https', 1)
 
 	
 	counter2 = 1
@@ -82,27 +86,30 @@ def read_conf_deepsearch():
 	parser = SafeConfigParser()
 	parser.read('custom_params.ini')
 
-	
-	if(parser.has_option('general'  ,'deep_numserver') == 0):
+	print parser.has_option('general'  ,'deep_numserver')
+	if(parser.has_option('general'  ,'deep_numserver') == False):
 		return None
-		
-		print parser
-		
-		numserver = parser.get('general', 'deep_numserver')	
 
-		try:
-			for i in xrange(int(numserver)):
-				d1 = {'url': parser.get('deep_search_provider%d' % (i+1)  , 'url'),
-					  'user': parser.get('deep_search_provider%d' % (i+1)  , 'user'),
-					  'pwd': parser.get('deep_search_provider%d' % (i+1)  , 'pwd'),
-					  'speed_class': parser.getint('deep_search_provider%d' % (i+1)  , 'speed_class'),
-					  'valid': int(parser.getint('deep_search_provider%d' % (i+1)  , 'valid')),
-					  }
-				cfg_struct.append(d1)
+	numserver = parser.get('general', 'deep_numserver')	
 
-		except Exception as e:
-			print str(e)
-			return None
+	try:
+		for i in xrange(int(numserver)):
+			spc = get_conf_speedopt(parser, i, 'd')
+			if ( spc == -1 ):
+				spc = 2
+			print spc	
+
+			d1 = {'url': parser.get('deep_search_provider%d' % (i+1)  , 'url'),
+				  'user': parser.get('deep_search_provider%d' % (i+1)  , 'user'),
+				  'pwd': parser.get('deep_search_provider%d' % (i+1)  , 'pwd'),
+				  'speed_class': spc,
+				  'valid': int(parser.getint('deep_search_provider%d' % (i+1)  , 'valid')),
+				  }
+			cfg_struct.append(d1)
+
+	except Exception as e:
+		print str(e)
+		return None
 		
 	return 	cfg_struct
 
@@ -114,7 +121,21 @@ def read_conf(forcedcustom=''):
 	cf1, co1 = read_conf_fn(forcedcustom)
 	return cf1,co1
 
- #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    
+
+def get_conf_speedopt(parser, idx, secname):
+
+	if(parser.has_section('speed_option') == True):
+		try:
+			spc1 = parser.getint('speed_option', secname + '%d_speed_class' % (idx+1))
+			print secname + '%d_speed_class' % (idx+1)
+		except Exception as e:
+			print str(e)
+			return -1
+	else:
+		return -1		
+	
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    
 def read_conf_fn(forcedcustom=''): 
 	cfg_struct = []
 	parser = SafeConfigParser()
@@ -122,6 +143,7 @@ def read_conf_fn(forcedcustom=''):
 	portno = parser.get('general', 'port')	
 	gen_user = parser.get('general', 'general_user')	
 	gen_pwd = parser.get('general', 'general_pwd')	
+	gen_https = parser.getint('general', 'general_https')
 	gen_trd = parser.get('general', 'trends')	
 	gen_timeout = int(parser.get('general', 'default_timeout'))
 	gen_cacheage = int(parser.get('general', 'max_cache_age'))
@@ -133,7 +155,8 @@ def read_conf_fn(forcedcustom=''):
 	gen_stats_key = parser.get('general', 'stats_key')
 	gen_tslow = int(parser.get('general', 'timeout_slow'))
 	gen_tfast = int(parser.get('general', 'timeout_fast'))
-	co1 = {'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd, 
+	co1 = {'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd,
+			'general_https' : gen_https,
 			'default_timeout' : gen_timeout, 'timeout_class' : [gen_tfast, gen_timeout, gen_tslow ],
 			'max_cache_age' : gen_cacheage, 'log_backupcount': gen_log_backupcount, 
 			'log_size' : gen_log_size, 'seed_warptable' : gen_seed_warptable, 'trends_refreshrate':gen_trends_refreshrate,
@@ -150,11 +173,13 @@ def read_conf_fn(forcedcustom=''):
 
 	try:
 		numserver = cst_parser.get('general', 'numserver')	
+		
 		#~ custom	 NAB
 		for i in xrange(int(numserver)):
-			spc = 2 
-			if(cst_parser.has_option('search_provider%d' % (i+1)  ,'speed_class')):
-				spc = cst_parser.getint('search_provider%d' % (i+1)  , 'speed_class')
+			spc = get_conf_speedopt(cst_parser, i, 's')
+			if ( spc == -1 ):
+				spc = 2
+
 			d1 = {'url': cst_parser.get('search_provider%d' % (i+1)  , 'url'),
 				  'type': cst_parser.get('search_provider%d' % (i+1)  , 'type'),
 				  'api': cst_parser.get('search_provider%d' % (i+1)  , 'api'),
@@ -164,15 +189,21 @@ def read_conf_fn(forcedcustom=''):
 				  'builtin': 0
 				  }
 			cfg_struct.append(d1)
-			
-		ret1 = cst_parser.has_option('general', 'port')
-		if(ret1 == True): 
+
+		if(parser.has_option('general' ,'general_https')):
+			gen_https = parser.getint('general', 'general_https')			
+		if (cst_parser.has_option('general', 'port')):
 			portno = cst_parser.get('general', 'port')			
-		ret1 = cst_parser.has_option('general', 'general_user')
-		if(ret1 == True): 
-			gen_user = cst_parser.get('general', 'general_user')	
+		if(cst_parser.has_option('general', 'general_user')):
+			gen_user = cst_parser.get('general', 'general_user') 
 			gen_pwd = cst_parser.get('general', 'general_pwd')	
 
+		co1 = {'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd,
+			'general_https' : gen_https,
+			'default_timeout' : gen_timeout, 'timeout_class' : [gen_tfast, gen_timeout, gen_tslow ],
+			'max_cache_age' : gen_cacheage, 'log_backupcount': gen_log_backupcount, 
+			'log_size' : gen_log_size, 'seed_warptable' : gen_seed_warptable, 'trends_refreshrate':gen_trends_refreshrate,
+			'stats_key' : gen_stats_key, 'motd':gen_motd}
 
 	except Exception as e:
 		print str(e)
@@ -181,9 +212,9 @@ def read_conf_fn(forcedcustom=''):
 	try:
 		builtin_numserver = cst_parser.get('general', 'builtin_numserver')
 		for i in xrange(int(builtin_numserver)):	
-			spc = 2 
-			if(cst_parser.has_option('bi_search_provider%d' % (i+1)  ,'speed_class')):
-				spc = cst_parser.getint('bi_search_provider%d' % (i+1)  , 'speed_class')
+			spc = get_conf_speedopt(cst_parser, i, 'b')
+			if ( spc == -1 ):
+				spc = 2
 
 			ret = cst_parser.has_option('bi_search_provider%d' % (i+1), 'login')			
 			lgn= ''
@@ -269,9 +300,11 @@ def html_builtin_output(cffile, cdsfile, genopt):
 		if(cffile[i]['builtin'] == 0):
 			cffile[i]['idx'] =  count
 			count = count + 1
-
+	
+	#~ if(
+		#~ https_opt = checked=yes
 	return render_template('config.html', cfg=cffile, cfg_dp=cdsfile,  cnt=count,  genopt = genopt, 
-										  cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
+										  cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb, https_opt = https_opt)
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
