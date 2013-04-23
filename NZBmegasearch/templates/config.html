@@ -20,7 +20,7 @@
 			Pass: <input type="password" name="general_pwd" value="{{ genopt['general_pwd'] }}" size="12"></td>
 	</tr>
 	<tr>	
-			<td><input type="checkbox" name="https">HTTPS Enabled </td>
+			<td><input type="checkbox" name="https" {{ genopt['general_https_verbose'] }} >HTTPS Enabled </td>
 	</tr>					
 </tbody></table>
 
@@ -58,6 +58,16 @@
 		<td><input type="text" name="API{{ c['idx'] }}" value="{{ c['api'] }}" size="40">
 		<input type="hidden" name="type{{ c['idx'] }}" value="NAB" size="40">
 		<input type="hidden" name="host{{ c['idx'] }}active" value="1" size="40"></td>
+
+		<span>
+		<select class="selcatstlye" name="selcat">
+			{% for sopt in selectable_speedopt -%}
+				<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
+			{%- endfor %}
+		</select>
+		</span>
+
+		
 		</tr>
 	{%- endif %}	
 {%- endfor %}	

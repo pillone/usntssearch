@@ -77,14 +77,15 @@ class DownloadedStats:
 	def __init__(self):
 		import urlparse
 
-		cfg,cgen = config_settings.read_conf('custom_params.ini')
-		self.cgen = cgen
+		cfgsets = config_settings.CfgSettings()
+		
+		self.cgen = cfgsets.cgen
 		self.logsdir = SearchModule.resource_path('logs/nzbmegasearch.log')
 		self.scriptsdir = SearchModule.resource_path('get_stats.sh')
 		self.cfg_urlidx = []
 		self.excludeurls= ['http://ftdworld.net', 'https://nzbx.co']
-		if(cfg is not None):
-			self.config = cfg
+		if(cfgsets.cfg is not None):
+			self.config = cfgsets.cfg
 			for i in xrange(len(self.config)):
 				if(self.config[i]['builtin'] == 0):
 					self.cfg_urlidx.append(i)
@@ -132,53 +133,6 @@ class DownloadedStats:
 			stat_info_curated = sorted(stat_info_curated, key=itemgetter('median'))
 		return render_template('stats_gen.html',stat_cur=stat_info_curated)
 
-	'''
-	def get(self,args):
-		log.info('Stats have been requested')
-		savedurl = []
-		errstr = "WRONG KEY"
-		if('key'  not in args):
-			return errstr
-		else:	
-			if(args['key'] != self.cgen['stats_key']):
-				return errstr
-			daytochk = datetime.datetime.now().strftime("%Y-%m-%d") 
-			
-		if('d'  in args):
-			daytochk=args['d']
-		subprocess.call([self.scriptsdir + ' '+self.logsdir + ' ' + daytochk ], shell=True, executable="/bin/bash")
-		with open("/tmp/logstats") as infile:
-			for line in infile:
-				#~ print line
-				parsedurlparam = dict(urlparse.parse_qsl(line))
-				matched_idx = -1
-				if( 'r' in parsedurlparam):
-					for i in self.cfg_urlidx:
-						sz_to_mtch = len(self.config[i]['url'])
-						if(line[0:sz_to_mtch] == self.config[i]['url']):
-							#~ print self.config[i]['url']
-							matched_idx = i 
-							break
-					
-					if(matched_idx != -1):
-						parsedurlparam['r'] = self.config[i]['api']
-						r1 = urlparse.urlsplit(line)
-						uidx = line.find("&")
-						if(uidx != -1):
-							savedurl.append(line[0:uidx] + '&' + urllib.urlencode(parsedurlparam))
-				else:
-					matched_idx = -1
-					for i in xrange(len(self.excludeurls)):
-						sz_to_mtch = len(self.excludeurls[i])
-						if(line[0:sz_to_mtch] == self.excludeurls[i]):
-							matched_idx = 1
-							break
-					
-					if(matched_idx == -1):	
-						savedurl.append(line[:-1])
-							
-		return json.dumps(savedurl)
-	'''		
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 		

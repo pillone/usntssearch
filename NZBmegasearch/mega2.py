@@ -38,20 +38,20 @@ motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
 print motd
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-cfg,cgen = config_settings.read_conf()
-cfg_deep = config_settings.read_conf_deepsearch()
+cfgsets = config_settings.CfgSettings()
+
+#~ cfg,cgen = config_settings.read_conf()
+#~ cfg_deep = config_settings.read_conf_deepsearch()
 first_time = 0
 
-
-
-if (cfg is None): 
+if (cfgsets.cfg is None): 
 	first_time = 1
 	'>> It will be configured'	
 
 logsdir = SearchModule.resource_path('logs/')
 logging.basicConfig(filename=logsdir+'nzbmegasearch.log',level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
-handler = logging.handlers.RotatingFileHandler(logsdir+'nzbmegasearch.log', maxBytes=cgen['log_size'], backupCount=cgen['log_backupcount'])
+handler = logging.handlers.RotatingFileHandler(logsdir+'nzbmegasearch.log', maxBytes=cfgsets.cgen['log_size'], backupCount=cfgsets.cgen['log_backupcount'])
 log.addHandler(handler)
 log.info(motd)
 templatedir = SearchModule.resource_path('templates')
@@ -61,9 +61,9 @@ cver_ver_notify= { 'chk':1,
 print '>> version: '+ str(cver_ver_notify['curver'])
 SearchModule.loadSearchModules()
 if(DEBUGFLAG):
-	cgen['general_trend'] = 0
+	cfgsets.cgen['general_trend'] = 0
 	print 'MEGA2: DEBUGFLAG MUST BE SET TO FALSE BEFORE DEPLOYMENT'
-sugg = SuggestionResponses(cfg, cgen)
+sugg = SuggestionResponses(cfgsets.cfg, cfgsets.cgen)
 #~ detached server for trends
 sugg.detached_trendpolling = 1
 
@@ -73,11 +73,11 @@ if(DEBUGFLAG == False and SERVERSIDE == True):
 	sleeptime = random.randrange(0, 10)
 	log.info('Wait ' + str(sleeptime) + 's for initialization...')
 	time.sleep(sleeptime)	
-ds = DeepsearchModule.DeepSearch(cfg_deep, cgen)
+ds = DeepsearchModule.DeepSearch(cfgsets.cfg_deep, cfgsets.cgen)
 
-mega_parall = megasearch.DoParallelSearch(cfg, cgen, ds)
-wrp = Warper (cgen, ds)
-apiresp = ApiResponses(cfg, wrp)
+mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds)
+wrp = Warper (cfgsets.cgen, ds)
+apiresp = ApiResponses(cfgsets.cfg, wrp)
 dwn = miscdefs.DownloadedStats()
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
@@ -125,7 +125,7 @@ def search():
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 @app.route('/config', methods=['GET','POST'])
 def config():
-	return config_settings.config_read()
+	return cfgsets.edit_config()
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -151,7 +151,7 @@ def main_index():
 		cfg,cgen = config_settings.read_conf()
 		mega_parall = megasearch.DoParallelSearch(cfg)
 	if first_time == 1:
-		return config_settings.config_read()	
+		return cfgsets.edit_config()
 
 	sugg.asktrend_allparallel()
 	params_dosearch = {'args': '', 
@@ -185,7 +185,6 @@ def generic_error(error):
 if __name__ == "__main__":	
 	sugg.asktrend_allparallel()
 	chost = '0.0.0.0'
-	cport = int(cgen['portno'])
-	print '>> Running on port '	+ str(cport)
+	print '>> Running on port '	+ str(cfgsets.cgen['portno'])
 
-	app.run(host=chost,port=cport, debug = DEBUGFLAG)
+	app.run(host=chost,port=cfgsets.cgen['portno'], debug = DEBUGFLAG)
