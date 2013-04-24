@@ -157,7 +157,6 @@ def main_index():
 	params_dosearch = {'args': '', 
 						'sugg': [], 
 						'trend': [], 
-						'configr': cfg,
 						'trend_movie': sugg.movie_trend, 
 						'trend_show': sugg.show_trend, 
 						'ver': cver_ver_notify,

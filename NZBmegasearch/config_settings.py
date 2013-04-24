@@ -19,6 +19,8 @@ from flask import render_template
 from ConfigParser import SafeConfigParser
 import sys
 import SearchModule
+import copy
+
 
 MAX_PROVIDER_NUMBER = 8
 
@@ -28,9 +30,13 @@ class CfgSettings:
 	
 	# Set up class variables
 	def __init__(self):
-		self.cgen = None
-		self.cfg = None
-		self.cfg_deep = None
+	
+		self.selectable_speedopt = [ ['0', 'Quick Response Time',''],
+									 ['1', 'Normal Response Time',''],
+									 ['2','Extended Response Time','']]
+		self.cgen = []
+		self.cfg = []
+		self.cfg_deep = []
 		self.read_conf_builtin()
 		self.read_conf_custom()
 		self.read_conf_deepsearch()
@@ -98,7 +104,7 @@ class CfgSettings:
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 	def read_conf_deepsearch(self): 
-		cfg_struct = []
+		self.cfg_deep = []
 		parser = SafeConfigParser()
 		parser.read('custom_params.ini')
 
@@ -107,7 +113,6 @@ class CfgSettings:
 			return None
 
 		numserver = parser.get('general', 'deep_numserver')	
-
 		try:
 			for i in xrange(int(numserver)):
 				spc = self.get_conf_speedopt(parser, i, 'd')
@@ -123,7 +128,7 @@ class CfgSettings:
 				self.cfg_deep.append(d1)
 
 		except Exception as e:
-			print str(e)
+			print str(e) + 'DSASDAS'
 			cfg_deep = None
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    
@@ -171,7 +176,7 @@ class CfgSettings:
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    
 	
 	def read_conf_custom(self, forcedcustom=''): 
-		cfg_struct = []
+		self.cfg = []
 		
 		cst_parser = SafeConfigParser()
 		if(forcedcustom == ''):
@@ -196,23 +201,16 @@ class CfgSettings:
 					  'valid': int(cst_parser.get('search_provider%d' % (i+1)  , 'valid')),
 					  'timeout':  self.cgen['default_timeout'],
 					  'builtin': 0
-					  }
+					  }					  
 				self.cfg.append(d1)
 
-			if(parser.has_option('general' ,'general_https')):
-				gen_https = parser.getint('general', 'general_https')			
+			if(cst_parser.has_option('general' ,'general_https')):
+				self.cgen['general_https'] = cst_parser.getint('general', 'general_https')			
 			if (cst_parser.has_option('general', 'port')):
-				portno = cst_parser.get('general', 'port')			
+				self.cgen['portno'] = cst_parser.getint('general', 'port')	
 			if(cst_parser.has_option('general', 'general_user')):
-				gen_user = cst_parser.get('general', 'general_user') 
-				gen_pwd = cst_parser.get('general', 'general_pwd')	
-
-			self.cgen = {'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd,
-				'general_https' : gen_https,
-				'default_timeout' : gen_timeout, 'timeout_class' : [gen_tfast, gen_timeout, gen_tslow ],
-				'max_cache_age' : gen_cacheage, 'log_backupcount': gen_log_backupcount, 
-				'log_size' : gen_log_size, 'seed_warptable' : gen_seed_warptable, 'trends_refreshrate':gen_trends_refreshrate,
-				'stats_key' : gen_stats_key, 'motd':gen_motd}
+				self.cgen['general_usr'] = cst_parser.get('general', 'general_user') 
+				self.cgen['general_pwd'] = cst_parser.get('general', 'general_pwd')	
 
 		except Exception as e:
 			print str(e)
@@ -220,29 +218,16 @@ class CfgSettings:
 			return
 	 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-	def se,f
-	
-	html_editpage(self, cffile, cdsfile, genopt): 
-			#~ self.possibleopt = [ ['1080p', 'HD 1080p',''],
-								#~ ['720p','HD 720p',''],
-								#~ ['BDRIP','SD BlurayRip',''],
-								#~ ['DVDRIP','SD DVDRip',''],
-								#~ ['DVDSCR','SD DVDScr',''],
-								#~ ['CAM','SD CAM',''],
-								#~ ['OSX','Mac OSX',''],
-								#~ ['XBOX360','Xbox360',''],
-								#~ ['PS3','PS3',''],
-								#~ ['ANDROID','Android',''],
-								#~ ['MOBI','Ebook (mobi)',''],
-								#~ ['EPUB','Ebook (epub)',''] ]
-
-
+	def html_editpage(self): 
+			
 		count = 0
-		
 		if 'SearchModule.loadedModules' not in globals():
 			SearchModule.loadSearchModules()
 		
 		cffileb = []		
+		cffile  = copy.deepcopy(self.cfg)
+		cdsfile = self.cfg_deep
+		genopt = self.cgen
 		
 		if(cffile is None):
 			cffile = []
@@ -286,15 +271,24 @@ class CfgSettings:
 		for i in xrange(len(cffile)):
 			if(cffile[i]['builtin'] == 0):
 				cffile[i]['idx'] =  count
+				sel_speedopt_tmp = copy.deepcopy(self.selectable_speedopt)	
+				sel_speedopt_tmp[cffile[i]['speed_class']][2] = 'selected'
+				cffile[i]['selspeed_sel'] =  sel_speedopt_tmp
 				count = count + 1
-		
+		**********
+		for i in xrange(len(cdsfile)):
+				sel_speedopt_tmp = copy.deepcopy(self.selectable_speedopt)	
+				sel_speedopt_tmp[cffile[i]['speed_class']][2] = 'selected'
+				cffile[i]['selspeed_sel'] =  sel_speedopt_tmp
+						
 		genopt['general_https_verbose']	 = ''
 		if(genopt['general_https'] == 1):
 			genopt['general_https_verbose']	 = 'checked=yes'
 		
+
+					
 		return render_template('config.html', cfg=cffile, cfg_dp=cdsfile,  cnt=count,  genopt = genopt, 
-											  selectable_speedopt = selectable_speedopt,
-											  cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
+ 											  cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
 
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -303,7 +297,7 @@ class CfgSettings:
 	def edit_config(self):
 		self.read_conf_custom()		
 		self.read_conf_deepsearch()
-		webbuf_body_bi = selft.html_editpage(cf,cfds,co)
+		webbuf_body_bi = self.html_editpage()
 		
 		return webbuf_body_bi
 		
