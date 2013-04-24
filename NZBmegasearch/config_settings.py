@@ -31,13 +31,13 @@ class CfgSettings:
 	# Set up class variables
 	def __init__(self):
 	
-		self.selectable_speedopt = [ ['0', 'Quick Response Time',''],
-									 ['1', 'Normal Response Time',''],
-									 ['2','Extended Response Time','']]
+		self.selectable_speedopt = [ ['0', 'Quick Response',''],
+									 ['1', 'Normal Response',''],
+									 ['2','Extended Response','']]
 		self.cgen = []
 		self.cfg = []
 		self.cfg_deep = []
-		self.read_conf_builtin()
+		self.read_conf_general()
 		self.read_conf_custom()
 		self.read_conf_deepsearch()
 
@@ -46,9 +46,21 @@ class CfgSettings:
 		
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-	def	write_conf(self, request_form):
+	def	write(self, request_form):
 		parser = SafeConfigParser()
 
+		#~ general settings
+		parser.add_section('speed_option')
+		parser.add_section('general')
+		parser.set('general', 'port', request_form['port'].replace(" ", ""))
+		parser.set('general', 'general_user', request_form['general_usr'].replace(" ", ""))
+		parser.set('general', 'general_pwd', request_form['general_pwd'].replace(" ", ""))
+		
+		parser.set('general', 'general_https', '0')
+		if (request_form.has_key('https')  == True):
+			parser.set('general', 'general_https', '1')
+
+		
 		#~ custom
 		counter = 1
 		for i in xrange(MAX_PROVIDER_NUMBER):
@@ -58,30 +70,21 @@ class CfgSettings:
 					parser.set('search_provider%s' % counter, 'url',request_form['host%d' % i].replace(" ", ""))
 					parser.set('search_provider%s' % counter, 'api',request_form['API%d' % i].replace(" ", ""))
 					parser.set('search_provider%s' % counter, 'type', request_form['type%d' % i].replace(" ", ""))
-					parser.set('search_provider%s' % counter, 'valid', int(1))
+					parser.set('search_provider%s' % counter, 'valid', '1')
+					parser.set('speed_option', 's%d_speed_class' % counter, request_form['selspeed%d' %i].replace(" ", ""))
 					counter = counter + 1
-		parser.add_section('general')
 		parser.set('general', 'numserver', str(counter-1))
-		
-		#~ they exist for sure
-		parser.set('general', 'port', request_form['port'].replace(" ", ""))
-		parser.set('general', 'general_user', request_form['general_usr'].replace(" ", ""))
-		parser.set('general', 'general_pwd', request_form['general_pwd'].replace(" ", ""))
-		
-		parser.set('general', 'general_https', 0)
-		if('https' in request_form):
-			parser.set('general', 'general_https', 1)
 
-		
+		#~ builtin search
 		counter2 = 1
 		for i in xrange(MAX_PROVIDER_NUMBER):
 			if (request_form.has_key('bi_host%d' % i)  == True):
 				parser.add_section('bi_search_provider%s' % counter2)
 				parser.set('bi_search_provider%s' % counter2, 'type', request_form['bi_host%d' % i].replace(" ", ""))
 				if (request_form.has_key('bi_host%dactive' % i)  == True):
-					parser.set('bi_search_provider%s' % counter2, 'valid', int(1))
+					parser.set('bi_search_provider%s' % counter2, 'valid', '1')
 				else:
-					parser.set('bi_search_provider%s' % counter2, 'valid', int(0))
+					parser.set('bi_search_provider%s' % counter2, 'valid', '0')
 				
 				if (request_form.has_key('bi_host%dlogin' % i)  == True):	
 					blgin = request_form['bi_host%dlogin' % i].replace(" ", "")
@@ -89,16 +92,31 @@ class CfgSettings:
 					parser.set('bi_search_provider%s' % counter2, 'login', blgin)
 					parser.set('bi_search_provider%s' % counter2, 'pwd', bpwd)
 					if(len(blgin) == 0 and len(bpwd) == 0):
-						parser.set('bi_search_provider%s' % counter2, 'valid', int(0))
-
+						parser.set('bi_search_provider%s' % counter2, 'valid', '0')
+				parser.set('speed_option', 'b%d_speed_class' % counter2, request_form['bi_host%dspeed' %i])	
 				counter2 = counter2 + 1	
-		
 		parser.set('general', 'builtin_numserver', str(counter2-1))
 		
 
-		#~ bi_parser.write(sys.stdout)	
-		with open('custom_params.ini', 'wt') as configfile:
-			parser.write(configfile)
+		#~ web search
+		counter3 = 1
+		for i in xrange(MAX_PROVIDER_NUMBER):
+			if (request_form.has_key('host%d' % i)  == True):
+				if(request_form['host%d' % i].replace(" ", "")): 
+					parser.add_section('deep_search_provider%s' % counter3)
+					parser.set('deep_search_provider%s' % counter3, 'url',request_form['ds_host%d' % i].replace(" ", ""))
+					parser.set('deep_search_provider%s' % counter3, 'user',request_form['ds_usr%d' % i].replace(" ", ""))
+					parser.set('deep_search_provider%s' % counter3, 'pwd', request_form['ds_pass%d' % i])
+					parser.set('deep_search_provider%s' % counter3, 'type', request_form['ds_type%d' % i].replace(" ", ""))
+					parser.set('deep_search_provider%s' % counter3, 'valid', '1')
+					parser.set('speed_option', 'd%d_speed_class' % counter3, request_form['ds_selspeed%d' %i])
+					counter3 = counter3 + 1
+		parser.set('general', 'deep_numserver', str(counter3-1))
+
+
+		parser.write(sys.stdout)	
+		#~ with open('custom_params.ini', 'wt') as configfile:
+			#~ parser.write(configfile)
 
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -108,7 +126,6 @@ class CfgSettings:
 		parser = SafeConfigParser()
 		parser.read('custom_params.ini')
 
-		print parser.has_option('general'  ,'deep_numserver')
 		if(parser.has_option('general'  ,'deep_numserver') == False):
 			return None
 
@@ -128,7 +145,7 @@ class CfgSettings:
 				self.cfg_deep.append(d1)
 
 		except Exception as e:
-			print str(e) + 'DSASDAS'
+			print str(e)
 			cfg_deep = None
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    
@@ -148,7 +165,7 @@ class CfgSettings:
 				
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    
 		
-	def read_conf_builtin(self, forcedcustom=''): 
+	def read_conf_general(self, forcedcustom=''): 
 		parser = SafeConfigParser()
 		parser.read('builtin_params.ini')
 		portno = parser.getint('general', 'port')	
@@ -216,9 +233,40 @@ class CfgSettings:
 			print str(e)
 			self.cfg = None
 			return
+
+		try:
+			builtin_numserver = cst_parser.get('general', 'builtin_numserver')
+			for i in xrange(int(builtin_numserver)):	
+				spc = self.get_conf_speedopt(cst_parser, i, 'd')
+				if ( spc == -1 ):
+					spc = 1
+
+				ret = cst_parser.has_option('bi_search_provider%d' % (i+1), 'login')			
+				lgn= ''
+				pwd= ''
+				if(ret == True): 
+					 lgn = cst_parser.get('bi_search_provider%d' % (i+1)  , 'login')
+					 pwd = cst_parser.get('bi_search_provider%d' % (i+1)  , 'pwd')
+				
+				d1 = {'valid': cst_parser.get('bi_search_provider%d' % (i+1)  , 'valid'),
+					  'type': cst_parser.get('bi_search_provider%d' % (i+1)  , 'type'),
+					  'speed_class': spc,
+					  'login': lgn,
+					  'pwd': pwd,
+					  'timeout':  self.cgen['default_timeout'],
+					  'builtin': 1}
+				self.cfg.append(d1)
+				
+		except Exception as e:
+			print str(e)
+			return
 	 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	def html_editpage(self): 
+			
+		self.selectable_speedopt[0][1] += ' ['+str(self.cgen['timeout_class'][0])+'s]'
+		self.selectable_speedopt[1][1] += ' ['+str(self.cgen['timeout_class'][1])+'s]'
+		self.selectable_speedopt[2][1] += ' ['+str(self.cgen['timeout_class'][2])+'s]'
 			
 		count = 0
 		if 'SearchModule.loadedModules' not in globals():
@@ -241,6 +289,7 @@ class CfgSettings:
 				flogin=0
 				login_name =  ''
 				login_pwd = ''
+				speed_cl = 2
 				if(module.active == 0):
 					option=''
 				for i in xrange(len(cffile)):
@@ -252,6 +301,8 @@ class CfgSettings:
 						
 						login_name=cffile[i]['login']
 						login_pwd=cffile[i]['pwd']
+						speed_cl = cffile[i]['speed_class']
+						print speed_cl
 						
 				if(module.login == 1):
 					flogin = 1
@@ -259,6 +310,7 @@ class CfgSettings:
 				tmpcfg= {'stchk' : option,
 						'humanname' : module.name,
 						'idx' : count,
+						'speed_class' : speed_cl,
 						'type' : module.typesrch,
 						'flogin': flogin,
 						'loginname': login_name,
@@ -271,16 +323,23 @@ class CfgSettings:
 		for i in xrange(len(cffile)):
 			if(cffile[i]['builtin'] == 0):
 				cffile[i]['idx'] =  count
-				sel_speedopt_tmp = copy.deepcopy(self.selectable_speedopt)	
-				sel_speedopt_tmp[cffile[i]['speed_class']][2] = 'selected'
-				cffile[i]['selspeed_sel'] =  sel_speedopt_tmp
 				count = count + 1
-		**********
-		for i in xrange(len(cdsfile)):
 				sel_speedopt_tmp = copy.deepcopy(self.selectable_speedopt)	
 				sel_speedopt_tmp[cffile[i]['speed_class']][2] = 'selected'
 				cffile[i]['selspeed_sel'] =  sel_speedopt_tmp
-						
+
+		
+		sel_speedopt_basic = copy.deepcopy(self.selectable_speedopt)	
+		sel_speedopt_basic[1][2] = 'selected'
+		
+		count=0
+		for i in xrange(len(cdsfile)):
+			cdsfile[i]['idx'] =  count
+			count = count + 1
+			sel_speedopt_tmp = copy.deepcopy(self.selectable_speedopt)	
+			sel_speedopt_tmp[cdsfile[i]['speed_class']][2] = 'selected'
+			cdsfile[i]['selspeed_sel'] =  sel_speedopt_tmp
+					
 		genopt['general_https_verbose']	 = ''
 		if(genopt['general_https'] == 1):
 			genopt['general_https_verbose']	 = 'checked=yes'
@@ -288,6 +347,7 @@ class CfgSettings:
 
 					
 		return render_template('config.html', cfg=cffile, cfg_dp=cdsfile,  cnt=count,  genopt = genopt, 
+											  sel_speedopt_basic = sel_speedopt_basic,
  											  cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
 
 
@@ -295,6 +355,7 @@ class CfgSettings:
 
 
 	def edit_config(self):
+		self.read_conf_general()
 		self.read_conf_custom()		
 		self.read_conf_deepsearch()
 		webbuf_body_bi = self.html_editpage()
@@ -305,6 +366,6 @@ class CfgSettings:
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-	def config_write(self, request_form):
-		write_conf(request_form)	
+	#~ def config_write(self, request_form):
+		#~ write_conf(request_form)	
 		#~ return config_read()

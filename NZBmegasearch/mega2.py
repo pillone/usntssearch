@@ -146,10 +146,11 @@ def main_index():
 	
 	global first_time,cfg,cgen,mega_parall
 	if request.method == 'POST':
-		config_settings.config_write(request.form)
-		first_time = 0
-		cfg,cgen = config_settings.read_conf()
-		mega_parall = megasearch.DoParallelSearch(cfg)
+		cfgsets.write(request.form)
+		#~ config_settings.config_write(request.form)
+		#~ first_time = 0
+		#~ cfg,cgen = config_settings.read_conf()
+		#~ mega_parall = megasearch.DoParallelSearch(cfg)
 	if first_time == 1:
 		return cfgsets.edit_config()
 
