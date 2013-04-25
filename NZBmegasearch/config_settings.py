@@ -34,6 +34,7 @@ class CfgSettings:
 		self.selectable_speedopt = [ ['0', 'Quick Response',''],
 									 ['1', 'Normal Response',''],
 									 ['2','Extended Response','']]
+		self.selectable_speedopt_cpy = copy.deepcopy(self.selectable_speedopt)
 		self.cgen = []
 		self.cfg = []
 		self.cfg_deep = []
@@ -60,8 +61,9 @@ class CfgSettings:
 		if (request_form.has_key('https')  == True):
 			parser.set('general', 'general_https', '1')
 
-		parser.set('general', 'sabnzb_', request_form['send2sabnzb_url'].replace(" ", ""))
-		send2sabnb_url
+		parser.set('general', 'sabnzbd_url', request_form['sabnzbd_url'].replace(" ", ""))
+		parser.set('general', 'sabnzbd_api', request_form['sabnzbd_api'].replace(" ", ""))
+		
 		
 		#~ custom
 		counter = 1
@@ -117,8 +119,8 @@ class CfgSettings:
 
 
 		parser.write(sys.stdout)	
-		#~ with open('custom_params.ini', 'wt') as configfile:
-			#~ parser.write(configfile)
+		with open('custom_params.ini', 'wt') as configfile:
+			parser.write(configfile)
 
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -132,6 +134,7 @@ class CfgSettings:
 			return None
 
 		numserver = parser.get('general', 'deep_numserver')	
+
 		try:
 			for i in xrange(int(numserver)):
 				spc = self.get_conf_speedopt(parser, i, 'd')
@@ -190,8 +193,13 @@ class CfgSettings:
 				'default_timeout' : gen_timeout, 'timeout_class' : [gen_tfast, gen_timeout, gen_tslow ],
 				'max_cache_age' : gen_cacheage, 'log_backupcount': gen_log_backupcount, 
 				'log_size' : gen_log_size, 'seed_warptable' : gen_seed_warptable, 'trends_refreshrate':gen_trends_refreshrate,
+				'sabnzbd_url' : '', 'sabnzbd_api':'',
 				'stats_key' : gen_stats_key, 'motd':gen_motd}
-	
+		self.selectable_speedopt = copy.deepcopy(self.selectable_speedopt_cpy)
+		self.selectable_speedopt[0][1] += ' ['+str(self.cgen['timeout_class'][0])+'s]'
+		self.selectable_speedopt[1][1] += ' ['+str(self.cgen['timeout_class'][1])+'s]'
+		self.selectable_speedopt[2][1] += ' ['+str(self.cgen['timeout_class'][2])+'s]'
+
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    
 	
 	def read_conf_custom(self, forcedcustom=''): 
@@ -217,12 +225,17 @@ class CfgSettings:
 					  'type': cst_parser.get('search_provider%d' % (i+1)  , 'type'),
 					  'api': cst_parser.get('search_provider%d' % (i+1)  , 'api'),
 					  'speed_class': spc,
-					  'valid': int(cst_parser.get('search_provider%d' % (i+1)  , 'valid')),
+					  'valid':  cst_parser.getint('search_provider%d' % (i+1)  , 'valid'),
 					  'timeout':  self.cgen['default_timeout'],
 					  'builtin': 0
 					  }					  
 				self.cfg.append(d1)
 
+
+			if(cst_parser.has_option('general' ,'sabnzbd_url')):
+				self.cgen['sabnzbd_url'] = cst_parser.get('general', 'sabnzbd_url')
+			if(cst_parser.has_option('general' ,'sabnzbd_api')):
+				self.cgen['sabnzbd_api'] = cst_parser.get('general', 'sabnzbd_api')
 			if(cst_parser.has_option('general' ,'general_https')):
 				self.cgen['general_https'] = cst_parser.getint('general', 'general_https')			
 			if (cst_parser.has_option('general', 'port')):
@@ -239,7 +252,7 @@ class CfgSettings:
 		try:
 			builtin_numserver = cst_parser.get('general', 'builtin_numserver')
 			for i in xrange(int(builtin_numserver)):	
-				spc = self.get_conf_speedopt(cst_parser, i, 'd')
+				spc = self.get_conf_speedopt(cst_parser, i, 'b')
 				if ( spc == -1 ):
 					spc = 1
 
@@ -250,7 +263,7 @@ class CfgSettings:
 					 lgn = cst_parser.get('bi_search_provider%d' % (i+1)  , 'login')
 					 pwd = cst_parser.get('bi_search_provider%d' % (i+1)  , 'pwd')
 				
-				d1 = {'valid': cst_parser.get('bi_search_provider%d' % (i+1)  , 'valid'),
+				d1 = {'valid': cst_parser.getint('bi_search_provider%d' % (i+1)  , 'valid'),
 					  'type': cst_parser.get('bi_search_provider%d' % (i+1)  , 'type'),
 					  'speed_class': spc,
 					  'login': lgn,
@@ -265,11 +278,7 @@ class CfgSettings:
 	 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	def html_editpage(self): 
-			
-		self.selectable_speedopt[0][1] += ' ['+str(self.cgen['timeout_class'][0])+'s]'
-		self.selectable_speedopt[1][1] += ' ['+str(self.cgen['timeout_class'][1])+'s]'
-		self.selectable_speedopt[2][1] += ' ['+str(self.cgen['timeout_class'][2])+'s]'
-			
+
 		count = 0
 		if 'SearchModule.loadedModules' not in globals():
 			SearchModule.loadSearchModules()

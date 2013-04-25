@@ -16,8 +16,8 @@
 		<td>Port: <input type="input" name="port" value="{{ genopt['portno'] }}" size="10"></td>
 	</tr>	
 	<tr>
-		<td>	User: <input type="input" name="general_usr" value="{{ genopt['general_usr'] }}" size="12">
-			Pass: <input type="password" name="general_pwd" value="{{ genopt['general_pwd'] }}" size="12"></td>
+		<td>	User: <input type="input" name="general_usr" value="{{ genopt['general_usr'] }}" size="18">
+			Pass: <input type="password" name="general_pwd" value="{{ genopt['general_pwd'] }}" size="18"></td>
 	</tr>
 	<tr>	
 			<td><input type="checkbox" name="https" {{ genopt['general_https_verbose'] }} >HTTPS Enabled </td>
@@ -27,8 +27,8 @@
 <table id="results" summary="SendtoSAB" style="width: 420px;"><thead>
 <tr><th scope="col">SabNZB Integration</th></tr></thead><tbody>
 	<tr>	
-			<td>Url: <input type="text" name="send2sabnzb_url" value="" size="12">
-			API Key: <input type="text" name="send2sabnzb_API" value="" size="12"></td>
+			<td>Url: <input type="text" name="sabnzbd_url" value="{{ genopt['sabnzbd_url'] }}" size="18">
+			API Key: <input type="text" name="sabnzbd_api" value="{{ genopt['sabnzbd_api'] }}" size="18"></td>
 			
 	</tr>					
 </tbody></table>

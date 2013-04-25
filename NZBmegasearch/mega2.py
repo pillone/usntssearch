@@ -39,9 +39,6 @@ print motd
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 cfgsets = config_settings.CfgSettings()
-
-#~ cfg,cgen = config_settings.read_conf()
-#~ cfg_deep = config_settings.read_conf_deepsearch()
 first_time = 0
 
 if (cfgsets.cfg is None): 
@@ -147,8 +144,9 @@ def main_index():
 	global first_time,cfg,cgen,mega_parall
 	if request.method == 'POST':
 		cfgsets.write(request.form)
-		#~ config_settings.config_write(request.form)
-		#~ first_time = 0
+		first_time = 0
+		os.execl('python', 'mega2.py')
+
 		#~ cfg,cgen = config_settings.read_conf()
 		#~ mega_parall = megasearch.DoParallelSearch(cfg)
 	if first_time == 1:
