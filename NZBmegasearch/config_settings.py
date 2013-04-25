@@ -60,6 +60,8 @@ class CfgSettings:
 		if (request_form.has_key('https')  == True):
 			parser.set('general', 'general_https', '1')
 
+		parser.set('general', 'sabnzb_', request_form['send2sabnzb_url'].replace(" ", ""))
+		send2sabnb_url
 		
 		#~ custom
 		counter = 1
@@ -364,8 +366,3 @@ class CfgSettings:
 		
 
 
-	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
-	#~ def config_write(self, request_form):
-		#~ write_conf(request_form)	
-		#~ return config_read()
