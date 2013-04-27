@@ -43,6 +43,24 @@ class DoParallelSearch:
 		self.qry_nologic = ''
 		self.logic_items = []
 		self.ds = ds			
+
+		if(self.cfg is not None):
+			for i in xrange(len(self.cfg)):
+				if(self.cfg[i]['valid'] != 0):
+					self.svalid_speed[ self.cfg[i]['speed_class'] ] = 1 + self.svalid_speed[ self.cfg[i]['speed_class'] ]
+
+		if(ds.cfg is not None):
+			for i in xrange(len(self.ds.cfg)):
+				if(self.cfg[i]['valid'] != 0):
+					self.svalid_speed[ self.ds.cfg[i]['speed_class'] ] = 1 + self.svalid_speed[ self.ds.cfg[i]['speed_class'] ]
+
+				
+		if( (self.cfg is not None) or (self.cgen is not None) ):
+			self.svalid_speed[1] += self.svalid_speed[0]
+			self.svalid_speed[2] += self.svalid_speed[1]
+			self.svalid = self.svalid_speed[2]
+			self.cfg_cpy = copy.deepcopy(self.cfg)
+		
 		
 		self.logic_expr = re.compile("(?:^|\s)([-+])(\w+)")
 		self.possibleopt = [ ['1080p', 'HD 1080p',''],
@@ -63,22 +81,6 @@ class DoParallelSearch:
 		self.searchopt_cpy = self.searchopt
 		self.possibleopt_cpy = self.possibleopt		
 
-		if(self.cfg is not None):
-			for i in xrange(len(self.cfg)):
-				if(self.cfg[i]['valid'] != 0):
-					self.svalid_speed[ self.cfg[i]['speed_class'] ] = 1 + self.svalid_speed[ self.cfg[i]['speed_class'] ]
-
-		if(ds.cfg is not None):
-			for i in xrange(len(self.ds.cfg)):
-				if(self.cfg[i]['valid'] != 0):
-					self.svalid_speed[ self.ds.cfg[i]['speed_class'] ] = 1 + self.svalid_speed[ self.ds.cfg[i]['speed_class'] ]
-				
-		if( (self.cfg is not None) or (self.cgen is not None) ):
-			self.svalid_speed[1] += self.svalid_speed[0]
-			self.svalid_speed[2] += self.svalid_speed[1]
-			self.svalid = self.svalid_speed[2]
-			self.cfg_cpy = copy.deepcopy(self.cfg)
-		
 	def dosearch(self, args):
 		#~ restore originals
 		self.cfg = copy.deepcopy(self.cfg_cpy)

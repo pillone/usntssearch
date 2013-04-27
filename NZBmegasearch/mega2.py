@@ -14,11 +14,11 @@
 #~ You should have received a copy of the GNU General Public License
 #~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
-from flask import Flask
-from flask import request, Response, redirect, send_from_directory
+from flask import Flask, request, Response, redirect, send_from_directory
 import logging
 import logging.handlers
 import os
+import sys
 import threading
 import SearchModule
 import DeepsearchModule
@@ -30,29 +30,47 @@ import config_settings
 import miscdefs
 import random
 import time
+from OpenSSL import SSL
 
 DEBUGFLAG = True
 SERVERSIDE = False
 
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+ 
+	
+def reload_all():
+	print '>> Bootstrapping...'
+	global cfgsets, sugg, ds, mega_parall, wrp, apiresp, auth
+	cfgsets = config_settings.CfgSettings()	
+	sugg = SuggestionResponses(cfgsets.cfg, cfgsets.cgen)
+	sugg.detached_trendpolling = 1
+	ds = DeepsearchModule.DeepSearch(cfgsets.cfg_deep, cfgsets.cgen)
+	mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds)
+	wrp = Warper (cfgsets.cgen, ds)
+	apiresp = ApiResponses(cfgsets.cfg, wrp)
+	auth = miscdefs.Auth(cfgsets.cgen)
+		
 motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
 print motd
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 cfgsets = config_settings.CfgSettings()
 first_time = 0
+reload_all()
 
 if (cfgsets.cfg is None): 
 	first_time = 1
 	'>> It will be configured'	
 
 logsdir = SearchModule.resource_path('logs/')
+certdir = SearchModule.resource_path('certificates/')
 logging.basicConfig(filename=logsdir+'nzbmegasearch.log',level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
 handler = logging.handlers.RotatingFileHandler(logsdir+'nzbmegasearch.log', maxBytes=cfgsets.cgen['log_size'], backupCount=cfgsets.cgen['log_backupcount'])
 log.addHandler(handler)
 log.info(motd)
 templatedir = SearchModule.resource_path('templates')
-app = Flask(__name__, template_folder=templatedir)	
+app = Flask(__name__, template_folder=templatedir)	 
 cver_ver_notify= { 'chk':1, 
 			  'curver': '--' }
 print '>> version: '+ str(cver_ver_notify['curver'])
@@ -60,9 +78,6 @@ SearchModule.loadSearchModules()
 if(DEBUGFLAG):
 	cfgsets.cgen['general_trend'] = 0
 	print 'MEGA2: DEBUGFLAG MUST BE SET TO FALSE BEFORE DEPLOYMENT'
-sugg = SuggestionResponses(cfgsets.cfg, cfgsets.cgen)
-#~ detached server for trends
-sugg.detached_trendpolling = 1
 
 #~ wait for login init
 if(DEBUGFLAG == False and SERVERSIDE == True):
@@ -70,32 +85,24 @@ if(DEBUGFLAG == False and SERVERSIDE == True):
 	sleeptime = random.randrange(0, 10)
 	log.info('Wait ' + str(sleeptime) + 's for initialization...')
 	time.sleep(sleeptime)	
-ds = DeepsearchModule.DeepSearch(cfgsets.cfg_deep, cfgsets.cgen)
-
-mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds)
-wrp = Warper (cfgsets.cgen, ds)
-apiresp = ApiResponses(cfgsets.cfg, wrp)
-dwn = miscdefs.DownloadedStats()
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+@app.route('/poweroff')
+def poweroff():
+	os.abort()
 
 @app.route('/robots.txt')
 def static_from_root():
     return send_from_directory(app.static_folder, request.path[1:])
-
-@app.route('/sts_gnr')
-def dstastgeneral():	
-	return dwn.get_generalstats(request.args)
-	
-
-@app.route('/legal')
-def legal():
-	return (miscdefs.legal())
-	
-		
+			
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/s', methods=['GET'])
+@auth.requires_auth
 def search():
+	if(first_time):
+		return (main_index)
+	
 	sugg.asktrend_allparallel()	
 	#~ parallel suggestion and search
 	if(DEBUGFLAG == False):
@@ -110,7 +117,6 @@ def search():
 
 	params_dosearch = {'args': request.args, 
 						'sugg': sugg.sugg_info, 
-						'configr': cfg,
 						'trend_movie': sugg.movie_trend, 
 						'trend_show': sugg.show_trend, 
 						'ver': cver_ver_notify,
@@ -121,6 +127,7 @@ def search():
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 @app.route('/config', methods=['GET','POST'])
+@auth.requires_auth
 def config():
 	return cfgsets.edit_config()
 
@@ -139,16 +146,15 @@ def warpme():
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 			
 @app.route('/', methods=['GET','POST'])
+@auth.requires_auth
 def main_index():
 	
 	global first_time,cfg,cgen,mega_parall
 	if request.method == 'POST':
 		cfgsets.write(request.form)
 		first_time = 0
-		os.execl('python', 'mega2.py')
+		reload_all()
 
-		#~ cfg,cgen = config_settings.read_conf()
-		#~ mega_parall = megasearch.DoParallelSearch(cfg)
 	if first_time == 1:
 		return cfgsets.edit_config()
 
@@ -170,6 +176,7 @@ def api():
 	return apiresp.dosearch(request.args)
 
 @app.route('/connect', methods=['GET'])
+@auth.requires_auth
 def connect():
 	return miscdefs.connectinfo()
  
@@ -178,11 +185,22 @@ def connect():
 @app.errorhandler(404)
 def generic_error(error):
 	return main_index()
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~   
  
 
 if __name__ == "__main__":	
+
 	sugg.asktrend_allparallel()
 	chost = '0.0.0.0'
 	print '>> Running on port '	+ str(cfgsets.cgen['portno'])
+	
+	ctx = None
+	
+	if(cfgsets.cgen['general_https'] == 1):
+		print '>> HTTPS security activated' 
+		ctx = SSL.Context(SSL.SSLv23_METHOD)
+		ctx.use_privatekey_file(certdir+'server.key')
+		ctx.use_certificate_file(certdir+'server.crt')
 
-	app.run(host=chost,port=cfgsets.cgen['portno'], debug = DEBUGFLAG)
+	app.run(host=chost,port=cfgsets.cgen['portno'], debug = True, ssl_context=ctx)

@@ -34,40 +34,39 @@ from operator import itemgetter
 
 log = logging.getLogger(__name__)
 
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-def legal():
-	return render_template('legal.html')
-
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 def connectinfo():
 	return render_template('connectinfo.html')
 	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-def check_auth(username, password, cgen):
-	if(username == cgen['general_usr'] and password == cgen['general_pwd']):
-		return True
-		
+class Auth:
+	def __init__(self, cgen):
+		self.cgen = cgen
 
-def authenticate():
-    """Sends a 401 response that enables basic auth"""
-    return Response(
-    'Could not verify your access level for that URL.\n'
-    'You have to login with proper credentials', 401,
-    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+	def check_auth(self, username, password):
+		if(username == self.cgen['general_usr'] and password == self.cgen['general_pwd']):
+			return True
+			
+	def authenticate(self):
+		"""Sends a 401 response that enables basic auth"""
+		return Response(
+		'Could not verify your access level for that URL.\n'
+		'You have to login with proper credentials', 401,
+		{'WWW-Authenticate': 'Basic realm="Login Required"'})
 
-def requires_auth(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-		cfg,cgen = config_settings.read_conf()		
-		if(len(cgen['general_usr']) != 0):
-			auth = request.authorization
-			if not auth or not check_auth(auth.username, auth.password, cgen):
-				return authenticate()
-			return f(*args, **kwargs)
-		else:
-			return f(*args, **kwargs)
-    return decorated
+	def requires_auth(self, f):
+		@wraps(f)
+		def decorated(*args, **kwargs):
+			if(len(self.cgen['general_usr']) != 0):
+				auth = request.authorization
+				if not auth or not self.check_auth(auth.username, auth.password):
+					return self.authenticate()
+				return f(*args, **kwargs)
+			else:
+				return f(*args, **kwargs)
+			return f(*args, **kwargs)		
+		return decorated
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 

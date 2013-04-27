@@ -30,7 +30,6 @@ class CfgSettings:
 	
 	# Set up class variables
 	def __init__(self):
-	
 		self.selectable_speedopt = [ ['0', 'Quick Response',''],
 									 ['1', 'Normal Response',''],
 									 ['2','Extended Response','']]
@@ -117,8 +116,7 @@ class CfgSettings:
 					counter3 = counter3 + 1
 		parser.set('general', 'deep_numserver', str(counter3-1))
 
-
-		parser.write(sys.stdout)	
+		#~ parser.write(sys.stdout)	
 		with open('custom_params.ini', 'wt') as configfile:
 			parser.write(configfile)
 

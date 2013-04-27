@@ -362,6 +362,10 @@ class BaseWSGIServer(HTTPServer, object):
         except KeyboardInterrupt:
             pass
 
+    def shutdown_request(self,request): 
+		if(self.ssl_context is not None):
+			request.shutdown()
+
     def handle_error(self, request, client_address):
         if self.passthrough_errors:
             raise
