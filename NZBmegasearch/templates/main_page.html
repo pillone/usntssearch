@@ -127,7 +127,14 @@
 				{% for row in results -%}
 					{% if row['ignore'] == 0  -%}
 					<tr>
-						<td class="titlecell"><a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a></td>
+						
+						<td class="titlecell">
+							{% if send2sab_exist   -%}
+								<a href= "{{ cgen['sabnzbd_url'] }}/api?mode=addurl&name={{send2sab_exist}}//{{ row['url_encr'] }}&apikey={{ cgen['sabnzbd_api'] }}" target="_blank">
+								<img src="static/sab2_16.png" style='vertical-align: middle;' width="16" height="16"/>
+							{%- endif %}		
+							</a>
+							<a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a></td>
 						<td class="sizecell">{{ row['cat'] }}</td>
 						<td class="sizecell">{{ row['filesize'] }}</td>
 						<td class="datecell">{{ row['age'] }}</td>
@@ -153,7 +160,12 @@
 				{% for row in results -%}
 					{% if row['ignore'] == 1  -%}
 					<tr>
-						<td class="titlecell"><a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a></td>
+						<td class="titlecell">
+							{% if send2sab_exist   -%}
+								<a href= "{{ cgen['sabnzbd_url'] }}/api?mode=addurl&name={{send2sab_exist}}//{{ row['url_encr'] }}&apikey={{ cgen['sabnzbd_api'] }}" target="_blank">
+								<img src="static/sab2_16.png" style='vertical-align: middle;' width="16" height="16"/>
+							{%- endif %}		
+							<a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a></td>
 						<td class="sizecell">{{ row['cat'] }}</td>						
 						<td class="sizecell">{{ row['filesize'] }}</td>
 						<td class="datecell">{{ row['age'] }}</td>

@@ -17,6 +17,7 @@
 
 from sets import Set
 import decimal
+import socket
 import datetime
 import time
 from operator import itemgetter
@@ -33,7 +34,6 @@ log = logging.getLogger(__name__)
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 class DoParallelSearch:
 	
-	# Set up class variables
 	def __init__(self, conf, cgen, ds):
 		self.results = []
 		self.cfg = conf
@@ -43,7 +43,9 @@ class DoParallelSearch:
 		self.qry_nologic = ''
 		self.logic_items = []
 		self.ds = ds			
-
+		self.sckname = self.getdomainandprotocol()
+		print '>> Base domain and protocol: ' + self.sckname
+	
 		if(self.cfg is not None):
 			for i in xrange(len(self.cfg)):
 				if(self.cfg[i]['valid'] != 0):
@@ -80,6 +82,22 @@ class DoParallelSearch:
 							['Extensive ['+str(self.svalid_speed[2]) + ' idx]', 2,'']]
 		self.searchopt_cpy = self.searchopt
 		self.possibleopt_cpy = self.possibleopt		
+
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+	def getdomainandprotocol(self):
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		s.connect(("8.8.8.8",80))
+		hprotocol = 'http://'
+		if(self.cgen['general_https']):
+			hprotocol = 'https://'
+		sckname = hprotocol + s.getsockname()[0]
+		s.close()
+		return sckname
+
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 	def dosearch(self, args):
 		#~ restore originals
@@ -127,6 +145,8 @@ class DoParallelSearch:
 		#~ print self.logic_items
 		results = SearchModule.performSearch(self.qry_nologic, self.cfg, self.ds )
 		self.results = summary_results(results, self.qry_nologic, self.logic_items)
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 		
 	def renderit(self,params):
 		params['search_opt']=  copy.deepcopy(self.searchopt)
@@ -143,7 +163,9 @@ class DoParallelSearch:
 			for slctg in params['selectable_opt']:
 				if(slctg[0] == params['args']['selcat']):
 					slctg[2] = 'selected'
-		return cleanUpResults(self.results, params['sugg'], params['ver'], params['args'], self.svalid, params)
+		return self.cleanUpResults(params)
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	
 	def renderit_empty(self,params):	
 		searchopt_local =  copy.deepcopy(self.searchopt)
@@ -152,6 +174,96 @@ class DoParallelSearch:
 								trend_show = params['trend_show'], trend_movie = params['trend_movie'], debug_flag = params['debugflag'],
 								sstring  = "", selectable_opt = self.possibleopt, search_opt = searchopt_local,  motd = self.cgen['motd'])
 		
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+	def cleanUpResults(self, params):
+		sugg_list = params['sugg']
+		results = self.results
+		svalid = self.svalid
+		args = params['args']
+		ver_notify = params['ver']
+		niceResults = []
+		existduplicates = 0
+
+		#~ sorting
+		if 'order' not in args:
+			results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
+		else:
+			if	(args['order']=='t'):
+				results = sorted(results, key=itemgetter('title'))
+			if	(args['order']=='s'):
+				results = sorted(results, key=itemgetter('size'), reverse=True)
+			if	(args['order']=='p'):
+				results = sorted(results, key=itemgetter('providertitle'))
+			if	(args['order']=='d'):
+				results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
+			if	(args['order']=='c'):
+				results = sorted(results, key=itemgetter('categ'), reverse=True) 
+				
+		#~ do nice 
+		for i in xrange(len(results)):
+			if(results[i]['ignore'] == 2):
+				continue
+				
+			if(results[i]['ignore'] == 1):
+				existduplicates = 1
+
+			# Convert sized to smallest SI unit (note that these are powers of 10, not powers of 2, i.e. OS X file sizes rather than Windows/Linux file sizes)
+			szf = float(results[i]['size']/1000000.0)
+			mgsz = ' MB '
+			if (szf > 1000.0): 
+				szf = szf /1000
+				mgsz = ' GB '
+			fsze1 = str(round(szf,1)) + mgsz
+			
+			if (results[i]['size'] == -1):
+				fsze1 = 'N/A'
+			totdays = (datetime.datetime.today() - datetime.datetime.fromtimestamp(results[i]['posting_date_timestamp'])).days + 1		
+			category_str = '' 
+			keynum = len(results[i]['categ'])
+			keycount = 0
+			for key in results[i]['categ'].keys():
+				category_str = category_str + key
+				keycount = keycount + 1
+				if (keycount < 	keynum):
+					 category_str =  category_str + ' - ' 
+			if (results[i]['url'] is None):
+				results[i]['url'] = ""
+			
+			qryforwarp=params['wrp'].chash64_encode(results[i]['url'])
+			if('req_pwd' in results[i]):
+				qryforwarp += '&m='+ results[i]['req_pwd']
+			niceResults.append({
+				'url':results[i]['url'],
+				'url_encr':'warp?x='+qryforwarp,
+				'title':results[i]['title'],
+				'filesize':fsze1,
+				'cat' : category_str,
+				'age':totdays,
+				'details':results[i]['release_comments'],
+				'details_deref':'http://www.derefer.me/?'+results[i]['release_comments'],
+				'providerurl':results[i]['provider'],
+				'providertitle':results[i]['providertitle'],
+				'ignore' : results[i]['ignore']
+			})
+		send2sab_exist = None
+		if ('sabnzbd_url' in self.cgen):
+			if(len(self.cgen['sabnzbd_url'])):
+				send2sab_exist = self.sckname
+		
+		return render_template('main_page.html',results=niceResults, exist=existduplicates, 
+												vr=ver_notify, args=args, nc = svalid, sugg = sugg_list,
+												send2sab_exist= send2sab_exist,
+												cgen = self.cgen,
+												trend_show = params['trend_show'], 
+												trend_movie = params['trend_movie'], 
+												debug_flag = params['debugflag'],
+												sstring  = params['args']['q'],
+												selectable_opt = params['selectable_opt'],
+												search_opt =  params['search_opt'],
+												motd = params['motd'] )
+
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 def summary_results(rawResults, strsearch, logic_items=[]):
@@ -230,79 +342,3 @@ def summary_results(rawResults, strsearch, logic_items=[]):
 	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-# Generate HTML for the results
-def cleanUpResults(results, sugg_list, ver_notify, args, svalid, params):
-	niceResults = []
-	existduplicates = 0
-
-	#~ sorting
-	if 'order' not in args:
-		results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
-	else:
-		if	(args['order']=='t'):
-			results = sorted(results, key=itemgetter('title'))
-		if	(args['order']=='s'):
-			results = sorted(results, key=itemgetter('size'), reverse=True)
-		if	(args['order']=='p'):
-			results = sorted(results, key=itemgetter('providertitle'))
-		if	(args['order']=='d'):
-			results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
-		if	(args['order']=='c'):
-			results = sorted(results, key=itemgetter('categ'), reverse=True) 
-			
-	#~ do nice 
-	for i in xrange(len(results)):
-		if(results[i]['ignore'] == 2):
-			continue
-			
-		if(results[i]['ignore'] == 1):
-			existduplicates = 1
-
-		# Convert sized to smallest SI unit (note that these are powers of 10, not powers of 2, i.e. OS X file sizes rather than Windows/Linux file sizes)
-		szf = float(results[i]['size']/1000000.0)
-		mgsz = ' MB '
-		if (szf > 1000.0): 
-			szf = szf /1000
-			mgsz = ' GB '
-		fsze1 = str(round(szf,1)) + mgsz
-		
-		if (results[i]['size'] == -1):
-			fsze1 = 'N/A'
-		totdays = (datetime.datetime.today() - datetime.datetime.fromtimestamp(results[i]['posting_date_timestamp'])).days + 1		
-		category_str = '' 
-		keynum = len(results[i]['categ'])
-		keycount = 0
-		for key in results[i]['categ'].keys():
-			category_str = category_str + key
-			keycount = keycount + 1
-			if (keycount < 	keynum):
-			 	 category_str =  category_str + ' - ' 
-		if (results[i]['url'] is None):
-			results[i]['url'] = ""
-		
-		qryforwarp=params['wrp'].chash64_encode(results[i]['url'])
-		if('req_pwd' in results[i]):
-			qryforwarp += '&m='+ results[i]['req_pwd']
-		niceResults.append({
-			'url':results[i]['url'],
-			'url_encr':'warp?x='+qryforwarp,
-			'title':results[i]['title'],
-			'filesize':fsze1,
-			'cat' : category_str,
-			'age':totdays,
-			'details':results[i]['release_comments'],
-			'details_deref':'http://www.derefer.me/?'+results[i]['release_comments'],
-			'providerurl':results[i]['provider'],
-			'providertitle':results[i]['providertitle'],
-			'ignore' : results[i]['ignore']
-		})
-	
-	return render_template('main_page.html',results=niceResults, exist=existduplicates, 
-											vr=ver_notify, args=args, nc = svalid, sugg = sugg_list,
-											trend_show = params['trend_show'], 
-											trend_movie = params['trend_movie'], 
-											debug_flag = params['debugflag'],
-											sstring  = params['args']['q'],
-											selectable_opt = params['selectable_opt'],
-											search_opt =  params['search_opt'],
-											motd = params['motd'] )

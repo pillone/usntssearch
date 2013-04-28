@@ -131,7 +131,6 @@ def search():
 def config():
 	return cfgsets.edit_config()
 
-
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/warp', methods=['GET'])
