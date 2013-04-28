@@ -33,6 +33,7 @@ class ad_NZBclub(SearchModule):
 		self.builtin = 1
 		self.login = 0
 		self.inapi = 1
+		self.api_catsearch = 0
 		
 		self.categories = {'Console': {'code':[], 'pretty': 'Console'},
 							'Movie' : {'code': [], 'pretty': 'Movie'},

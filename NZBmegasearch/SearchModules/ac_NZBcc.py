@@ -31,6 +31,7 @@ class ac_NZBcc(SearchModule):
 		self.builtin = 1
 		self.login = 0
 		self.inapi = 1
+		self.api_catsearch = 1
 		
 		self.categories = {'Console': {'code':[], 'pretty': 'Console'},
 							'Movie' : {'code': [], 'pretty': 'Movie'},
@@ -52,7 +53,18 @@ class ac_NZBcc(SearchModule):
 			for i in xrange(len(self.categories[key]['code'])):
 				val = self.categories[key]['code'][i]
 				self.category_inv[str(val)] = prettyval
-	# Perform a search using the given query string
+				
+				
+				alt.binaries.tv
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	def search_raw(self, queryopt, cfg):
+	
+		queryString = 'alt.binaries.tv'
+		parsed_data = self.search(queryString, cfg)
+		return parsed_data		
+						
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def search(self, queryString, cfg):
 		# Get HTML
 		urlParams = dict(

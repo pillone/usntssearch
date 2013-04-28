@@ -31,7 +31,8 @@ class af_Fanzub(SearchModule):
 		self.builtin = 1
 		self.login = 0
 		self.inapi = 1
-
+		self.api_catsearch = 0
+		
 		self.categories = {'Console': {'code':[], 'pretty': ''},
 							'Movie' : {'code': ['Anime'], 'pretty': 'Anime'},
  							'Movie_HD' : {'code': ['Anime'], 'pretty': 'Anime'},

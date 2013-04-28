@@ -33,6 +33,7 @@ class aa_NZBx(SearchModule):
 		self.builtin = 1
 		self.login = 0
 		self.inapi = 1
+		self.api_catsearch = 0
 									 
 		self.categories = {'Console': {'code':[1000,1010,1020,1030,1040,1050,1060,1070,1080], 'pretty': 'Console'},
 							'Movie' : {'code': [2000, 2010, 2020], 'pretty': 'Movie'},

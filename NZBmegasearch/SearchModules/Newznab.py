@@ -33,7 +33,7 @@ class Newznab(SearchModule):
 		self.nzbDownloadBaseURL = 'NA'
 		self.builtin = 0
 		self.inapi = 1
-	
+		self.api_catsearch = 1
 		
 		self.categories = {'Console': {'code':[1000,1010,1020,1030,1040,1050,1060,1070,1080], 'pretty': 'Console'},
 							'Movie' : {'code': [2000, 2010, 2020], 'pretty': 'Movie'},
@@ -56,7 +56,20 @@ class Newznab(SearchModule):
 				val = self.categories[key]['code'][i]
 				self.category_inv[str(val)] = prettyval
 		#~ print self.category_inv
-	# Perform a search using the given query string
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	def search_raw(self, queryopt, cfg):
+		urlParams = dict(
+			queryopt,
+			o='xml',
+			apikey=self.api
+		)
+		
+		parsed_data = self.parse_xmlsearch(urlParams, cfg['timeout'])		
+		return parsed_data		
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
 	def search(self, queryString, cfg):
 		# Get text
 		urlParams = dict(

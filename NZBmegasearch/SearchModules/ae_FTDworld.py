@@ -33,6 +33,7 @@ class ae_FTDworld(SearchModule):
 		self.login = 0
 		self.inapi = 0
 		self.cookie = {}
+		self.api_catsearch = 0
 		
 	def dologin(self):			
 		cfg = {}

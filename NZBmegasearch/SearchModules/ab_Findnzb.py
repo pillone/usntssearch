@@ -33,7 +33,8 @@ class ab_Findnzb(SearchModule):
 		self.builtin = 1
 		self.login = 0
 		self.inapi = 1
-
+		self.api_catsearch = 1
+		
 		self.categories = {'Console': {'code':[1000,1010,1020,1030,1040,1050,1060,1070,1080], 'pretty': 'Console'},
 							'Movie' : {'code': [2000, 2010, 2020], 'pretty': 'Movie'},
  							'Movie_HD' : {'code': [2040, 2050, 2060], 'pretty': 'HD'},
@@ -54,7 +55,19 @@ class ab_Findnzb(SearchModule):
 			for i in xrange(len(self.categories[key]['code'])):
 				val = self.categories[key]['code'][i]
 				self.category_inv[str(val)] = prettyval
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	def search_raw(self, queryopt, cfg):
+		urlParams = dict(
+			queryopt,
+			o='xml',
+			apikey=self.api
+		)
 		
+		parsed_data = self.parse_xmlsearch(urlParams, cfg['timeout'])		
+		return parsed_data		
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+			
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):		
 		urlParams = dict(

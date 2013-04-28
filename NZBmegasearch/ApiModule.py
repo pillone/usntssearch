@@ -177,13 +177,37 @@ class ApiResponses:
 			if(len(tvrage_show['showtitle'])): 
 				return self.generate_tvserie_nabresponse(tvrage_show)				
 			else:
-				return render_template('api_error.html')		
-		else:
+				return render_template('api_error.html')				
+		elif(self.args.has_key('cat')):
+			if((self.args['cat'].find('5030') != -1) or (self.args['cat'].find('5040') != -1)):
+				return self.generate_tvserie_nabresponse_broadcast();
+			else:
+				return render_template('api_error.html')
+		else:	
 			return render_template('api_default.html')
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 
+	def generate_tvserie_nabresponse_broadcast(self):
+		
+		addparams = dict(
+						age= '1500',
+						t='tvsearch',
+						cat='5040,5030')
+		
+		rawResults = SearchModule.performSearch('', self.cfg, None, addparams)
+		results = []
+		#~ no cleaning just flatten in one array
+		for provid in xrange(len(rawResults)):
+			for z in xrange(len(rawResults[provid])):
+ 				results.append(rawResults[provid][z])
+
+		self.searchstring = ''
+		return self.cleanUpResultsXML(results)
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	
 	def imdb_movieinfo(self, mid):	
 		parsed_data = {'movietitle': '',
 						'year': '1900'}
