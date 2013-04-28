@@ -36,14 +36,12 @@ DEBUGFLAG = True
 SERVERSIDE = False
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
- 
-	
+ 	
 def reload_all():
 	print '>> Bootstrapping...'
 	global cfgsets, sugg, ds, mega_parall, wrp, apiresp, auth
 	cfgsets = config_settings.CfgSettings()	
 	sugg = SuggestionResponses(cfgsets.cfg, cfgsets.cgen)
-	sugg.detached_trendpolling = 1
 	ds = DeepsearchModule.DeepSearch(cfgsets.cfg_deep, cfgsets.cgen)
 	mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds)
 	wrp = Warper (cfgsets.cgen, ds)
@@ -54,6 +52,11 @@ motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
 print motd
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+cver = miscdefs.ChkVersion() 
+cver.chk_local_sign()
+os.abort()
+print '>> version: '+ str(cver.ver_notify['curver'])
 cfgsets = config_settings.CfgSettings()
 first_time = 0
 reload_all()
@@ -71,9 +74,7 @@ log.addHandler(handler)
 log.info(motd)
 templatedir = SearchModule.resource_path('templates')
 app = Flask(__name__, template_folder=templatedir)	 
-cver_ver_notify= { 'chk':1, 
-			  'curver': '--' }
-print '>> version: '+ str(cver_ver_notify['curver'])
+
 SearchModule.loadSearchModules()
 if(DEBUGFLAG):
 	cfgsets.cgen['general_trend'] = 0
@@ -119,7 +120,7 @@ def search():
 						'sugg': sugg.sugg_info, 
 						'trend_movie': sugg.movie_trend, 
 						'trend_show': sugg.show_trend, 
-						'ver': cver_ver_notify,
+						'ver': cver.ver_notify,
 						'wrp':wrp,
 						'debugflag':DEBUGFLAG
 						}
@@ -163,7 +164,7 @@ def main_index():
 						'trend': [], 
 						'trend_movie': sugg.movie_trend, 
 						'trend_show': sugg.show_trend, 
-						'ver': cver_ver_notify,
+						'ver': cver.ver_notify,
 						'debugflag':DEBUGFLAG}
 	return mega_parall.renderit_empty(params_dosearch)
 

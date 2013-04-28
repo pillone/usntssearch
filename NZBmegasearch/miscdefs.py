@@ -17,6 +17,7 @@
 
 import requests
 import sys
+import base64
 from functools import wraps
 from flask import Response,request
 import config_settings
@@ -143,6 +144,21 @@ class ChkVersion:
 		self.chk_local_ver()
 		self.ver_notify['chk'] = self.chk_repos_ver()
 	
+	def chk_local_sign(self): 
+		with open('vernum.num') as f:
+			content = f.readlines()
+		vals = content[0].split(' ')
+		
+		if(len(vals) != 3):
+			random_string = base64.urlsafe_b64encode(os.urandom(50))
+			print '>> rid'
+			content[0] = content[0].rstrip() + ' ' + random_string
+			with open('vernum.num','wt') as f:
+				f.write(content[0])
+    
+		print content
+		
+		
 	
 	def chk_local_ver(self): 
 		verify_str = '80801102808011028080110280801102'

@@ -16,6 +16,7 @@
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #
 from SearchModule import *
 import time
+import urllib
 		
 # Search on NZBx.co
 class aa_NZBx(SearchModule):
@@ -29,11 +30,12 @@ class aa_NZBx(SearchModule):
 		self.typesrch = 'NZX'
 		self.queryURL = 'https://nzbx.co/api/search'
 		self.baseURL = 'https://nzbx.co'
+		self.queryURLSBreq = 'https://nzbx.co/api/sickbeard'
 		self.active = 1
 		self.builtin = 1
 		self.login = 0
 		self.inapi = 1
-		self.api_catsearch = 0
+		self.api_catsearch = 1
 									 
 		self.categories = {'Console': {'code':[1000,1010,1020,1030,1040,1050,1060,1070,1080], 'pretty': 'Console'},
 							'Movie' : {'code': [2000, 2010, 2020], 'pretty': 'Movie'},
@@ -57,16 +59,35 @@ class aa_NZBx(SearchModule):
 				val = self.categories[key]['code'][i]
 				self.category_inv[str(val)] = prettyval
 
-	# Perform a search using the given query string
-	def search(self, queryString, cfg):
-		timestamp_s = time.time()
 
-		# Get JSON
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	def search_raw(self, queryopt, cfg):
+		#~ supported only tv for now
+		urlParams = dict(
+			q='',
+			cat='tv-hd|tv-sd'
+		)
+	
+		return self.search_internal(urlParams, self.queryURLSBreq, cfg)
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~						
+
+	def search(self, queryString, cfg):
+		
 		urlParams = dict(
 			q=queryString
 		)
+		
+		return self.search_internal(urlParams, self.queryURL, cfg)
+						
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~						
+
+	def search_internal(self, urlParams, urlq, cfg):
+		timestamp_s = time.time()
+
 		try:
-			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=cfg['timeout'])
+			http_result = requests.get(url=urlq, params=urlParams, verify=False, timeout=cfg['timeout'])
 		except Exception as e:
 			print e
 			log.critical(str(e))
@@ -95,6 +116,9 @@ class aa_NZBx(SearchModule):
 			if(len(category_found) == 0):
 				category_found['N/A'] = 1
 	
+			if('nzb' not in data[i]):
+				data[i]['nzb'] = self.baseURL + '/nzb?' + str(data[i]['guid']) + '*|*' + urllib.quote_plus(data[i]['name'])
+				
 			release_details = 'https://nzbx.co/d?'+data[i]['guid']
 			d1 = {
 				'title': data[i]['name'],

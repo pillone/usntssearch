@@ -179,13 +179,25 @@
 						
 		</div>
 		<div class="topright_tight">
+			[ <a href='https://github.com/pillone/usntssearch'>
+				{% if vr['chk']  == 1 -%} 
+					<span style='color: #ff0000'>Update Now!</span>
+				{%- endif %}
+				{% if vr['chk']  == -1 -%} 	
+					<span style='color: #ff0000'>Error checking updates</span>
+				{%- endif %}					
+				{% if vr['chk']  == 0 -%} 		
+					Github
+				{%- endif %}											
+			</a> ] 
+			[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' /><img src="static/cp_logo.png" width="" height="16" /></a> ]
 			[ <a href='config'><img src="static/options.png" width="" height="16" style='vertical-align: bottom;' /></a> ] 
-			[ <a href='poweroff'><img src="static/off.png" width="" height="16" style='vertical-align: bottom;' /></a> ] 
-			[ <a href='https://github.com/pillone/usntssearch'>Offline version</a> ] 
-			[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' /><img src="static/cp_logo.png" width="" height="16" /><img src="static/ch_logo.png" width="" height="13" /></a> ] 			</div>		
+			[ <a href='poweroff' OnClick="return confirm('Do you really want to halt?');"><img src="static/off.png" width="" height="16" style='vertical-align: bottom;' /></a> ]
+			</div>		
 		</div>
 	
-		<div class="bottomcenter">ver. {{ vr['curver'] }} -- {{ nc  }} <br/></div>
+		<div class="bottomcenter">ver. {{ vr['curver'] }} -- # {{ nc  }} -- 0byte<br/></div>
+		
 	    <script type="text/javascript"> 
 	    $(document).ready(function() { 
 			$('#submit').click(function() { 
@@ -215,8 +227,7 @@
 						);
             }); 
 			$.unblockUI();
-	     }); 
-   
+	     });    
 		</script>
 
 	</body>
