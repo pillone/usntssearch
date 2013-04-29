@@ -9,7 +9,7 @@
 </style>
 </head>
 <body>
-<form action="/" method="post">
+<form action="/" method="post" name="cfgform">
 <table id="results" summary="Config" style="width: 420px;"><thead>
 <tr><th scope="col">General Options</th></tr></thead><tbody>
 	<tr>
@@ -135,4 +135,68 @@
 <div style="margin: 45px">
 	<input type="submit" value="Save" style="width: 80px; font: bold 16px &#39;Lucida Sans Unicode&#39;, &#39;Lucida Grande&#39;, Sans-Serif; ">
 	<input type="button" style="width: 80px; font: 16px &#39;Lucida Sans Unicode&#39;, &#39;Lucida Grande&#39;, Sans-Serif; " value="Cancel" onclick="location.href=&#39;\/&#39;;">
+	<input type="button" style="width: 80px; font: 16px &#39;Lucida Sans Unicode&#39;, &#39;Lucida Grande&#39;, Sans-Serif; " value="TEST" onclick="test()">
 </div></form>
+
+
+	    <script type="text/javascript"> 
+			function test()
+			{
+				
+				var port_v = cfgform.port.value;
+				chk1 = /^\d+$/.test(port_v);
+				if(!chk1 || (chk1==true && (parseInt(port_v)> 65535 ||  parseInt(port_v)< 1024 )) )
+				{
+					alert('ERROR: [Port] is a number-only field between [1024,65535]');
+					return false
+				}	
+				
+				var usr_v = cfgform.general_usr.value.replace(/\s+/g, ' ')
+				var pwd_v = cfgform.general_pwd.value.replace(/\s+/g, ' ')
+				if (((usr_v.length == 0) && (pwd_v.length > 0)) || ((usr_v.length > 0) && (pwd_v.length == 0)))
+				{
+					alert('ERROR: [User and Password] must be either both empty or both filled');
+					return false
+				}	
+
+				var sabnzbd_url_v = cfgform.sabnzbd_url.value.replace(/\s+/g, ' ')
+				var sabnzbd_api_v = cfgform.sabnzbd_api.value.replace(/\s+/g, ' ')
+				if ((sabnzbd_api_v.length > 0) && (sabnzbd_url_v.length == 0))
+				{
+					alert('ERROR: [SAB url and api] url missing with provided API key');
+					return false
+				}	
+				
+				{% for c in cfg_bi -%}				
+					{% if c['flogin'] == 1-%}
+						var bi_login_v{{ q }} = cfgform.bi_host{{ c['idx'] }}login.value.replace(/\s+/g, ' ')
+						var bi_pwd_v{{ q }} = cfgform.bi_host{{ c['idx'] }}pwd.value.replace(/\s+/g, ' ')
+						var bi_active_v{{ q }} = cfgform.bi_host{{ c['idx'] }}active.checked
+						if ( ((bi_login_v{{ q }}.length == 0) || (bi_pwd_v{{ q }}.length == 0)) && bi_active_v{{ q }} )
+						{
+							alert('ERROR: Enter user and password for {{ c['humanname'] }}');
+							return false
+						}	
+					{%- endif %}	
+				{%- endfor %}	
+				
+				{% for q in range(0,cnt_max) -%}
+				
+					alert(cfgform.host{{ q }}.value)
+					var bi_host{{ q }} = cfgform.host{{ q }}.value.replace(/\s+/g, ' ')
+					var bi_hostapi{{ q }} = cfgform.API{{ q }}.value.replace(/\s+/g, ' ')
+
+					if ((bi_host{{ q }}.length == 0) || (bi_hostapi{{ q }}.length > 0))
+					{
+						alert('ERROR: Newznab Host (API) #{{ q }}. Enter url for the given API');
+						return false
+					}	
+					
+				{%- endfor %}
+
+				
+			}
+	    </script>
+
+
+</body></html>

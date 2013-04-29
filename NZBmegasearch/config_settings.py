@@ -311,7 +311,6 @@ class CfgSettings:
 						login_name=cffile[i]['login']
 						login_pwd=cffile[i]['pwd']
 						speed_cl = cffile[i]['speed_class']
-						print speed_cl
 						
 				if(module.login == 1):
 					flogin = 1
