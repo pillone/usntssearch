@@ -30,21 +30,20 @@ class ae_FTDworld(SearchModule):
 		self.nzbDownloadBaseURL = 'http://ftdworld.net/cgi-bin/nzbdown.pl?fileID='
 		self.active = 1
 		self.builtin = 1
-		self.login = 0
+		self.login = 1
 		self.inapi = 0
 		self.cookie = {}
 		self.api_catsearch = 0
+		self.cfg = {}
 		
-	def dologin(self):			
-		cfg = {}
-		cfg['login'] = 'nzbmegasearch'
-		cfg['pwd'] = 'nerradmistav'
-		
+	def dologin(self, cfg):			
 		loginurl='http://ftdworld.net/api/login.php'
 		urlParams = dict(
 			userlogin=cfg['login'],
 			passlogin=cfg['pwd']
 		)
+		
+		print urlParams
 		try:
 			#~ short timeout
 			http_result = requests.post(loginurl, data=urlParams, timeout=2)

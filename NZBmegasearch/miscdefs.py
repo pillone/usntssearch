@@ -155,10 +155,7 @@ class ChkVersion:
 			content[0] = content[0].rstrip() + ' ' + random_string
 			with open('vernum.num','wt') as f:
 				f.write(content[0])
-    
-		print content
-		
-		
+
 	
 	def chk_local_ver(self): 
 		verify_str = '80801102808011028080110280801102'

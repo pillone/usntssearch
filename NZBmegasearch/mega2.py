@@ -44,7 +44,7 @@ def reload_all():
 	sugg = SuggestionResponses(cfgsets.cfg, cfgsets.cgen)
 	ds = DeepsearchModule.DeepSearch(cfgsets.cfg_deep, cfgsets.cgen)
 	mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds)
-	wrp = Warper (cfgsets.cgen, ds)
+	wrp = Warper (cfgsets.cgen, cfgsets.cfg, ds)
 	apiresp = ApiResponses(cfgsets.cfg, wrp)
 	auth = miscdefs.Auth(cfgsets.cgen)
 		
@@ -54,8 +54,8 @@ print motd
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 cver = miscdefs.ChkVersion() 
-cver.chk_local_sign()
-os.abort()
+#~ cver.chk_local_sign()
+#~ os.abort()
 print '>> version: '+ str(cver.ver_notify['curver'])
 cfgsets = config_settings.CfgSettings()
 first_time = 0
