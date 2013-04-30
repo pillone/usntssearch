@@ -172,7 +172,6 @@ def main_index():
 
 @app.route('/api', methods=['GET'])
 def api():
-	#~ print request.args
 	return apiresp.dosearch(request.args)
 
 @app.route('/connect', methods=['GET'])

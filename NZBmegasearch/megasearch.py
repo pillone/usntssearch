@@ -35,6 +35,7 @@ log = logging.getLogger(__name__)
 class DoParallelSearch:
 	
 	def __init__(self, conf, cgen, ds):
+		
 		self.results = []
 		self.cfg = conf
 		self.cgen = cgen
@@ -63,7 +64,6 @@ class DoParallelSearch:
 			self.svalid = self.svalid_speed[2]
 			self.cfg_cpy = copy.deepcopy(self.cfg)
 		
-		
 		self.logic_expr = re.compile("(?:^|\s)([-+])(\w+)")
 		self.possibleopt = [ ['1080p', 'HD 1080p',''],
 							['720p','HD 720p',''],
@@ -77,9 +77,8 @@ class DoParallelSearch:
 							['ANDROID','Android',''],
 							['MOBI','Ebook (mobi)',''],
 							['EPUB','Ebook (epub)',''] ]
-		self.searchopt = [ ['Quick ['+str(self.svalid_speed[0]) + ' idx]', 0,''],
-							['Normal ['+str(self.svalid_speed[1]) + ' idx]', 1,''],
-							['Extensive ['+str(self.svalid_speed[2]) + ' idx]', 2,'']]
+		self.searchopt = [ 	['Normal ['+str(self.svalid_speed[1]) + ']', 1,''],
+							['Extensive ['+str(self.svalid_speed[2]) + ']', 2,'']]
 		self.searchopt_cpy = self.searchopt
 		self.possibleopt_cpy = self.possibleopt		
 
@@ -142,7 +141,6 @@ class DoParallelSearch:
 			return self.results
 						
 		self.logic_items = self.logic_expr.findall(args['q'])
-		#~ print self.logic_items
 		results = SearchModule.performSearch(self.qry_nologic, self.cfg, self.ds )
 		self.results = summary_results(results, self.qry_nologic, self.logic_items)
 	
@@ -169,7 +167,7 @@ class DoParallelSearch:
 	
 	def renderit_empty(self,params):	
 		searchopt_local =  copy.deepcopy(self.searchopt)
-		searchopt_local[1][2] = 'checked'
+		searchopt_local[0][2] = 'checked'
 		return render_template('main_page.html', vr=params['ver'], nc=self.svalid, sugg = [], 
 								trend_show = params['trend_show'], trend_movie = params['trend_movie'], debug_flag = params['debugflag'],
 								sstring  = "", selectable_opt = self.possibleopt, search_opt = searchopt_local,  motd = self.cgen['motd'])

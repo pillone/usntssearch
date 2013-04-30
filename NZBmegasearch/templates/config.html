@@ -76,7 +76,7 @@
 		<td><input type="text" name="host{{ q }}" value="" size="40"></td>
 		<td><input type="text" name="API{{ q }}" value="" size="40">
 		<input type="hidden" name="type{{ q }}" value="NAB" size="40">
-		<input type="hidden" name="host{{ q }}" value="1" size="40"></td>
+		</td>
 
 		<td><span>
 		<select  name="selspeed{{ q }}">
@@ -98,7 +98,7 @@
 		<td><input type="text" name="ds_usr{{ c['idx'] }}" value="{{ c['user'] }}" size="18"></td>
 		<td><input type="password" name="ds_pass{{ c['idx'] }}" value="{{ c['pwd'] }}" size="18"></td>
 		<input type="hidden" name="ds_type{{ c['idx'] }}" value="DSN" size="40">
-		<input type="hidden" name="ds_host{{ c['idx'] }}active" value="1" size="40"></td>
+		</td>
 
 		<td><span>
 		<select  name="ds_selspeed{{ c['idx'] }}">
@@ -116,7 +116,7 @@
 		<td><input type="text" name="ds_usr{{ q }}" value="" size="18">
 		<td><input type="text" name="ds_pass{{ q }}" value="" size="18">
 		<input type="hidden" name="ds_type{{ q }}" value="DSN" size="40">
-		<input type="hidden" name="ds_host{{ q }}" value="1" size="40"></td>
+		</td>
 
 		<td><span>
 		<select  name="ds_selspeed{{ q }}">
@@ -133,14 +133,13 @@
 
 
 <div style="margin: 45px">
-	<input type="submit" value="Save" style="width: 80px; font: bold 16px &#39;Lucida Sans Unicode&#39;, &#39;Lucida Grande&#39;, Sans-Serif; ">
+	<input type="submit" value="Save" style="width: 80px; font: bold 16px &#39;Lucida Sans Unicode&#39;, &#39;Lucida Grande&#39;, Sans-Serif; " onclick="return check_form_correctness()">
 	<input type="button" style="width: 80px; font: 16px &#39;Lucida Sans Unicode&#39;, &#39;Lucida Grande&#39;, Sans-Serif; " value="Cancel" onclick="location.href=&#39;\/&#39;;">
-	<input type="button" style="width: 80px; font: 16px &#39;Lucida Sans Unicode&#39;, &#39;Lucida Grande&#39;, Sans-Serif; " value="TEST" onclick="test()">
 </div></form>
 
 
 	    <script type="text/javascript"> 
-			function test()
+			function check_form_correctness()
 			{
 				
 				var port_v = cfgform.port.value;
@@ -161,9 +160,10 @@
 
 				var sabnzbd_url_v = cfgform.sabnzbd_url.value.replace(/\s+/g, ' ')
 				var sabnzbd_api_v = cfgform.sabnzbd_api.value.replace(/\s+/g, ' ')
-				if ((sabnzbd_api_v.length > 0) && (sabnzbd_url_v.length == 0))
+				var cb = check_beginning_http(sabnzbd_url_v)
+				if ((sabnzbd_api_v.length > 0) && (sabnzbd_url_v.length == 0) || !cb)
 				{
-					alert('ERROR: [SAB url and api] url missing with provided API key');
+					alert('ERROR: [SAB url and api] url missing with provided API key.\nUrl must begin with http(s)://');
 					return false
 				}	
 				
@@ -181,21 +181,78 @@
 				{%- endfor %}	
 				
 				{% for q in range(0,cnt_max) -%}
-				
-					alert(cfgform.host{{ q }}.value)
-					var bi_host{{ q }} = cfgform.host{{ q }}.value.replace(/\s+/g, ' ')
-					var bi_hostapi{{ q }} = cfgform.API{{ q }}.value.replace(/\s+/g, ' ')
+					<!-- -->
+					var host{{ q }} = cfgform.host{{ q }}.value.replace(/\s+/g, ' ')
+					var hostapi{{ q }} = cfgform.API{{ q }}.value.replace(/\s+/g, ' ')
+					var cb = check_beginning_http(hostapi{{ q }})
 
-					if ((bi_host{{ q }}.length == 0) || (bi_hostapi{{ q }}.length > 0))
+					if ((host{{ q }}.length == 0) && (hostapi{{ q }}.length > 0) || !cb)
 					{
-						alert('ERROR: Newznab Host (API) #{{ q }}. Enter url for the given API');
+						alert('ERROR: Newznab Host (API) #{{ q }}. Enter url for the given API.\nUrl must begin with http(s)://');
 						return false
-					}	
-					
+					}						
 				{%- endfor %}
 
-				
+				{% for q in range(0,cnt_max) -%}
+					<!-- -->				
+					var ds_host{{ q }} = cfgform.ds_host{{ q }}.value.replace(/\s+/g, ' ')
+					var ds_usr{{ q }} = cfgform.ds_usr{{ q }}.value.replace(/\s+/g, ' ')
+					var ds_pass{{ q }} = cfgform.ds_pass{{ q }}.value.replace(/\s+/g, ' ')
+					var cb = check_beginning_http(ds_host{{ q }})					
+					var err = 0
+					
+					if(!cb)
+					{
+						err = 1;
+					}
+					if ((ds_pass{{ q }}.length == 0) && (ds_usr{{ q }}.length > 0))
+					{
+						err = 1;
+					}
+					if ((ds_pass{{ q }}.length > 0) && (ds_usr{{ q }}.length == 0))
+					{
+						err = 1;
+					}
+					if ((ds_host{{ q }}.length > 0) && ( err == 0 ) )
+					{
+						err = 1;
+					}
+					if ((ds_host{{ q }}.length == 0) && ( err == 1  ) )
+					{
+						err = 1;
+					}
+					if ((ds_host{{ q }}.length > 0) && ( err == 1  ) )
+					{
+						err = 1;
+					}
+					
+					if (err == 1)
+					{
+						alert('ERROR: Newznab Web  #{{ q }}. Enter url, username and password.\nUrl must begin with http(s)://');
+						return false
+					}					
+						
+				{%- endfor %}
 			}
+			
+			
+			function check_beginning_http(string_to_chk)
+			{
+				if(string_to_chk.length == 0)
+				{
+					return true
+				}
+				
+				var pattern = /^((http|https|ftp):\/\/)/;
+				if(!pattern.test(string_to_chk))
+				{
+					return false
+				}	
+				return true
+			}	
+				
+
+
 	    </script>
 
 

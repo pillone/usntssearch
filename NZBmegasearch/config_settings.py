@@ -30,9 +30,8 @@ class CfgSettings:
 	
 	# Set up class variables
 	def __init__(self):
-		self.selectable_speedopt = [ ['0', 'Quick Response',''],
-									 ['1', 'Normal Response',''],
-									 ['2','Extended Response','']]
+		self.selectable_speedopt = [ ['1', 'Normal Response',''],
+									 ['2','Extensive Response','']]
 		self.selectable_speedopt_cpy = copy.deepcopy(self.selectable_speedopt)
 		self.cgen = []
 		self.cfg = []
@@ -194,9 +193,9 @@ class CfgSettings:
 				'sabnzbd_url' : '', 'sabnzbd_api':'',
 				'stats_key' : gen_stats_key, 'motd':gen_motd}
 		self.selectable_speedopt = copy.deepcopy(self.selectable_speedopt_cpy)
-		self.selectable_speedopt[0][1] += ' ['+str(self.cgen['timeout_class'][0])+'s]'
-		self.selectable_speedopt[1][1] += ' ['+str(self.cgen['timeout_class'][1])+'s]'
-		self.selectable_speedopt[2][1] += ' ['+str(self.cgen['timeout_class'][2])+'s]'
+		self.selectable_speedopt[0][1] += ' ['+str(self.cgen['timeout_class'][1])+'s]'
+		self.selectable_speedopt[1][1] += ' ['+str(self.cgen['timeout_class'][2])+'s]'
+		#~ self.selectable_speedopt[2][1] += ' ['+str(self.cgen['timeout_class'][2])+'s]'
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    
 	
@@ -338,7 +337,7 @@ class CfgSettings:
 
 		
 		sel_speedopt_basic = copy.deepcopy(self.selectable_speedopt)	
-		sel_speedopt_basic[1][2] = 'selected'
+		sel_speedopt_basic[0][2] = 'selected'
 		
 		count=0
 		for i in xrange(len(cdsfile)):
