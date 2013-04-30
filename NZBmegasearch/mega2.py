@@ -54,7 +54,7 @@ print motd
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 cver = miscdefs.ChkVersion() 
-#~ cver.chk_local_sign()
+cver.chk_local_vvs()
 #~ os.abort()
 print '>> version: '+ str(cver.ver_notify['curver'])
 cfgsets = config_settings.CfgSettings()

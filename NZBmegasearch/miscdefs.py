@@ -144,17 +144,36 @@ class ChkVersion:
 		self.chk_local_ver()
 		self.ver_notify['chk'] = self.chk_repos_ver()
 	
-	def chk_local_sign(self): 
+	def chk_local_vvs(self): 
+		#~ ACKS the server 
+		#~ completely anonymous. It does not store any info 
+		#~ about the computer, the user and the providers used
+		
 		with open('vernum.num') as f:
 			content = f.readlines()
 		vals = content[0].split(' ')
 		
+		vval = '1'
 		if(len(vals) != 3):
-			random_string = base64.urlsafe_b64encode(os.urandom(50))
+			random_string = base64.urlsafe_b64encode(os.urandom(50)).replace('-','').replace('=','').replace('/','').replace('+','')
 			print '>> rid'
 			content[0] = content[0].rstrip() + ' ' + random_string
+			vval = random_string
 			with open('vernum.num','wt') as f:
 				f.write(content[0])
+		else:
+			vval = vals[2]
+
+		urlParams = dict(v=vval)
+		print urlParams
+		try:
+			#~ http_result = requests.get(url='https://mega.nzbx.co/uous', params=urlParams, verify=False, timeout=4)
+			http_result = requests.get(url='https://localhost:5005/uous', params=urlParams, verify=False, timeout=4)
+		except Exception as e:
+			print e
+			log.critical(str(e))
+			return []
+
 
 	
 	def chk_local_ver(self): 
