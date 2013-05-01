@@ -38,7 +38,7 @@ except ImportError as exc:
     log.warning("Error: failed to import OPENSSL module ({})".format(exc))
     openssl_imported = False
 
-DEBUGFLAG = False
+DEBUGFLAG = True
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
  	

@@ -114,7 +114,7 @@
 		<tr>
 		<td><input type="text" name="ds_host{{ q }}" value="" size="40"></td>
 		<td><input type="text" name="ds_usr{{ q }}" value="" size="18">
-		<td><input type="text" name="ds_pass{{ q }}" value="" size="18">
+		<td><input type="password" name="ds_pass{{ q }}" value="" size="18">
 		<input type="hidden" name="ds_type{{ q }}" value="DSN" size="40">
 		</td>
 
@@ -184,8 +184,8 @@
 					<!-- -->
 					var host{{ q }} = cfgform.host{{ q }}.value.replace(/\s+/g, ' ')
 					var hostapi{{ q }} = cfgform.API{{ q }}.value.replace(/\s+/g, ' ')
-					var cb = check_beginning_http(hostapi{{ q }})
-
+					var cb = check_beginning_http(host{{ q }})
+					
 					if ((host{{ q }}.length == 0) && (hostapi{{ q }}.length > 0) || !cb)
 					{
 						alert('ERROR: Newznab Host (API) #{{ q }}. Enter url for the given API.\nUrl must begin with http(s)://');
@@ -213,7 +213,7 @@
 					{
 						err = 1;
 					}
-					if ((ds_host{{ q }}.length > 0) && ( err == 0 ) )
+					if ((ds_host{{ q }}.length > 0) && ( (ds_pass{{ q }}.length == 0) && (ds_usr{{ q }}.length == 0)  ) )
 					{
 						err = 1;
 					}

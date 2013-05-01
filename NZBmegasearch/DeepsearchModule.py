@@ -269,7 +269,7 @@ class DeepSearch_one:
 		timestamp_e = time.time()
 		log.info('TS ' + mainurl + " " + str(timestamp_e - timestamp_s))
 
-		soup = BeautifulSoup(data)
+		soup = BeautifulSoup.BeautifulSoup(data)
 
 	#~ def searchDBG(self, srchstr):
 		#~ handler = open('tmp/tater.html').read()

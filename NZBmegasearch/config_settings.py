@@ -103,8 +103,8 @@ class CfgSettings:
 		#~ web search
 		counter3 = 1
 		for i in xrange(MAX_PROVIDER_NUMBER):
-			if (request_form.has_key('host%d' % i)  == True):
-				if(request_form['host%d' % i].replace(" ", "")): 
+			if (request_form.has_key('ds_host%d' % i)  == True):
+				if(request_form['ds_host%d' % i].replace(" ", "")): 
 					parser.add_section('deep_search_provider%s' % counter3)
 					parser.set('deep_search_provider%s' % counter3, 'url',request_form['ds_host%d' % i].replace(" ", ""))
 					parser.set('deep_search_provider%s' % counter3, 'user',request_form['ds_usr%d' % i].replace(" ", ""))
@@ -284,7 +284,7 @@ class CfgSettings:
 		cffile  = copy.deepcopy(self.cfg)
 		cdsfile = self.cfg_deep
 		genopt = self.cgen
-		
+
 		if(cffile is None):
 			cffile = []
 
@@ -332,7 +332,7 @@ class CfgSettings:
 				cffile[i]['idx'] =  count
 				count = count + 1
 				sel_speedopt_tmp = copy.deepcopy(self.selectable_speedopt)	
-				sel_speedopt_tmp[cffile[i]['speed_class']][2] = 'selected'
+				sel_speedopt_tmp[cffile[i]['speed_class']-1][2] = 'selected'
 				cffile[i]['selspeed_sel'] =  sel_speedopt_tmp
 
 		
@@ -344,7 +344,7 @@ class CfgSettings:
 			cdsfile[i]['idx'] =  count
 			count = count + 1
 			sel_speedopt_tmp = copy.deepcopy(self.selectable_speedopt)	
-			sel_speedopt_tmp[cdsfile[i]['speed_class']][2] = 'selected'
+			sel_speedopt_tmp[cdsfile[i]['speed_class']-1][2] = 'selected'
 			cdsfile[i]['selspeed_sel'] =  sel_speedopt_tmp
 					
 		genopt['general_https_verbose']	 = ''
