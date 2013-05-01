@@ -336,6 +336,7 @@ div#container
 	vertical-align: middle;
 }
 
+
 .alert-info {
 	font: 14px Helvetica, Arial, Sans-Serif;;
 	padding: 8px 35px 8px 14px;
@@ -350,6 +351,16 @@ div#container
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
+}
+
+
+.alert-info-silent {
+	font: 14px Helvetica, Arial, Sans-Serif;;
+	padding: 8px 35px 8px 14px;
+	width: 420px;
+	margin: 40px auto;
+	margin-bottom: 18px;
+	overflow: hidden;
 }
  
 /*
