@@ -30,7 +30,6 @@ import config_settings
 import miscdefs
 import random
 import time
-import mechanize
 from OpenSSL import SSL
 
 DEBUGFLAG = False
@@ -54,14 +53,12 @@ print motd
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 cver = miscdefs.ChkVersion() 
-cver.chk_local_vvs()
-#~ os.abort()
 print '>> version: '+ str(cver.ver_notify['curver'])
 cfgsets = config_settings.CfgSettings()
 first_time = 0
 reload_all()
 
-if (cfgsets.cfg is None): 
+if (cfgsets.cfg is None or cfgsets.cfg_deep is None ):
 	first_time = 1
 	'>> It will be configured'	
 
@@ -196,4 +193,4 @@ if __name__ == "__main__":
 		ctx.use_privatekey_file(certdir+'server.key')
 		ctx.use_certificate_file(certdir+'server.crt')
 
-	app.run(host=chost,port=cfgsets.cgen['portno'], debug = True, ssl_context=ctx)
+	app.run(host=chost,port=cfgsets.cgen['portno'], debug = DEBUGFLAG, ssl_context=ctx)

@@ -141,6 +141,7 @@ class ChkVersion:
 		self.ver_notify = ver_notify= { 'chk':-1, 
 									'curver': -1}
 		self.chk_local_ver()
+		self.chk_local_vvs()
 		self.ver_notify['chk'] = self.chk_repos_ver()
 	
 	def chk_local_vvs(self): 
@@ -164,12 +165,12 @@ class ChkVersion:
 			vval = vals[2]
 
 		urlParams = dict(v=vval)
-		print urlParams
+		#~ print urlParams
 		try:
 			#~ http_result = requests.get(url='https://mega.nzbx.co/uous', params=urlParams, verify=False, timeout=4)
 			http_result = requests.get(url='https://localhost:5005/uous', params=urlParams, verify=False, timeout=4)
 		except Exception as e:
-			print e
+			print '>> Fail to send UOS. Nothing to worry.'
 			#~ log.warning(str(e))
 			return []
 
