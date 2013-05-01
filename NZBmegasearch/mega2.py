@@ -31,7 +31,6 @@ import miscdefs
 import random
 import time
 from OpenSSL import SSL
-from BeautifulSoup  import BeautifulSoup 
 
 
 DEBUGFLAG = False
