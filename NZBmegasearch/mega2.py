@@ -30,7 +30,13 @@ import config_settings
 import miscdefs
 import random
 import time
-from OpenSSL import SSL
+
+openssl_imported = True
+try:
+	from OpenSSL import SSL
+except ImportError as exc:
+    log.warning("Error: failed to import OPENSSL module ({})".format(exc))
+    openssl_imported = False
 
 DEBUGFLAG = False
 
@@ -187,7 +193,7 @@ if __name__ == "__main__":
 	
 	ctx = None
 	
-	if(cfgsets.cgen['general_https'] == 1):
+	if(cfgsets.cgen['general_https'] == 1 or openssl_imported == False):
 		print '>> HTTPS security activated' 
 		ctx = SSL.Context(SSL.SSLv23_METHOD)
 		ctx.use_privatekey_file(certdir+'server.key')

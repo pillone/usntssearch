@@ -1,18 +1,23 @@
 **NZBmegasearcH** 
 ======================
 
-NZBmegasearcH performs metasearch on many state-of-the-art indices.
+NZBmegasearcH is a meta-search engine that retreives data from your favourite NZB indeces.
 
-It is fully customizable also with Newsznab or Spotweb-based indices. It supports CP and SB, retreives trending movies and shows, gives appropriate search suggestions.
-It is python based and it works on linux, mac, win. Windows binaries are also available.
+It is configurable with N#wsnb-based, Spotw#b-based, an many others indeces. 
+It natively supports CP and SB, retreives trending movies and shows, gives appropriate search suggestions.
 
-**Latest version is 0.28**
+It is written in Python and it works on linux, mac, win. Windows binaries are also available.
+
+**Latest version is 0.30**
 
 This project makes use of:
 
 - Python 2.7
 - [Flask] (http://flask.pocoo.org/)
 - [Requests] (http://docs.python-requests.org/en/latest/)
+- [BeautifulSoup] (http://www.crummy.com/software/BeautifulSoup/)
+- [Mechanize] (http://wwwsearch.sourceforge.net/mechanize/)
+- [PyOpenSSL] (https://launchpad.net/pyopenssl/)
 
 
 
@@ -27,7 +32,7 @@ Install
 
 **Linux**
 
-- apt-get install python2.7 git 
+- apt-get install python2.7 git python-openssl
 - git clone https://github.com/pillone/usntssearch.git
 - Enter in the usntssearch/NZBmegasearch directory and run "python mega2.py" to start 
 - Open browser to localhost:5000
@@ -36,14 +41,26 @@ Install
 Updates
 ================
 
-**Changes in v0.28**
+**Changes in v0.30**
 
-- **Finally logging with autorotation -- thanks PeterBeard**
-- **Finally linux version automatically updates**
-- **No more python lib dependencies. Everything is packed. No need to run setup.**
-- **Windows binaries are available**
-- **Unified graphics between Chrome and Firefox**
-- **Many undocumented and obscure interplatform bugs fixed. Countless hours spent.**
+- **Supports user-pass Newsznab indeces (in case API system not supported)**
+- **Supports SB tv show discovery**
+- **Supports HTTPS-SSL serving**
+- **Supports sabnzbd integration (one-click send)**
+- **Supports FTDworld authentication to enable download**
+- **Added Wombie's index as built-in provider**
+- **Many code and interface improvements**
+- **Many bugs fixed**
+
+
+Changes in v0.28
+
+- Finally logging with autorotation -- thanks PeterBeard
+- Finally linux version automatically updates
+- No more python lib dependencies. Everything is packed. No need to run setup.
+- Windows binaries are available
+- Unified graphics between Chrome and Firefox
+- Many undocumented and obscure interplatform bugs fixed. Countless hours spent.
 
 Changes in v0.271
 

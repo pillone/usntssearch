@@ -167,8 +167,7 @@ class ChkVersion:
 		urlParams = dict(v=vval)
 		#~ print urlParams
 		try:
-			#~ http_result = requests.get(url='https://mega.nzbx.co/uous', params=urlParams, verify=False, timeout=4)
-			http_result = requests.get(url='https://localhost:5005/uous', params=urlParams, verify=False, timeout=4)
+			http_result = requests.get(url='https://mega.nzbx.co/uous', params=urlParams, verify=False, timeout=5)
 		except Exception as e:
 			print '>> Fail to send UOS. Nothing to worry.'
 			#~ log.warning(str(e))
