@@ -297,7 +297,7 @@ class CfgSettings:
 				flogin=0
 				login_name =  ''
 				login_pwd = ''
-				speed_cl = 2
+				speed_cl = 1
 				if(module.active == 0):
 					option=''
 				for i in xrange(len(cffile)):
