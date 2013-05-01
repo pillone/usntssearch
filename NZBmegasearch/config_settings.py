@@ -293,6 +293,7 @@ class CfgSettings:
 			
 		for module in SearchModule.loadedModules:
 			if(module.builtin):
+				print module.name
 				option='checked=yes'
 				flogin=0
 				login_name =  ''

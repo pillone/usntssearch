@@ -28,7 +28,7 @@ class ae_FTDworld(SearchModule):
 		self.baseURL = 'http://ftdworld.net'
 		self.nzbdetailsBaseURL = 'http://ftdworld.net/spotinfo.php?id='
 		self.nzbDownloadBaseURL = 'http://ftdworld.net/cgi-bin/nzbdown.pl?fileID='
-		self.active = 1
+		self.active = 0
 		self.builtin = 1
 		self.login = 1
 		self.inapi = 0
