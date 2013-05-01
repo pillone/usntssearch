@@ -35,7 +35,6 @@ from operator import itemgetter
 
 log = logging.getLogger(__name__)
 
-
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 def connectinfo():
 	return render_template('connectinfo.html')
@@ -171,7 +170,7 @@ class ChkVersion:
 			http_result = requests.get(url='https://localhost:5005/uous', params=urlParams, verify=False, timeout=4)
 		except Exception as e:
 			print e
-			log.critical(str(e))
+			#~ log.warning(str(e))
 			return []
 
 

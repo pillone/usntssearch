@@ -30,10 +30,10 @@ import config_settings
 import miscdefs
 import random
 import time
+import mechanize
 from OpenSSL import SSL
 
-DEBUGFLAG = True
-SERVERSIDE = False
+DEBUGFLAG = False
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
  	
@@ -80,12 +80,6 @@ if(DEBUGFLAG):
 	cfgsets.cgen['general_trend'] = 0
 	print 'MEGA2: DEBUGFLAG MUST BE SET TO FALSE BEFORE DEPLOYMENT'
 
-#~ wait for login init
-if(DEBUGFLAG == False and SERVERSIDE == True):
-	random.seed()
-	sleeptime = random.randrange(0, 10)
-	log.info('Wait ' + str(sleeptime) + 's for initialization...')
-	time.sleep(sleeptime)	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/poweroff')
