@@ -30,8 +30,11 @@ import config_settings
 import miscdefs
 import random
 import time
-from OpenSSL import SSL
 
+if sys.platform.startswith('linux'):
+	from OpenSSL import SSL
+if sys.platform.startswith('win32'):
+	from OpenSSLwin import SSL
 
 DEBUGFLAG = False
 

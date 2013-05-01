@@ -22,7 +22,7 @@ import datetime
 import mechanize
 import sys, logging
 import cookielib
-import BeautifulSoup.BeautifulSoup 
+import BeautifulSoup
 import config_settings
 from urllib2 import urlparse
 import socket
