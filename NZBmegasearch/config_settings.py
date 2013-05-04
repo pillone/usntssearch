@@ -59,7 +59,10 @@ class CfgSettings:
 		if (request_form.has_key('https')  == True):
 			parser.set('general', 'general_https', '1')
 
-		parser.set('general', 'sabnzbd_url', request_form['sabnzbd_url'].replace(" ", ""))
+		sab_url = request_form['sabnzbd_url'].replace(" ", "")
+		if(sab_url[-1] == '/'):
+			sab_url = sab_url[:-1]
+		parser.set('general', 'sabnzbd_url', sab_url)
 		parser.set('general', 'sabnzbd_api', request_form['sabnzbd_api'].replace(" ", ""))
 		
 		

@@ -301,7 +301,11 @@ class _SSLConnectionFix(object):
         return socket._fileobject(self._con, mode, bufsize)
 
     def __getattr__(self, attrib):
-        return getattr(self._con, attrib)
+        try:
+			gat = getattr(self._con, attrib)
+        except Exception:
+			print 'Exception in _SSLConnectionFix'
+        return gat
 
 
 def select_ip_version(host, port):
@@ -353,6 +357,7 @@ class BaseWSGIServer(HTTPServer, object):
             self.ssl_context = None
 
     def log(self, type, message, *args):
+        print message
         _log(type, message, *args)
 
     def serve_forever(self):
@@ -360,11 +365,15 @@ class BaseWSGIServer(HTTPServer, object):
         try:
             HTTPServer.serve_forever(self)
         except KeyboardInterrupt:
+            print 'Exception: Keyb hit detected'
             pass
 
     def shutdown_request(self,request): 
 		if(self.ssl_context is not None):
-			request.shutdown()
+			try:
+				request.shutdown()
+			except Exception as e:
+				print 'Exception: ' + str(e)
 
     def handle_error(self, request, client_address):
         if self.passthrough_errors:
@@ -373,6 +382,7 @@ class BaseWSGIServer(HTTPServer, object):
             return HTTPServer.handle_error(self, request, client_address)
 
     def get_request(self):
+        socket.setdefaulttimeout(None)
         con, info = self.socket.accept()
         if self.ssl_context is not None:
             con = _SSLConnectionFix(con)

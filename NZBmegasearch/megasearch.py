@@ -93,6 +93,7 @@ class DoParallelSearch:
 			hprotocol = 'https://'
 		sckname = hprotocol + s.getsockname()[0]
 		s.close()
+		sckname = sckname+':'+ str(self.cgen['portno'])
 		return sckname
 
 	
