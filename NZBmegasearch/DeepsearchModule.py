@@ -245,7 +245,9 @@ class DeepSearch_one:
 			return []
 		
 		socket.setdefaulttimeout(self.timeout)
-		locale.setlocale( locale.LC_ALL, 'en_US.utf8' )
+		
+		#~ WIN: it seems to have issue in win32
+		# locale.setlocale( locale.LC_ALL, 'en_US.utf8' )
 		
 		if	(self.chkcookie() == False):
 			if(self.dologin() == False):

@@ -193,7 +193,7 @@ if __name__ == "__main__":
 	
 	ctx = None
 	
-	if(cfgsets.cgen['general_https'] == 1 or openssl_imported == False):
+	if(cfgsets.cgen['general_https'] == 1 and openssl_imported == True):
 		print '>> HTTPS security activated' 
 		ctx = SSL.Context(SSL.SSLv23_METHOD)
 		ctx.use_privatekey_file(certdir+'server.key')

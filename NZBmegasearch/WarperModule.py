@@ -178,7 +178,11 @@ class Warper:
 		f.close()
 		fresponse = send_file(f.name, mimetype='application/x-nzb;', as_attachment=True, 
 						attachment_filename='yourmovie.nzb', add_etags=False, cache_timeout=None, conditional=False)
-		os.remove(f.name)
+
+		try:
+			os.remove(f.name)
+		except Exception as e:
+			print 'Cannot remove temporary NZB file' 
 		
 		for i in xrange(len(response.info().headers)):
 			if(response.info().headers[i].find('Content-Encoding')  != -1):
@@ -222,23 +226,3 @@ class Warper:
 			response = self.beam_localwarp(decodedurl)
 			log.info ('WARPNGD: ' + decodedurl)	
 			return response	
-		'''
-		#~ turbo nginxproxing 	
-		if('x' in arguments):
-			decodedurl = self.chash64_decode(arguments['x'])
-			if(len(decodedurl) == 0):
-				log.info('MALFORMEDURL_UNKCHAR: ' + arguments['x'])
-				return -1				
-			rprnt = all(c in string.printable for c in decodedurl)
-			if (rprnt == False):
-				log.info('MALFORMEDURL_UNPRINT: ' + arguments['x'])
-				return -1		
-				
-			response = self.beam_notenc(decodedurl)
-			log.info ('RAWNGXN: '+arguments['x'])	
-			log.info ('WARPNGX: ' + decodedurl + ' --> ' + response.headers['X-Accel-Redirect'])	
-			#~ print response.headers['X-Accel-Redirect']
-			
-			return response	
-		'''	
-	
