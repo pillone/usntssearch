@@ -22,7 +22,7 @@ import datetime
 import mechanize
 import sys, logging
 import cookielib
-import BeautifulSoup
+import beautifulsoup
 import config_settings
 from urllib2 import urlparse
 import socket
@@ -196,7 +196,7 @@ class DeepSearch_one:
 			return []
 
 		data = res.get_data()  
-		soup = BeautifulSoup(data)
+		soup = beautifulsoup.BeautifulSoup(data)
 
 		info = {}
 		for row in soup.findAll("tr"):
@@ -269,7 +269,7 @@ class DeepSearch_one:
 		timestamp_e = time.time()
 		log.info('TS ' + mainurl + " " + str(timestamp_e - timestamp_s))
 
-		soup = BeautifulSoup.BeautifulSoup(data)
+		soup = beautifulsoup.BeautifulSoup(data)
 
 	#~ def searchDBG(self, srchstr):
 		#~ handler = open('tmp/tater.html').read()
