@@ -35,7 +35,7 @@ openssl_imported = True
 try:
 	from OpenSSL import SSL
 except ImportError as exc:
-    log.warning("Error: failed to import OPENSSL module ({})".format(exc))
+    print ">> Warning: failed to import OPENSSL module ({})".format(exc)
     openssl_imported = False
 
 DEBUGFLAG = False
