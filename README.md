@@ -27,6 +27,9 @@ Install
 **Windows**
 
 - Download latest available binary from [usntssearch-binaries/windows] (https://github.com/pillone/usntssearch-binaries/tree/master/windows)
+- There are two binaries avaliable: 
+ * win32_NZBMegasearcH_0.XX-noconsole.zip runs silently without console output
+ * win32_NZBMegasearcH_0.XX-wconsole.zip runs with console output
 - Unzip in a folder and click on mega2.exe
 - Open browser to localhost:5000
 
