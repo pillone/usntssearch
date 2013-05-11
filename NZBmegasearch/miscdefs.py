@@ -44,9 +44,17 @@ class Auth:
 	def __init__(self, cgen):
 		self.cgen = cgen
 
-	def check_auth(self, username, password):
-		if(username == self.cgen['general_usr'] and password == self.cgen['general_pwd']):
-			return True
+	def check_auth(self, username, password, mode):
+		if(mode == 0):
+			if(username == self.cgen['general_usr'] and password == self.cgen['general_pwd']):
+				return True
+		if(mode == 1):
+			if(len(self.cgen['config_user']) != 0):
+				if(username == self.cgen['config_user'] and password == self.cgen['config_pwd']):
+					return True
+			else:
+				if(username == self.cgen['general_usr'] and password == self.cgen['general_pwd']):
+					return True
 			
 	def authenticate(self):
 		"""Sends a 401 response that enables basic auth"""
@@ -60,7 +68,20 @@ class Auth:
 		def decorated(*args, **kwargs):
 			if(len(self.cgen['general_usr']) != 0):
 				auth = request.authorization
-				if not auth or not self.check_auth(auth.username, auth.password):
+				if not auth or not self.check_auth(auth.username, auth.password,0):
+					return self.authenticate()
+				return f(*args, **kwargs)
+			else:
+				return f(*args, **kwargs)
+			return f(*args, **kwargs)		
+		return decorated
+
+	def requires_conf(self, f):
+		@wraps(f)
+		def decorated(*args, **kwargs):
+			if(len(self.cgen['config_user']) != 0 or len(self.cgen['general_usr']) != 0):
+				auth = request.authorization
+				if not auth or not self.check_auth(auth.username, auth.password,1):
 					return self.authenticate()
 				return f(*args, **kwargs)
 			else:

@@ -70,7 +70,7 @@ class SuggestionResponses:
 		
 	def ask(self, arguments):
 		self.args = arguments
-		self.search_str = SearchModule.sanitize_strings(self.args['q'])
+		self.search_str = SearchModule.sanitize_strings(self.args['q']).replace(".", " ") 
 		movieinfo = self.imdb_titlemovieinfo()
 		sugg_info_raw = self.movie_bestmatch(movieinfo)
 		self.sugg_info = self.prepareforquery(sugg_info_raw)
@@ -235,11 +235,15 @@ class SuggestionResponses:
 		eps_sorted_sel = []
 		nxtbest = -1
 		for i in xrange(len(eps_sorted)):
-			rd = (datetime.datetime.strptime(eps_sorted[i]['aired'], "%Y-%m-%d") - datetime.datetime.today()).days + 1
-			if(rd <= 0):
-				eps_sorted_sel.append(eps_sorted[i])
-			if(rd < 0):
-				break	
+			try:
+				rd = (datetime.datetime.strptime(eps_sorted[i]['aired'], "%Y-%m-%d") - datetime.datetime.today()).days + 1
+				
+				if(rd <= 0):
+					eps_sorted_sel.append(eps_sorted[i])
+				if(rd < 0):
+					break	
+			except Exception as e:
+				print '>> Failure in suggestions ' + str(e)		
 
 		#~ print eps_sorted_sel
 		return eps_sorted_sel

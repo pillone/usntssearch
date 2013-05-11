@@ -178,7 +178,7 @@ class DoParallelSearch:
 		for slctg in possibleopt:
 			if(slctg[0] == self.cgen['search_default']):
 				slctg[2] = 'selected'
-						
+		
 		return render_template('main_page.html', vr=params['ver'], nc=self.svalid, sugg = [], 
 								trend_show = params['trend_show'], trend_movie = params['trend_movie'], debug_flag = params['debugflag'],
 								sstring  = "", selectable_opt = possibleopt, search_opt = searchopt_local,  motd = self.cgen['motd'])
@@ -260,7 +260,7 @@ class DoParallelSearch:
 		if ('sabnzbd_url' in self.cgen):
 			if(len(self.cgen['sabnzbd_url'])):
 				send2sab_exist = self.sckname
-		
+
 		return render_template('main_page.html',results=niceResults, exist=existduplicates, 
 												vr=ver_notify, args=args, nc = svalid, sugg = sugg_list,
 												send2sab_exist= send2sab_exist,

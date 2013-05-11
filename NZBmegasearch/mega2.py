@@ -103,13 +103,13 @@ def search():
 	
 	sugg.asktrend_allparallel()	
 	#~ parallel suggestion and search
-	if(DEBUGFLAG == False):
+	if(cfgsets.cgen['general_suggestion'] == 1):
 		t1 = threading.Thread(target=sugg.ask, args=(request.args,) )
 	t2 = threading.Thread(target=mega_parall.dosearch, args=(request.args,)   )
-	if(DEBUGFLAG == False):
+	if(cfgsets.cgen['general_suggestion'] == 1):
 		t1.start()
 	t2.start()
-	if(DEBUGFLAG == False):	
+	if(cfgsets.cgen['general_suggestion'] == 1):	
 		t1.join()
 	t2.join()
 
@@ -125,7 +125,7 @@ def search():
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 @app.route('/config', methods=['GET','POST'])
-@auth.requires_auth
+@auth.requires_conf
 def config():
 	return cfgsets.edit_config()
 

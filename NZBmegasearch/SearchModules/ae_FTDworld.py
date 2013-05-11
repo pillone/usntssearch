@@ -43,7 +43,6 @@ class ae_FTDworld(SearchModule):
 			passlogin=cfg['pwd']
 		)
 		
-		print urlParams
 		try:
 			#~ short timeout
 			http_result = requests.post(loginurl, data=urlParams, timeout=2)

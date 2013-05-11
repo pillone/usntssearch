@@ -48,18 +48,15 @@
 					</tr>
 			</table>
 			</form>
+	
 			<table class ="suggarea_macro">
-				
+	
 				<td style='vertical-align: top;'>
+					{% if   trend_movie -%}			
 					<table class ="trend_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
 						  <div class='alert-flex'> Movies Trending</div>
 						</TH></tr>	
-						{% if not trend_movie -%}
-							<tr>	
-							<td  class ="suggarea_title"> Not retreived </td>
-							</tr>	
-						{%- endif %}
 						{% for tm in trend_movie -%}
 							<tr>	
 							<td  class ="suggarea_title"> <a href="s?q={{ tm['searchstr'] }}" class='sugglinx'> {{ tm['prettytxt'] }} </a></td>
@@ -67,19 +64,17 @@
 							</tr>
 						{%- endfor %}
 					</table>			
+					{%- endif %}
 				</td>
 
+	
 
 				<td style='vertical-align: top;'>
+					{% if trend_show -%}
 					<table class ="trend_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
 						<div class='alert-flex'> Shows Trending</div>
 						</TH></tr>	
-						{% if not trend_show -%}
-							<tr>	
-							<td  class ="suggarea_title"> Not retreived </td>
-							</tr>	
-						{%- endif %}
 						{% for ts in trend_show -%}
 							<tr>	
 							<td  class ="suggarea_title"> <a href="s?q={{ ts['searchstr'] }}" class='sugglinx'> {{ ts['prettytxt'] }} </a></td>
@@ -87,19 +82,17 @@
 							</tr>
 						{%- endfor %}
 					</table>			
+					{%- endif %}
 				</td>
 
-				<td style='vertical-align: top;'>
 
+
+				<td style='vertical-align: top;'>
+					{%  if   sugg -%}
 					<table class ="suggarea_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
 						<div class='alert-red'>Did you mean ... </div>
 						</TH></tr>	
-						{%  if not sugg -%}
-							<tr>	
-							<td  class ="suggarea_title"> No suggestions </td>
-							</tr>							
-						{%- endif %}
 						{% for sl in sugg -%}
 							<tr>	
 							<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"  style="color:#ff0000;" class='sugglinx'> {{ sl['prettytxt'] }} </a></td>
@@ -107,6 +100,8 @@
 							</tr>
 						{%- endfor %}
 					</table>			
+					{%- endif %}
+
 
 				</td>
 				
