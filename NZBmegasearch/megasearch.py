@@ -31,6 +31,21 @@ import copy
 
 log = logging.getLogger(__name__)
 
+
+def listpossiblesearchoptions():
+	possibleopt = [ ['1080p', 'HD 1080p',''],
+							['720p','HD 720p',''],
+							['BDRIP','SD BlurayRip',''],
+							['DVDRIP','SD DVDRip',''],
+							['DVDSCR','SD DVDScr',''],
+							['CAM','SD CAM',''],
+							['OSX','Mac OSX',''],
+							['XBOX360','Xbox360',''],
+							['PS3','PS3',''],
+							['ANDROID','Android',''],
+							['MOBI','Ebook (mobi)',''],
+							['EPUB','Ebook (epub)',''] ]
+	return possibleopt						
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 class DoParallelSearch:
 	
@@ -65,18 +80,7 @@ class DoParallelSearch:
 			self.cfg_cpy = copy.deepcopy(self.cfg)
 		
 		self.logic_expr = re.compile("(?:^|\s)([-+])(\w+)")
-		self.possibleopt = [ ['1080p', 'HD 1080p',''],
-							['720p','HD 720p',''],
-							['BDRIP','SD BlurayRip',''],
-							['DVDRIP','SD DVDRip',''],
-							['DVDSCR','SD DVDScr',''],
-							['CAM','SD CAM',''],
-							['OSX','Mac OSX',''],
-							['XBOX360','Xbox360',''],
-							['PS3','PS3',''],
-							['ANDROID','Android',''],
-							['MOBI','Ebook (mobi)',''],
-							['EPUB','Ebook (epub)',''] ]
+		self.possibleopt = listpossiblesearchoptions()
 		self.searchopt = [ 	['Normal ['+str(self.svalid_speed[1]) + ']', 1,''],
 							['Extensive ['+str(self.svalid_speed[2]) + ']', 2,'']]
 		self.searchopt_cpy = self.searchopt
@@ -169,9 +173,15 @@ class DoParallelSearch:
 	def renderit_empty(self,params):	
 		searchopt_local =  copy.deepcopy(self.searchopt)
 		searchopt_local[0][2] = 'checked'
+		
+		possibleopt =  copy.deepcopy(self.possibleopt)
+		for slctg in possibleopt:
+			if(slctg[0] == self.cgen['search_default']):
+				slctg[2] = 'selected'
+						
 		return render_template('main_page.html', vr=params['ver'], nc=self.svalid, sugg = [], 
 								trend_show = params['trend_show'], trend_movie = params['trend_movie'], debug_flag = params['debugflag'],
-								sstring  = "", selectable_opt = self.possibleopt, search_opt = searchopt_local,  motd = self.cgen['motd'])
+								sstring  = "", selectable_opt = possibleopt, search_opt = searchopt_local,  motd = self.cgen['motd'])
 		
 	
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 

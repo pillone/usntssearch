@@ -11,17 +11,64 @@
 <body>
 <form action="/" method="post" name="cfgform">
 <table id="results" summary="Config" style="width: 420px;"><thead>
-<tr><th scope="col">General Options</th></tr></thead><tbody>
+<tr><th scope="col">General Options (requires restart)</th></tr></thead><tbody>
 	<tr>
 		<td>Port: <input type="input" name="port" value="{{ genopt['portno'] }}" size="10"></td>
 	</tr>	
-	<tr>
-		<td>	User: <input type="input" name="general_usr" value="{{ genopt['general_usr'] }}" size="18">
-			Pass: <input type="password" name="general_pwd" value="{{ genopt['general_pwd'] }}" size="18"></td>
-	</tr>
 	<tr>	
 			<td><input type="checkbox" name="https" {{ genopt['general_https_verbose'] }} >HTTPS Enabled </td>
 	</tr>					
+</tbody></table>
+
+<table id="results" summary="security" style="width: 420px;"><thead>
+<tr><th scope="col">Security Options</th><th></th></tr></thead><tbody>
+	<tr>
+		<td> Authentication (optional) </td><td></td>
+	</tr>	
+
+	<tr>
+		<td>Username: <input type="input" name="general_usr" value="{{ genopt['general_usr'] }}" size="18"></td>
+			<td>Pass: <input type="password" name="general_pwd" value="{{ genopt['general_pwd'] }}" size="18"></td>
+	</tr>
+
+	<tr>
+		<td> <br>Config-page authentication (optional) </td><td></td>
+	</tr>	
+
+	<tr>
+		<td>Username: <input type="input" name="config_user" value="{{ genopt['config_user'] }}" size="18"></td>
+			<td>Pass: <input type="password" name="config_pwd" value="{{ genopt['config_pwd'] }}" size="18"></td>
+	</tr>
+	
+</tbody></table>
+
+
+<table id="results" summary="Suggestion" style="width: 420px;"><thead>
+<tr><th scope="col">Suggestion and Trends</th></tr></thead><tbody>
+	<tr>	
+			<td><input type="checkbox" name="trends" {{ genopt['general_trend_verbose'] }} >Movie and Show Trends Active </td>
+	</tr>					
+			<td><input type="checkbox" name="sugg" {{ genopt['general_suggestion_verbose'] }} >Search Suggestions Active </td>
+	</tr>					
+	
+</tbody></table>
+
+<table id="results" summary="ssopt" style="width: 420px;"><thead>
+<tr><th scope="col">Default Search Option</th></tr></thead><tbody>
+	<tr>	
+			<td>
+				<span>
+						<select name="selcat">
+							<option value="">No categ.</option>			
+							{% for sopt in selectable_opt -%}
+								<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
+							{%- endfor %}
+						</select>
+						</span>
+				
+				</td>
+	</tr>					
+	
 </tbody></table>
 
 <table id="results" summary="SendtoSAB" style="width: 420px;"><thead>
@@ -51,14 +98,14 @@
 {%- endfor %}	
 </tbody></table>
 <table id="results" summary="Config" style="width: 300px;"><thead>
-<tr><th scope="col">Newznab Host (API)</th><th scope="col">API key</th><th scope="col">Timeout</th></tr></thead><tbody>
+<tr><th>#</th><th scope="col">Newznab Host (API)</th><th scope="col">API key</th><th scope="col">Timeout</th><th scope="col">Active</th></tr></thead><tbody>
 {% for c in cfg -%}
 	{% if c['builtin'] == 0-%}
 		<tr>
-		<td><input type="text" name="host{{ c['idx'] }}" value="{{ c['url'] }}" size="40"></td>
-		<td><input type="text" name="API{{ c['idx'] }}" value="{{ c['api'] }}" size="40">
-		<input type="hidden" name="type{{ c['idx'] }}" value="NAB" size="40">
-		<input type="hidden" name="host{{ c['idx'] }}active" value="1" size="40"></td>
+		<td>{{ c['idx']+1 }})</td><td><input type="text" name="host{{ c['idx'] }}" value="{{ c['url'] }}" size="35"></td>
+		<td><input type="text" name="API{{ c['idx'] }}" value="{{ c['api'] }}" size="35">
+		<input type="hidden" name="type{{ c['idx'] }}" value="NAB" size="35">
+		<input type="hidden" name="host{{ c['idx'] }}active" value="1" size="35"></td>
 
 		<td><span>
 		<select  name="selspeed{{ c['idx'] }}">
@@ -68,14 +115,17 @@
 		</select>
 		</span></td>
 
+		<td>
+			<input type="checkbox" name="valid{{ c['idx'] }}"  {{c['valid_verbose'] }} >
+		</td>	
 		</tr>
 	{%- endif %}	
 {%- endfor %}	
 {% for q in range(cnt,cnt_max) -%}
 		<tr>
-		<td><input type="text" name="host{{ q }}" value="" size="40"></td>
-		<td><input type="text" name="API{{ q }}" value="" size="40">
-		<input type="hidden" name="type{{ q }}" value="NAB" size="40">
+		<td>{{ q+1 }})</td><td><input type="text" name="host{{ q }}" value="" size="35"></td>
+		<td><input type="text" name="API{{ q }}" value="" size="35">
+		<input type="hidden" name="type{{ q }}" value="NAB" size="35">
 		</td>
 
 		<td><span>
@@ -86,15 +136,18 @@
 		</select>
 		</span></td>
 
+		<td>
+			<input type="checkbox" name="valid{{ q }}"  checked=yes >
+		</td>	
 {%- endfor %}	
 </tbody></table>
 
 
 <table id="results" summary="NZConfig_web" style="width: 300px;"><thead>
-<tr><th scope="col">Newznab Host (Web)</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Timeout</th></thead></tr><tbody>
+<tr><th>#</th><th scope="col">Newznab Host (Web)</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Timeout</th><th scope="col">Active</th></thead></tr><tbody>
 {% for c in cfg_dp -%}
 		<tr>
-		<td><input type="text" name="ds_host{{ c['idx'] }}" value="{{ c['url'] }}" size="40"></td>
+		<td>{{ c['idx']+1 }})</td><td><input type="text" name="ds_host{{ c['idx'] }}" value="{{ c['url'] }}" size="40"></td>
 		<td><input type="text" name="ds_usr{{ c['idx'] }}" value="{{ c['user'] }}" size="18"></td>
 		<td><input type="password" name="ds_pass{{ c['idx'] }}" value="{{ c['pwd'] }}" size="18"></td>
 		<input type="hidden" name="ds_type{{ c['idx'] }}" value="DSN" size="40">
@@ -107,12 +160,14 @@
 			{%- endfor %}
 		</select>
 		</span></td>
-
+		<td>
+			<input type="checkbox" name="ds_valid{{ c['idx'] }}"  {{c['valid_verbose'] }} >
+		</td>	
 		</tr>
 {%- endfor %}	
-{% for q in range(cnt,cnt_max) -%}
+{% for q in range(cnt_ds,cnt_max) -%}
 		<tr>
-		<td><input type="text" name="ds_host{{ q }}" value="" size="40"></td>
+		<td>{{ q+1 }})</td><td><input type="text" name="ds_host{{ q }}" value="" size="40"></td>
 		<td><input type="text" name="ds_usr{{ q }}" value="" size="18">
 		<td><input type="password" name="ds_pass{{ q }}" value="" size="18">
 		<input type="hidden" name="ds_type{{ q }}" value="DSN" size="40">
@@ -126,7 +181,9 @@
 		</select>
 		</span></td>
 
-		
+		<td>
+			<input type="checkbox" name="ds_valid{{ q }}"  checked=yes  >
+		</td>	
 		</tr>
 {%- endfor %}	
 </tbody></table>
@@ -188,7 +245,7 @@
 					
 					if ((host{{ q }}.length == 0) && (hostapi{{ q }}.length > 0) || !cb)
 					{
-						alert('ERROR: Newznab Host (API) #{{ q }}. Enter url for the given API.\nUrl must begin with http(s)://');
+						alert('ERROR: Newznab Host (API) #{{ q+1 }}. Enter url for the given API.\nUrl must begin with http(s)://');
 						return false
 					}						
 				{%- endfor %}
@@ -228,7 +285,7 @@
 					
 					if (err == 1)
 					{
-						alert('ERROR: Newznab Web  #{{ q }}. Enter url, username and password.\nUrl must begin with http(s)://');
+						alert('ERROR: Newznab Web  #{{ q+1 }}. Enter url, username and password.\nUrl must begin with http(s)://');
 						return false
 					}					
 						

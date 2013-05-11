@@ -20,7 +20,7 @@ from ConfigParser import SafeConfigParser
 import sys
 import SearchModule
 import copy
-
+import megasearch
 
 MAX_PROVIDER_NUMBER = 8
 
@@ -39,7 +39,7 @@ class CfgSettings:
 		self.read_conf_general()
 		self.read_conf_custom()
 		self.read_conf_deepsearch()
-
+		
 	def	reset(self):
 		self.cfg = []
 		
@@ -54,10 +54,18 @@ class CfgSettings:
 		parser.set('general', 'port', request_form['port'].replace(" ", ""))
 		parser.set('general', 'general_user', request_form['general_usr'].replace(" ", ""))
 		parser.set('general', 'general_pwd', request_form['general_pwd'].replace(" ", ""))
+		parser.set('general', 'config_user', request_form['config_user'].replace(" ", ""))
+		parser.set('general', 'config_pwd', request_form['config_pwd'].replace(" ", ""))
 		
 		parser.set('general', 'general_https', '0')
+		parser.set('general', 'search_suggestions', '0')
+		parser.set('general', 'trends', '0')		
 		if (request_form.has_key('https')  == True):
 			parser.set('general', 'general_https', '1')
+		if (request_form.has_key('trends')  == True):
+			parser.set('general', 'trends', '1')
+		if (request_form.has_key('sugg')  == True):
+			parser.set('general', 'search_suggestions', '1')
 
 		sab_url = request_form['sabnzbd_url'].replace(" ", "")
 		if(len(sab_url)):
@@ -65,7 +73,7 @@ class CfgSettings:
 				sab_url = sab_url[:-1]
 		parser.set('general', 'sabnzbd_url', sab_url)
 		parser.set('general', 'sabnzbd_api', request_form['sabnzbd_api'].replace(" ", ""))
-		
+		parser.set('general', 'search_default', request_form['selcat'])
 		
 		#~ custom
 		counter = 1
@@ -76,7 +84,9 @@ class CfgSettings:
 					parser.set('search_provider%s' % counter, 'url',request_form['host%d' % i].replace(" ", ""))
 					parser.set('search_provider%s' % counter, 'api',request_form['API%d' % i].replace(" ", ""))
 					parser.set('search_provider%s' % counter, 'type', request_form['type%d' % i].replace(" ", ""))
-					parser.set('search_provider%s' % counter, 'valid', '1')
+					parser.set('search_provider%s' % counter, 'valid', '0')
+					if (request_form.has_key('valid%d' % i)  == True):
+						parser.set('search_provider%s' % counter, 'valid', '1')
 					parser.set('speed_option', 's%d_speed_class' % counter, request_form['selspeed%d' %i].replace(" ", ""))
 					counter = counter + 1
 		parser.set('general', 'numserver', str(counter-1))
@@ -114,7 +124,9 @@ class CfgSettings:
 					parser.set('deep_search_provider%s' % counter3, 'user',request_form['ds_usr%d' % i].replace(" ", ""))
 					parser.set('deep_search_provider%s' % counter3, 'pwd', request_form['ds_pass%d' % i])
 					parser.set('deep_search_provider%s' % counter3, 'type', request_form['ds_type%d' % i].replace(" ", ""))
-					parser.set('deep_search_provider%s' % counter3, 'valid', '1')
+					parser.set('deep_search_provider%s' % counter3, 'valid', '0')
+					if (request_form.has_key('ds_valid%d' % i)  == True):
+						parser.set('deep_search_provider%s' % counter3, 'valid', '1')
 					parser.set('speed_option', 'd%d_speed_class' % counter3, request_form['ds_selspeed%d' %i])
 					counter3 = counter3 + 1
 		parser.set('general', 'deep_numserver', str(counter3-1))
@@ -177,8 +189,10 @@ class CfgSettings:
 		portno = parser.getint('general', 'port')	
 		gen_user = parser.get('general', 'general_user')	
 		gen_pwd = parser.get('general', 'general_pwd')	
+		config_user = parser.get('general', 'config_user')	
+		config_pwd = parser.get('general', 'config_pwd')
 		gen_https = parser.getint('general', 'general_https')
-		gen_trd = parser.get('general', 'trends')	
+		gen_trd = parser.getint('general', 'trends')	
 		gen_timeout = int(parser.get('general', 'default_timeout'))
 		gen_cacheage = int(parser.get('general', 'max_cache_age'))
 		gen_log_size = int(parser.get('general', 'max_log_size'))
@@ -189,11 +203,18 @@ class CfgSettings:
 		gen_stats_key = parser.get('general', 'stats_key')
 		gen_tslow = int(parser.get('general', 'timeout_slow'))
 		gen_tfast = int(parser.get('general', 'timeout_fast'))
+		gen_sugg = parser.getint('general', 'search_suggestions')
+		gen_search_default = parser.get('general', 'search_default')
+		
 		self.cgen = {'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd,
+				'config_user':config_user,
+				'config_pwd':config_pwd,
+				'general_suggestion' : gen_sugg,
 				'general_https' : gen_https,
 				'default_timeout' : gen_timeout, 'timeout_class' : [gen_tfast, gen_timeout, gen_tslow ],
 				'max_cache_age' : gen_cacheage, 'log_backupcount': gen_log_backupcount, 
 				'log_size' : gen_log_size, 'seed_warptable' : gen_seed_warptable, 'trends_refreshrate':gen_trends_refreshrate,
+				'search_default':gen_search_default,
 				'sabnzbd_url' : '', 'sabnzbd_api':'',
 				'stats_key' : gen_stats_key, 'motd':gen_motd}
 		self.selectable_speedopt = copy.deepcopy(self.selectable_speedopt_cpy)
@@ -244,6 +265,16 @@ class CfgSettings:
 			if(cst_parser.has_option('general', 'general_user')):
 				self.cgen['general_usr'] = cst_parser.get('general', 'general_user') 
 				self.cgen['general_pwd'] = cst_parser.get('general', 'general_pwd')	
+			if(cst_parser.has_option('general' ,'search_suggestions')):
+				self.cgen['general_suggestion'] = cst_parser.getint('general', 'search_suggestions')			
+			if(cst_parser.has_option('general' ,'trends')):
+				self.cgen['general_trend'] = cst_parser.getint('general', 'trends')			
+			if(cst_parser.has_option('general' ,'search_default')):	
+				self.cgen['search_default'] = cst_parser.get('general', 'search_default')		
+			if(cst_parser.has_option('general' ,'config_user')):	
+				self.cgen['config_user'] = cst_parser.get('general', 'config_user')
+			if(cst_parser.has_option('general' ,'config_pwd')):	
+				self.cgen['config_pwd'] = cst_parser.get('general', 'config_pwd')
 
 		except Exception as e:
 			print str(e)
@@ -334,6 +365,9 @@ class CfgSettings:
 		for i in xrange(len(cffile)):
 			if(cffile[i]['builtin'] == 0):
 				cffile[i]['idx'] =  count
+				cffile[i]['valid_verbose'] = ''
+				if(cffile[i]['valid'] == 1):
+					cffile[i]['valid_verbose'] = 'checked=yes'
 				count = count + 1
 				sel_speedopt_tmp = copy.deepcopy(self.selectable_speedopt)	
 				sel_speedopt_tmp[cffile[i]['speed_class']-1][2] = 'selected'
@@ -343,21 +377,35 @@ class CfgSettings:
 		sel_speedopt_basic = copy.deepcopy(self.selectable_speedopt)	
 		sel_speedopt_basic[0][2] = 'selected'
 		
-		count=0
+		count_ds=0
 		for i in xrange(len(cdsfile)):
-			cdsfile[i]['idx'] =  count
-			count = count + 1
+			cdsfile[i]['idx'] =  count_ds
+			cdsfile[i]['valid_verbose'] = ''
+			if(cdsfile[i]['valid'] == 1):
+				cdsfile[i]['valid_verbose'] = 'checked=yes'			
+			count_ds = count_ds + 1
 			sel_speedopt_tmp = copy.deepcopy(self.selectable_speedopt)	
 			sel_speedopt_tmp[cdsfile[i]['speed_class']-1][2] = 'selected'
 			cdsfile[i]['selspeed_sel'] =  sel_speedopt_tmp
-					
+		
+		possibleopt=megasearch.listpossiblesearchoptions()
+		for slctg in possibleopt:
+			if(slctg[0] == genopt['search_default']):
+				slctg[2] = 'selected'
+										
 		genopt['general_https_verbose']	 = ''
+		genopt['general_trend_verbose']	 = ''
+		genopt['general_suggestion_verbose']	 = ''
 		if(genopt['general_https'] == 1):
 			genopt['general_https_verbose']	 = 'checked=yes'
-		
+		if(genopt['general_suggestion'] == 1):
+			genopt['general_suggestion_verbose']	 = 'checked=yes'
+		if(genopt['general_trend'] == 1):
+			genopt['general_trend_verbose']	 = 'checked=yes'
 
 					
-		return render_template('config.html', cfg=cffile, cfg_dp=cdsfile,  cnt=count,  genopt = genopt, 
+		return render_template('config.html', cfg=cffile, cfg_dp=cdsfile,  cnt=count,  cnt_ds=count_ds, genopt = genopt, 
+												selectable_opt = possibleopt,
 											  sel_speedopt_basic = sel_speedopt_basic,
  											  cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
 
