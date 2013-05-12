@@ -57,13 +57,14 @@ motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
 print motd
 
 DEBUGFLAG = False
-if(sys.argv[1] == 'debug'):
-	print '====== DEBUGMODE DEBUGMODE DEBUGMODE DEBUGMODE ======'
-	DEBUGFLAG = True	
+if(len(sys.argv) > 1):
+	if(sys.argv[1] == 'debug'):
+		print '====== DEBUGMODE DEBUGMODE DEBUGMODE DEBUGMODE ======'
+		DEBUGFLAG = True	
 	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-cver = miscdefs.ChkVersion() 
+cver = miscdefs.ChkVersion(DEBUGFLAG) 
 print '>> version: '+ str(cver.ver_notify['curver'])
 cfgsets = config_settings.CfgSettings()
 first_time = 0

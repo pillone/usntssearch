@@ -158,11 +158,11 @@ class DownloadedStats:
 		
 class ChkVersion:
 
-	def __init__(self, debugflag):
+	def __init__(self, debugflag=False):
 		self.ver_notify = ver_notify= { 'chk':-1, 
 									'curver': -1}
 		self.chk_local_ver()
-		if(debugflag == False)
+		if(debugflag == False):
 			self.chk_local_vvs()
 		self.ver_notify['chk'] = self.chk_repos_ver()
 	
