@@ -47,6 +47,7 @@ Updates
 **Changes in v0.31**
 
 - **Selectable IMDB suggestions, trends**
+- **Selectable default search option**
 - **Selectable Active/Non active NAB providers**
 - **Silent, AJAX connected SABNZB connectivity**
 - **Config user protection**
