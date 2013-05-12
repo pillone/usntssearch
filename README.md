@@ -8,7 +8,7 @@ It natively supports CP and SB, retreives trending movies and shows, gives appro
 
 It is written in Python and it works on linux, mac, win. Windows binaries are also available.
 
-**Latest version is 0.30**
+**Latest version is 0.31**
 
 This project makes use of:
 
@@ -44,16 +44,25 @@ Install
 Updates
 ================
 
-**Changes in v0.30**
+**Changes in v0.31**
 
-- **Supports user-pass Newsznab indeces (in case API system not supported)**
-- **Supports SB tv show discovery**
-- **Supports HTTPS-SSL serving**
-- **Supports sabnzbd integration (one-click send)**
-- **Supports FTDworld authentication to enable download**
-- **Added Wombie's index as built-in provider**
-- **Many code and interface improvements**
-- **Many bugs fixed**
+- **Selectable IMDB suggestions, trends**
+- **Selectable Active/Non active NAB providers**
+- **Silent, AJAX connected SABNZB connectivity**
+- **Config user protection**
+- **Deepsearch locale bug fixed**
+
+
+Changes in v0.30
+
+- Supports user-pass Newsznab indeces (in case API system not supported)
+- Supports SB tv show discovery
+- Supports HTTPS-SSL serving
+- Supports sabnzbd integration (one-click send)
+- Supports FTDworld authentication to enable download
+- Added Wombie's index as built-in provider
+- Many code and interface improvements
+- Many bugs fixed
 
 
 Changes in v0.28
