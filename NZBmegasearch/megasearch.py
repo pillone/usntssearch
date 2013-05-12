@@ -19,6 +19,7 @@ from sets import Set
 import decimal
 import socket
 import datetime
+import requests
 import time
 from operator import itemgetter
 from urllib2 import urlparse
@@ -185,6 +186,48 @@ class DoParallelSearch:
 		
 	
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+	def tosab(self, args):		
+	
+		if('data' not in args):
+			return 0
+	
+		send2sab_exist = None
+		if ('sabnzbd_url' in self.cgen):
+			if(len(self.cgen['sabnzbd_url'])):
+				send2sab_exist = self.sckname
+
+				urlq = self.cgen['sabnzbd_url']+ '/api'
+				urlParams = dict(
+									mode='addurl',
+									name=send2sab_exist+'/'+args['data'],
+									apikey=self.cgen['sabnzbd_api'],
+								)
+				try:				
+					http_result = requests.get(url=urlq, params=urlParams, verify=False, timeout=15)
+				except Exception as e:
+					print 'Error contacting SABNZBD '+str(e)
+					return 0
+				
+				data = http_result.text
+				
+				#~ that's dirty but effective
+				if(len(data) < 100):
+					limitpos = data.find('ok')
+					if(limitpos == -1):
+						mssg = 'ERROR: send url to SAB fails #1'
+						print mssg
+						log.error (mssg)
+						return 0
+				else:
+					mssg = 'ERROR: send url to SAB fails #2'
+					print mssg
+					log.error (mssg)
+					return 0
+
+				return 1
+
+				
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 	def cleanUpResults(self, params):
 		sugg_list = params['sugg']
@@ -244,6 +287,7 @@ class DoParallelSearch:
 			if('req_pwd' in results[i]):
 				qryforwarp += '&m='+ results[i]['req_pwd']
 			niceResults.append({
+				'id':i,
 				'url':results[i]['url'],
 				'url_encr':'warp?x='+qryforwarp,
 				'title':results[i]['title'],

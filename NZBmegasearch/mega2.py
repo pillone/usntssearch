@@ -14,7 +14,7 @@
 #~ You should have received a copy of the GNU General Public License
 #~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
-from flask import Flask, request, Response, redirect, send_from_directory
+from flask import Flask, request, Response, redirect, send_from_directory, jsonify
 import logging
 import logging.handlers
 import os
@@ -38,8 +38,6 @@ except ImportError as exc:
     print ">> Warning: failed to import OPENSSL module ({})".format(exc)
     openssl_imported = False
 
-DEBUGFLAG = True
-
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
  	
 def reload_all():
@@ -52,10 +50,17 @@ def reload_all():
 	wrp = Warper (cfgsets.cgen, cfgsets.cfg, ds)
 	apiresp = ApiResponses(cfgsets.cfg, wrp)
 	auth = miscdefs.Auth(cfgsets.cgen)
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 		
 motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
 print motd
 
+DEBUGFLAG = False
+if(sys.argv[1] == 'debug'):
+	print '====== DEBUGMODE DEBUGMODE DEBUGMODE DEBUGMODE ======'
+	DEBUGFLAG = True	
+	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 cver = miscdefs.ChkVersion() 
@@ -139,6 +144,11 @@ def warpme():
 		return main_index()
 	else: 	
 		return res
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+@app.route('/tosab')
+def tosab():
+	return jsonify(code=mega_parall.tosab(request.args))
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 			

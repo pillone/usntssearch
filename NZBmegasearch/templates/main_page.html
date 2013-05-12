@@ -9,7 +9,10 @@
 		<script type="text/javascript" src="static/jquery.min.js"></script>		
 		<script type="text/javascript" src="static/block-ui.js"></script>		
 
-		
+		<script type=text/javascript>
+		  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+		</script>
+
 	</head>
 	<body>
 		<div id="container">
@@ -106,7 +109,6 @@
 				</td>
 				
 			</table>			
-
 			{% if results -%}			
 
 			<table id="results" summary="Search Results">
@@ -125,8 +127,9 @@
 						
 						<td class="titlecell">
 							{% if send2sab_exist   -%}
-								<a href= "{{ cgen['sabnzbd_url'] }}/api?mode=addurl&name={{send2sab_exist}}/{{ row['url_encr'] }}&apikey={{ cgen['sabnzbd_api'] }}" target="_blank">
-								<img src="static/sab2_16.png" style='vertical-align: middle;' width="16" height="16"/>
+								<a href= "" id=tosab_lnk name=tosab_info{{ row['id'] }}>
+								<input type="hidden" value="{{ row['url_encr'] }}" name=tosab_info{{ row['id'] }}>
+								<img src="static/sab2_16.png" style='vertical-align: middle;' width="16" height="16"/ name=tosab_info{{ row['id'] }}_img>
 							{%- endif %}		
 							</a>
 							<a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a></td>
@@ -157,9 +160,10 @@
 					<tr>
 						<td class="titlecell">
 							{% if send2sab_exist   -%}
-								<a href= "{{ cgen['sabnzbd_url'] }}/api?mode=addurl&name={{send2sab_exist}}//{{ row['url_encr'] }}&apikey={{ cgen['sabnzbd_api'] }}" target="_blank">
-								<img src="static/sab2_16.png" style='vertical-align: middle;' width="16" height="16"/>
-							{%- endif %}		
+								<a href= "" id=tosab_lnk name=tosab_infol{{ row['id'] }}>
+								<input type="hidden" value="{{ row['url_encr'] }}" name=tosab_info{{ row['id'] }}>
+								<img src="static/sab2_16.png" style='vertical-align: middle;' width="16" height="16"/ name=tosab_info{{ row['id'] }}_img>
+							{%- endif %}			
 							<a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a></td>
 						<td class="sizecell">{{ row['cat'] }}</td>						
 						<td class="sizecell">{{ row['filesize'] }}</td>
@@ -194,7 +198,30 @@
 		<div class="bottomcenter">ver. {{ vr['curver'] }} -- # {{ nc  }} -- 0byte<br/></div>
 		
 	    <script type="text/javascript"> 
+
 	    $(document).ready(function() { 
+
+ 			$("a#tosab_lnk").click(function () {
+				var addressValue = $(this).attr("name");
+				$('img[name="'+addressValue+'_img"]').attr("src", 'static/loadingicon.gif')            
+				
+				 $.getJSON($SCRIPT_ROOT + '/tosab', 
+							{data: $('input[name="'+addressValue+'"]').val(), },
+							function(data) {
+								if(data.code == 1)
+								{
+									$('img[name="'+addressValue+'_img"]').attr("src", 'static/sab2_16_ok.png')            
+								}
+								else
+								{	
+									$('img[name="'+addressValue+'_img"]').attr("src", 'static/sab2_16_no.png')
+								}
+								
+								});
+				return false;
+			  
+			});
+    
 			$('#submit').click(function() { 
 
 				$.blockUI({ message: '<h1>PLEASE WAIT</h1><br><h2>this may take up to 20s...</h2>', css: { 

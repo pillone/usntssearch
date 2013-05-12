@@ -21,7 +21,7 @@
 </tbody></table>
 
 <table id="results" summary="security" style="width: 420px;"><thead>
-<tr><th scope="col">Security Options</th><th></th></tr></thead><tbody>
+<tr><th scope="col">Security Options (requires restart)</th><th></th></tr></thead><tbody>
 	<tr>
 		<td> Authentication (optional) </td><td></td>
 	</tr>	
@@ -215,6 +215,15 @@
 					return false
 				}	
 
+	
+				var usrc_v = cfgform.config_user.value.replace(/\s+/g, ' ')
+				var pwdc_v = cfgform.config_pwd.value.replace(/\s+/g, ' ')
+				if (((usrc_v.length == 0) && (pwdc_v.length > 0)) || ((usrc_v.length > 0) && (pwdc_v.length == 0)))
+				{
+					alert('ERROR: [Config User and Password] must be either both empty or both filled');
+					return false
+				}	
+				
 				var sabnzbd_url_v = cfgform.sabnzbd_url.value.replace(/\s+/g, ' ')
 				var sabnzbd_api_v = cfgform.sabnzbd_api.value.replace(/\s+/g, ' ')
 				var cb = check_beginning_http(sabnzbd_url_v)

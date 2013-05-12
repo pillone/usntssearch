@@ -294,9 +294,9 @@ class DeepSearch_one:
 				if(len(sz2s) == 2):
 					#~ print sz2s[1].lower()
 					if (sz2s[1].lower() == 'mb' ):
-						bytesize.append(int(self.basic_sz * locale.atof(sz2s[0])))
+						bytesize.append(int(self.basic_sz * float(sz2s[0].replace(',', '')) ))
 					if (sz2s[1].lower() == 'gb' ):
-						bytesize.append(int(self.basic_sz * locale.atof(sz2s[0]) * 1024))
+						bytesize.append(int(self.basic_sz * float(sz2s[0].replace(',', '')) * 1024))
 		#~ print bytesize
 
 		#~ 2010-05-08 18:53:09
