@@ -30,6 +30,8 @@ class CfgSettings:
 	
 	# Set up class variables
 	def __init__(self):
+		self.dirconf=  os.getenv('OPENSHIFT_DATA_DIR', '')
+
 		self.selectable_speedopt = [ ['1', 'Normal Response',''],
 									 ['2','Extensive Response','']]
 		self.selectable_speedopt_cpy = copy.deepcopy(self.selectable_speedopt)
@@ -132,7 +134,7 @@ class CfgSettings:
 		parser.set('general', 'deep_numserver', str(counter3-1))
 
 		#~ parser.write(sys.stdout)	
-		with open('custom_params.ini', 'wt') as configfile:
+		with open(self.dirconf+'custom_params.ini', 'wt') as configfile:
 			parser.write(configfile)
 
 
@@ -141,7 +143,7 @@ class CfgSettings:
 	def read_conf_deepsearch(self): 
 		self.cfg_deep = []
 		parser = SafeConfigParser()
-		parser.read('custom_params.ini')
+		parser.read(self.dirconf+'custom_params.ini')
 
 		if(parser.has_option('general'  ,'deep_numserver') == False):
 			return None
@@ -185,7 +187,7 @@ class CfgSettings:
 		
 	def read_conf_general(self, forcedcustom=''): 
 		parser = SafeConfigParser()
-		parser.read('builtin_params.ini')
+		parser.read(self.dirconf+'builtin_params.ini')
 		portno = parser.getint('general', 'port')	
 		gen_user = parser.get('general', 'general_user')	
 		gen_pwd = parser.get('general', 'general_pwd')	
@@ -229,7 +231,7 @@ class CfgSettings:
 		
 		cst_parser = SafeConfigParser()
 		if(forcedcustom == ''):
-			cst_parser.read('custom_params.ini')
+			cst_parser.read(self.dirconf+'custom_params.ini')
 		else:
 			print 'Forced custom filename: ' + forcedcustom
 			cst_parser.read(forcedcustom)	

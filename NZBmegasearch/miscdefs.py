@@ -159,6 +159,7 @@ class DownloadedStats:
 class ChkVersion:
 
 	def __init__(self, debugflag=False):
+		self.dirconf=  os.getenv('OPENSHIFT_DATA_DIR', '')
 		self.ver_notify = ver_notify= { 'chk':-1, 
 									'curver': -1}
 		self.chk_local_ver()
@@ -171,7 +172,7 @@ class ChkVersion:
 		#~ completely anonymous. It does not store any info 
 		#~ about the computer, the user and the providers used
 		
-		with open('vernum.num') as f:
+		with open(self.dirconf+'vernum.num') as f:
 			content = f.readlines()
 		vals = content[0].split(' ')
 		
@@ -181,7 +182,7 @@ class ChkVersion:
 			print '>> rid'
 			content[0] = content[0].rstrip() + ' ' + random_string
 			vval = random_string
-			with open('vernum.num','wt') as f:
+			with open(self.dirconf+'vernum.num','wt') as f:
 				f.write(content[0])
 		else:
 			vval = vals[2]
@@ -200,7 +201,7 @@ class ChkVersion:
 	def chk_local_ver(self): 
 		verify_str = '80801102808011028080110280801102'
 
-		with open('vernum.num') as f:
+		with open(self.dirconf+'vernum.num') as f:
 			content = f.readlines()
 		vals = content[0].split(' ')
 		if(vals[0] == verify_str):

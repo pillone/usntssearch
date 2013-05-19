@@ -32,14 +32,21 @@ log = logging.getLogger(__name__)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 def resource_path(relative_path):
+	dirconf = os.getenv('OPENSHIFT_REPO_DIR', '')
+
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
     except Exception:
         base_path = os.path.abspath(".")
+        
+    retstr = os.path.join(base_path, relative_path)    
+    
+    if(len(dirconf)):
+		retstr = os.path.join(base_path+'/wsgi/' , relative_path)    
 
-    return os.path.join(base_path, relative_path)
+    return retstr
     
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	
