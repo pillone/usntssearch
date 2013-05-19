@@ -32,7 +32,7 @@ log = logging.getLogger(__name__)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 def resource_path(relative_path):
-	dirconf = os.getenv('OPENSHIFT_REPO_DIR', '')
+    dirconf = os.getenv('OPENSHIFT_REPO_DIR', '')
 
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
