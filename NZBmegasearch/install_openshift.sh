@@ -11,10 +11,7 @@ git reset --hard origin/master
 
 echo 'Preparing...'
 cp builtin_params.ini $OPENSHIFT_DATA_DIR
-cp openshift/application .
+cp openshift/application $OPENSHIFT_REPO_DIR/wsgi/
 cp openshift/app.py $OPENSHIFT_REPO_DIR/
-
-
-cp -r $PWD $OPENSHIFT_REPO_DIR/wsgi
 
 ctl_app restart
