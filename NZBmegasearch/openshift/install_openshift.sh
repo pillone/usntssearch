@@ -10,8 +10,8 @@ echo 'Running update -- 02/02'
 git reset --hard origin/master
 
 echo 'Preparing...'
-cp builtin_params.ini $OPENSHIFT_DATA_DIR
-cp openshift/application $OPENSHIFT_REPO_DIR/wsgi/
-cp openshift/app.py $OPENSHIFT_REPO_DIR/
+cp ../builtin_params.ini $OPENSHIFT_DATA_DIR
+cp application $OPENSHIFT_REPO_DIR/wsgi/usntssearch/NZBmegasearch/
+cp app.py $OPENSHIFT_REPO_DIR/
 
 ctl_app restart
