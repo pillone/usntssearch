@@ -38,6 +38,7 @@ except ImportError as exc:
     print ">> Warning: failed to import OPENSSL module ({})".format(exc)
     openssl_imported = False
 
+
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
  	
 def reload_all():
@@ -75,6 +76,8 @@ if (cfgsets.cfg is None or cfgsets.cfg_deep is None ):
 	'>> It will be configured'	
 
 logsdir = SearchModule.resource_path('logs/')
+if(len(os.getenv('OPENSHIFT_DATA_DIR', ''))):
+	logsdir = os.environ.get('OPENSHIFT_DATA_DIR')
 certdir = SearchModule.resource_path('certificates/')
 logging.basicConfig(filename=logsdir+'nzbmegasearch.log',level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)

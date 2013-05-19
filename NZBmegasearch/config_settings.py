@@ -18,6 +18,7 @@
 from flask import render_template
 from ConfigParser import SafeConfigParser
 import sys
+import os
 import SearchModule
 import copy
 import megasearch
