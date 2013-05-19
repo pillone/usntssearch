@@ -14,5 +14,3 @@ cp ../builtin_params.ini $OPENSHIFT_DATA_DIR
 cp ../vernum.num $OPENSHIFT_DATA_DIR
 cp application $OPENSHIFT_REPO_DIR/wsgi/usntssearch/NZBmegasearch/
 cp app.py $OPENSHIFT_REPO_DIR/
-
-ctl_app restart
