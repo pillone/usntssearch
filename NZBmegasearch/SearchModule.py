@@ -44,7 +44,7 @@ def resource_path(relative_path):
     retstr = os.path.join(base_path, relative_path)    
     
     if(len(dirconf)):
-		retstr = os.path.join(base_path+'/wsgi/' , relative_path)    
+		retstr = os.path.join(base_path+'/wsgi/usntssearch/NZBmegasearch/' , relative_path)    
 
     return retstr
     
