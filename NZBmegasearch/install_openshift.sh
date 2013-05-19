@@ -11,3 +11,5 @@ git reset --hard origin/master
 
 echo 'Preparing...'
 cp builtin_params.ini OPENSHIFT_DATA_DIR
+
+ctl_app restart
