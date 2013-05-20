@@ -10,15 +10,24 @@
 </head>
 <body>
 <form action="/" method="post" name="cfgform">
+
 <table id="results" summary="Config" style="width: 420px;"><thead>
 <tr><th scope="col">General Options (requires restart)</th></tr></thead><tbody>
 	<tr>
+		{% if openshift_install == False -%}	
 		<td>Port: <input type="input" name="port" value="{{ genopt['portno'] }}" size="10"></td>
+		{%- endif %}
+		{% if openshift_install == True -%}	
+		<td>Port: <input type="hidden" name="port" value="{{ genopt['portno'] }}" size="10"></td>
+		{%- endif %}
 	</tr>	
 	<tr>	
-			<td><input type="checkbox" name="https" {{ genopt['general_https_verbose'] }} >HTTPS Enabled </td>
+		{% if openshift_install == False -%}	
+		<td><input type="checkbox" name="https" {{ genopt['general_https_verbose'] }} >HTTPS Enabled </td>
+		{%- endif %}
 	</tr>					
 </tbody></table>
+
 
 <table id="results" summary="security" style="width: 420px;"><thead>
 <tr><th scope="col">Security Options (requires restart)</th><th></th></tr></thead><tbody>

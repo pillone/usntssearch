@@ -406,10 +406,13 @@ class CfgSettings:
 		if(genopt['general_trend'] == 1):
 			genopt['general_trend_verbose']	 = 'checked=yes'
 
-					
+		openshift_install = False
+		if(len(self.dirconf)):
+			openshift_install = True
 		return render_template('config.html', cfg=cffile, cfg_dp=cdsfile,  cnt=count,  cnt_ds=count_ds, genopt = genopt, 
 												selectable_opt = possibleopt,
 											  sel_speedopt_basic = sel_speedopt_basic,
+											  openshift_install = openshift_install,
  											  cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
 
 

@@ -24,6 +24,7 @@ import config_settings
 from flask import render_template
 import os
 import subprocess
+import datetime
 import time
 import logging
 import SearchModule
@@ -162,11 +163,21 @@ class ChkVersion:
 		self.dirconf=  os.getenv('OPENSHIFT_DATA_DIR', '')
 		self.ver_notify = ver_notify= { 'chk':-1, 
 									'curver': -1}
-		self.chk_local_ver()
+		self.chk_update_ts = 0
+		self.chk_update_refreshrate = 3600 * 4
 		if(debugflag == False):
 			self.chk_local_vvs()
-		self.ver_notify['chk'] = self.chk_repos_ver()
+		self.chk_update()
 	
+	def chk_update(self):
+		dt1 =  (datetime.datetime.now() - datetime.datetime.fromtimestamp(self.chk_update_ts))
+		dl = (dt1.days+1) * dt1.seconds
+		if(dl > self.chk_update_refreshrate):
+			print '>> Checking for updates...'
+			self.chk_local_ver()
+			self.ver_notify['chk'] = self.chk_repos_ver()
+			self.chk_update_ts = time.time()
+		
 	def chk_local_vvs(self): 
 		#~ ACKS the server 
 		#~ completely anonymous. It does not store any info 
@@ -209,7 +220,7 @@ class ChkVersion:
 	
 	def autoupdate(self): 
 		#~ linux only, sorry win users
-		if sys.platform.startswith('linux'):
+		if (sys.platform.startswith('linux') and len(self.dirconf)==0):
 			#~ print 'MISCDEFS: THIS LINE HAS TO BE REMOVED BEFORE DEPLOYMENT'
 			mssg = '>> Running autoupdate on Linux platform' 
 			print mssg

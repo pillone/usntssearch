@@ -67,6 +67,7 @@ if(len(sys.argv) > 1):
 
 cver = miscdefs.ChkVersion(DEBUGFLAG) 
 print '>> version: '+ str(cver.ver_notify['curver'])
+motd = motd  + ' v.'+str(cver.ver_notify['curver'])
 cfgsets = config_settings.CfgSettings()
 first_time = 0
 reload_all()
@@ -171,6 +172,7 @@ def main_index():
 		return cfgsets.edit_config()
 
 	sugg.asktrend_allparallel()
+	cver.chk_update()
 	params_dosearch = {'args': '', 
 						'sugg': [], 
 						'trend': [], 
@@ -203,7 +205,7 @@ def generic_error(error):
 if __name__ == "__main__":	
 
 	sugg.asktrend_allparallel()
-	chost = '0.0.0.0'
+	chost = '::'
 	print '>> Running on port '	+ str(cfgsets.cgen['portno'])
 	
 	ctx = None
