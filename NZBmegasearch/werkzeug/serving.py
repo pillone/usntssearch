@@ -361,19 +361,16 @@ class BaseWSGIServer(HTTPServer, object):
         _log(type, message, *args)
 
     def serve_stop(self):
-        print 'close'
         self.shutdown_signal = True
-        #~ HTTPServer.shutdown(self)
         HTTPServer.server_close(self)
-
-        print 'dddd' 
 
     def serve_forever(self):
         self.shutdown_signal = False
         try:
             HTTPServer.serve_forever(self)
         except KeyboardInterrupt:
-            print 'Exception: Keyb hit detected'
+            print 'Exception: CTRL+C interrupt detected'
+            os.abort()
             pass
         
         
@@ -639,6 +636,7 @@ def run_simple(hostname, port, application, use_reloader=False,
         _log('info', ' * Running on %s://%s:%d/', ssl_context is None
              and 'http' or 'https', display_hostname, port)
     if 0:         
+    #~ I had to break the auto-reloader for the autostart :(
     #~ if use_reloader:
         # Create and destroy a socket so that any exceptions are raised before
         # we spawn a separate Python interpreter and lose this ability.
@@ -650,5 +648,4 @@ def run_simple(hostname, port, application, use_reloader=False,
         run_with_reloader(inner, extra_files, reloader_interval)
     else:
         palu=inner()
-    print 'here'    
     return palu        

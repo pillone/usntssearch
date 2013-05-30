@@ -101,6 +101,11 @@ if(DEBUGFLAG):
 def poweroff():
 	os.abort()
 
+@app.route('/reboot', methods=['GET'])
+def reboot():
+	app.restart()
+	return main_index()
+
 @app.route('/robots.txt')
 def static_from_root():
     return send_from_directory(app.static_folder, request.path[1:])
@@ -142,30 +147,6 @@ def config():
 	return cfgsets.edit_config()
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
-@app.route('/rr', methods=['GET'])
-def rro():
-	 
-	#~ pythonscr = sys.executable
-	print 'reboot2'
-	#~ os.execl(pythonscr, pythonscr, *sys.argv)
-
-	app.restart()
-	#~ sig = getattr(signal, 'SIGKILL', signal.SIGTERM)
-	#~ if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
-		#~ os.kill(os.getpid(), sig)
-
-	#~ args = [sys.executable] + sys.argv
-	#~ new_environ = os.environ.copy()
-	#~ new_environ['WERKZEUG_RUN_MAIN'] = 'true'
-	#~ if os.name == 'nt':
-		#~ for key, value in new_environ.iteritems():
-			#~ if isinstance(value, unicode):
-				#~ new_environ[key] = value.encode('iso-8859-1')
-#~ 
-	#~ exit_code = subprocess.call(args)
-	print 'reboot'
-	return main_index()
         
 @app.route('/warp', methods=['GET'])
 def warpme():
@@ -240,10 +221,4 @@ if __name__ == "__main__":
 		ctx.use_privatekey_file(certdir+'server.key')
 		ctx.use_certificate_file(certdir+'server.crt')
 	
-	#~ try:
 	app.run(host=chost,port=cfgsets.cgen['portno'], debug = DEBUGFLAG, ssl_context=ctx)
-
-	#~ except Exception as e:
-		#~ print '>> Restart2'
-		#~ app.run(host=chost,port=47347, debug = DEBUGFLAG, ssl_context=ctx)
-		#~ rro()
