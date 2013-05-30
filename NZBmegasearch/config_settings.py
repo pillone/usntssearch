@@ -417,14 +417,16 @@ class CfgSettings:
 
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
-
-	def edit_config(self):
+	def refresh(self):
 		self.read_conf_general()
 		self.read_conf_custom()		
 		self.read_conf_deepsearch()
-		webbuf_body_bi = self.html_editpage()
-		
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+	
+	def edit_config(self):
+		self.refresh()
+		webbuf_body_bi = self.html_editpage()		
 		return webbuf_body_bi
 		
 

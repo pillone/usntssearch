@@ -360,6 +360,14 @@ class BaseWSGIServer(HTTPServer, object):
         print message
         _log(type, message, *args)
 
+    def serve_stop(self):
+        print 'close'
+        self.shutdown_signal = True
+        #~ HTTPServer.shutdown(self)
+        HTTPServer.server_close(self)
+
+        print 'dddd' 
+
     def serve_forever(self):
         self.shutdown_signal = False
         try:
@@ -367,6 +375,8 @@ class BaseWSGIServer(HTTPServer, object):
         except KeyboardInterrupt:
             print 'Exception: Keyb hit detected'
             pass
+        
+        
 
     def shutdown_request(self,request): 
 		if(self.ssl_context is not None):
@@ -611,9 +621,16 @@ def run_simple(hostname, port, application, use_reloader=False,
         application = SharedDataMiddleware(application, static_files)
 
     def inner():
-        make_server(hostname, port, application, threaded,
+        #~ make_server(hostname, port, application, threaded,
+                    #~ processes, request_handler,
+                    #~ passthrough_errors, ssl_context).serve_forever()
+
+        palu = make_server(hostname, port, application, threaded,
                     processes, request_handler,
-                    passthrough_errors, ssl_context).serve_forever()
+                    passthrough_errors, ssl_context)
+        #~ pinu = palu.serve_forever()            
+        print 'dsadasdasdsadasdsadsad'
+        return palu
 
     if os.environ.get('WERKZEUG_RUN_MAIN') != 'true':
         display_hostname = hostname != '*' and hostname or 'localhost'
@@ -621,7 +638,8 @@ def run_simple(hostname, port, application, use_reloader=False,
             display_hostname = '[%s]' % display_hostname
         _log('info', ' * Running on %s://%s:%d/', ssl_context is None
              and 'http' or 'https', display_hostname, port)
-    if use_reloader:
+    if 0:         
+    #~ if use_reloader:
         # Create and destroy a socket so that any exceptions are raised before
         # we spawn a separate Python interpreter and lose this ability.
         address_family = select_ip_version(hostname, port)
@@ -631,4 +649,6 @@ def run_simple(hostname, port, application, use_reloader=False,
         test_socket.close()
         run_with_reloader(inner, extra_files, reloader_interval)
     else:
-        inner()
+        palu=inner()
+    print 'here'    
+    return palu        

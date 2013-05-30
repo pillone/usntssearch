@@ -67,7 +67,7 @@ class aa_NZBx(SearchModule):
 			q='',
 			cat='tv-hd|tv-sd'
 		)
-	
+		
 		return self.search_internal(urlParams, self.queryURLSBreq, cfg)
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~						

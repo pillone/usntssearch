@@ -30,6 +30,7 @@ import config_settings
 import miscdefs
 import random
 import time
+import socket
 
 openssl_imported = True
 try:
@@ -50,7 +51,7 @@ def reload_all():
 	mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds)
 	wrp = Warper (cfgsets.cgen, cfgsets.cfg, ds)
 	apiresp = ApiResponses(cfgsets.cfg, wrp)
-	auth = miscdefs.Auth(cfgsets.cgen)
+	auth = miscdefs.Auth(cfgsets)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 		
@@ -142,6 +143,30 @@ def config():
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
+@app.route('/rr', methods=['GET'])
+def rro():
+	 
+	#~ pythonscr = sys.executable
+	print 'reboot2'
+	#~ os.execl(pythonscr, pythonscr, *sys.argv)
+
+	app.restart()
+	#~ sig = getattr(signal, 'SIGKILL', signal.SIGTERM)
+	#~ if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+		#~ os.kill(os.getpid(), sig)
+
+	#~ args = [sys.executable] + sys.argv
+	#~ new_environ = os.environ.copy()
+	#~ new_environ['WERKZEUG_RUN_MAIN'] = 'true'
+	#~ if os.name == 'nt':
+		#~ for key, value in new_environ.iteritems():
+			#~ if isinstance(value, unicode):
+				#~ new_environ[key] = value.encode('iso-8859-1')
+#~ 
+	#~ exit_code = subprocess.call(args)
+	print 'reboot'
+	return main_index()
+        
 @app.route('/warp', methods=['GET'])
 def warpme():
 	res = wrp.beam(request.args)
@@ -157,11 +182,10 @@ def tosab():
 	return jsonify(code=mega_parall.tosab(request.args))
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-			
+ 
 @app.route('/', methods=['GET','POST'])
 @auth.requires_auth
 def main_index():
-	
 	global first_time,cfg,cgen,mega_parall
 	if request.method == 'POST':
 		cfgsets.write(request.form)
@@ -205,7 +229,7 @@ def generic_error(error):
 if __name__ == "__main__":	
 
 	sugg.asktrend_allparallel()
-	chost = '::'
+	chost = '0.0.0.0'
 	print '>> Running on port '	+ str(cfgsets.cgen['portno'])
 	
 	ctx = None
@@ -215,5 +239,11 @@ if __name__ == "__main__":
 		ctx = SSL.Context(SSL.SSLv23_METHOD)
 		ctx.use_privatekey_file(certdir+'server.key')
 		ctx.use_certificate_file(certdir+'server.crt')
-
+	
+	#~ try:
 	app.run(host=chost,port=cfgsets.cgen['portno'], debug = DEBUGFLAG, ssl_context=ctx)
+
+	#~ except Exception as e:
+		#~ print '>> Restart2'
+		#~ app.run(host=chost,port=47347, debug = DEBUGFLAG, ssl_context=ctx)
+		#~ rro()

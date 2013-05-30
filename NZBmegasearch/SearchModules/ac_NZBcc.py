@@ -32,7 +32,8 @@ class ac_NZBcc(SearchModule):
 		self.login = 0
 		self.inapi = 1
 		self.api_catsearch = 1
-		
+		self.agent_headers = {	'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1' }	
+
 		self.categories = {'Console': {'code':[], 'pretty': 'Console'},
 							'Movie' : {'code': [], 'pretty': 'Movie'},
  							'Movie_HD' : {'code': [], 'pretty': 'HD'},
@@ -66,13 +67,13 @@ class ac_NZBcc(SearchModule):
 						
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def search(self, queryString, cfg):
-		# Get HTML
+		# Relaxed search on .cc
 		urlParams = dict(
-			q=queryString
+			q=queryString.replace(".", " ")
 		)
 		timestamp_s = time.time()	
 		try:
-			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=cfg['timeout'])
+			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=cfg['timeout'], headers= self.agent_headers)
 		except Exception as e:
 			print e
 			log.critical(str(e))

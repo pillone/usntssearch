@@ -42,35 +42,40 @@ def connectinfo():
 	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 class Auth:
-	def __init__(self, cgen):
-		self.cgen = cgen
+	def __init__(self, cfgsetsp):
+		self.cfgsets = cfgsetsp
 
 	def check_auth(self, username, password, mode):
 		if(mode == 0):
-			if(username == self.cgen['general_usr'] and password == self.cgen['general_pwd']):
+			if(username == self.cfgsets.cgen['general_usr'] and password == self.cfgsets.cgen['general_pwd']):
 				return True
 		if(mode == 1):
-			if(len(self.cgen['config_user']) != 0):
-				if(username == self.cgen['config_user'] and password == self.cgen['config_pwd']):
+			if(len(self.cfgsets.cgen['config_user']) != 0):
+				if(username == self.cfgsets.cgen['config_user'] and password == self.cfgsets.cgen['config_pwd']):
 					return True
 			else:
-				if(username == self.cgen['general_usr'] and password == self.cgen['general_pwd']):
+				if(username == self.cfgsets.cgen['general_usr'] and password == self.cfgsets.cgen['general_pwd']):
 					return True
+		return False			
 			
 	def authenticate(self):
 		"""Sends a 401 response that enables basic auth"""
-		return Response(
+		retres =  Response(
 		'Could not verify your access level for that URL.\n'
 		'You have to login with proper credentials', 401,
 		{'WWW-Authenticate': 'Basic realm="Login Required"'})
+		return retres
+ 
 
 	def requires_auth(self, f):
 		@wraps(f)
 		def decorated(*args, **kwargs):
-			if(len(self.cgen['general_usr']) != 0):
+			self.cfgsets.refresh()
+			if(len(self.cfgsets.cgen['general_usr']) != 0):
 				auth = request.authorization
 				if not auth or not self.check_auth(auth.username, auth.password,0):
-					return self.authenticate()
+					sret = self.authenticate()
+					return sret
 				return f(*args, **kwargs)
 			else:
 				return f(*args, **kwargs)
@@ -80,7 +85,7 @@ class Auth:
 	def requires_conf(self, f):
 		@wraps(f)
 		def decorated(*args, **kwargs):
-			if(len(self.cgen['config_user']) != 0 or len(self.cgen['general_usr']) != 0):
+			if(len(self.cfgsets.cgen['config_user']) != 0 or len(self.cfgsets.cgen['general_usr']) != 0):
 				auth = request.authorization
 				if not auth or not self.check_auth(auth.username, auth.password,1):
 					return self.authenticate()
@@ -158,16 +163,16 @@ class DownloadedStats:
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 		
 class ChkVersion:
-
+ 
 	def __init__(self, debugflag=False):
 		self.dirconf=  os.getenv('OPENSHIFT_DATA_DIR', '')
 		self.ver_notify = ver_notify= { 'chk':-1, 
 									'curver': -1}
 		self.chk_update_ts = 0
 		self.chk_update_refreshrate = 3600 * 4
-		if(debugflag == False):
-			self.chk_local_vvs()
-		self.chk_update()
+		#~ if(debugflag == False):
+			#~ self.chk_local_vvs()
+			#~ self.chk_update()
 	
 	def chk_update(self):
 		dt1 =  (datetime.datetime.now() - datetime.datetime.fromtimestamp(self.chk_update_ts))

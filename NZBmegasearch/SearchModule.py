@@ -125,11 +125,10 @@ def performSearch(queryString,  cfg, dsearch=None, extraparam=None):
 	#~ for SB autodiscovery, uses all the possible providers
 	if (extraparam is not None):
 		for index in xrange(len(cfg)):
-			rval = neededModules[index].api_catsearch
+			rval = (neededModules[index].api_catsearch and cfg[index]['valid'] > 0)
 
 			if(rval == True):
 				try:
-					#~ print neededModule 
 					t = threading.Thread(target=performSearchThreadRaw, args=(extraparam,neededModules[index],lock,cfg[index]))
 					t.start()
 					threadHandles.append(t)
@@ -266,15 +265,14 @@ class SearchModule(object):
 		timestamp_s = time.time()
 
 		try:
-			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=tout)
+			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=tout, headers= self.agent_headers)
 					
 		except Exception as e:
 			mssg = self.queryURL + ' -- ' + str(e)
 			print mssg
 			log.critical(mssg)
-			#~ error_rlimit = str(e.args[0]).find('Max retries exceeded')
-			#~ print error_rlimit
 			return parsed_data
+			
 		timestamp_e = time.time()	
 		#~ print "NABAPI " + self.queryURL + " " + str(timestamp_e - timestamp_s)
 		log.info('TS ' + self.baseURL + " " + str(timestamp_e - timestamp_s))

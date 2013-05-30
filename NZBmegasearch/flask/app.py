@@ -738,12 +738,23 @@ class Flask(_PackageBoundObject):
         options.setdefault('use_reloader', self.debug)
         options.setdefault('use_debugger', self.debug)
         try:
-            run_simple(host, port, self, **options)
+            print 'bbb'			
+            self.palu = run_simple(host, port, self, **options)
+            self.palu.serve_forever() 
+            print 'dsada'
         finally:
             # reset the first request information if the development server
             # resetted normally.  This makes it possible to restart the server
             # without reloader and that stuff from an interactive shell.
             self._got_first_request = False
+
+        print '-----------------------------------'
+        pythonscr = sys.executable
+        os.execl(pythonscr, pythonscr, *sys.argv)   
+            
+    def restart(self):
+		print 'invoke'
+		self.palu.serve_stop()
 
     def test_client(self, use_cookies=True):
         """Creates a test client for this application.  For information
