@@ -171,7 +171,6 @@ class ChkVersion:
 		self.chk_update_ts = 0
 		self.chk_update_refreshrate = 3600 * 4
 		#~ if(debugflag == False):
-			#~ self.chk_local_vvs()
 			#~ self.chk_update()
 	
 	def chk_update(self):
@@ -183,36 +182,6 @@ class ChkVersion:
 			self.ver_notify['chk'] = self.chk_repos_ver()
 			self.chk_update_ts = time.time()
 		
-	def chk_local_vvs(self): 
-		#~ ACKS the server 
-		#~ completely anonymous. It does not store any info 
-		#~ about the computer, the user and the providers used
-		
-		with open(self.dirconf+'vernum.num') as f:
-			content = f.readlines()
-		vals = content[0].split(' ')
-		
-		vval = '1'
-		if(len(vals) != 3):
-			random_string = base64.urlsafe_b64encode(os.urandom(50)).replace('-','').replace('=','').replace('/','').replace('+','')
-			print '>> rid'
-			content[0] = content[0].rstrip() + ' ' + random_string
-			vval = random_string
-			with open(self.dirconf+'vernum.num','wt') as f:
-				f.write(content[0])
-		else:
-			vval = vals[2]
-
-		urlParams = dict(v=vval)
-		#~ print urlParams
-		try:
-			http_result = requests.get(url='https://mega.nzbx.co/uous', params=urlParams, verify=False, timeout=5)
-		except Exception as e:
-			print '>> Fail to send UOS. Nothing to worry.'
-			#~ log.warning(str(e))
-			return []
-
-
 	
 	def chk_local_ver(self): 
 		verify_str = '80801102808011028080110280801102'

@@ -626,7 +626,6 @@ def run_simple(hostname, port, application, use_reloader=False,
                     processes, request_handler,
                     passthrough_errors, ssl_context)
         #~ pinu = palu.serve_forever()            
-        print 'dsadasdasdsadasdsadsad'
         return palu
 
     if os.environ.get('WERKZEUG_RUN_MAIN') != 'true':

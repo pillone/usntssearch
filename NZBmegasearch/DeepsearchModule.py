@@ -326,7 +326,7 @@ class DeepSearch_one:
 				'filelist_preview': '',
 				'group': 'N/A',
 				'posting_date_timestamp': tstamp[i],
-				'release_comments': self.baseURL + '/' +rdetails[i]['href'],
+				'release_comments': self.baseURL  + rdetails[i]['href'],
 				'categ':{'N/A':1},
 				'ignore':0,
 				'req_pwd':self.typesrch,

@@ -179,10 +179,10 @@ class DoParallelSearch:
 		for slctg in possibleopt:
 			if(slctg[0] == self.cgen['search_default']):
 				slctg[2] = 'selected'
-		
+		#~ params['ver']['chk'] = -1
 		return render_template('main_page.html', vr=params['ver'], nc=self.svalid, sugg = [], 
 								trend_show = params['trend_show'], trend_movie = params['trend_movie'], debug_flag = params['debugflag'],
-								sstring  = "", selectable_opt = possibleopt, search_opt = searchopt_local,  motd = self.cgen['motd'])
+								sstring  = "", selectable_opt = possibleopt, search_opt = searchopt_local,  motd = self.cgen['motd'], sid = params['sid'])
 		
 	
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -315,6 +315,7 @@ class DoParallelSearch:
 												sstring  = params['args']['q'],
 												selectable_opt = params['selectable_opt'],
 												search_opt =  params['search_opt'],
+												sid = params['sid'],
 												motd = params['motd'] )
 
 

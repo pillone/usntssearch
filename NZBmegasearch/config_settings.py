@@ -23,7 +23,7 @@ import SearchModule
 import copy
 import megasearch
 
-MAX_PROVIDER_NUMBER = 8
+MAX_PROVIDER_NUMBER = 12
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -59,6 +59,7 @@ class CfgSettings:
 		parser.set('general', 'general_pwd', request_form['general_pwd'].replace(" ", ""))
 		parser.set('general', 'config_user', request_form['config_user'].replace(" ", ""))
 		parser.set('general', 'config_pwd', request_form['config_pwd'].replace(" ", ""))
+		parser.set('general', 'general_apikey', request_form['general_apikey'].replace(" ", ""))
 		
 		parser.set('general', 'general_https', '0')
 		parser.set('general', 'search_suggestions', '0')
@@ -84,7 +85,10 @@ class CfgSettings:
 			if (request_form.has_key('host%d' % i)  == True):
 				if(request_form['host%d' % i].replace(" ", "")): 
 					parser.add_section('search_provider%s' % counter)
-					parser.set('search_provider%s' % counter, 'url',request_form['host%d' % i].replace(" ", ""))
+					hosturl = request_form['host%d' % i].replace(" ", "")
+					if(hosturl[-1] == '/'):
+						hosturl = hosturl[:-1]
+					parser.set('search_provider%s' % counter, 'url',hosturl)
 					parser.set('search_provider%s' % counter, 'api',request_form['API%d' % i].replace(" ", ""))
 					parser.set('search_provider%s' % counter, 'type', request_form['type%d' % i].replace(" ", ""))
 					parser.set('search_provider%s' % counter, 'valid', '0')
@@ -123,7 +127,11 @@ class CfgSettings:
 			if (request_form.has_key('ds_host%d' % i)  == True):
 				if(request_form['ds_host%d' % i].replace(" ", "")): 
 					parser.add_section('deep_search_provider%s' % counter3)
-					parser.set('deep_search_provider%s' % counter3, 'url',request_form['ds_host%d' % i].replace(" ", ""))
+					hosturl = request_form['ds_host%d' % i].replace(" ", "")
+					if(hosturl[-1] == '/'):
+						hosturl = hosturl[:-1]
+					
+					parser.set('deep_search_provider%s' % counter3, 'url',hosturl)
 					parser.set('deep_search_provider%s' % counter3, 'user',request_form['ds_usr%d' % i].replace(" ", ""))
 					parser.set('deep_search_provider%s' % counter3, 'pwd', request_form['ds_pass%d' % i])
 					parser.set('deep_search_provider%s' % counter3, 'type', request_form['ds_type%d' % i].replace(" ", ""))
@@ -219,6 +227,7 @@ class CfgSettings:
 				'log_size' : gen_log_size, 'seed_warptable' : gen_seed_warptable, 'trends_refreshrate':gen_trends_refreshrate,
 				'search_default':gen_search_default,
 				'sabnzbd_url' : '', 'sabnzbd_api':'',
+				'general_apikey' : '',
 				'stats_key' : gen_stats_key, 'motd':gen_motd}
 		self.selectable_speedopt = copy.deepcopy(self.selectable_speedopt_cpy)
 		self.selectable_speedopt[0][1] += ' ['+str(self.cgen['timeout_class'][1])+'s]'
@@ -278,6 +287,9 @@ class CfgSettings:
 				self.cgen['config_user'] = cst_parser.get('general', 'config_user')
 			if(cst_parser.has_option('general' ,'config_pwd')):	
 				self.cgen['config_pwd'] = cst_parser.get('general', 'config_pwd')
+			if(cst_parser.has_option('general' ,'general_apikey')):	
+				self.cgen['general_apikey'] = cst_parser.get('general', 'general_apikey')
+
 
 		except Exception as e:
 			print str(e)

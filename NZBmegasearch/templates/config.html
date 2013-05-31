@@ -48,6 +48,14 @@
 		<td>Username: <input type="input" name="config_user" value="{{ genopt['config_user'] }}" size="18"></td>
 			<td>Pass: <input type="password" name="config_pwd" value="{{ genopt['config_pwd'] }}" size="18"></td>
 	</tr>
+
+	<tr>
+		<td> <br>API key for SB, CP connection (optional)</td><td></td>
+	</tr>	
+
+	<tr>
+		<td><input type="button" value="Generate Key" onclick="generate_key()" > </td> <td> <input type="input" name="general_apikey" value="{{ genopt['general_apikey'] }}" size="16" readonly> <input type="button" value="x" onclick="delete_key()" > </td>
+	</tr>
 	
 </tbody></table>
 
@@ -205,6 +213,16 @@
 
 
 	    <script type="text/javascript"> 
+	    	function generate_key()
+			{
+				varkey = Math.random().toString(36).slice(2);
+				cfgform.general_apikey.value=varkey;
+			}
+			function delete_key()
+			{
+				cfgform.general_apikey.value='';
+			}
+	    
 			function check_form_correctness()
 			{
 				

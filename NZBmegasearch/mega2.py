@@ -31,6 +31,7 @@ import miscdefs
 import random
 import time
 import socket
+import base64
 
 openssl_imported = True
 try:
@@ -39,6 +40,7 @@ except ImportError as exc:
     print ">> Warning: failed to import OPENSSL module ({})".format(exc)
     openssl_imported = False
 
+sessionid_string = base64.urlsafe_b64encode(os.urandom(10)).replace('-','').replace('=','').replace('/','').replace('+','')
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
  	
@@ -97,13 +99,20 @@ if(DEBUGFLAG):
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-@app.route('/poweroff')
+@app.route('/poweroff', methods=['GET'])
+@auth.requires_auth
 def poweroff():
-	os.abort()
+	if('sid' in request.args):
+		if(request.args['sid'] == sessionid_string):
+			os.abort()
+	return main_index()
 
-@app.route('/reboot', methods=['GET'])
+@app.route('/restart', methods=['GET'])
+@auth.requires_auth
 def reboot():
-	app.restart()
+	if('sid' in request.args):
+		if(request.args['sid'] == sessionid_string):
+			app.restart()
 	return main_index()
 
 @app.route('/robots.txt')
@@ -136,7 +145,8 @@ def search():
 						'trend_show': sugg.show_trend, 
 						'ver': cver.ver_notify,
 						'wrp':wrp,
-						'debugflag':DEBUGFLAG
+						'debugflag':DEBUGFLAG,
+						'sid': sessionid_string
 						}
 	return mega_parall.renderit(params_dosearch)
 
@@ -184,14 +194,20 @@ def main_index():
 						'trend_movie': sugg.movie_trend, 
 						'trend_show': sugg.show_trend, 
 						'ver': cver.ver_notify,
-						'debugflag':DEBUGFLAG}
+						'debugflag':DEBUGFLAG,
+						'sid': sessionid_string}
 	return mega_parall.renderit_empty(params_dosearch)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/api', methods=['GET'])
 def api():
-	return apiresp.dosearch(request.args)
+	if('apikey' in request.args):
+		if(request.args['apikey'] == cfgsets.cgen['general_apikey']):
+			return apiresp.dosearch(request.args)
+	return '[API key protection ACTIVE] Wrong key selected'
+			
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~   
 
 @app.route('/connect', methods=['GET'])
 @auth.requires_auth
