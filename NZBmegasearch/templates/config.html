@@ -15,7 +15,7 @@
 <tr><th scope="col">General Options (requires restart)</th></tr></thead><tbody>
 	<tr>
 		{% if openshift_install == False -%}	
-		<td>Port: <input type="input" name="port" value="{{ genopt['portno'] }}" size="10"></td>
+		<td><input type="input" name="port" value="{{ genopt['portno'] }}" size="10"></td>
 		{%- endif %}
 		{% if openshift_install == True -%}	
 		<td>Port: <input type="hidden" name="port" value="{{ genopt['portno'] }}" size="10"></td>
