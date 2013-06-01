@@ -126,6 +126,14 @@ def reboot():
 				return render_template('restart.html');
 	return main_index();			
 
+@app.route('/legal', methods=['GET'])
+@auth.requires_auth
+def legal():
+	if(cfgsets.cgen['large_server'] == True):
+		return render_template('legal.html')
+	return main_index()
+
+
 @app.route('/robots.txt')
 def static_from_root():
     return send_from_directory(app.static_folder, request.path[1:])
