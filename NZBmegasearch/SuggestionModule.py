@@ -50,7 +50,7 @@ class SuggestionResponses:
 		self.sugg_info = []
 		self.active_trend = 1
 		self.trends_refreshrate = cgen['trends_refreshrate']
-		self.detached_trendpolling = 0
+		self.detached_trendpolling = cgen['large_server']
 				
 		self.tvrage_rqheaders = {
 						'Connection': 'keep-alive;' ,
@@ -78,7 +78,7 @@ class SuggestionResponses:
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def asktrend_allparallel(self):
-		if(self.detached_trendpolling == 0):
+		if(self.detached_trendpolling == False):
 			if(self.active_trend == 1):
 				t1 = threading.Thread(target=self.asktrend_movie)
 				t2 = threading.Thread(target=self.asktrend_show)
@@ -243,7 +243,7 @@ class SuggestionResponses:
 				if(rd < 0):
 					break	
 			except Exception as e:
-				print '>> Failure in suggestions ' + str(e)		
+				print '>> Warning (SuggestionModule): ' + str(e)		
 
 		#~ print eps_sorted_sel
 		return eps_sorted_sel
