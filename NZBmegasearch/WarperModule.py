@@ -207,9 +207,15 @@ class Warper:
 		
 	def beam(self, arguments):
 
-		#~ manual proxing 
 		if('m' in arguments and 'x' in arguments):
 			decodedurl = self.chash64_decode(arguments['x'])
+
+			if(len(decodedurl) == 0):
+				return -1				
+			rprnt = all(c in string.printable for c in decodedurl)
+			if (rprnt == False):
+				return -1		
+
 			response = self.beam_cookie(decodedurl, arguments)
 			log.info ('WARPNGM: ' + decodedurl + ' --> manual cookie')	
 			return response				

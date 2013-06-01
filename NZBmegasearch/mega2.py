@@ -14,7 +14,7 @@
 #~ You should have received a copy of the GNU General Public License
 #~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
-from flask import Flask, request, Response, redirect, send_from_directory, jsonify
+from flask import Flask, request, Response, redirect, render_template, send_from_directory, jsonify
 import logging
 import logging.handlers
 import os
@@ -113,7 +113,7 @@ def reboot():
 	if('sid' in request.args):
 		if(request.args['sid'] == sessionid_string):
 			app.restart()
-	return main_index()
+	return render_template('restart.html');
 
 @app.route('/robots.txt')
 def static_from_root():

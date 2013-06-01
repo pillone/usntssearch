@@ -178,20 +178,27 @@
 						
 		</div>
 		<div class="topright_tight">
-			[ <a href='https://github.com/pillone/usntssearch'>
-				{% if vr['chk']  == 1 -%} 
-					<span style='color: #ff0000'>Update Now!</span>
-				{%- endif %}
-				{% if vr['chk']  == -1 -%} 	
-					<span style='color: #ff0000'>Error checking updates</span>
-				{%- endif %}					
-				{% if vr['chk']  == 0 -%} 		
-					Github
-				{%- endif %}											
+			{% if vr['chk']  == 1 and vr['os']  == 'linux' -%} 
+			[ <a href='restart?sid={{ sid }}'>
+					<span style='color: #ff0000'>Autoupdate Now!</span>
 			</a> ] 
+			{%- else %}
+				[ <a href='https://github.com/pillone/usntssearch'>
+					{% if vr['chk']  == 1 -%} 
+						<span style='color: #ff0000'>Update Now!</span>
+					{%- endif %}
+					{% if vr['chk']  == -1 -%} 	
+						<span style='color: #ff0000'>Error checking updates</span>
+					{%- endif %}					
+					{% if vr['chk']  == 0 -%} 		
+						Github
+					{%- endif %}											
+				</a> ] 
+			{%- endif %}
+				
 			[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' /><img src="static/cp_logo.png" width="" height="16" /></a> ]
 			[ <a href='config'><img src="static/options.png" width="" height="16" style='vertical-align: bottom;' /></a> ] 
-			[ <a href='restart?sid={{ sid }}' OnClick="return confirm('Do you really want to restart the program?');"><img src="static/restart.png" width="" height="16" style='vertical-align: bottom;' /></a> 
+			[ <a href='restart?sid={{ sid }}' OnClick="return confirm('Do you really want to restart the program?');" class='restartbutton'><img src="static/restart.png" width="" height="16" style='vertical-align: bottom;' /></a> 
 			 <a href='poweroff?sid={{ sid }}' OnClick="return confirm('Do you really want to halt the program?');"><img src="static/off.png" width="" height="16" style='vertical-align: bottom;' /></a> ]
 			</div>		
 		</div>

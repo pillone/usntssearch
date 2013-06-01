@@ -167,7 +167,8 @@ class ChkVersion:
 	def __init__(self, debugflag=False):
 		self.dirconf=  os.getenv('OPENSHIFT_DATA_DIR', '')
 		self.ver_notify = ver_notify= { 'chk':-1, 
-									'curver': -1}
+									'curver': -1,
+									'os':-1}
 		self.chk_update_ts = 0
 		self.chk_update_refreshrate = 3600 * 4
 		#~ if(debugflag == False):
@@ -177,6 +178,14 @@ class ChkVersion:
 		dt1 =  (datetime.datetime.now() - datetime.datetime.fromtimestamp(self.chk_update_ts))
 		dl = (dt1.days+1) * dt1.seconds
 		if(dl > self.chk_update_refreshrate):
+			if (sys.platform.startswith('linux') and len(self.dirconf)==0):
+				self.ver_notify['os'] = 'linux'
+			else:
+				self.ver_notify['os'] = 'other'
+
+			if (len(self.dirconf)):
+				self.ver_notify['os'] = 'openshift'
+
 			print '>> Checking for updates...'
 			self.chk_local_ver()
 			self.ver_notify['chk'] = self.chk_repos_ver()
