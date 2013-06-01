@@ -124,32 +124,7 @@ class ApiResponses:
 		if('m' in self.args):
 			arguments['m'] = self.args['m']
 		return self.wrp.beam(arguments)
-
-		#~ LOCAL VERSION
-		'''
-		response = urllib2.urlopen(fullurl)
-		fcontent = response.read()
-		#~ print fullurl
-		#~ print response.info()
-		
-		f=tempfile.NamedTemporaryFile(delete=False)
-		f.write(fcontent)
-		f.close()	
-		fresponse = send_file(f.name, mimetype='application/x-nzb;', as_attachment=True, 
-						attachment_filename='yourmovie.nzb', add_etags=False, cache_timeout=None, conditional=False)
-		os.remove(f.name)
-		#~ not needed
-		#~ print response.info()
-		#~ brutal but works
-		for i in xrange(len(response.info().headers)):
-			if(response.info().headers[i].find('Content-Encoding')  != -1):
-				fresponse.headers["Content-Encoding"] = 'gzip'
-				break
-		#~ print fresponse.headers
-		return fresponse				
-
-		'''
-		
+ 
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def couchpotato_req(self):	

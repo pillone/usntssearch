@@ -43,8 +43,9 @@ def connectinfo():
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 class Auth:
 	def __init__(self, cfgsetsp):
-		self.cfgsets = cfgsetsp
-
+		#~ another instance to not use ptrs
+		self.cfgsets = 	config_settings.CfgSettings()	
+	
 	def check_auth(self, username, password, mode):
 		if(mode == 0):
 			if(username == self.cfgsets.cgen['general_usr'] and password == self.cfgsets.cgen['general_pwd']):

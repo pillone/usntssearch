@@ -59,6 +59,7 @@ class Warper:
 		self.generate_hashtable()
 		self.dsearch = ds
 		self.cfg = cfg
+		self.cgen = cgen
 		print '>> Hash table has been initialized: ' + str(self.seedno)
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
@@ -228,7 +229,11 @@ class Warper:
 			rprnt = all(c in string.printable for c in decodedurl)
 			if (rprnt == False):
 				return -1		
-				
-			response = self.beam_localwarp(decodedurl)
+			
+			if(self.cgen['large_server'] == False):
+				response = self.beam_localwarp(decodedurl)
+			else:
+				response = self.beam_notenc(decodedurl)
+
 			log.info ('WARPNGD: ' + decodedurl)	
 			return response	

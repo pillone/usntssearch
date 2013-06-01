@@ -183,6 +183,7 @@ class DoParallelSearch:
 		#~ params['ver']['os'] = 'openshift'
 		return render_template('main_page.html', vr=params['ver'], nc=self.svalid, sugg = [], 
 								trend_show = params['trend_show'], trend_movie = params['trend_movie'], debug_flag = params['debugflag'],
+								large_server = self.cgen['large_server'],
 								sstring  = "", selectable_opt = possibleopt, search_opt = searchopt_local,  motd = self.cgen['motd'], sid = params['sid'])
 		
 	
@@ -317,6 +318,7 @@ class DoParallelSearch:
 												selectable_opt = params['selectable_opt'],
 												search_opt =  params['search_opt'],
 												sid = params['sid'],
+												large_server = self.cgen['large_server'],
 												motd = params['motd'] )
 
 

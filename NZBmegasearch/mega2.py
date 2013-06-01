@@ -48,23 +48,31 @@ def reload_all():
 	print '>> Bootstrapping...'
 	global cfgsets, sugg, ds, mega_parall, wrp, apiresp, auth
 	cfgsets = config_settings.CfgSettings()	
+	cfgsets.cgen['large_server'] = LARGESERVER
 	sugg = SuggestionResponses(cfgsets.cfg, cfgsets.cgen)
 	ds = DeepsearchModule.DeepSearch(cfgsets.cfg_deep, cfgsets.cgen)
 	mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds)
 	wrp = Warper (cfgsets.cgen, cfgsets.cfg, ds)
 	apiresp = ApiResponses(cfgsets.cfg, wrp)
 	auth = miscdefs.Auth(cfgsets)
+	
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-		
 motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
 print motd
 
 DEBUGFLAG = False
+LARGESERVER = False
+
 if(len(sys.argv) > 1):
-	if(sys.argv[1] == 'debug'):
-		print '====== DEBUGMODE DEBUGMODE DEBUGMODE DEBUGMODE ======'
-		DEBUGFLAG = True	
+	for argv in sys.argv:
+		if(argv == 'debug'):
+			print '====== DEBUGMODE DEBUGMODE DEBUGMODE DEBUGMODE ======'
+			DEBUGFLAG = True	
+
+		if(argv == 'large'):
+			print '====== LARGE SERVER MODE FOR NGIX ======'
+			LARGESERVER = True
 	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
@@ -98,22 +106,25 @@ if(DEBUGFLAG):
 	print '====== DEBUGFLAG MUST BE SET TO FALSE BEFORE DEPLOYMENT ======'
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
+ 
 @app.route('/poweroff', methods=['GET'])
 @auth.requires_auth
 def poweroff():
-	if('sid' in request.args):
-		if(request.args['sid'] == sessionid_string):
-			os.abort()
+	if(cfgsets.cgen['large_server'] == False):
+		if('sid' in request.args):
+			if(request.args['sid'] == sessionid_string):
+				os.abort()
 	return main_index()
 
 @app.route('/restart', methods=['GET'])
 @auth.requires_auth
 def reboot():
-	if('sid' in request.args):
-		if(request.args['sid'] == sessionid_string):
-			app.restart()
-	return render_template('restart.html');
+	if(cfgsets.cgen['large_server'] == False):
+		if('sid' in request.args):
+			if(request.args['sid'] == sessionid_string):
+				app.restart()
+				return render_template('restart.html');
+	return main_index();			
 
 @app.route('/robots.txt')
 def static_from_root():
@@ -124,7 +135,9 @@ def static_from_root():
 @app.route('/s', methods=['GET'])
 @auth.requires_auth
 def search():
-	if(first_time):
+	print cfgsets.cgen
+	
+	if(first_time and cfgsets.cgen['large_server'] == False):
 		return (main_index)
 	
 	sugg.asktrend_allparallel()	
@@ -154,7 +167,10 @@ def search():
 @app.route('/config', methods=['GET','POST'])
 @auth.requires_conf
 def config():
-	return cfgsets.edit_config()
+ 	if(cfgsets.cgen['large_server'] == False):
+		return cfgsets.edit_config()
+	else:	
+		return main_index();
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
         
@@ -177,14 +193,18 @@ def tosab():
 @app.route('/', methods=['GET','POST'])
 @auth.requires_auth
 def main_index():
-	global first_time,cfg,cgen,mega_parall
-	if request.method == 'POST':
-		cfgsets.write(request.form)
-		first_time = 0
-		reload_all()
+	#~ flask bug in threads, had to solve like that
+	cfgsets.cgen['large_server'] = LARGESERVER
+	#~ ~ 
+	global first_time
+	if(cfgsets.cgen['large_server'] == False):
+		if request.method == 'POST':
+			cfgsets.write(request.form)
+			first_time = 0
+			reload_all()
 
-	if first_time == 1:
-		return cfgsets.edit_config()
+		if first_time == 1:
+			return cfgsets.edit_config()
 
 	sugg.asktrend_allparallel()
 	cver.chk_update()
