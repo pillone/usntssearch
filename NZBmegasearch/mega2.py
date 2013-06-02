@@ -84,7 +84,7 @@ if( __name__ == 'mega2'):
 
 cver = miscdefs.ChkVersion(DEBUGFLAG) 
 print '>> version: '+ str(cver.ver_notify['curver'])
-motd = motd  + ' v.'+str(cver.ver_notify['curver']) + 'large_server: ' + str(LARGESERVER) + 'debug: ' + str(DEBUGFLAG)
+motd = motd  + ' v.'+str(cver.ver_notify['curver']) + 'large_server: ' + str(LARGESERVER) + ' debug: ' + str(DEBUGFLAG)
 cfgsets = config_settings.CfgSettings()
 first_time = 0
 reload_all()
