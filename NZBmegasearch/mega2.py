@@ -33,7 +33,6 @@ import time
 import socket
 import base64
 
-
 openssl_imported = True
 try:
 	from OpenSSL import SSL
@@ -67,6 +66,14 @@ LARGESERVER = False
 
 if(len(sys.argv) > 1):
 	for argv in sys.argv:
+		if(argv == 'help'):
+			print ''
+			print '`debug`: start in debug mode'
+			print '`large`: modality for GUNICORN + NGINX large server'
+			print '`daemon`: start in daemon mode, detached from terminal'
+			print ''
+			exit()
+
 		if(argv == 'debug'):
 			print '====== DEBUGMODE DEBUGMODE DEBUGMODE DEBUGMODE ======'
 			DEBUGFLAG = True	
@@ -74,6 +81,11 @@ if(len(sys.argv) > 1):
 		if(argv == 'large'):
 			print '====== GUNICORN + NGIX server ======'
 			LARGESERVER = True
+
+		if(argv == 'daemon'):
+			print '====== DAEMON MODE ======'
+			if os.fork():
+				sys.exit()
 
 #~ detect if started from gunicorn
 if( __name__ == 'mega2'):
