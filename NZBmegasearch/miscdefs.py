@@ -172,8 +172,8 @@ class ChkVersion:
 									'os':-1}
 		self.chk_update_ts = 0
 		self.chk_update_refreshrate = 3600 * 4
-		#~ if(debugflag == False):
-			#~ self.chk_update()
+		if(debugflag == False):
+			self.chk_update()
 	
 	def chk_update(self):
 		dt1 =  (datetime.datetime.now() - datetime.datetime.fromtimestamp(self.chk_update_ts))

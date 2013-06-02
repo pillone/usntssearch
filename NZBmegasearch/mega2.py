@@ -33,6 +33,7 @@ import time
 import socket
 import base64
 
+
 openssl_imported = True
 try:
 	from OpenSSL import SSL
@@ -71,14 +72,19 @@ if(len(sys.argv) > 1):
 			DEBUGFLAG = True	
 
 		if(argv == 'large'):
-			print '====== LARGE SERVER MODE FOR NGIX ======'
+			print '====== GUNICORN + NGIX server ======'
 			LARGESERVER = True
+
+#~ detect if started from gunicorn
+if( __name__ == 'mega2'):
+	print '====== GUNICORN + NGIX server ======'
+	LARGESERVER = True
 	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 cver = miscdefs.ChkVersion(DEBUGFLAG) 
 print '>> version: '+ str(cver.ver_notify['curver'])
-motd = motd  + ' v.'+str(cver.ver_notify['curver'])
+motd = motd  + ' v.'+str(cver.ver_notify['curver']) + 'large_server: ' + LARGESERVER
 cfgsets = config_settings.CfgSettings()
 first_time = 0
 reload_all()
