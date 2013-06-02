@@ -1,14 +1,27 @@
 **NZBmegasearcH** 
 ======================
 
-NZBmegasearcH is a meta-search engine that retreives data from your favourite NZB indeces.
+NZBmegasearcH is a program that collects all your newznab (and many others) accounts to one place.   
+Are you tired to search by using many different sites (nzbx.co, nzb.in, nzb.su etc)? Well, that's the solution for you. NZBmegasearcH aggregates search results from all your accounts in one clean web interface.
 
-It is configurable with N#wsnb-based, Spotw#b-based, an many others indeces. 
-It natively supports CP and SB, retreives trending movies and shows, gives appropriate search suggestions.
+Technically speaking: NZBmegasearcH is a meta-search engine that retreives data from your favourite NZB indices.
+
+That's more: you can configure to use it with your SB and CP as a unique provider.
+
+*Features*:
+* Support for accounts from any Newsnb and Spotweb based provider
+* Support for web-only access to Newsnb websites (in case API is not active)
+* Support for nzbx.co, findnzb.info, ftdworld.net, wombie and many others
+* Support for CP and SB
+* Support for many search categories
+* Retreives trending movies and shows
+* Gives appropriate search suggestions
+* Really small memory and CPU footprint
+* SSH and user identification supported
 
 It is written in Python and it works on linux, mac, win. Windows binaries are also available.
 
-**Latest version is 0.31**
+**Latest version is 0.4**
 
 This project makes use of:
 
@@ -19,122 +32,63 @@ This project makes use of:
 - [Mechanize] (http://wwwsearch.sourceforge.net/mechanize/)
 - [PyOpenSSL] (https://launchpad.net/pyopenssl/)
 
+---
+
+## [Install it for free and anonymously on the cloud](https://github.com/pillone/usntssearch/blob/master/NZBmegasearch/openshift/openshift_install.md)
 
 
-Install
-================
+---
+
+## [Install it on your server (heavy traffic)](https://github.com/pillone/usntssearch/blob/master/NZBmegasearch/large_server/nginx_install.md)
+
+
+---
+
+## Install it on your computer
+
+ 
 
 **Windows**
 
 - Download latest available binary from [usntssearch-binaries/windows] (https://github.com/pillone/usntssearch-binaries/tree/master/windows)
 - There are two binaries avaliable: 
- * win32_NZBMegasearcH_0.XX-noconsole.zip runs silently without console output
- * win32_NZBMegasearcH_0.XX-wconsole.zip runs with console output
-- Unzip in a folder and click on mega2.exe
-- Open browser to localhost:5000
+ * `win32_NZBMegasearcH_0.XX-noconsole.zip` runs silently without console output
+ * `win32_NZBMegasearcH_0.XX-wconsole.zip` runs with console output
+- Unzip in a folder and click on `mega2.exe`
+- Open browser to `localhost:5000`
 
 **Linux**
 
-- apt-get install python2.7 git python-openssl
-- git clone https://github.com/pillone/usntssearch.git
-- Enter in the usntssearch/NZBmegasearch directory and run "python mega2.py" to start 
-- Open browser to localhost:5000
+- `apt-get install python2.7 git python-openssl`
+- `git clone https://github.com/pillone/usntssearch.git`
+- Enter in the usntssearch/NZBmegasearch directory and run  `python mega2.py` to start
+- Open browser to `localhost:5000`
 
 
-Updates
-================
+- Run in detached from terminal: `python mega2.py daemon`
+- Autorun at reboot: add mega2.py in your crontab line with `@reboot`
 
-**Changes in v0.31**
+---
+## Updates
 
-- **Selectable IMDB suggestions, trends**
-- **Selectable default search option**
-- **Selectable Active/Non active NAB providers**
-- **Silent, AJAX connected SABNZB connectivity**
-- **Config user protection**
-- **Deepsearch locale bug fixed**
+**Changes in v0.4**
 
+- **Support for Openshift**
+- **Support for large servers (NGINX + GUNICORN)**
+- **Improved logging**
+- **Improved redirection to comments/details in result page**
+- **Added API key for CP and SB for improved security (optional)**
+- **Finally 'restart' works from the main page**
+- **Daemon mode**
+- **Improved search with nzb.cc**
+- **Improved NZB download from FTDworld**
+- **No need for restart when user authentication is changed**
+- **Fixed autoupdate. Autoupdate notifies each 4h**
+- **Fixed CP bug for automatic shows requests**
+- **Added DCMA page for large servers**
 
-Changes in v0.30
+More updates are available in changelog.txt
 
-- Supports user-pass Newsznab indeces (in case API system not supported)
-- Supports SB tv show discovery
-- Supports HTTPS-SSL serving
-- Supports sabnzbd integration (one-click send)
-- Supports FTDworld authentication to enable download
-- Added Wombie's index as built-in provider
-- Many code and interface improvements
-- Many bugs fixed
-
-
-Changes in v0.28
-
-- Finally logging with autorotation -- thanks PeterBeard
-- Finally linux version automatically updates
-- No more python lib dependencies. Everything is packed. No need to run setup.
-- Windows binaries are available
-- Unified graphics between Chrome and Firefox
-- Many undocumented and obscure interplatform bugs fixed. Countless hours spent.
-
-Changes in v0.271
-
-- Superbug introduced and fixed. Sorry everybody.
-
-Changes in v0.27
-
-- COUCHPOTATO support added
-
-Changes in v0.26
-
-- Suggestions over search (only movies for now...)
-- Display trending movies
-- Display trending shows with autosearch current episodes
-- Lots of coding and fixes
-
-Changes in v0.252
-
-- Improved search query sanitizing for better provider search 
-- Improved SICKBEARD search queries for shows with duplicates, thanks judhat2
-
-Changes in v0.251
-
-- Big bug fixed in searches with many Newsznab providers (a bad one)
-- Other fixes and improvements
-
-Changes in v0.25
-
-- SICKBEARD connectivity complete
-- Improvements in search providers
-
-Changes in v0.24
-
-- Sort in title, age, size, provider
-
-Changes in v0.23
-
-- Change port
-- Support username and pwd, thanks to userpasscombine
-- Timeout for long responses
-- Improved ver. checking
-
-
-Changes in v0.21
-
-- Added automatic notification of newer versions
-- Improved searches (faster, better)
-- bug fixes
-
-Changes in v0.20
-
-- Added support for FTDworld.net, Fanzub
-- Findnzb does not need any API! thanks to the Findnzb team
-- Merged modularization improvements, thanks to PeterBeard!
-- Setup improvements, thanks to fxjkhr
-- Too many bug fixes
-- Search stability improvements
-- Improved look and feel
-
-
-<a title="website statistics" href="http://statcounter.com/"
+<a title="website statistics" href="http://statcounter.com/" 
 target="_blank"><img
-src="http://c.statcounter.com/8769563/0/45111251/0/"
-alt="website statistics" style="border:none;"></a>
+src="http://c.statcounter.com/8769563/0/45111251/0/" alt="website statistics" style="border:none;"></a>
