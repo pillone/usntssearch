@@ -33,8 +33,9 @@ This project makes use of:
 - [PyOpenSSL] (https://launchpad.net/pyopenssl/)
 
 ## Screenshots
-![Config](https://github.com/pillone/usntssearch/tree/master/NZBmegasearch/static/show_config.jpg)
-![Search](https://github.com/pillone/usntssearch/blob/master/NZBmegasearch/static/show_search.jpg)
+
+![Config](https://raw.github.com/pillone/usntssearch/master/NZBmegasearch/static/show_config.jpg)
+![Search](https://raw.github.com/pillone/usntssearch/master/NZBmegasearch/static/show_search.jpg)
  
 
 ## [Install it for free and anonymously on the cloud](https://github.com/pillone/usntssearch/blob/master/NZBmegasearch/openshift/openshift_install.md)
