@@ -34,7 +34,12 @@ This project makes use of:
 
 ## Screenshots
 
+
+* Configure  
+
 ![Config](https://raw.github.com/pillone/usntssearch/master/NZBmegasearch/static/show_config.jpg)
+
+* Search  
 ![Search](https://raw.github.com/pillone/usntssearch/master/NZBmegasearch/static/show_search.jpg)
  
 
