@@ -161,8 +161,6 @@ def static_from_root():
 @app.route('/s', methods=['GET'])
 @auth.requires_auth
 def search():
-	print cfgsets.cgen
-	
 	if(first_time and cfgsets.cgen['large_server'] == False):
 		return (main_index)
 	
