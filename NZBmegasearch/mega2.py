@@ -88,7 +88,8 @@ if(len(sys.argv) > 1):
 				sys.exit()
 
 #~ detect if started from gunicorn
-if( __name__ == 'mega2' and len(os.getenv('OPENSHIFT_DATA_DIR', ''))):
+oshift_dirconf = len(os.getenv('OPENSHIFT_DATA_DIR', '')
+if( __name__ == 'mega2' and len(oshift_dirconf)==0):
 	print '====== GUNICORN + NGIX server ======'
 	LARGESERVER = True
 	
