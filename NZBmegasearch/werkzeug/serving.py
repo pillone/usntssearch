@@ -370,7 +370,7 @@ class BaseWSGIServer(HTTPServer, object):
             HTTPServer.serve_forever(self)
         except KeyboardInterrupt:
             print 'Exception: CTRL+C interrupt detected'
-            os.abort()
+            exit()
             pass
         
         

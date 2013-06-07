@@ -33,6 +33,7 @@ import time
 import socket
 import base64
 
+
 openssl_imported = True
 try:
 	from OpenSSL import SSL
@@ -132,7 +133,7 @@ def poweroff():
 	if(cfgsets.cgen['large_server'] == False):
 		if('sid' in request.args):
 			if(request.args['sid'] == sessionid_string):
-				os.abort()
+				os._exit(0)
 	return main_index()
 
 @app.route('/restart', methods=['GET'])
@@ -247,10 +248,16 @@ def main_index():
 
 @app.route('/api', methods=['GET'])
 def api():
-	if('apikey' in request.args):
-		if(request.args['apikey'] == cfgsets.cgen['general_apikey']):
-			return apiresp.dosearch(request.args)
-	return '[API key protection ACTIVE] Wrong key selected'
+	if(len(cfgsets.cgen['general_apikey'])):
+		if('apikey' in request.args):
+			if(request.args['apikey'] == cfgsets.cgen['general_apikey']):
+				return apiresp.dosearch(request.args)
+			else:	
+				return '[API key protection ACTIVE] Wrong key selected'
+		else:	
+				return '[API key protection ACTIVE] API key required'
+	else:
+		return apiresp.dosearch(request.args)
 			
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~   
 

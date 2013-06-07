@@ -63,6 +63,8 @@ class ApiResponses:
 				response = self.sickbeard_req()
 			elif (typesearch == 'movie'):
 				response = self.couchpotato_req()	
+			elif (typesearch == 'search'):
+				response = self.generate_tsearch_nabresponse()					
 			#~ elif (typesearch == 'music'):
 				#~ response = self.headphones_req()	
 			elif (typesearch == 'get'):	
@@ -246,6 +248,22 @@ class ApiResponses:
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
+	def generate_tsearch_nabresponse(self):
+
+		if(self.args.has_key('q')):
+			freesearch_str = SearchModule.sanitize_strings(self.args['q'])
+			self.searchstring = freesearch_str
+			self.typesearch = 2
+			#~ compile results				
+			results = SearchModule.performSearch(freesearch_str, self.cfg )
+			#~ flatten and summarize them
+			cleaned_results = megasearch.summary_results(results, freesearch_str)
+			#~ render XML
+			return self.cleanUpResultsXML(cleaned_results)
+			
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
 	def generate_movie_nabresponse(self,imdb_show ):
 
 		movie_search_str = imdb_show['movietitle'].lower().replace("'", "").replace("-", " ").replace(":", " ")
@@ -344,6 +362,9 @@ class ApiResponses:
 		if(self.typesearch == 1):
 			idbinfo = ''
 			kindofreq = kindofreq + ' SB ' + self.args['rid'] + ' '
+		if(self.typesearch == 2):
+			idbinfo = ''
+			kindofreq = kindofreq + ' FS '
 			
 		mssg = kindofreq + self.searchstring + ' ' + str(len(niceResults)) + ' ' +  str(len(results))
 		print mssg
