@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>NZB MegasearcH</title>
@@ -19,15 +19,17 @@
 			<div class="alert-info-silent">
 			{{ motd|safe  }}
 			</div>
-			<div  class="titlemain"><img src="static/title.png" width="387" height="" /> 	</div>
 			
+			<div  class="titlemain"><img src="static/title.png" width="387" height="" alt="NZBmegasearcH"/></div>
 			<form action="/s" method="get" class="form-wrapper-01">
 			<table><tr>
 					<td>
+						<label for="search" class="visuallyhidden">Search</label>
 						<input type="text" id="search" placeholder="" name="q" value="{{ sstring }}">
 						<span>
-						<select class="selcatstlye" name="selcat">
-							<option value="">No categ.</option>			
+						<label for="selcat" class="visuallyhidden">Category</label>
+						<select class="selcatstlye" name="selcat" id="selcat">
+							<option value="" selected>No categ.</option>
 							{% for sopt in selectable_opt -%}
 								<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
 							{%- endfor %}
@@ -51,28 +53,23 @@
 					</tr>
 			</table>
 			</form>
-	
-			<table class ="suggarea_macro">
-	
-				<td style='vertical-align: top;'>
-					{% if   trend_movie -%}			
-					<table class ="trend_table"  >
+
+			<div class ="suggarea_macro">
+
+					{% if   trend_movie -%}
+					<table class ="trend_table">
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
 						  <div class='alert-flex'> Movies Trending</div>
 						</TH></tr>	
 						{% for tm in trend_movie -%}
 							<tr>	
 							<td  class ="suggarea_title"> <a href="s?q={{ tm['searchstr'] }}" class='sugglinx'> {{ tm['prettytxt'] }} </a></td>
-							<td class ="suggarea_imbd"> <a href="{{ tm['imdb_url'] }}" > <img src="static/imdb.png" width="16" height="16" /> </a> </td>
+							<td class ="suggarea_imbd"> <a href="{{ tm['imdb_url'] }}" > <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a> </td>
 							</tr>
 						{%- endfor %}
 					</table>			
 					{%- endif %}
-				</td>
 
-	
-
-				<td style='vertical-align: top;'>
 					{% if trend_show -%}
 					<table class ="trend_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
@@ -81,16 +78,12 @@
 						{% for ts in trend_show -%}
 							<tr>	
 							<td  class ="suggarea_title"> <a href="s?q={{ ts['searchstr'] }}" class='sugglinx'> {{ ts['prettytxt'] }} </a></td>
-							<td class ="suggarea_imbd"> <a href="{{ ts['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
+							<td class ="suggarea_imbd"> <a href="{{ ts['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a> </td>
 							</tr>
 						{%- endfor %}
 					</table>			
 					{%- endif %}
-				</td>
 
-
-
-				<td style='vertical-align: top;'>
 					{%  if   sugg -%}
 					<table class ="suggarea_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
@@ -99,7 +92,7 @@
 						{% for sl in sugg -%}
 							<tr>	
 							<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"  style="color:#ff0000;" class='sugglinx'> {{ sl['prettytxt'] }} </a></td>
-							<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
+							<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a> </td>
 							</tr>
 						{%- endfor %}
 					</table>			
@@ -113,11 +106,11 @@
 
 			<table id="results" summary="Search Results">
 				<thead>
-					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th>
-					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=c"><b>Type <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th> 
-					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s"><b>Size <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th> 
-					    <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d"><b>Days <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th> 
-					    <th scope="col" class=providercell><a href="s?q={{ args['q'] }}&order=p"><b>Comments <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th>
+					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
+					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=c"><b>Type <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
+					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s"><b>Size <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
+					    <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d"><b>Days <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
+					    <th scope="col" class=providercell><a href="s?q={{ args['q'] }}&order=p"><b>Comments <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -197,12 +190,12 @@
 					</a> ] 
 				{%- endif %}
 					
-				[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' /><img src="static/cp_logo.png" width="" height="16" /></a> ]
-				[ <a href='config'><img src="static/options.png" width="" height="16" style='vertical-align: bottom;' /></a> ] 
+				[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' alt="connect" /><img src="static/cp_logo.png" width="" height="16" alt=""/></a> ]
+				[ <a href='config'><img src="static/options.png" width="" height="16" style='vertical-align: bottom;' alt="config" /></a> ]
 				[ {% if vr['os']  != 'openshift' -%} 
-						<a href='restart?sid={{ sid }}' OnClick="return confirm('Do you really want to restart the program?');" class='restartbutton'><img src="static/restart.png" width="" height="16" style='vertical-align: bottom;' /></a> 
+						<a href='restart?sid={{ sid }}' OnClick="return confirm('Do you really want to restart the program?');" class='restartbutton'><img src="static/restart.png" width="" height="16" style='vertical-align: bottom;' alt="restart"/></a>
 				  {%- endif %}					
-				 <a href='poweroff?sid={{ sid }}' OnClick="return confirm('Do you really want to halt the program?');"><img src="static/off.png" width="" height="16" style='vertical-align: bottom;' /></a> ]
+				 <a href='poweroff?sid={{ sid }}' OnClick="return confirm('Do you really want to halt the program?');"><img src="static/off.png" width="" height="16" style='vertical-align: bottom;' alt="power off"/></a> ]
 				</div>		
 			</div>
 		{%- endif %}
