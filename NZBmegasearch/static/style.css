@@ -131,13 +131,12 @@ div#container
 	text-align: center;
 
 }
- 
+
 
 .suggarea_macro {
-	width: 650px;
 	font-family: Helvetica, Arial, Sans-Serif;
 	font-size: 14px;
-	margin: 20px auto auto 320px;
+	margin: 20px auto;
 /*
 	border:1px solid black;
 	text-align: right;
@@ -148,7 +147,9 @@ div#container
 	font-family: Helvetica, Arial, Sans-Serif;
 	font-size: 14px;
 	text-align: right;
-	float: right
+	vertical-align: top;
+	display: inline;
+	margin-left: 20px;
 	}
 
 
@@ -156,9 +157,10 @@ div#container
 	font-family: Helvetica, Arial, Sans-Serif;
 	font-size: 14px;
 	text-align: right;
-	float: right
+	display: inline;
+	margin-left: 20px;
 	}
-	
+
 .suggarea_title {
 	word-break:break-all;
 /*
@@ -393,4 +395,15 @@ div#container
 	border-radius: 5px;
 	padding: 2px 4px 2px 4px;
 	float: right
+}
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
 }
