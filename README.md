@@ -43,7 +43,7 @@ This project makes use of:
 ![Search](https://raw.github.com/pillone/usntssearch/master/NZBmegasearch/static/show_search.jpg)
  
 
-## [Install it for free and anonymously on the cloud](https://github.com/pillone/usntssearch/blob/master/NZBmegasearch/openshift/openshift_install.md)
+## [Install it for free and anonymously on the cloud *fix*](https://github.com/pillone/usntssearch/blob/master/NZBmegasearch/openshift/openshift_install.md)
 
  
 
