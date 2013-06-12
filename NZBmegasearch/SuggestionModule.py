@@ -28,8 +28,8 @@ import threading
 import logging
 import json
 
-BEST_K_YEAR = 5
-BEST_K_VOTES = 3
+#~ BEST_K_YEAR = 5
+#~ BEST_K_VOTES = 3
 MAX_TRENDS = 50
 MAX_CHAR_LEN = 22
 #~ MIN_REFRESHRATE_S = 3600
@@ -51,7 +51,7 @@ class SuggestionResponses:
 		self.active_trend = 1
 		self.trends_refreshrate = cgen['trends_refreshrate']
 		self.detached_trendpolling = cgen['large_server']
-				
+		self.best_k	= cgen['trends_qty']
 		self.tvrage_rqheaders = {
 						'Connection': 'keep-alive;' ,
 						'Cache-Control': 'max-age=0',
@@ -185,7 +185,7 @@ class SuggestionResponses:
 	def show_bestmatch(self, showinfo):	
 	
 		#~ trivial heuristic on popularity
-		ntocheck = min(len(showinfo), BEST_K_YEAR)
+		ntocheck = min(len(showinfo), self.best_k)
 		show_sorted = sorted(showinfo, key=itemgetter('rating_count'), reverse=True) 
 		return show_sorted[0:ntocheck]
 
@@ -362,7 +362,7 @@ class SuggestionResponses:
 	
 		#~ trivial heuristic on release date and popularity
 		movieinfo_sorted = sorted(movieinfo, key=itemgetter('release_date'), reverse=True) 
-		ntocheck = min(len(movieinfo_sorted), BEST_K_YEAR)
+		ntocheck = min(len(movieinfo_sorted), self.best_k)
 		movieinfo_sorted_final = sorted(movieinfo_sorted[0:ntocheck-1], key=itemgetter('rating_count'), reverse=True) 
 		return movieinfo_sorted_final
 		

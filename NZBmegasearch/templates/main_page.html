@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>NZB MegasearcH</title>
@@ -19,17 +19,15 @@
 			<div class="alert-info-silent">
 			{{ motd|safe  }}
 			</div>
-			
-			<div  class="titlemain"><img src="static/title.png" width="387" height="" alt="NZBmegasearcH"/></div>
+			<div  class="titlemain"><img src="static/title.png" width="387" height="" /> 	</div>
+
 			<form action="/s" method="get" class="form-wrapper-01">
 			<table><tr>
 					<td>
-						<label for="search" class="visuallyhidden">Search</label>
 						<input type="text" id="search" placeholder="" name="q" value="{{ sstring }}">
 						<span>
-						<label for="selcat" class="visuallyhidden">Category</label>
-						<select class="selcatstlye" name="selcat" id="selcat">
-							<option value="" selected>No categ.</option>
+						<select class="selcatstlye" name="selcat">
+							<option value="">No categ.</option>			
 							{% for sopt in selectable_opt -%}
 								<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
 							{%- endfor %}
@@ -54,22 +52,27 @@
 			</table>
 			</form>
 
-			<div class ="suggarea_macro">
+			<table class ="suggarea_macro">
 
-					{% if   trend_movie -%}
-					<table class ="trend_table">
+				<td style='vertical-align: top;'>
+					{% if   trend_movie -%}			
+					<table class ="trend_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
 						  <div class='alert-flex'> Movies Trending</div>
 						</TH></tr>	
 						{% for tm in trend_movie -%}
 							<tr>	
 							<td  class ="suggarea_title"> <a href="s?q={{ tm['searchstr'] }}" class='sugglinx'> {{ tm['prettytxt'] }} </a></td>
-							<td class ="suggarea_imbd"> <a href="{{ tm['imdb_url'] }}" > <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a> </td>
+							<td class ="suggarea_imbd"> <a href="{{ tm['imdb_url'] }}" > <img src="static/imdb.png" width="16" height="16" /> </a> </td>
 							</tr>
 						{%- endfor %}
 					</table>			
 					{%- endif %}
+				</td>
 
+
+
+				<td style='vertical-align: top;'>
 					{% if trend_show -%}
 					<table class ="trend_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
@@ -78,12 +81,16 @@
 						{% for ts in trend_show -%}
 							<tr>	
 							<td  class ="suggarea_title"> <a href="s?q={{ ts['searchstr'] }}" class='sugglinx'> {{ ts['prettytxt'] }} </a></td>
-							<td class ="suggarea_imbd"> <a href="{{ ts['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a> </td>
+							<td class ="suggarea_imbd"> <a href="{{ ts['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
 							</tr>
 						{%- endfor %}
 					</table>			
 					{%- endif %}
+				</td>
 
+
+
+				<td style='vertical-align: top;'>
 					{%  if   sugg -%}
 					<table class ="suggarea_table"  >
 						<tr>	<TH COLSPAN="2" style="text-align: right;">
@@ -92,7 +99,7 @@
 						{% for sl in sugg -%}
 							<tr>	
 							<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"  style="color:#ff0000;" class='sugglinx'> {{ sl['prettytxt'] }} </a></td>
-							<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a> </td>
+							<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" /> </a> </td>
 							</tr>
 						{%- endfor %}
 					</table>			
@@ -100,24 +107,24 @@
 
 
 				</td>
-				
+
 			</table>			
 			{% if results -%}			
 
-			<table class="results" summary="Search Results">
+			<table id="results" summary="Search Results">
 				<thead>
-					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
-					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=c"><b>Type <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
-					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s"><b>Size <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
-					    <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d"><b>Days <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
-					    <th scope="col" class=providercell><a href="s?q={{ args['q'] }}&order=p"><b>Comments <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
+					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th>
+					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=c"><b>Type <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th> 
+					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s"><b>Size <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th> 
+					    <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d"><b>Days <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th> 
+					    <th scope="col" class=providercell><a href="s?q={{ args['q'] }}&order=p"><b>Comments <img src="static/arrow-down.png" style='vertical-align: middle;'/></b></a></th>
 					</tr>
 				</thead>
 				<tbody>
 				{% for row in results -%}
 					{% if row['ignore'] == 0  -%}
 					<tr>
-						
+
 						<td class="titlecell">
 							{% if send2sab_exist   -%}
 								<a href= "" id=tosab_lnk name=tosab_info{{ row['id'] }}>
@@ -139,7 +146,7 @@
 
 
 			{% if exist -%}
-			<table class="results" summary="Detected duplicates">
+			<table id="results" summary="Detected duplicates">
 				<thead>
 					<tr><th scope="col" class=titlecell><b>Detected duplicates</b></th>
 					    <th scope="col" class=sizecell><b>Type</b></th> 					
@@ -168,7 +175,7 @@
 				</tbody>
 			</table>
 			{%- endif %}
-						
+
 		</div>
 		{% if large_server  == False -%} 
 			<div class="topright_tight">
@@ -189,13 +196,13 @@
 						{%- endif %}											
 					</a> ] 
 				{%- endif %}
-					
-				[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' alt="connect" /><img src="static/cp_logo.png" width="" height="16" alt=""/></a> ]
-				[ <a href='config'><img src="static/options.png" width="" height="16" style='vertical-align: bottom;' alt="config" /></a> ]
+
+				[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' /><img src="static/cp_logo.png" width="" height="16" /></a> ]
+				[ <a href='config'><img src="static/options.png" width="" height="16" style='vertical-align: bottom;' /></a> ] 
 				[ {% if vr['os']  != 'openshift' -%} 
-						<a href='restart?sid={{ sid }}' OnClick="return confirm('Do you really want to restart the program?');" class='restartbutton'><img src="static/restart.png" width="" height="16" style='vertical-align: bottom;' alt="restart"/></a>
+						<a href='restart?sid={{ sid }}' OnClick="return confirm('Do you really want to restart the program?');" class='restartbutton'><img src="static/restart.png" width="" height="16" style='vertical-align: bottom;' /></a> 
 				  {%- endif %}					
-				 <a href='poweroff?sid={{ sid }}' OnClick="return confirm('Do you really want to halt the program?');"><img src="static/off.png" width="" height="16" style='vertical-align: bottom;' alt="power off"/></a> ]
+				 <a href='poweroff?sid={{ sid }}' OnClick="return confirm('Do you really want to halt the program?');"><img src="static/off.png" width="" height="16" style='vertical-align: bottom;' /></a> ]
 				</div>		
 			</div>
 		{%- endif %}
@@ -207,13 +214,13 @@
 				[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' /><img src="static/cp_logo.png" width="" height="16" /></a> ]
 			</div>
 		{%- endif %}
-	
+
 		<div class="bottomcenter">ver. {{ vr['curver'] }} -- # {{ nc  }} -- 0byte 
 					{% if vr['os']  == 'openshift' -%} 
 					-- OPENSHIFT
 					{% endif %}
 		</div>
-		
+
 	    <script type="text/javascript"> 
 
 	    $(document).ready(function() { 
@@ -221,7 +228,7 @@
  			$("a#tosab_lnk").click(function () {
 				var addressValue = $(this).attr("name");
 				$('img[name="'+addressValue+'_img"]').attr("src", 'static/loadingicon.gif')            
-				
+
 				 $.getJSON($SCRIPT_ROOT + '/tosab', 
 							{data: $('input[name="'+addressValue+'"]').val(), },
 							function(data) {
@@ -233,10 +240,10 @@
 								{	
 									$('img[name="'+addressValue+'_img"]').attr("src", 'static/sab2_16_no.png')
 								}
-								
+
 								});
 				return false;
-			  
+
 			});
     
 			$('#submit').click(function() { 

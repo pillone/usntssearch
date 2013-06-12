@@ -60,7 +60,7 @@ $ git clone https://github.com/pillone
 $ cd /opt/usntssearch/NZBmegasearch
 $ python mega2.py
 ``` 
-> then visit `http://serveripaddress:5000` and configure it. Alternatively, you can use a `custo`
+> then visit `http://serveripaddress:5000` and configure it. Alternatively, you can use a `custom_params.ini` that you have already saved from a home install.
 
 * This will start all the services:
 ```

@@ -62,6 +62,7 @@ class CfgSettings:
 		parser.set('general', 'general_apikey', request_form['general_apikey'].replace(" ", ""))
 		parser.set('general', 'general_https', '0')
 		parser.set('general', 'search_suggestions', '0')
+		parser.set('general', 'trends_qty', request_form['seltrqty'])		
 		parser.set('general', 'trends', '0')		
 		if (request_form.has_key('https')  == True):
 			parser.set('general', 'general_https', '1')
@@ -215,6 +216,7 @@ class CfgSettings:
 		gen_tfast = int(parser.get('general', 'timeout_fast'))
 		gen_sugg = parser.getint('general', 'search_suggestions')
 		gen_search_default = parser.get('general', 'search_default')
+		gen_trends_qty = parser.getint('general', 'trends_qty')
 		
 		self.cgen = {'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd,
 				'config_user':config_user,
@@ -225,6 +227,7 @@ class CfgSettings:
 				'max_cache_age' : gen_cacheage, 'log_backupcount': gen_log_backupcount, 
 				'log_size' : gen_log_size, 'seed_warptable' : gen_seed_warptable, 'trends_refreshrate':gen_trends_refreshrate,
 				'search_default':gen_search_default,
+				'trends_qty':gen_trends_qty,
 				'sabnzbd_url' : '', 'sabnzbd_api':'',
 				'general_apikey' : '',
 				'stats_key' : gen_stats_key, 'motd':gen_motd}
@@ -288,6 +291,8 @@ class CfgSettings:
 				self.cgen['config_pwd'] = cst_parser.get('general', 'config_pwd')
 			if(cst_parser.has_option('general' ,'general_apikey')):	
 				self.cgen['general_apikey'] = cst_parser.get('general', 'general_apikey')
+			if(cst_parser.has_option('general' ,'trends_qty')):	
+				self.cgen['trends_qty'] = cst_parser.getint('general', 'trends_qty')
 
 
 		except Exception as e:
@@ -406,7 +411,14 @@ class CfgSettings:
 		for slctg in possibleopt:
 			if(slctg[0] == genopt['search_default']):
 				slctg[2] = 'selected'
-										
+		
+		tnarray = []
+		for ntn in xrange(1,50):
+			if(genopt['trends_qty'] == ntn):
+				tnarray.append([ ntn, ntn,'selected'])
+			else:
+				tnarray.append([ntn, ntn,''])
+		
 		genopt['general_https_verbose']	 = ''
 		genopt['general_trend_verbose']	 = ''
 		genopt['general_suggestion_verbose']	 = ''
@@ -424,6 +436,7 @@ class CfgSettings:
 												selectable_opt = possibleopt,
 											  sel_speedopt_basic = sel_speedopt_basic,
 											  openshift_install = openshift_install,
+											  tnarray = tnarray,
  											  cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
 
 

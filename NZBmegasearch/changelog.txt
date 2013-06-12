@@ -1,21 +1,31 @@
 Updates
 ================
 
-**Changes in v0.4**
+**Changes in v0.41**
 
-- **Support for Openshift**
-- **Support for large servers (NGINX + GUNICORN)**
-- **Improved logging**
-- **Improved redirection to comments/details in result page**
-- **Added API key for CP and SB for improved security (optional)**
-- **Finally 'restart' works from the main page**
-- **Daemon mode**
-- **Improved search with nzb.cc**
-- **Improved NZB download from FTDworld**
-- **No need for restart when user authentication is changed**
-- **Fixed autoupdate. Autoupdate notifies each 4h**
-- **Fixed CP bug for automatic shows requests**
-- **Added DCMA page for large servers**
+- **Support for NZB360**
+- **Solved SB api errors**
+- **Solved Log rotation bug in windows, thanks mavenish **
+- **Fix for Opeshift update, thanks xedarius **
+- **Added trend quantity**
+- **Accepted merge request 'Accessibility improvements' by daniel-dixon **
+- **Graceful exit from windows**
+
+Changes in v0.4
+
+- Support for Openshift
+- Support for large servers (NGINX + GUNICORN)
+- Improved logging
+- Improved redirection to comments/details in result page
+- Added API key for CP and SB for improved security (optional)
+- Finally 'restart' works from the main page
+- Daemon mode
+- Improved search with nzb.cc
+- Improved NZB download from FTDworld
+- No need for restart when user authentication is changed
+- Fixed autoupdate. Autoupdate notifies each 4h
+- Fixed CP bug for automatic shows requests
+- Added DCMA page for large servers
 
 Changes in v0.31
 
