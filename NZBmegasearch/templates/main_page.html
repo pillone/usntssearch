@@ -104,7 +104,7 @@
 			</table>			
 			{% if results -%}			
 
-			<table id="results" summary="Search Results">
+			<table class="results" summary="Search Results">
 				<thead>
 					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
 					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=c"><b>Type <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
@@ -139,7 +139,7 @@
 
 
 			{% if exist -%}
-			<table id="results" summary="Detected duplicates">
+			<table class="results" summary="Detected duplicates">
 				<thead>
 					<tr><th scope="col" class=titlecell><b>Detected duplicates</b></th>
 					    <th scope="col" class=sizecell><b>Type</b></th> 					
