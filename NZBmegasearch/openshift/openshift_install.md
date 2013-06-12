@@ -89,6 +89,7 @@ $ git push
 [flask-dog.rhcloud.com]\> ./install_openshift.sh
 [flask-dog.rhcloud.com]\> ctl_app restart
 ```
+then select 1 (python-2.7) to start 
 
 * You can now check out that everything has been correctly installed by visiting:
 > `http://flask-dog.rhcloud.com/`
@@ -117,6 +118,7 @@ $ git push
 [flask-dog.rhcloud.com]\> ./install_openshift.sh
 [flask-dog.rhcloud.com]\> ctl_app restart
 ```
+then select 1 (python-2.7) to start 
 
 * You can now disconnect from SSH
 

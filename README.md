@@ -12,7 +12,7 @@ That's more: you can configure to use it with your SB and CP as a unique provide
 * Support for accounts from any Newsnb and Spotweb based provider
 * Support for web-only access to Newsnb websites (in case API is not active)
 * Support for nzbx.co, findnzb.info, ftdworld.net, wombie and many others
-* Support for CP and SB
+* Support for CP, SB, NZB360
 * Support for many search categories
 * Retreives trending movies and shows
 * Gives appropriate search suggestions
@@ -21,7 +21,7 @@ That's more: you can configure to use it with your SB and CP as a unique provide
 
 It is written in Python and it works on linux, mac, win. Windows binaries are also available.
 
-**Latest version is 0.4**
+**Latest version is 0.41**
 
 This project makes use of:
 
@@ -77,21 +77,16 @@ This project makes use of:
 
 ## Updates
 
-**Changes in v0.4**
 
-- **Support for Openshift**
-- **Support for large servers (NGINX + GUNICORN)**
-- **Improved logging**
-- **Improved redirection to comments/details in result page**
-- **Added API key for CP and SB for improved security (optional)**
-- **Finally 'restart' works from the main page**
-- **Daemon mode**
-- **Improved search with nzb.cc**
-- **Improved NZB download from FTDworld**
-- **No need for restart when user authentication is changed**
-- **Fixed autoupdate. Autoupdate notifies each 4h**
-- **Fixed CP bug for automatic shows requests**
-- **Added DCMA page for large servers**
+**Changes in v0.41**
+
+- **Support for NZB360**
+- **Solved SB api errors**
+- **Solved Log rotation bug in windows, thanks mavenish **
+- **Fix for Opeshift update, thanks xedarius **
+- **Added trend quantity**
+- **Accepted merge request 'Accessibility improvements' by daniel-dixon **
+- **Graceful exit from windows**
 
 More updates are available in changelog.txt
 
