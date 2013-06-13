@@ -14,18 +14,18 @@
 <table class="results" summary="Config" style="width: 420px;"><thead>
 <tr><th scope="col">General Options (requires restart)</th></tr></thead><tbody>
 	<tr>
-		{% if openshift_install == False -%}	
+		{% if openshift_install == False -%}
 		<td><label for="port">Port:</label> <input type="input" name="port" id="port" value="{{ genopt['portno'] }}" size="10"></td>
 		{%- endif %}
-		{% if openshift_install == True -%}	
+		{% if openshift_install == True -%}
 		<td><input type="hidden" name="port" value="{{ genopt['portno'] }}" size="10"></td>
 		{%- endif %}
-	</tr>	
-	<tr>	
-		{% if openshift_install == False -%}	
+	</tr>
+	<tr>
+		{% if openshift_install == False -%}
 		<td><input type="checkbox" name="https" id="https" {{ genopt['general_https_verbose'] }} ><label for="https">HTTPS Enabled</label></td>
 		{%- endif %}
-	</tr>					
+	</tr>
 </tbody></table>
 
 
@@ -33,7 +33,7 @@
 <tr><th scope="col">Security Options</th><th></th></tr></thead><tbody>
 	<tr>
 		<td> Authentication (optional) </td><td></td>
-	</tr>	
+	</tr>
 
 	<tr>
 		<td><label for="general_usr">Username:</label> <input type="input" name="general_usr" id="general_usr" value="{{ genopt['general_usr'] }}" size="18"></td>
@@ -42,7 +42,7 @@
 
 	<tr>
 		<td> <br>Config-page authentication (optional) </td><td></td>
-	</tr>	
+	</tr>
 
 	<tr>
 		<td><label for="config_user">Username:</label> <input type="input" name="config_user" id="config_user" value="{{ genopt['config_user'] }}" size="18"></td>
@@ -51,28 +51,28 @@
 
 	<tr>
 		<td> <br>API key for SB, CP connection (optional)</td><td></td>
-	</tr>	
+	</tr>
 
 	<tr>
 		<td><input type="button" value="Generate Key" onclick="generate_key()" > </td> <td> <label for="general_apikey">API key</label><input type="input" name="general_apikey" id="general_apikey" value="{{ genopt['general_apikey'] }}" size="16" readonly> <input type="button" value="x" onclick="delete_key()" > </td>
 	</tr>
-	
+
 </tbody></table>
 
 
 <table class="results" summary="Suggestion" style="width: 420px;"><thead>
 <tr><th scope="col">Suggestion and Trends</th></tr></thead><tbody>
-	<tr>	
+	<tr>
 			<td><input type="checkbox" name="trends" id="trends" {{ genopt['general_trend_verbose'] }} ><label for="trends">Movie and Show Trends Active</label></td>
-	</tr>					
+	</tr>
 			<td><input type="checkbox" name="sugg" id="sugg" {{ genopt['general_suggestion_verbose'] }} ><label for="sugg">Search Suggestions Active</label></td>
-	</tr>					
-	
+	</tr>
+
 </tbody></table>
 
 <table class="results" summary="ssopt" style="width: 420px;"><thead>
 <tr><th scope="col">Default Search Option</th></tr></thead><tbody>
-	<tr>	
+	<tr>
 			<td>
 				<span>
 						<label for="selcat" class="visuallyhidden">Category</label>
@@ -83,19 +83,19 @@
 							{%- endfor %}
 						</select>
 						</span>
-				
+
 				</td>
-	</tr>					
-	
+	</tr>
+
 </tbody></table>
 
 <table class="results" summary="SendtoSAB" style="width: 420px;"><thead>
 <tr><th scope="col">SabNZB Integration</th></tr></thead><tbody>
-	<tr>	
+	<tr>
 			<td><label for="sabnzbd_url">Url:</label> <input type="text" name="sabnzbd_url" id="sabnzbd_url" value="{{ genopt['sabnzbd_url'] }}" size="18">
 			<label for="sabnzbd_api">API Key:</label> <input type="text" name="sabnzbd_api" id="sabnzbd_api" value="{{ genopt['sabnzbd_api'] }}" size="18"></td>
-			
-	</tr>					
+
+	</tr>
 </tbody></table>
 
 
@@ -110,10 +110,10 @@
 			{% if c['flogin'] == 1-%}
 				-- <label for="bi_host{{ c['idx'] }}login">login:</label> <input type="text" name="bi_host{{ c['idx'] }}login" id="bi_host{{ c['idx'] }}login" value="{{ c['loginname'] }}" size="12">
 				<label for="bi_host{{ c['idx'] }}pwd">pwd:</label> <input type="password" name="bi_host{{ c['idx'] }}pwd" id="bi_host{{ c['idx'] }}pwd" value="{{ c['loginpwd'] }}" size="12">
-			{%- endif %}	
+			{%- endif %}
 		</td>
 	</tr>
-{%- endfor %}	
+{%- endfor %}
 </tbody></table>
 <table class="results" summary="Config" style="width: 300px;"><thead>
 <tr><th>#</th><th scope="col">Newznab Host (API)</th><th scope="col">API key</th><th scope="col">Timeout</th><th scope="col">Active</th></tr></thead><tbody>
@@ -139,10 +139,10 @@
 		<td>
 			<input type="checkbox" name="valid{{ c['idx'] }}" id="valid{{ c['idx'] }}"  {{c['valid_verbose'] }} >
 			<label for="valid{{ c['idx'] }}">Active</label>
-		</td>	
+		</td>
 		</tr>
-	{%- endif %}	
-{%- endfor %}	
+	{%- endif %}
+{%- endfor %}
 {% for q in range(cnt,cnt_max) -%}
 		<tr>
 		<td>{{ q+1 }})</td><td><label for="host{{ q }}" class="visuallyhidden">Newznab Host (API)</label>
@@ -164,8 +164,8 @@
 		<td>
 			<input type="checkbox" name="valid{{ q }}" id="valid{{ q }}" checked=yes >
 			<label for="valid{{ q }}" class="visuallyhidden">Active</label>
-		</td>	
-{%- endfor %}	
+		</td>
+{%- endfor %}
 </tbody></table>
 
 
@@ -193,9 +193,9 @@
 		<td>
 			<input type="checkbox" name="ds_valid{{ c['idx'] }}" id="ds_valid{{ c['idx'] }}" {{c['valid_verbose'] }} >
 			<label for="ds_valid{{ c['idx'] }}" class="visuallyhidden">Active</label>
-		</td>	
+		</td>
 		</tr>
-{%- endfor %}	
+{%- endfor %}
 {% for q in range(cnt_ds,cnt_max) -%}
 		<tr>
 		<td>{{ q+1 }})</td><td><label for="ds_host{{ q }}" class="visuallyhidden">Newznab Host (Web)</label>
@@ -219,9 +219,9 @@
 		<td>
 			<input type="checkbox" name="ds_valid{{ q }}" id="ds_valid{{ q }}" checked=yes  >
 			<label for="ds_valid{{ q }}" class="visuallyhidden">Active</label>
-		</td>	
+		</td>
 		</tr>
-{%- endfor %}	
+{%- endfor %}
 </tbody></table>
 
 
@@ -231,7 +231,7 @@
 </div></form>
 
 
-	    <script type="text/javascript"> 
+	    <script type="text/javascript">
 	    	function generate_key()
 			{
 				varkey = Math.random().toString(36).slice(2);
@@ -241,35 +241,35 @@
 			{
 				cfgform.general_apikey.value='';
 			}
-	    
+
 			function check_form_correctness()
 			{
-				
+
 				var port_v = cfgform.port.value;
 				chk1 = /^\d+$/.test(port_v);
 				if(!chk1 || (chk1==true && (parseInt(port_v)> 65535 ||  parseInt(port_v)< 1024 )) )
 				{
 					alert('ERROR: [Port] is a number-only field between [1024,65535]');
 					return false
-				}	
-				
+				}
+
 				var usr_v = cfgform.general_usr.value.replace(/\s+/g, ' ')
 				var pwd_v = cfgform.general_pwd.value.replace(/\s+/g, ' ')
 				if (((usr_v.length == 0) && (pwd_v.length > 0)) || ((usr_v.length > 0) && (pwd_v.length == 0)))
 				{
 					alert('ERROR: [User and Password] must be either both empty or both filled');
 					return false
-				}	
+				}
 
-	
+
 				var usrc_v = cfgform.config_user.value.replace(/\s+/g, ' ')
 				var pwdc_v = cfgform.config_pwd.value.replace(/\s+/g, ' ')
 				if (((usrc_v.length == 0) && (pwdc_v.length > 0)) || ((usrc_v.length > 0) && (pwdc_v.length == 0)))
 				{
 					alert('ERROR: [Config User and Password] must be either both empty or both filled');
 					return false
-				}	
-				
+				}
+
 				var sabnzbd_url_v = cfgform.sabnzbd_url.value.replace(/\s+/g, ' ')
 				var sabnzbd_api_v = cfgform.sabnzbd_api.value.replace(/\s+/g, ' ')
 				var cb = check_beginning_http(sabnzbd_url_v)
@@ -277,9 +277,9 @@
 				{
 					alert('ERROR: [SAB url and api] url missing with provided API key.\nUrl must begin with http(s)://');
 					return false
-				}	
-				
-				{% for c in cfg_bi -%}				
+				}
+
+				{% for c in cfg_bi -%}
 					{% if c['flogin'] == 1-%}
 						var bi_login_v{{ q }} = cfgform.bi_host{{ c['idx'] }}login.value.replace(/\s+/g, ' ')
 						var bi_pwd_v{{ q }} = cfgform.bi_host{{ c['idx'] }}pwd.value.replace(/\s+/g, ' ')
@@ -288,31 +288,31 @@
 						{
 							alert('ERROR: Enter user and password for {{ c['humanname'] }}');
 							return false
-						}	
-					{%- endif %}	
-				{%- endfor %}	
-				
+						}
+					{%- endif %}
+				{%- endfor %}
+
 				{% for q in range(0,cnt_max) -%}
 					<!-- -->
 					var host{{ q }} = cfgform.host{{ q }}.value.replace(/\s+/g, ' ')
 					var hostapi{{ q }} = cfgform.API{{ q }}.value.replace(/\s+/g, ' ')
 					var cb = check_beginning_http(host{{ q }})
-					
+
 					if ((host{{ q }}.length == 0) && (hostapi{{ q }}.length > 0) || !cb)
 					{
 						alert('ERROR: Newznab Host (API) #{{ q+1 }}. Enter url for the given API.\nUrl must begin with http(s)://');
 						return false
-					}						
+					}
 				{%- endfor %}
 
 				{% for q in range(0,cnt_max) -%}
-					<!-- -->				
+					<!-- -->
 					var ds_host{{ q }} = cfgform.ds_host{{ q }}.value.replace(/\s+/g, ' ')
 					var ds_usr{{ q }} = cfgform.ds_usr{{ q }}.value.replace(/\s+/g, ' ')
 					var ds_pass{{ q }} = cfgform.ds_pass{{ q }}.value.replace(/\s+/g, ' ')
-					var cb = check_beginning_http(ds_host{{ q }})					
+					var cb = check_beginning_http(ds_host{{ q }})
 					var err = 0
-					
+
 					if(!cb)
 					{
 						err = 1;
@@ -337,32 +337,32 @@
 					{
 						err = 1;
 					}
-					
+
 					if (err == 1)
 					{
 						alert('ERROR: Newznab Web  #{{ q+1 }}. Enter url, username and password.\nUrl must begin with http(s)://');
 						return false
-					}					
-						
+					}
+
 				{%- endfor %}
 			}
-			
-			
+
+
 			function check_beginning_http(string_to_chk)
 			{
 				if(string_to_chk.length == 0)
 				{
 					return true
 				}
-				
+
 				var pattern = /^((http|https|ftp):\/\/)/;
 				if(!pattern.test(string_to_chk))
 				{
 					return false
-				}	
+				}
 				return true
-			}	
-				
+			}
+
 
 
 	    </script>
