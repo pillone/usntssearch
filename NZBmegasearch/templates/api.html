@@ -20,12 +20,12 @@
 {% for row in results -%}
 <item>
 	<title>{{ row['title'] }}</title>
-	<guid isPermaLink="true">{{ row['encodedurl']|safe }}</guid>
-	<link>{{ row['url']|safe }}</link>
+	<guid isPermaLink="true">{{ row['encodedurl'] }}</guid>
+	<link>{{ row['url'] }}</link>
 	<comments>{{ row['providerurl'] }}</comments> 	
 	<pubDate>{{ row['age'] }}</pubDate> 	
 	<description>{{ row['title'] }} -- NZBMegasearch: {{ row['providertitle'] }}</description>
-	<enclosure url="{{ row['url']|safe }}" length="{{ row['filesize'] }}" type="application/x-nzb" />
+	<enclosure url="{{ row['url'] }}" length="{{ row['filesize'] }}" type="application/x-nzb" />
 	<newznab:attr name="size" value="{{ row['filesize'] }}" />
 	<newznab:attr name="guid" value="123456" />
 	

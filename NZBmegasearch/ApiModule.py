@@ -58,6 +58,8 @@ class ApiResponses:
 	def dosearch(self, arguments, hname):
 		self.args = arguments
 		self.rqurl = hname.scheme+'://'+hname.netloc
+		print arguments
+		print self.rqurl
 
 		if(self.args.has_key('t')):
 			typesearch=self.args['t']
@@ -337,7 +339,6 @@ class ApiResponses:
 			if(results[i]['ignore'] == 0):
 				if (results[i]['url'] is None):
 					results[i]['url'] = ""
-
 				qryforwarp=self.wrp.chash64_encode(results[i]['url'])
 				if('req_pwd' in results[i]):
 					qryforwarp += '&m='+ results[i]['req_pwd']
@@ -364,13 +365,13 @@ class ApiResponses:
 			kindofreq = kindofreq + ' CP '
 		if(self.typesearch == 1):
 			idbinfo = ''
-			kindofreq = kindofreq + ' SB ' + self.args['rid'] + ' '
+			kindofreq = kindofreq + ' SB '
 		if(self.typesearch == 2):
 			idbinfo = ''
 			kindofreq = kindofreq + ' FS '
-			
 		mssg = kindofreq + self.searchstring + ' ' + str(len(niceResults)) + ' ' +  str(len(results))
 		print mssg
 		log.info (mssg)
+		
 		return render_template('api.html',results=niceResults, num_results=len(niceResults), typeres= self.typesearch, idb = idbinfo)
 	
