@@ -188,7 +188,7 @@ class DoParallelSearch:
 		
 	
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-	def tosab(self, args):		
+	def tosab(self, args, hname):		
 	
 		if('data' not in args):
 			return 0
@@ -197,6 +197,8 @@ class DoParallelSearch:
 		if ('sabnzbd_url' in self.cgen):
 			if(len(self.cgen['sabnzbd_url'])):
 				send2sab_exist = self.sckname
+				#~ send2sab_exist = hname.scheme+'://'+hname.netloc
+				#~ print send2sab_exist
 
 				urlq = self.cgen['sabnzbd_url']+ '/api'
 				urlParams = dict(

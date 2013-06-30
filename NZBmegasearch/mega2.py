@@ -15,6 +15,7 @@
 #~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
 from flask import Flask, request, Response, redirect, render_template, send_from_directory, jsonify
+from urlparse import urlparse
 import logging
 import logging.handlers
 import os
@@ -54,7 +55,7 @@ def reload_all():
 	ds = DeepsearchModule.DeepSearch(cfgsets.cfg_deep, cfgsets.cgen)
 	mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds)
 	wrp = Warper (cfgsets.cgen, cfgsets.cfg, ds)
-	apiresp = ApiResponses(cfgsets.cfg, wrp)
+	apiresp = ApiResponses(cfgsets.cfg, wrp, ds)
 	auth = miscdefs.Auth(cfgsets)
 	
 
@@ -214,13 +215,13 @@ def warpme():
 
 @app.route('/tosab')
 def tosab():
-	return jsonify(code=mega_parall.tosab(request.args))
-
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+	return jsonify(code=mega_parall.tosab(request.args, urlparse(request.url) ))
+	
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 	
  
 @app.route('/', methods=['GET','POST'])
 @auth.requires_auth
-def main_index():
+def main_index():	
 	#~ flask bug in threads, had to solve like that
 	cfgsets.cgen['large_server'] = LARGESERVER
 	#~ ~ 
@@ -253,13 +254,13 @@ def api():
 	if(len(cfgsets.cgen['general_apikey'])):
 		if('apikey' in request.args):
 			if(request.args['apikey'] == cfgsets.cgen['general_apikey']):
-				return apiresp.dosearch(request.args)
+				return apiresp.dosearch(request.args, urlparse(request.url))
 			else:	
 				return '[API key protection ACTIVE] Wrong key selected'
 		else:	
 				return '[API key protection ACTIVE] API key required'
 	else:
-		return apiresp.dosearch(request.args)
+		return apiresp.dosearch(request.args, urlparse(request.url))
 			
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~   
 

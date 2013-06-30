@@ -542,6 +542,7 @@ class DeepSearchGinga_one(DeepSearch_one):
 				'release_comments': self.baseURL + rdetails[i],
 				'categ':{'N/A':1},
 				'ignore':0,
+				'req_pwd':self.typesrch,
 				'provider':self.baseURL,
 				'providertitle':self.name
 			}

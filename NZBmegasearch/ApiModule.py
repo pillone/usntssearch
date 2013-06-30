@@ -35,11 +35,12 @@ log = logging.getLogger(__name__)
 class ApiResponses:
 
 	# Set up class variables
-	def __init__(self, conf, wrp):
+	def __init__(self, conf, wrp, ds):
 		self.response = []
 		self.serie_string = ''
 		self.typesearch = ''
 		self.wrp = wrp
+		self.cfg_ds = ds
 		self.tvrage_rqheaders = {
 								'Connection': 'keep-alive;' ,
 								'Cache-Control': 'max-age=0',
@@ -54,9 +55,10 @@ class ApiResponses:
 			self.timeout = conf[0]['timeout']
 			self.cfg= conf	 		
 			
-	def dosearch(self, arguments):
+	def dosearch(self, arguments, hname):
 		self.args = arguments
-		
+		self.rqurl = hname.scheme+'://'+hname.netloc
+
 		if(self.args.has_key('t')):
 			typesearch=self.args['t']
 			if (typesearch == 'tvsearch'):
@@ -255,7 +257,7 @@ class ApiResponses:
 			self.searchstring = freesearch_str
 			self.typesearch = 2
 			#~ compile results				
-			results = SearchModule.performSearch(freesearch_str, self.cfg )
+			results = SearchModule.performSearch(freesearch_str, self.cfg, self.cfg_ds )
 			#~ flatten and summarize them
 			cleaned_results = megasearch.summary_results(results, freesearch_str)
 			#~ render XML
@@ -273,7 +275,7 @@ class ApiResponses:
 		self.searchstring = movie_search_str
 		self.typesearch = 0
 		#~ compile results				
-		results = SearchModule.performSearch(movie_search_str, self.cfg )		
+		results = SearchModule.performSearch(movie_search_str, self.cfg , self.cfg_ds )	
 		#~ flatten and summarize them
 		cleaned_results = megasearch.summary_results(results,movie_search_str)
 		#~ render XML
@@ -293,7 +295,7 @@ class ApiResponses:
 		self.typesearch = 1
 		self.searchstring = serie_search_str
 		#~ compile results				
-		results = SearchModule.performSearch(serie_search_str, self.cfg )		
+		results = SearchModule.performSearch(serie_search_str, self.cfg , self.cfg_ds )		
 		#~ flatten and summarize them
 		cleaned_results = megasearch.summary_results(results,serie_search_str)
 		#~ render XML
@@ -345,7 +347,8 @@ class ApiResponses:
 				human_readable_time = dt1.strftime("%a, %d %b %Y %H:%M:%S")
 				#~ print human_readable_time
 				niceResults.append({
-					'url': results[i]['url'],
+					#~ 'url': results[i]['url'],
+					'url':self.rqurl + '/warp?x='+qryforwarp,
 					'encodedurl': qryforwarp,
 					'title':results[i]['title'],
 					'filesize':results[i]['size'],
