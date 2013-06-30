@@ -20,10 +20,11 @@ from ConfigParser import SafeConfigParser
 import sys
 import os
 import SearchModule
+import DeepsearchModule
 import copy
 import megasearch
 
-MAX_PROVIDER_NUMBER = 12
+MAX_PROVIDER_NUMBER = 15
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -102,22 +103,25 @@ class CfgSettings:
 		counter2 = 1
 		for i in xrange(MAX_PROVIDER_NUMBER):
 			if (request_form.has_key('bi_host%d' % i)  == True):
-				parser.add_section('bi_search_provider%s' % counter2)
-				parser.set('bi_search_provider%s' % counter2, 'type', request_form['bi_host%d' % i].replace(" ", ""))
-				if (request_form.has_key('bi_host%dactive' % i)  == True):
-					parser.set('bi_search_provider%s' % counter2, 'valid', '1')
-				else:
-					parser.set('bi_search_provider%s' % counter2, 'valid', '0')
-				
-				if (request_form.has_key('bi_host%dlogin' % i)  == True):	
-					blgin = request_form['bi_host%dlogin' % i].replace(" ", "")
-					bpwd = request_form['bi_host%dpwd' % i].replace(" ", "")
-					parser.set('bi_search_provider%s' % counter2, 'login', blgin)
-					parser.set('bi_search_provider%s' % counter2, 'pwd', bpwd)
-					if(len(blgin) == 0 and len(bpwd) == 0):
+				site_typename = request_form['bi_host%d' % i].replace(" ", "")
+				#~ API based builtins
+				if(site_typename[:2] != 'DS'):
+					parser.add_section('bi_search_provider%s' % counter2)
+					parser.set('bi_search_provider%s' % counter2, 'type', site_typename)
+					if (request_form.has_key('bi_host%dactive' % i)  == True):
+						parser.set('bi_search_provider%s' % counter2, 'valid', '1')
+					else:
 						parser.set('bi_search_provider%s' % counter2, 'valid', '0')
-				parser.set('speed_option', 'b%d_speed_class' % counter2, request_form['bi_host%dspeed' %i])	
-				counter2 = counter2 + 1	
+					
+					if (request_form.has_key('bi_host%dlogin' % i)  == True):	
+						blgin = request_form['bi_host%dlogin' % i].replace(" ", "")
+						bpwd = request_form['bi_host%dpwd' % i].replace(" ", "")
+						parser.set('bi_search_provider%s' % counter2, 'login', blgin)
+						parser.set('bi_search_provider%s' % counter2, 'pwd', bpwd)
+						if(len(blgin) == 0 and len(bpwd) == 0):
+							parser.set('bi_search_provider%s' % counter2, 'valid', '0')
+					parser.set('speed_option', 'b%d_speed_class' % counter2, request_form['bi_host%dspeed' %i])	
+					counter2 = counter2 + 1	
 		parser.set('general', 'builtin_numserver', str(counter2-1))
 		
 
@@ -140,6 +144,33 @@ class CfgSettings:
 						parser.set('deep_search_provider%s' % counter3, 'valid', '1')
 					parser.set('speed_option', 'd%d_speed_class' % counter3, request_form['ds_selspeed%d' %i])
 					counter3 = counter3 + 1
+
+		#~ builtin web search
+		for i in xrange(MAX_PROVIDER_NUMBER):
+			if (request_form.has_key('bi_host%d' % i)  == True):
+				site_typename = request_form['bi_host%d' % i].replace(" ", "")
+				#~ API based builtins
+				if(site_typename[:2] == 'DS'):
+					parser.add_section('deep_search_provider%s' % counter3)
+					parser.set('deep_search_provider%s' % counter3, 'isbuiltin', '1')
+					parser.set('deep_search_provider%s' % counter3, 'type', site_typename)
+					parser.set('deep_search_provider%s' % counter3, 'url', request_form['bi_host%durl' % i].replace(" ", ""))
+					
+					if (request_form.has_key('bi_host%dactive' % i)  == True):
+						parser.set('deep_search_provider%s' % counter3, 'valid', '1')
+					else:
+						parser.set('deep_search_provider%s' % counter3, 'valid', '0')
+					
+					if (request_form.has_key('bi_host%dlogin' % i)  == True):	
+						blgin = request_form['bi_host%dlogin' % i].replace(" ", "")
+						bpwd = request_form['bi_host%dpwd' % i].replace(" ", "")
+						parser.set('deep_search_provider%s' % counter3, 'user', blgin)
+						parser.set('deep_search_provider%s' % counter3, 'pwd', bpwd)
+						if(len(blgin) == 0 and len(bpwd) == 0):
+							parser.set('deep_search_provider%s' % counter3, 'valid', '0')
+					parser.set('speed_option', 'd%d_speed_class' % counter3, request_form['bi_host%dspeed' %i])	
+					counter3 = counter3 + 1	
+
 		parser.set('general', 'deep_numserver', str(counter3-1))
 
 		#~ parser.write(sys.stdout)	
@@ -165,9 +196,15 @@ class CfgSettings:
 				if ( spc == -1 ):
 					spc = 1
 
+				if(parser.has_option('deep_search_provider%d' % (i+1)  , 'type')):	
+					typeds = parser.get('deep_search_provider%d' % (i+1)  , 'type')
+				else:	
+					typeds = 'DSN'
+
 				d1 = {'url': parser.get('deep_search_provider%d' % (i+1)  , 'url'),
 					  'user': parser.get('deep_search_provider%d' % (i+1)  , 'user'),
 					  'pwd': parser.get('deep_search_provider%d' % (i+1)  , 'pwd'),
+					  'type': typeds,
 					  'speed_class': spc,
 					  'valid': int(parser.getint('deep_search_provider%d' % (i+1)  , 'valid')),
 					  }
@@ -323,6 +360,8 @@ class CfgSettings:
 					  'builtin': 1}
 				self.cfg.append(d1)
 				
+				#~ Gingadaddy
+				
 		except Exception as e:
 			print str(e)
 			return
@@ -334,6 +373,8 @@ class CfgSettings:
 		if 'SearchModule.loadedModules' not in globals():
 			SearchModule.loadSearchModules()
 		
+		dsearchsupport = DeepsearchModule.supportedengines()
+		
 		cffileb = []		
 		cffile  = copy.deepcopy(self.cfg)
 		cdsfile = self.cfg_deep
@@ -344,7 +385,7 @@ class CfgSettings:
 
 		if(cdsfile is None):
 			cdsfile = []
-			
+		
 		for module in SearchModule.loadedModules:
 			if(module.builtin):
 				option='checked=yes'
@@ -370,6 +411,7 @@ class CfgSettings:
 				
 				tmpcfg= {'stchk' : option,
 						'humanname' : module.name,
+						'url': '',
 						'idx' : count,
 						'speed_class' : speed_cl,
 						'type' : module.typesrch,
@@ -379,6 +421,42 @@ class CfgSettings:
 						}
 				cffileb.append(tmpcfg)
 				count = count + 1
+		
+		#~ scrapers with web login
+		for dsearchmodule in dsearchsupport:
+			if(dsearchmodule['opts']['builtin']):
+				option='checked=yes'
+				flogin=0
+				login_name =  ''
+				login_pwd = ''
+				speed_cl = dsearchmodule['opts']['speed_cl']
+				if(dsearchmodule['opts']['active'] == 0):
+					option=''
+					
+				for i in xrange(len(cdsfile)):
+					if(cdsfile[i]['type'] == dsearchmodule['opts']['typesrch']):
+						if(cdsfile[i]['valid'] == 0):
+							option=''
+						else: 	
+							option='checked=yes'							
+						#~ speed_cl = cdsfile[i]['speed_cl']
+						login_name=cdsfile[i]['user']
+						login_pwd=cdsfile[i]['pwd']
+				if(dsearchmodule['opts']['login'] == 1):
+					flogin = 1
+				tmpcfg= {'stchk' : option,
+						'humanname' : dsearchmodule['name'],
+						'url': dsearchmodule['opts']['url'],
+						'idx' : count,
+						'speed_class' : speed_cl,
+						'type' : dsearchmodule['opts']['typesrch'],
+						'flogin': flogin,
+						'loginname': login_name,
+						'loginpwd': login_pwd,
+						}
+				cffileb.append(tmpcfg)
+				count = count + 1
+				
 
 		count = 0
 		for i in xrange(len(cffile)):
@@ -397,15 +475,19 @@ class CfgSettings:
 		sel_speedopt_basic[0][2] = 'selected'
 		
 		count_ds=0
+		cdsfile_toshow1 = []
 		for i in xrange(len(cdsfile)):
-			cdsfile[i]['idx'] =  count_ds
-			cdsfile[i]['valid_verbose'] = ''
-			if(cdsfile[i]['valid'] == 1):
-				cdsfile[i]['valid_verbose'] = 'checked=yes'			
-			count_ds = count_ds + 1
-			sel_speedopt_tmp = copy.deepcopy(self.selectable_speedopt)	
-			sel_speedopt_tmp[cdsfile[i]['speed_class']-1][2] = 'selected'
-			cdsfile[i]['selspeed_sel'] =  sel_speedopt_tmp
+			if(cdsfile[i]['type'] == 'DSN'):
+				cdsfile_toshow = copy.deepcopy(cdsfile[i])
+				cdsfile_toshow['idx'] =  count_ds
+				cdsfile_toshow['valid_verbose'] = ''
+				if(cdsfile_toshow['valid'] == 1):
+					cdsfile_toshow['valid_verbose'] = 'checked=yes'			
+				count_ds = count_ds + 1
+				sel_speedopt_tmp = copy.deepcopy(self.selectable_speedopt)	
+				sel_speedopt_tmp[cdsfile[i]['speed_class']-1][2] = 'selected'
+				cdsfile_toshow['selspeed_sel'] =  sel_speedopt_tmp
+				cdsfile_toshow1.append(cdsfile_toshow)
 		
 		possibleopt=megasearch.listpossiblesearchoptions()
 		for slctg in possibleopt:
@@ -432,7 +514,7 @@ class CfgSettings:
 		openshift_install = False
 		if(len(self.dirconf)):
 			openshift_install = True
-		return render_template('config.html', cfg=cffile, cfg_dp=cdsfile,  cnt=count,  cnt_ds=count_ds, genopt = genopt, 
+		return render_template('config.html', cfg=cffile, cfg_dp=cdsfile_toshow1,  cnt=count,  cnt_ds=count_ds, genopt = genopt, 
 												selectable_opt = possibleopt,
 											  sel_speedopt_basic = sel_speedopt_basic,
 											  openshift_install = openshift_install,

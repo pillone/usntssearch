@@ -54,7 +54,7 @@
 	</tr>
 
 	<tr>
-		<td><input type="button" value="Generate Key" onclick="generate_key()" > </td> <td> <label for="general_apikey">API key</label><input type="input" name="general_apikey" id="general_apikey" value="{{ genopt['general_apikey'] }}" size="16" readonly> <input type="button" value="x" onclick="delete_key()" > </td>
+		<td><input type="button" value="Generate Key" onclick="generate_key()" > </td> <td> <label for="general_apikey"></label><input type="input" name="general_apikey" id="general_apikey" value="{{ genopt['general_apikey'] }}" size="16" readonly> <input type="button" value="x" onclick="delete_key()" > </td>
 	</tr>
 
 </tbody></table>
@@ -66,7 +66,22 @@
 			<td><input type="checkbox" name="trends" id="trends" {{ genopt['general_trend_verbose'] }} ><label for="trends">Movie and Show Trends Active</label></td>
 	</tr>
 			<td><input type="checkbox" name="sugg" id="sugg" {{ genopt['general_suggestion_verbose'] }} ><label for="sugg">Search Suggestions Active</label></td>
-	</tr>
+	</tr>					
+
+			<td> Number of suggestions/trends (if active)
+
+				<span>
+						<select name="seltrqty">
+							<option value="5">5 (default)</option>	
+							{% for tnarray_el in tnarray -%}
+								<option value='{{ tnarray_el[0] }}' {{ tnarray_el[2]}}>{{ tnarray_el[1] }}</option>
+							{%- endfor %}
+						</select>
+				</span>
+				
+			</td>
+	</tr>					
+	
 
 </tbody></table>
 
@@ -106,6 +121,7 @@
 		<td>
 			<input type="checkbox" name="bi_host{{ c['idx'] }}active" id="bi_host{{ c['idx'] }}active" value="1" size="40" {{ c['stchk'] }}> <label for="bi_host{{ c['idx'] }}active">{{ c['humanname'] }}</label>
 			<input type="hidden" name="bi_host{{ c['idx'] }}" value="{{ c['type'] }}" size="40">
+			<input type="hidden" name="bi_host{{ c['idx'] }}url" value="{{ c['url'] }}" size="40">
 			<input type="hidden" name="bi_host{{ c['idx'] }}speed" value="{{ c['speed_class'] }}" size="40">
 			{% if c['flogin'] == 1-%}
 				-- <label for="bi_host{{ c['idx'] }}login">login:</label> <input type="text" name="bi_host{{ c['idx'] }}login" id="bi_host{{ c['idx'] }}login" value="{{ c['loginname'] }}" size="12">
@@ -138,7 +154,6 @@
 
 		<td>
 			<input type="checkbox" name="valid{{ c['idx'] }}" id="valid{{ c['idx'] }}"  {{c['valid_verbose'] }} >
-			<label for="valid{{ c['idx'] }}">Active</label>
 		</td>
 		</tr>
 	{%- endif %}
