@@ -31,7 +31,7 @@ class al_OMGwtf(SearchModule):
 		self.queryURL = 'https://api.omgwtfnzbs.org/json/?search'
 		self.baseURL = 'https://omgwtfnzbs.org/'
 		self.queryURLSBreq = ''
-		self.active = 1
+		self.active = 0
 		self.builtin = 1
 		self.login = 1
 		self.inapi = 0
