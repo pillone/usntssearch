@@ -2,7 +2,7 @@
 ======================
 
 NZBmegasearcH is a program that collects all your newznab (and many others) accounts to one place.   
-Are you tired to search by using many different sites (nzbx.co, nzb.in, nzb.su etc)? Well, that's the solution for you. NZBmegasearcH aggregates search results from all your accounts in one clean web interface.
+Are you tired to search by using many different sites (nzb.cc, omgwtfnzbs, nzb.su etc)? Well, that's the solution for you. NZBmegasearcH aggregates search results from all your accounts in one clean web interface.
 
 Technically speaking: NZBmegasearcH is a meta-search engine that retreives data from your favourite NZB indices.
 
