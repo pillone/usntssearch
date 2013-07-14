@@ -84,7 +84,8 @@ This project makes use of:
 - New support for Gingadaddy
 - Results caching 
 - Raw search option
-- SB HTTP error 400 fix, thanks Nobeernogman, CptChaos
+- Fix: CP getb error
+- Fix: SB HTTP error 400, thanks Nobeernogman, CptChaos
 - Removed NZBX.co support (defunct)
 
 More updates are available in changelog.txt
