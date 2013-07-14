@@ -78,7 +78,7 @@ This project makes use of:
 ## Updates
 
 
-**Changes in v0.42**
+**Changes in v0.42a**
 
 - New support for Omgwtfnzbs
 - New support for Gingadaddy
