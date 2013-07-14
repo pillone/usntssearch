@@ -53,8 +53,8 @@ def reload_all():
 	cfgsets.cgen['large_server'] = LARGESERVER
 	sugg = SuggestionResponses(cfgsets.cfg, cfgsets.cgen)
 	ds = DeepsearchModule.DeepSearch(cfgsets.cfg_deep, cfgsets.cgen)
-	mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds)
 	wrp = Warper (cfgsets.cgen, cfgsets.cfg, ds)
+	mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds, wrp)
 	apiresp = ApiResponses(cfgsets.cfg, wrp, ds)
 	auth = miscdefs.Auth(cfgsets)
 	
@@ -186,7 +186,6 @@ def search():
 						'trend_movie': sugg.movie_trend, 
 						'trend_show': sugg.show_trend, 
 						'ver': cver.ver_notify,
-						'wrp':wrp,
 						'debugflag':DEBUGFLAG,
 						'sid': sessionid_string
 						}

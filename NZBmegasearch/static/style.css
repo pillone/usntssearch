@@ -205,6 +205,7 @@ div#container
 
 }
 
+
 .form-wrapper-01 #search:focus {
 	outline: 0;
 	border-color: #aaa;
@@ -407,3 +408,44 @@ div#container
     position: absolute;
     width: 1px;
 }
+
+.confcbox {
+	outline: 1px solid #000000
+}
+
+.conftbox {
+	font: 12px Helvetica, Arial, Sans-Serif;
+	border: 1px solid #ccc;
+	color: #000000
+}
+
+.confbttn {
+	background:#fff;
+	font: 12px Helvetica, Arial, Sans-Serif;
+	border: 2px solid #ccc;
+	color: #000000
+}
+
+.confbttnbig {
+	background:#a2bcc0;
+	width: 150px; 
+	font: bold 16px Helvetica, Arial, Sans-Serif;
+	border: 1px solid #a2bcc0;
+	color: #fafafa;
+
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	
+}
+
+.conftsel {
+	font: 12px Helvetica, Arial, Sans-Serif;
+	border: 1px solid #ccc;
+	background:#fff;
+
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+

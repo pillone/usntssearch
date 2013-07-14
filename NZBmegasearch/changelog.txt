@@ -1,15 +1,15 @@
 Updates
 ================
 
-**Changes in v0.41**
+Changes in v0.41
 
-- **Support for NZB360**
-- **Solved SB api errors**
-- **Solved Log rotation bug in windows, thanks mavenish **
-- **Fix for Opeshift update, thanks xedarius **
-- **Added trend quantity**
-- **Accepted merge request 'Accessibility improvements' by daniel-dixon **
-- **Graceful exit from windows**
+- Support for NZB360
+- Solved SB api errors
+- Solved Log rotation bug in windows, thanks mavenish 
+- Fix for Opeshift update, thanks xedarius 
+- Added trend quantity
+- Accepted merge request 'Accessibility improvements' by daniel-nixon 
+- Graceful exit from windows
 
 Changes in v0.4
 

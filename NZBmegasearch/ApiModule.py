@@ -18,6 +18,7 @@
 
 from flask import  Flask, render_template, redirect, send_file, Response
 import requests
+import urlparse
 import tempfile
 import megasearch
 import xml.etree.ElementTree
@@ -59,7 +60,7 @@ class ApiResponses:
 		self.args = arguments
 		self.rqurl = hname.scheme+'://'+hname.netloc
 		print arguments
-		print self.rqurl
+		#~ print self.rqurl
 
 		if(self.args.has_key('t')):
 			typesearch=self.args['t']
@@ -125,10 +126,20 @@ class ApiResponses:
 		#~ fullurl = self.wrp.chash64_decode(self.args['id'])
 		#~ print fullurl
 		arguments={}
-		arguments['x'] = self.args['id']
-		print self.args
-		if('m' in self.args):
-			arguments['m'] = self.args['m']
+		sq = self.args['id'].split('&');
+		arguments['x'] = sq[0]
+		
+		
+		for i in xrange(1,len(sq) ):
+			onearg = dict(urlparse.parse_qsl(sq[i]))
+			if('m' in onearg):
+				arguments['m'] = onearg['m']
+		#~ LEGACY CODE FOR CP
+		#~ arguments={}
+		#~ arguments['x'] = self.args['id']
+		#~ print self.args
+		#~ if('m' in self.args):
+			#~ arguments['m'] = self.args['m']
 		return self.wrp.beam(arguments)
  
 
@@ -340,23 +351,31 @@ class ApiResponses:
 				if (results[i]['url'] is None):
 					results[i]['url'] = ""
 				qryforwarp=self.wrp.chash64_encode(results[i]['url'])
+
 				if('req_pwd' in results[i]):
 					qryforwarp += '&m='+ results[i]['req_pwd']
 
 				#~ print qryforwarp
 				dt1 =  datetime.datetime.fromtimestamp(int(results[i]['posting_date_timestamp']))
 				human_readable_time = dt1.strftime("%a, %d %b %Y %H:%M:%S")
-				#~ print human_readable_time
-				niceResults.append({
-					#~ 'url': results[i]['url'],
-					'url':self.rqurl + '/warp?x='+qryforwarp,
-					'encodedurl': qryforwarp,
-					'title':results[i]['title'],
-					'filesize':results[i]['size'],
-					'age':human_readable_time,
-					'providertitle':results[i]['providertitle'],
-					'providerurl':results[i]['provider']
-				})
+				
+				niceResults_row = {
+							#~ 'url': results[i]['url'],
+							'url':self.rqurl + '/warp?x='+qryforwarp,
+							'encodedurl': qryforwarp,
+							'title':results[i]['title'],
+							'filesize':results[i]['size'],
+							'age':human_readable_time,
+							'providertitle':results[i]['providertitle'],
+							'providerurl':results[i]['provider']
+						}
+
+				#~ non CP request generate might errors if no url is found in the permalink
+				if(self.typesearch != 0):
+					niceResults_row['encodedurl'] = 'http://bogus.gu/bog'
+					
+				niceResults.append(	niceResults_row)
+							
 		
 		kindofreq = datetime.datetime.now().strftime("%Y-%m-%d %H:%M ") 
 		idbinfo = ''

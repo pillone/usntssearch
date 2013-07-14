@@ -80,6 +80,16 @@ class Warper:
 		for i in xrange(len(enc_str_b64)):
 			nstr += self.base64scramble_enc[ enc_str_b64[i] ] [0]
 		return nstr
+
+	#~ def chash64_encode_safe(self, strstr):
+		#~ nstr = self.chash64_encode(strstr)
+		#~ snstr = list(nstr)
+		#~ for i in xrange(0,len(snstr)):
+			#~ if(snstr[i] == '='):
+				#~ snstr[i] = '.'
+		#~ nstr = "".join(snstr)		
+		#~ return nstr
+		
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 		
 	def generate_hashtable(self):

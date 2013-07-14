@@ -11,7 +11,7 @@ That's more: you can configure to use it with your SB and CP as a unique provide
 *Features*:
 * Support for accounts from any Newsnb and Spotweb based provider
 * Support for web-only access to Newsnb websites (in case API is not active)
-* Support for nzbx.co, findnzb.info, ftdworld.net, wombie and many others
+* Support for nzb.cc, findnzb.info, ftdworld.net, wombie, omgwtfnzbs, gingadaddy and many others
 * Support for CP, SB, NZB360
 * Support for many search categories
 * Retreives trending movies and shows
@@ -21,7 +21,7 @@ That's more: you can configure to use it with your SB and CP as a unique provide
 
 It is written in Python and it works on linux, mac, win. Windows binaries are also available.
 
-**Latest version is 0.41**
+**Latest version is 0.42**
 
 This project makes use of:
 
@@ -43,7 +43,7 @@ This project makes use of:
 ![Search](https://raw.github.com/pillone/usntssearch/master/NZBmegasearch/static/show_search.jpg)
  
 
-## [Install it for free and anonymously on the cloud (*fix*)](https://github.com/pillone/usntssearch/blob/master/NZBmegasearch/openshift/openshift_install.md)
+## [Install it for free and anonymously on the cloud](https://github.com/pillone/usntssearch/blob/master/NZBmegasearch/openshift/openshift_install.md)
 
  
 
@@ -78,15 +78,14 @@ This project makes use of:
 ## Updates
 
 
-**Changes in v0.41**
+**Changes in v0.42**
 
-- **Support for NZB360**
-- **Solved SB api errors**
-- **Solved Log rotation bug in windows, thanks mavenish **
-- **Fix for Opeshift update, thanks xedarius **
-- **Added trend quantity**
-- **Accepted merge request 'Accessibility improvements' by daniel-dixon **
-- **Graceful exit from windows**
+- New support for Omgwtfnzbs
+- New support for Gingadaddy
+- Results caching 
+- Raw search option
+- SB HTTP error 400 fix, thanks Nobeernogman, CptChaos
+- Removed NZBX.co support (defunct)
 
 More updates are available in changelog.txt
 

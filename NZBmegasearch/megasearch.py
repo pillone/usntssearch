@@ -15,9 +15,12 @@
 #~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
 
+import json
 from sets import Set
 import decimal
 import socket
+import random
+import string
 import datetime
 import requests
 import time
@@ -50,7 +53,7 @@ def listpossiblesearchoptions():
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 class DoParallelSearch:
 	
-	def __init__(self, conf, cgen, ds):
+	def __init__(self, conf, cgen, ds, wrp):
 		
 		self.results = []
 		self.cfg = conf
@@ -60,6 +63,7 @@ class DoParallelSearch:
 		self.qry_nologic = ''
 		self.logic_items = []
 		self.ds = ds			
+		self.wrp = wrp
 		self.sckname = self.getdomainandprotocol()
 		print '>> Base domain and protocol: ' + self.sckname
 	
@@ -86,8 +90,8 @@ class DoParallelSearch:
 							['Extensive ['+str(self.svalid_speed[2]) + ']', 2,'']]
 		self.searchopt_cpy = self.searchopt
 		self.possibleopt_cpy = self.possibleopt		
-
-	
+		self.collect_info = []
+		self.resultsraw = None
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 	def getdomainandprotocol(self):
@@ -101,7 +105,30 @@ class DoParallelSearch:
 		sckname = sckname+':'+ str(self.cgen['portno'])
 		return sckname
 
-	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+	def cleancache(self):
+		ntime = datetime.datetime.now()
+		cinfon = []	
+		for i in xrange(len(self.collect_info)):
+			dt1 =  (ntime - datetime.datetime.fromtimestamp(self.collect_info[i]['tstamp']))
+			dl = (dt1.days+1) * dt1.seconds
+			#~ remove by overtime
+			if(dl < self.cgen['max_cache_age']*60):
+				cinfon.append(self.collect_info[i])
+			else:
+				print 'removed'	
+		self.collect_info = cinfon		
+			
+	def chkforcache(self, qryenc, speedclass):
+		rbuff = None
+		if(self.cgen['cache_active'] == 1):
+			#~ print len(self.collect_info)
+			for i in xrange(len(self.collect_info)):
+				if(self.collect_info[i]['searchstr'] == qryenc and self.collect_info[i]['speedclass'] == speedclass ):
+					#~ print 'Cache hit id:' + str(i)
+					rbuff = self.collect_info[i]['resultsraw']
+					break
+		return rbuff		
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 	def dosearch(self, args):
@@ -116,7 +143,8 @@ class DoParallelSearch:
 		self.logic_items = self.logic_expr.findall(args['q'])
 		self.qry_nologic = self.logic_expr.sub(" ",args['q'])
 		if('selcat' in args):
-			self.qry_nologic += " " + args['selcat']
+			if(args['selcat'] != ""):
+				self.qry_nologic += " " + args['selcat']
 
 		#~ speed class
 		speed_class_sel = 1	
@@ -147,9 +175,22 @@ class DoParallelSearch:
 			return self.results
 						
 		self.logic_items = self.logic_expr.findall(args['q'])
-		results = SearchModule.performSearch(self.qry_nologic, self.cfg, self.ds )
-		self.results = summary_results(results, self.qry_nologic, self.logic_items)
-	
+		self.cleancache()
+		self.resultsraw = self.chkforcache(self.wrp.chash64_encode(self.qry_nologic), speed_class_sel)
+		if( self.resultsraw is None):
+			self.resultsraw = SearchModule.performSearch(self.qry_nologic, self.cfg, self.ds )
+			
+		if( self.cgen['smartsearch'] == 1):
+			#~ smartsearch
+			self.results = summary_results(self.resultsraw, self.qry_nologic, self.logic_items)
+		else:
+			#~ no cleaning just flatten in one array
+			self.results = []
+			for provid in xrange(len(self.resultsraw)):
+				for z in xrange(len(self.resultsraw[provid])):
+					self.results.append(self.resultsraw[provid][z])
+
+
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 		
 	def renderit(self,params):
@@ -287,7 +328,7 @@ class DoParallelSearch:
 			if (results[i]['url'] is None):
 				results[i]['url'] = ""
 			
-			qryforwarp=params['wrp'].chash64_encode(results[i]['url'])
+			qryforwarp=self.wrp.chash64_encode(results[i]['url'])
 			if('req_pwd' in results[i]):
 				qryforwarp += '&m='+ results[i]['req_pwd']
 			niceResults.append({
@@ -308,15 +349,35 @@ class DoParallelSearch:
 		if ('sabnzbd_url' in self.cgen):
 			if(len(self.cgen['sabnzbd_url'])):
 				send2sab_exist = self.sckname
-
+		speed_class_sel = 1	
+		if('tm' in args):
+			speed_class_sel = int(args['tm'])
+		
+		#~ save for caching
+		if(self.cgen['cache_active'] == 1 and len(self.resultsraw)>0):
+			if(len(self.collect_info) < self.cgen['max_cache_qty']):
+				if(self.chkforcache(self.wrp.chash64_encode(self.qry_nologic), speed_class_sel) is None):
+					collect_all = {}
+					collect_all['searchstr'] = self.wrp.chash64_encode(self.qry_nologic)
+					collect_all['tstamp'] =  time.time()
+					collect_all['resultsraw'] = self.resultsraw		
+					collect_all['speedclass'] = speed_class_sel		
+					self.collect_info.append(collect_all)
+					#~ print 'Result added to the cache list'
+		#~ ~ ~ ~ ~ ~ ~ ~ ~ 
+		if('selcat' not in params['args']):
+			params['args']['selcat'] = ''
+			
 		return render_template('main_page.html',results=niceResults, exist=existduplicates, 
 												vr=ver_notify, args=args, nc = svalid, sugg = sugg_list,
+												speed_class_sel = speed_class_sel,
 												send2sab_exist= send2sab_exist,
 												cgen = self.cgen,
 												trend_show = params['trend_show'], 
 												trend_movie = params['trend_movie'], 
 												debug_flag = params['debugflag'],
 												sstring  = params['args']['q'],
+												scat = params['args']['selcat'],
 												selectable_opt = params['selectable_opt'],
 												search_opt =  params['search_opt'],
 												sid = params['sid'],

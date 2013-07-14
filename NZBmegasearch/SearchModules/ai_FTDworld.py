@@ -18,10 +18,10 @@ from SearchModule import *
 import time
 
 # Search on NZBx.co
-class ae_FTDworld(SearchModule):
+class ai_FTDworld(SearchModule):
 	# Set up class variables
 	def __init__(self):
-		super(ae_FTDworld, self).__init__()
+		super(ai_FTDworld, self).__init__()
 		self.name = 'FTDworld.net'
 		self.typesrch = 'FTD'
 		self.queryURL = 'http://ftdworld.net/api/index.php'

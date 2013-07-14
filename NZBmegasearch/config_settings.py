@@ -24,7 +24,7 @@ import DeepsearchModule
 import copy
 import megasearch
 
-MAX_PROVIDER_NUMBER = 15
+MAX_PROVIDER_NUMBER = 20
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -63,14 +63,20 @@ class CfgSettings:
 		parser.set('general', 'general_apikey', request_form['general_apikey'].replace(" ", ""))
 		parser.set('general', 'general_https', '0')
 		parser.set('general', 'search_suggestions', '0')
+		parser.set('general', 'trends', '0')
 		parser.set('general', 'trends_qty', request_form['seltrqty'])		
-		parser.set('general', 'trends', '0')		
+		parser.set('general', 'smartsearch', '0')
+		parser.set('general', 'cache_active', '0')		
 		if (request_form.has_key('https')  == True):
 			parser.set('general', 'general_https', '1')
 		if (request_form.has_key('trends')  == True):
 			parser.set('general', 'trends', '1')
 		if (request_form.has_key('sugg')  == True):
 			parser.set('general', 'search_suggestions', '1')
+		if (request_form.has_key('smartsearch')  == True):
+			parser.set('general', 'smartsearch', '1')
+		if (request_form.has_key('cache_active')  == True):
+			parser.set('general', 'cache_active', request_form['cache_active'])
 
 		sab_url = request_form['sabnzbd_url'].replace(" ", "")
 		if(len(sab_url)):
@@ -243,6 +249,7 @@ class CfgSettings:
 		gen_trd = parser.getint('general', 'trends')	
 		gen_timeout = int(parser.get('general', 'default_timeout'))
 		gen_cacheage = int(parser.get('general', 'max_cache_age'))
+		gen_cacheqty = int(parser.get('general', 'max_cache_qty'))
 		gen_log_size = int(parser.get('general', 'max_log_size'))
 		gen_log_backupcount = int(parser.get('general', 'max_log_backupcount'))
 		gen_seed_warptable = int(parser.get('general', 'seed_warptable'))
@@ -254,14 +261,20 @@ class CfgSettings:
 		gen_sugg = parser.getint('general', 'search_suggestions')
 		gen_search_default = parser.get('general', 'search_default')
 		gen_trends_qty = parser.getint('general', 'trends_qty')
+		smartsearch = parser.getint('general', 'smartsearch')
+		cache_active = parser.getint('general', 'cache_active')
+		
 		
 		self.cgen = {'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd,
 				'config_user':config_user,
 				'config_pwd':config_pwd,
+				'smartsearch':smartsearch,
 				'general_suggestion' : gen_sugg,
 				'general_https' : gen_https,
+				'cache_active':cache_active,
 				'default_timeout' : gen_timeout, 'timeout_class' : [gen_tfast, gen_timeout, gen_tslow ],
-				'max_cache_age' : gen_cacheage, 'log_backupcount': gen_log_backupcount, 
+				'max_cache_age' : gen_cacheage, 'log_backupcount': gen_log_backupcount,
+				'max_cache_qty' : gen_cacheqty, 
 				'log_size' : gen_log_size, 'seed_warptable' : gen_seed_warptable, 'trends_refreshrate':gen_trends_refreshrate,
 				'search_default':gen_search_default,
 				'trends_qty':gen_trends_qty,
@@ -330,7 +343,14 @@ class CfgSettings:
 				self.cgen['general_apikey'] = cst_parser.get('general', 'general_apikey')
 			if(cst_parser.has_option('general' ,'trends_qty')):	
 				self.cgen['trends_qty'] = cst_parser.getint('general', 'trends_qty')
-
+			if(cst_parser.has_option('general' ,'smartsearch')):	
+				self.cgen['smartsearch'] = cst_parser.getint('general', 'smartsearch')
+			if(cst_parser.has_option('general' ,'max_cache_age')):	
+				self.cgen['max_cache_age'] = cst_parser.getint('general', 'max_cache_age')
+			if(cst_parser.has_option('general' ,'max_cache_qty')):	
+				self.cgen['max_cache_qty'] = cst_parser.getint('general', 'max_cache_qty')
+			if(cst_parser.has_option('general' ,'cache_active')):	
+				self.cgen['cache_active'] = cst_parser.getint('general', 'cache_active')
 
 		except Exception as e:
 			print str(e)
@@ -390,6 +410,8 @@ class CfgSettings:
 			if(module.builtin):
 				option='checked=yes'
 				flogin=0
+				flogin_caption_user='login'
+				flogin_caption_pwd='pwd'
 				login_name =  ''
 				login_pwd = ''
 				speed_cl = 1
@@ -408,6 +430,10 @@ class CfgSettings:
 						
 				if(module.login == 1):
 					flogin = 1
+					#~ if('caption_login_user' in module):
+					if (hasattr(module, 'caption_login_user')):
+						flogin_caption_user = module.caption_login_user
+						flogin_caption_pwd = module.caption_login_pwd
 				
 				tmpcfg= {'stchk' : option,
 						'humanname' : module.name,
@@ -416,6 +442,8 @@ class CfgSettings:
 						'speed_class' : speed_cl,
 						'type' : module.typesrch,
 						'flogin': flogin,
+						'flogin_caption_user': flogin_caption_user,
+						'flogin_caption_pwd': flogin_caption_pwd,
 						'loginname': login_name,
 						'loginpwd': login_pwd,
 						}
@@ -448,6 +476,8 @@ class CfgSettings:
 						'humanname' : dsearchmodule['name'],
 						'url': dsearchmodule['opts']['url'],
 						'idx' : count,
+						'flogin_caption_user': 'login',
+						'flogin_caption_pwd': 'pwd',
 						'speed_class' : speed_cl,
 						'type' : dsearchmodule['opts']['typesrch'],
 						'flogin': flogin,
@@ -504,12 +534,18 @@ class CfgSettings:
 		genopt['general_https_verbose']	 = ''
 		genopt['general_trend_verbose']	 = ''
 		genopt['general_suggestion_verbose']	 = ''
+		genopt['smartsearch_verbose']	 = ''
+		genopt['max_cache_verbose']	 = ''
 		if(genopt['general_https'] == 1):
 			genopt['general_https_verbose']	 = 'checked=yes'
 		if(genopt['general_suggestion'] == 1):
 			genopt['general_suggestion_verbose']	 = 'checked=yes'
 		if(genopt['general_trend'] == 1):
 			genopt['general_trend_verbose']	 = 'checked=yes'
+		if(genopt['smartsearch'] == 1):
+			genopt['smartsearch_verbose']	 = 'checked=yes'
+		if(genopt['cache_active'] == 1):
+			genopt['cache_active_verbose']	 = 'checked=yes'
 
 		openshift_install = False
 		if(len(self.dirconf)):
