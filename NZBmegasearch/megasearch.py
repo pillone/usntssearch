@@ -365,8 +365,9 @@ class DoParallelSearch:
 					self.collect_info.append(collect_all)
 					#~ print 'Result added to the cache list'
 		#~ ~ ~ ~ ~ ~ ~ ~ ~ 
-		if('selcat' not in params['args']):
-			params['args']['selcat'] = ''
+		scat = ''
+		if('selcat' in params['args']):
+			scat = params['args']['selcat']
 			
 		return render_template('main_page.html',results=niceResults, exist=existduplicates, 
 												vr=ver_notify, args=args, nc = svalid, sugg = sugg_list,
@@ -377,7 +378,7 @@ class DoParallelSearch:
 												trend_movie = params['trend_movie'], 
 												debug_flag = params['debugflag'],
 												sstring  = params['args']['q'],
-												scat = params['args']['selcat'],
+												scat = scat,
 												selectable_opt = params['selectable_opt'],
 												search_opt =  params['search_opt'],
 												sid = params['sid'],
