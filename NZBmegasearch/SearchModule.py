@@ -261,7 +261,7 @@ class SearchModule(object):
 
 	def parse_xmlsearch(self, urlParams, tout): 
 		parsed_data = []
-		print self.queryURL  + ' ' + urlParams['apikey']
+		#~ print self.queryURL  + ' ' + urlParams['apikey']
 		timestamp_s = time.time()
 
 		try:
