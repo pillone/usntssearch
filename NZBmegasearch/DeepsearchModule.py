@@ -167,14 +167,14 @@ class DeepSearch_one:
 		mainurl = self.cur_cfg['url']
 		loginurl = mainurl + "/login"
 
-		print "Logging in: " + mainurl
+		#~ print "Logging in: " + mainurl
 		log.info("Logging in: " + mainurl)
 
 		
 		try:
 			socket.setdefaulttimeout(self.timeout)
 			self.br.open(loginurl)
-			print loginurl			
+			#~ print loginurl			
 		except Exception as e:
 			print str(e)
 			self.mech_error_generic(e)
@@ -293,7 +293,6 @@ class DeepSearch_one:
 		except Exception as e:
 			self.mech_error_generic(e)
 			eret = self.mech_error_generic(e)
-			print eret
 			if(eret == 302):
 				self.reset_cookies()
 			return []	
@@ -404,14 +403,14 @@ class DeepSearchGinga_one(DeepSearch_one):
 		mainurl = self.cur_cfg['url']
 		loginurl = mainurl + "/index.php"
 		
-		print "Logging in: " + mainurl
-		log.info("Logging in: " + mainurl)
+		#~ print "Logging in: " + mainurl
+		#~ log.info("Logging in: " + mainurl)
 
 		
 		try:
 			socket.setdefaulttimeout(self.timeout)
 			self.br.open(loginurl)
-			print loginurl			
+			#~ print loginurl			
 		except Exception as e:
 			print str(e)
 			self.mech_error_generic(e)
@@ -468,7 +467,6 @@ class DeepSearchGinga_one(DeepSearch_one):
 		except Exception as e:
 			self.mech_error_generic(e)
 			eret = self.mech_error_generic(e)
-			print eret
 			if(eret == 302):
 				self.reset_cookies()
 			return []	
@@ -479,7 +477,7 @@ class DeepSearchGinga_one(DeepSearch_one):
 		
 
 		#~ def searchDBG(self, srchstr):
-		handler = open('test.html').read()
+		#~ handler = open('test.html').read()
 		soup = beautifulsoup.BeautifulSoup(data)
 
 		parsed_data = []

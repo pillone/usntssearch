@@ -188,7 +188,8 @@ class DoParallelSearch:
 			self.results = []
 			for provid in xrange(len(self.resultsraw)):
 				for z in xrange(len(self.resultsraw[provid])):
-					self.results.append(self.resultsraw[provid][z])
+					if (self.resultsraw[provid][z]['title'] != None):
+						self.results.append(self.resultsraw[provid][z])
 
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -396,11 +397,12 @@ def summary_results(rawResults, strsearch, logic_items=[]):
 	#~ all in one array
 	for provid in xrange(len(rawResults)):
 		for z in xrange(len(rawResults[provid])):
-			rawResults[provid][z]['title'] = SearchModule.sanitize_html(rawResults[provid][z]['title'])
-			title = SearchModule.sanitize_strings(rawResults[provid][z]['title'])
-			titles.append(title)
-			sptitle_collection.append(Set(title.split(".")))
-			results.append(rawResults[provid][z])
+			if (rawResults[provid][z]['title'] != None):
+				rawResults[provid][z]['title'] = SearchModule.sanitize_html(rawResults[provid][z]['title'])
+				title = SearchModule.sanitize_strings(rawResults[provid][z]['title'])
+				titles.append(title)
+				sptitle_collection.append(Set(title.split(".")))
+				results.append(rawResults[provid][z])
 			
 	strsearch1 = SearchModule.sanitize_strings(strsearch)
 	strsearch1_collection = Set(strsearch1.split("."))	

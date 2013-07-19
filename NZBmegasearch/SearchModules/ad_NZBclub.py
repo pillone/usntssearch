@@ -112,7 +112,12 @@ class ad_NZBclub(SearchModule):
 			len_elem_pubdate = len(elem_pubdate.text)
 			#~ Tue, 22 Jan 2013 17:36:23 +0000
 			#~ removes gmt shift
-			elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate-6], "%a, %d %b %Y %H:%M:%S").timetuple())
+			try: 
+				elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate-6], "%a, %d %b %Y %H:%M:%S").timetuple())
+			except Exception as e:
+				#~ if fails..
+				elem_postdate = datetime.datetime.now()
+			
 			elem_poster = ''
 
 			elem_lnk = elem.find("link")
