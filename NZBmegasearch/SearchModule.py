@@ -261,7 +261,7 @@ class SearchModule(object):
 
 	def parse_xmlsearch(self, urlParams, tout): 
 		parsed_data = []
-		#~ print self.queryURL  + ' ' + urlParams['apikey']
+		print self.queryURL  + ' ' + urlParams['apikey']
 		timestamp_s = time.time()
 
 		try:
@@ -293,6 +293,8 @@ class SearchModule(object):
 			elem_title = elem.find("title")
 			elem_url = elem.find("enclosure")
 			elem_pubdate = elem.find("pubDate")
+			elem_guidattr = elem.find("newznab_attsr")
+ 
 			len_elem_pubdate = len(elem_pubdate.text)
 			#~ Tue, 22 Jan 2013 17:36:23 +0000
 			#~ removes gmt shift
@@ -300,11 +302,11 @@ class SearchModule(object):
 			elem_poster = ''
 
 			elem_guid = elem.find("guid")
-			release_details = self.baseURL
-			if(elem_guid is not None):
-				release_details = elem_guid.text
+			release_details = ''					
 			for attr in elem.iter('newznab_attr'):
 				if('name' in attr.attrib):
+					if (attr.attrib['name'] == 'guid'): 
+						release_details  = self.baseURL + '/details/' + attr.attrib['value']
 					if (attr.attrib['name'] == 'poster'): 
 						elem_poster = attr.attrib['value']
 					if (attr.attrib['name'] == 'category'):
@@ -317,6 +319,12 @@ class SearchModule(object):
 						#~ print '=========='
 			if(len(category_found) == 0):
 				category_found['N/A'] = 1
+
+			if(len(release_details) == 0):
+				if(elem_guid is not None):
+					release_details = elem_guid.text
+				else:
+					release_details = self.baseURL	
 			
 			d1 = { 
 				'title': elem_title.text,
