@@ -1,6 +1,16 @@
 Updates
 ================
 
+Changes in v0.42
+
+- New support for Omgwtfnzbs
+- New support for Gingadaddy
+- Results caching
+- Raw search option
+- Fix: CP getb error
+- Fix: SB HTTP error 400, thanks Nobeernogman, CptChaos
+- Removed NZBX.co support (defunct)
+
 Changes in v0.41
 
 - Support for NZB360

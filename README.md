@@ -21,7 +21,7 @@ That's more: you can configure to use it with your SB and CP as a unique provide
 
 It is written in Python and it works on linux, mac, win. Windows binaries are also available.
 
-**Latest version is 0.42**
+**Latest version is 0.43**
 
 This project makes use of:
 
@@ -78,15 +78,14 @@ This project makes use of:
 ## Updates
 
 
-**Changes in v0.42a**
+**Changes in v0.43**
 
-- New support for Omgwtfnzbs
-- New support for Gingadaddy
-- Results caching 
-- Raw search option
-- Fix: CP getb error
-- Fix: SB HTTP error 400, thanks Nobeernogman, CptChaos
-- Removed NZBX.co support (defunct)
+- Bugfix Gingadaddy, thanks to johnnyhopeful, mavenish
+- Bugfix details w some provider, thanks to dr99,  JackDandy
+- Bugfix fanzub thanks JackDandy
+- Bugfix trends thanks usamitysam, gazaz
+- Bugfix error 500 thanks Mochaka
+- Added improved gtignore thanks JackDandy
 
 More updates are available in changelog.txt
 
