@@ -72,7 +72,8 @@ class DoParallelSearch:
 		self.logic_items = []
 		self.ds = ds			
 		self.wrp = wrp
-		self.sckname = self.getdomainandprotocol()
+		self.sckname = self.getdomainandprotocol(self.cgen['general_ipaddress'])
+
 		print '>> Base domain and protocol: ' + self.sckname
 	
 		if(self.cfg is not None):
@@ -127,8 +128,9 @@ class DoParallelSearch:
 		return rbuff		
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	
-	def getdomainandprotocol(self):
-		sgetsockname = getdomainext()
+	def getdomainandprotocol(self, sgetsockname):
+		if(len(sgetsockname)==0):
+			sgetsockname = getdomainext()
 		hprotocol = 'http://'
 		if(self.cgen['general_https']):
 			hprotocol = 'https://'
@@ -143,10 +145,9 @@ class DoParallelSearch:
 		if('q' not in args):
 			self.results = []
 			return self.results
-			
-			
-		self.logic_items = self.logic_expr.findall(args['q'])
-		self.qry_nologic = self.logic_expr.sub(" ",args['q'])
+		nuqry = args['q'] + ' ' + self.cgen['searchaddontxt']
+		self.logic_items = self.logic_expr.findall(nuqry)
+		self.qry_nologic = self.logic_expr.sub(" ",nuqry)
 		if('selcat' in args):
 			if(args['selcat'] != ""):
 				self.qry_nologic += " " + args['selcat']
@@ -179,7 +180,6 @@ class DoParallelSearch:
 			self.results = []
 			return self.results
 						
-		self.logic_items = self.logic_expr.findall(args['q'])
 		self.cleancache()
 		self.resultsraw = self.chkforcache(self.wrp.chash64_encode(self.qry_nologic), speed_class_sel)
 		if( self.resultsraw is None):

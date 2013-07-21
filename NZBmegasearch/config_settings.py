@@ -62,7 +62,7 @@ class CfgSettings:
 		parser.set('general', 'config_pwd', request_form['config_pwd'].replace(" ", ""))
 		parser.set('general', 'general_apikey', request_form['general_apikey'].replace(" ", ""))
 		parser.set('general', 'general_ipaddress', request_form['general_ipaddress'].replace(" ", ""))
-		parser.set('general', 'searchaddontxt', request_form['searchaddontxt'].replace(" ", ""))
+		parser.set('general', 'searchaddontxt', request_form['searchaddontxt'])
 		parser.set('general', 'general_https', '0')
 		parser.set('general', 'search_suggestions', '0')
 		parser.set('general', 'trends', '0')
