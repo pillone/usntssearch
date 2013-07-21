@@ -195,6 +195,9 @@ def search():
 @app.route('/config', methods=['GET','POST'])
 @auth.requires_conf
 def config():
+	#~ flask bug in threads, had to solve like that
+	cfgsets.cgen['large_server'] = LARGESERVER
+
  	if(cfgsets.cgen['large_server'] == False):
 		return cfgsets.edit_config()
 	else:	
