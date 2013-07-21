@@ -26,6 +26,7 @@
 		<td><input type="checkbox" name="https" id="https" {{ genopt['general_https_verbose'] }}><label for="https">HTTPS Enabled</label></td>
 		{%- endif %}
 	</tr>
+	
 </tbody></table>
 
 
@@ -109,15 +110,22 @@
 		<td><input type="checkbox" name="cache_active" id="cache_active" value="1" size="40"  {{ genopt['cache_active_verbose'] }}> <label for="max_cache_qty">Cache results (suggested)</label></td>
 	</tr>	
 
+	<tr>	
+		<td>Appended search terms, eg: 'R6 -german -french': <input type="text" name="searchaddontxt" id="searchaddontxt" class="conftbox" value="{{ genopt['searchaddontxt'] }}" size="19" ></td>
+	</tr>	
+
 </tbody></table>
 
 <table class="results" summary="SendtoSAB" style="width: 420px;"><thead>
-<tr><th scope="col">SabNZB Integration</th></tr></thead><tbody>
+<tr><th scope="col">SabNZB Integration</th><th></th></tr></thead><tbody>
 	<tr>
-			<td><label for="sabnzbd_url">Url:</label> <input type="text" name="sabnzbd_url" id="sabnzbd_url" value="{{ genopt['sabnzbd_url'] }}" size="18" class="conftbox">
-			<label for="sabnzbd_api">API Key:</label> <input type="text" name="sabnzbd_api" id="sabnzbd_api" value="{{ genopt['sabnzbd_api'] }}" size="18" class="conftbox"></td>
-
+			<td><label for="sabnzbd_url">Url:</label> <input type="text" name="sabnzbd_url" id="sabnzbd_url" value="{{ genopt['sabnzbd_url'] }}" size="22" class="conftbox"> </td> <td> 
+			<label for="sabnzbd_api">API Key:</label> <input type="text" name="sabnzbd_api" id="sabnzbd_api" value="{{ genopt['sabnzbd_api'] }}" size="22" class="conftbox"></td>
 	</tr>
+	<tr>
+		<td><input type="button" value="Detect NZBmegasearcH IP/host" onclick="detect_ip()" class="confbttn"> </td> <td> <label for="general_ipaddress"></label><input type="text" name="general_ipaddress" id="general_ipaddress" value="{{ genopt['general_ipaddress'] }}" size="16" class="conftbox"> </td>
+	</tr>
+	
 </tbody></table>
 
 
@@ -282,6 +290,11 @@
 
 
 	    <script type="text/javascript">
+			function detect_ip()
+			{
+				cfgform.general_ipaddress.value="{{ cdomainname }}";
+			}
+			
 	    	function generate_key()
 			{
 				varkey = Math.random().toString(36).slice(2);

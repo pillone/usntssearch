@@ -36,6 +36,14 @@ import copy
 log = logging.getLogger(__name__)
 
 
+def getdomainext( ):
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	s.connect(("8.8.8.8",80))
+	sname = s.getsockname()[0]
+	s.close()
+	return sname
+
+
 def listpossiblesearchoptions():
 	possibleopt = [ ['1080p', 'HD 1080p',''],
 							['720p','HD 720p',''],
@@ -92,18 +100,6 @@ class DoParallelSearch:
 		self.possibleopt_cpy = self.possibleopt		
 		self.collect_info = []
 		self.resultsraw = None
-	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
-	def getdomainandprotocol(self):
-		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-		s.connect(("8.8.8.8",80))
-		hprotocol = 'http://'
-		if(self.cgen['general_https']):
-			hprotocol = 'https://'
-		sckname = hprotocol + s.getsockname()[0]
-		s.close()
-		sckname = sckname+':'+ str(self.cgen['portno'])
-		return sckname
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	def cleancache(self):
@@ -130,7 +126,16 @@ class DoParallelSearch:
 					break
 		return rbuff		
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
+	
+	def getdomainandprotocol(self):
+		sgetsockname = getdomainext()
+		hprotocol = 'http://'
+		if(self.cgen['general_https']):
+			hprotocol = 'https://'
+		sckname = hprotocol + sgetsockname +':'+ str(self.cgen['portno'])
+		return sckname
+		
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 		
 	def dosearch(self, args):
 		#~ restore originals
 		self.cfg = copy.deepcopy(self.cfg_cpy)

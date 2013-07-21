@@ -61,6 +61,8 @@ class CfgSettings:
 		parser.set('general', 'config_user', request_form['config_user'].replace(" ", ""))
 		parser.set('general', 'config_pwd', request_form['config_pwd'].replace(" ", ""))
 		parser.set('general', 'general_apikey', request_form['general_apikey'].replace(" ", ""))
+		parser.set('general', 'general_ipaddress', request_form['general_ipaddress'].replace(" ", ""))
+		parser.set('general', 'searchaddontxt', request_form['searchaddontxt'].replace(" ", ""))
 		parser.set('general', 'general_https', '0')
 		parser.set('general', 'search_suggestions', '0')
 		parser.set('general', 'trends', '0')
@@ -263,15 +265,18 @@ class CfgSettings:
 		gen_trends_qty = parser.getint('general', 'trends_qty')
 		smartsearch = parser.getint('general', 'smartsearch')
 		cache_active = parser.getint('general', 'cache_active')
+		searchaddontxt = parser.get('general', 'searchaddontxt')
 		
 		
 		self.cgen = {'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd,
 				'config_user':config_user,
 				'config_pwd':config_pwd,
 				'smartsearch':smartsearch,
+				'searchaddontxt':searchaddontxt,
 				'general_suggestion' : gen_sugg,
 				'general_https' : gen_https,
 				'cache_active':cache_active,
+				'general_ipaddress': '',
 				'default_timeout' : gen_timeout, 'timeout_class' : [gen_tfast, gen_timeout, gen_tslow ],
 				'max_cache_age' : gen_cacheage, 'log_backupcount': gen_log_backupcount,
 				'max_cache_qty' : gen_cacheqty, 
@@ -351,6 +356,11 @@ class CfgSettings:
 				self.cgen['max_cache_qty'] = cst_parser.getint('general', 'max_cache_qty')
 			if(cst_parser.has_option('general' ,'cache_active')):	
 				self.cgen['cache_active'] = cst_parser.getint('general', 'cache_active')
+			if(cst_parser.has_option('general' ,'searchaddontxt')):	
+				self.cgen['searchaddontxt'] = cst_parser.get('general', 'searchaddontxt')
+			if(cst_parser.has_option('general' ,'general_ipaddress')):	
+				self.cgen['general_ipaddress'] = cst_parser.get('general', 'general_ipaddress')
+
 
 		except Exception as e:
 			print str(e)
@@ -405,6 +415,8 @@ class CfgSettings:
 
 		if(cdsfile is None):
 			cdsfile = []
+		
+		cdomainname = megasearch.getdomainext()
 		
 		for module in SearchModule.loadedModules:
 			if(module.builtin):
@@ -555,6 +567,7 @@ class CfgSettings:
 											  sel_speedopt_basic = sel_speedopt_basic,
 											  openshift_install = openshift_install,
 											  tnarray = tnarray,
+											  cdomainname = cdomainname,
  											  cnt_max=MAX_PROVIDER_NUMBER, cfg_bi=cffileb)
 
 
