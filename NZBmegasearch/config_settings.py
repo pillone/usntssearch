@@ -61,14 +61,17 @@ class CfgSettings:
 		parser.set('general', 'config_user', request_form['config_user'].replace(" ", ""))
 		parser.set('general', 'config_pwd', request_form['config_pwd'].replace(" ", ""))
 		parser.set('general', 'general_apikey', request_form['general_apikey'].replace(" ", ""))
-		parser.set('general', 'general_ipaddress', request_form['general_ipaddress'].replace(" ", ""))
 		parser.set('general', 'searchaddontxt', request_form['searchaddontxt'])
 		parser.set('general', 'general_https', '0')
 		parser.set('general', 'search_suggestions', '0')
 		parser.set('general', 'trends', '0')
 		parser.set('general', 'trends_qty', request_form['seltrqty'])		
 		parser.set('general', 'smartsearch', '0')
-		parser.set('general', 'cache_active', '0')		
+		parser.set('general', 'cache_active', '0')	
+		parser.set('general', 'general_ipaddress', '')		
+		
+		if (request_form['general_ipaddress'] != 'AUTO'):
+			parser.set('general', 'general_ipaddress', request_form['general_ipaddress'].replace(" ", ""))
 		if (request_form.has_key('https')  == True):
 			parser.set('general', 'general_https', '1')
 		if (request_form.has_key('trends')  == True):
@@ -558,6 +561,10 @@ class CfgSettings:
 			genopt['smartsearch_verbose']	 = 'checked=yes'
 		if(genopt['cache_active'] == 1):
 			genopt['cache_active_verbose']	 = 'checked=yes'
+		genopt['general_ipaddress_verbose']	 = 'AUTO'
+		if(genopt['general_ipaddress'] != ''):
+			genopt['general_ipaddress_verbose'] = genopt['general_ipaddress']
+
 
 		openshift_install = False
 		if(len(self.dirconf)):
