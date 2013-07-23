@@ -26,7 +26,10 @@
 		<td><input type="checkbox" name="https" id="https" {{ genopt['general_https_verbose'] }}><label for="https">HTTPS Enabled</label></td>
 		{%- endif %}
 	</tr>
-	
+
+	<tr>
+		<td><input type="button" value="Detect megasearch IP/host" onclick="detect_ip()" class="confbttn">   <label for="general_ipaddress"></label><input type="text" name="general_ipaddress" id="general_ipaddress" value="{{ genopt['general_ipaddress_verbose'] }}" size="14" class="conftbox"> <input type="button" value="Auto" onclick='cfgform.general_ipaddress.value="AUTO"' class="confbttn"></td>	
+	</tr>	
 </tbody></table>
 
 
@@ -115,17 +118,31 @@
 	</tr>	
 
 </tbody></table>
-
+ 
 <table class="results" summary="SendtoSAB" style="width: 420px;"><thead>
 <tr><th scope="col">SabNZB Integration</th><th></th></tr></thead><tbody>
 	<tr>
 			<td><label for="sabnzbd_url">Url:</label> <input type="text" name="sabnzbd_url" id="sabnzbd_url" value="{{ genopt['sabnzbd_url'] }}" size="22" class="conftbox"> </td> <td> 
 			<label for="sabnzbd_api">API Key:</label> <input type="text" name="sabnzbd_api" id="sabnzbd_api" value="{{ genopt['sabnzbd_api'] }}" size="22" class="conftbox"></td>
 	</tr>
-	<tr>
-		<td><input type="button" value="Detect megasearch IP/host" onclick="detect_ip()" class="confbttn"> </td> <td> <label for="general_ipaddress"></label><input type="text" name="general_ipaddress" id="general_ipaddress" value="{{ genopt['general_ipaddress_verbose'] }}" size="14" class="conftbox"> <input type="button" value="Auto" onclick='cfgform.general_ipaddress.value="AUTO"' class="confbttn"></td>
-	</tr>
 	
+</tbody></table>
+
+<table class="results" summary="SendtoNZBGet" style="width: 420px;"><thead>
+<tr><th scope="col">NZBGet Integration</th> <th></th> <th></th>  <th></th></tr></thead><tbody>
+	<tr>
+			<td><label for="nzbget_url">Url:</label> </td> 
+			<td><input type="text" name="nzbget_url" id="nzbget_url" value="{{ genopt['nzbget_url'] }}" size="15" class="conftbox"> </td> 
+			<td>  </td>
+			<td>  </td> 
+	</tr>
+	<tr>
+			<td><label for="nzbget_user">User:</label> </td> 
+			<td><input type="text" name="nzbget_user" id="nzbget_user" value="{{ genopt['nzbget_user'] }}" size="15" class="conftbox"> </td> 
+			<td><label for="nzbget_pwd">Pwd:</label> </td> 			
+			<td> <input type="password" name="nzbget_pwd" id="nzbget_pwd" value="{{ genopt['nzbget_pwd'] }}" size="15" class="conftbox"> </td>
+	</tr>
+
 </tbody></table>
 
 

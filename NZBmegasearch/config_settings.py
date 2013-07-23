@@ -90,6 +90,14 @@ class CfgSettings:
 		parser.set('general', 'sabnzbd_url', sab_url)
 		parser.set('general', 'sabnzbd_api', request_form['sabnzbd_api'].replace(" ", ""))
 		parser.set('general', 'search_default', request_form['selcat'])
+
+		nzbget_url = request_form['nzbget_url'].replace(" ", "")
+		if(len(nzbget_url)):
+			if(nzbget_url[-1] == '/'):
+				nzbget_url = sab_url[:-1]
+		parser.set('general', 'nzbget_url', nzbget_url)
+		parser.set('general', 'nzbget_user', request_form['nzbget_user'].replace(" ", ""))
+		parser.set('general', 'nzbget_pwd', request_form['nzbget_pwd'].replace(" ", ""))
 		
 		#~ custom
 		counter = 1
@@ -287,6 +295,7 @@ class CfgSettings:
 				'search_default':gen_search_default,
 				'trends_qty':gen_trends_qty,
 				'sabnzbd_url' : '', 'sabnzbd_api':'',
+				'nzbget_url' : '', 'nzbget_user':'','nzbget_pwd':'',
 				'general_apikey' : '',
 				'stats_key' : gen_stats_key, 'motd':gen_motd}
 		self.selectable_speedopt = copy.deepcopy(self.selectable_speedopt_cpy)
@@ -330,6 +339,12 @@ class CfgSettings:
 				self.cgen['sabnzbd_url'] = cst_parser.get('general', 'sabnzbd_url')
 			if(cst_parser.has_option('general' ,'sabnzbd_api')):
 				self.cgen['sabnzbd_api'] = cst_parser.get('general', 'sabnzbd_api')
+			if(cst_parser.has_option('general' ,'nzbget_url')):
+				self.cgen['nzbget_url'] = cst_parser.get('general', 'nzbget_url')
+			if(cst_parser.has_option('general' ,'nzbget_user')):
+				self.cgen['nzbget_user'] = cst_parser.get('general', 'nzbget_user')
+			if(cst_parser.has_option('general' ,'nzbget_pwd')):
+				self.cgen['nzbget_pwd'] = cst_parser.get('general', 'nzbget_pwd')
 			if(cst_parser.has_option('general' ,'general_https')):
 				self.cgen['general_https'] = cst_parser.getint('general', 'general_https')			
 			if (cst_parser.has_option('general', 'port')):

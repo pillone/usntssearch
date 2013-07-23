@@ -34,7 +34,6 @@ import time
 import socket
 import base64
 
-
 openssl_imported = True
 try:
 	from OpenSSL import SSL
@@ -218,7 +217,15 @@ def warpme():
 @app.route('/tosab')
 def tosab():
 	return jsonify(code=mega_parall.tosab(request.args, urlparse(request.url) ))
-	
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 	
+
+@app.route('/tonzbget')
+def tosab():
+	print request.args
+	mega_parall.tonzbget(request.args, urlparse(request.url))
+	return 'a'
+		
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 	
  
 @app.route('/', methods=['GET','POST'])

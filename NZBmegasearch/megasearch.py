@@ -32,6 +32,8 @@ import logging
 import base64
 import re
 import copy
+from xmlrpclib import ServerProxy
+import requests
 
 log = logging.getLogger(__name__)
 
@@ -234,6 +236,36 @@ class DoParallelSearch:
 								sstring  = "", selectable_opt = possibleopt, search_opt = searchopt_local,  motd = self.cgen['motd'], sid = params['sid'])
 		
 	
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+	def tonzbget(self, args, hname):
+		
+		if('data' not in args):
+			return 0
+			
+		if ('nzbget_url' in self.cgen):
+			if(len(self.cgen['nzbget_url'])):				
+				rq_url = 'http://'+self.cgen['nzbget_user']+':'+self.cgen['nzbget_pwd']+'@'+self.cgen['nzbget_url'] + '/xmlrpc'
+				print rq_url
+				#~ try
+					#~ server = ServerProxy(rq_url)
+				#~ except Exception as e:
+					#~ print 'Error contacting NZBGET '+str(e)
+					#~ return 0
+
+				try:
+					internal_url = 'http://localhost:5000/'+args['data']
+					print internal_url
+					#~ damn...
+					r = requests.get(url)
+					print len(r.content)
+				except Exception as e:
+					print 'Error contacting myself '+str(e)
+					return 0	
+
+				return 1
+
+				
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	def tosab(self, args, hname):		
 	
@@ -351,6 +383,11 @@ class DoParallelSearch:
 				'providertitle':results[i]['providertitle'],
 				'ignore' : results[i]['ignore']
 			})
+		send2nzbget_exist = None
+		if ('nzbget_url' in self.cgen):
+			if(len(self.cgen['nzbget_url'])):
+				send2nzbget_exist = self.sckname
+
 		send2sab_exist = None
 		if ('sabnzbd_url' in self.cgen):
 			if(len(self.cgen['sabnzbd_url'])):
@@ -379,6 +416,7 @@ class DoParallelSearch:
 												vr=ver_notify, args=args, nc = svalid, sugg = sugg_list,
 												speed_class_sel = speed_class_sel,
 												send2sab_exist= send2sab_exist,
+												send2nzbget_exist= send2nzbget_exist,
 												cgen = self.cgen,
 												trend_show = params['trend_show'], 
 												trend_movie = params['trend_movie'], 

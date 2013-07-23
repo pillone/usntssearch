@@ -122,9 +122,15 @@
 							{% if send2sab_exist   -%}
 								<a href= "" id=tosab_lnk name=tosab_info{{ row['id'] }}>
 								<input type="hidden" value="{{ row['url_encr'] }}" name=tosab_info{{ row['id'] }}>
-								<img src="static/sab2_16.png" style='vertical-align: middle;' width="16" height="16"/ name=tosab_info{{ row['id'] }}_img>
+								<img src="static/sab2_16.png" style='vertical-align: middle;' width="16" height="16"/ name=tosab_info{{ row['id'] }}_img></a>
 							{%- endif %}
-							</a>
+  
+							{% if send2nzbget_exist   -%}
+								<a href= "" id=tonzbget_lnk name=tonzbget_info{{ row['id'] }}>
+								<input type="hidden" value="{{ row['url_encr'] }}" name=tonzbget_info{{ row['id'] }}>
+								<img src="static/off.png" style='vertical-align: middle;' width="16" height="16"/ name=tonzbget_info{{ row['id'] }}_img></a>
+							{%- endif %}
+							
 							<a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a></td>
 						<td class="sizecell">{{ row['cat'] }}</td>
 						<td class="sizecell">{{ row['filesize'] }}</td>
@@ -232,6 +238,27 @@
 								else
 								{
 									$('img[name="'+addressValue+'_img"]').attr("src", 'static/sab2_16_no.png')
+								}
+
+								});
+				return false;
+
+			});
+			
+ 			$("a#tonzbget_lnk").click(function () {
+				var addressValue = $(this).attr("name");
+				$('img[name="'+addressValue+'_img"]').attr("src", 'static/loadingicon.gif')
+
+				 $.getJSON($SCRIPT_ROOT + '/tonzbget',
+							{data: $('input[name="'+addressValue+'"]').val(), },
+							function(data) {
+								if(data.code == 1)
+								{
+									$('img[name="'+addressValue+'_img"]').attr("src", 'static/imdb.png')
+								}
+								else
+								{
+									$('img[name="'+addressValue+'_img"]').attr("src", 'static/arrow-down.png')
 								}
 
 								});
