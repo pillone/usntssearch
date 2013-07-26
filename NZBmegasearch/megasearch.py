@@ -33,7 +33,8 @@ import base64
 import re
 import copy
 from xmlrpclib import ServerProxy
-import requests
+import urllib2
+from base64 import standard_b64encode
 
 log = logging.getLogger(__name__)
 
@@ -247,20 +248,33 @@ class DoParallelSearch:
 			if(len(self.cgen['nzbget_url'])):				
 				rq_url = 'http://'+self.cgen['nzbget_user']+':'+self.cgen['nzbget_pwd']+'@'+self.cgen['nzbget_url'] + '/xmlrpc'
 				print rq_url
-				#~ try
-					#~ server = ServerProxy(rq_url)
-				#~ except Exception as e:
-					#~ print 'Error contacting NZBGET '+str(e)
-					#~ return 0
+				try:
+					server = ServerProxy(rq_url)
+				except Exception as e:
+					print 'Error contacting NZBGET '+str(e)
+					return 0
 
 				try:
-					internal_url = 'http://localhost:5000/'+args['data']
-					print internal_url
-					#~ damn...
-					r = requests.get(url)
-					print len(r.content)
+					myrq = args['data'].replace("warp?", "")
+					print myrq
+					pulrlparse = dict(urlparse.parse_qsl(myrq))
+					res = self.wrp.beam(pulrlparse)	
+					if('Location'   in res.headers):
+						log.info('tonzbget: Warp is treated as 302 redirector')
+						geturl_rq = res.headers['Location']
+						r = requests.get(geturl_rq)
+						nzbname = 'nzbfromNZBmegasearcH'
+						if('content-disposition' in r.headers):
+							rheaders = r.headers['content-disposition']
+							idxsfind = rheaders.find('=')
+							if(idxsfind != -1):
+								nzbname = rheaders[idxsfind+1:len(rheaders)].replace('"','')
+						nzbcontent64=standard_b64encode(r.content)
+						server.append(nzbname, '', False, nzbcontent64)
+						
 				except Exception as e:
-					print 'Error contacting myself '+str(e)
+					#~ print 'Error connecting server or downloading nzb '+str(e)
+					log.info('Error connecting server or downloading nzb: '+str(e))
 					return 0	
 
 				return 1
