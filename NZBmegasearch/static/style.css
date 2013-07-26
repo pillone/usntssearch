@@ -169,9 +169,7 @@ div#container
 }
 
 .suggarea_imbd {
-/*
-	width: 5%;
-*/
+.suggarea_imbd { padding-left: 5px; }
  }
 
 .form-wrapper-01 {
