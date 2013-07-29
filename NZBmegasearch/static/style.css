@@ -364,16 +364,9 @@ div#container
 	overflow: hidden;
 }
 
-/*
- 	border:1px solid black;
-*/
 .alert-flex {
 	width: 150px;
 	font: bold 14px Helvetica, Arial, Sans-Serif;
-/*
-	font: bold 14px 'Sans-Serif';
-	font: bold 14px Helvetica, Arial, Sans-Serif;;
-*/
 	color: #ffffff;
 	background-color: #a2bcc0;
 	-moz-border-radius: 5px;
@@ -381,6 +374,7 @@ div#container
 	border-radius: 5px;
 	padding: 2px 4px 2px 4px;
 	float: right
+	margin: 0 0 5px;
 }
 
 
