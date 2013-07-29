@@ -221,10 +221,9 @@ def tosab():
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 	
 
 @app.route('/tonzbget')
-def tosab():
-	print request.args
-	mega_parall.tonzbget(request.args, urlparse(request.url))
-	return 'a'
+def tonzbget():
+	return jsonify(code=mega_parall.tonzbget(request.args, urlparse(request.url) ))
+	
 		
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 	
  

@@ -247,7 +247,7 @@ class DoParallelSearch:
 		if ('nzbget_url' in self.cgen):
 			if(len(self.cgen['nzbget_url'])):				
 				rq_url = 'http://'+self.cgen['nzbget_user']+':'+self.cgen['nzbget_pwd']+'@'+self.cgen['nzbget_url'] + '/xmlrpc'
-				print rq_url
+				#~ print rq_url
 				try:
 					server = ServerProxy(rq_url)
 				except Exception as e:
@@ -256,10 +256,16 @@ class DoParallelSearch:
 
 				try:
 					myrq = args['data'].replace("warp?", "")
-					print myrq
-					pulrlparse = dict(urlparse.parse_qsl(myrq))
+					pulrlparse = dict(urlparse.parse_qsl(myrq))					
+					if('m' in args):
+						pulrlparse['m'] = args['m']
+						
+					#~ print pulrlparse
 					res = self.wrp.beam(pulrlparse)	
+					#~ print res.headers
+					
 					if('Location'   in res.headers):
+						#~ for redirect
 						log.info('tonzbget: Warp is treated as 302 redirector')
 						geturl_rq = res.headers['Location']
 						r = requests.get(geturl_rq)
@@ -271,7 +277,20 @@ class DoParallelSearch:
 								nzbname = rheaders[idxsfind+1:len(rheaders)].replace('"','')
 						nzbcontent64=standard_b64encode(r.content)
 						server.append(nzbname, '', False, nzbcontent64)
-						
+					else:
+						#~ for downloaded						
+						log.info('tonzbget: Warp gets full content')
+						nzbname = 'nzbfromNZBmegasearcH'
+						if('content-disposition' in res.headers):
+							rheaders = res.headers['content-disposition']
+							idxsfind = rheaders.find('=')
+							if(idxsfind != -1):
+								nzbname = rheaders[idxsfind+1:len(rheaders)].replace('"','')
+						#~ print res.data
+						nzbcontent64=standard_b64encode(res.data)
+						server.append(nzbname, '', False, nzbcontent64)
+		
+																			
 				except Exception as e:
 					#~ print 'Error connecting server or downloading nzb '+str(e)
 					log.info('Error connecting server or downloading nzb: '+str(e))
