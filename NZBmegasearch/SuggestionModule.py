@@ -15,7 +15,7 @@
 #~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
 
-
+import re
 import requests
 import megasearch
 import xml.etree.ElementTree
@@ -52,6 +52,8 @@ class SuggestionResponses:
 		self.trends_refreshrate = cgen['trends_refreshrate']
 		self.detached_trendpolling = cgen['large_server']
 		self.best_k	= cgen['trends_qty']
+		self.cgen	= cgen
+		self.logic_expr = re.compile("(?:^|\s)([-+])(\w+)")
 		self.tvrage_rqheaders = {
 						'Connection': 'keep-alive;' ,
 						'Cache-Control': 'max-age=0',
@@ -65,6 +67,50 @@ class SuggestionResponses:
 
 		if(int(cgen['general_trend']) == 0):
 			self.active_trend = 0
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+		
+	def ask_predb(self, args):
+	
+		parsed_data = []
+		
+		if('q' not in args):
+			return parsed_data
+		nuqry = args['q'] + ' ' + self.cgen['searchaddontxt']
+		self.qry_nologic = self.logic_expr.sub(" ",nuqry)
+		urlParams = dict( search=self.qry_nologic, rss=1  )			
+		urlpredb = 'http://predb.me'
+		
+		#~ print urlParams
+		try:
+			http_result = requests.get(url=urlpredb, params=urlParams, verify=False, timeout=self.timeout,  headers=self.tvrage_rqheaders)
+		except Exception as e:
+			print e
+			log.critical(str(e))
+			return parsed_data
+			
+		data = http_result.text
+
+		try:
+			tree = ET.fromstring(data.encode('utf-8'))
+		except Exception as e:
+			print e
+			log.critical(str(e))
+			return parsed_data
+		
+		counter = 0
+		#~ elem_title = elem.find("title")
+
+		for titles in tree.iter('title'):
+			if (counter > 0):
+				p_data = { 'title': titles.text}
+				parsed_data.append(p_data)	
+			
+			counter = counter + 1	
+			
+		#~ print parsed_data
+		return 	parsed_data					
+
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 		

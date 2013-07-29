@@ -161,6 +161,7 @@ def static_from_root():
     return send_from_directory(app.static_folder, request.path[1:])
 			
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+ 
 
 @app.route('/s', methods=['GET'])
 @auth.requires_auth
@@ -173,12 +174,15 @@ def search():
 	if(cfgsets.cgen['general_suggestion'] == 1):
 		t1 = threading.Thread(target=sugg.ask, args=(request.args,) )
 	t2 = threading.Thread(target=mega_parall.dosearch, args=(request.args,)   )
+	t3 = threading.Thread(target=sugg.ask_predb, args=(request.args,)   )
 	if(cfgsets.cgen['general_suggestion'] == 1):
 		t1.start()
 	t2.start()
+	t3.start()
 	if(cfgsets.cgen['general_suggestion'] == 1):	
 		t1.join()
 	t2.join()
+	t3.join()
 
 	params_dosearch = {'args': request.args, 
 						'sugg': sugg.sugg_info, 
