@@ -69,7 +69,8 @@ class CfgSettings:
 		parser.set('general', 'smartsearch', '0')
 		parser.set('general', 'cache_active', '0')	
 		parser.set('general', 'general_ipaddress', '')		
-		
+		parser.set('general', 'predb_active', '0')		
+
 		if (request_form['general_ipaddress'] != 'AUTO'):
 			parser.set('general', 'general_ipaddress', request_form['general_ipaddress'].replace(" ", ""))
 		if (request_form.has_key('https')  == True):
@@ -80,6 +81,8 @@ class CfgSettings:
 			parser.set('general', 'search_suggestions', '1')
 		if (request_form.has_key('smartsearch')  == True):
 			parser.set('general', 'smartsearch', '1')
+		if (request_form.has_key('predb_active')  == True):
+			parser.set('general', 'predb_active', '1')
 		if (request_form.has_key('cache_active')  == True):
 			parser.set('general', 'cache_active', request_form['cache_active'])
 
@@ -278,7 +281,6 @@ class CfgSettings:
 		cache_active = parser.getint('general', 'cache_active')
 		searchaddontxt = parser.get('general', 'searchaddontxt')
 		
-		
 		self.cgen = {'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd,
 				'config_user':config_user,
 				'config_pwd':config_pwd,
@@ -297,6 +299,7 @@ class CfgSettings:
 				'sabnzbd_url' : '', 'sabnzbd_api':'',
 				'nzbget_url' : '', 'nzbget_user':'','nzbget_pwd':'',
 				'general_apikey' : '',
+				'predb_active' : 0,
 				'stats_key' : gen_stats_key, 'motd':gen_motd}
 		self.selectable_speedopt = copy.deepcopy(self.selectable_speedopt_cpy)
 		self.selectable_speedopt[0][1] += ' ['+str(self.cgen['timeout_class'][1])+'s]'
@@ -378,6 +381,9 @@ class CfgSettings:
 				self.cgen['searchaddontxt'] = cst_parser.get('general', 'searchaddontxt')
 			if(cst_parser.has_option('general' ,'general_ipaddress')):	
 				self.cgen['general_ipaddress'] = cst_parser.get('general', 'general_ipaddress')
+			if(cst_parser.has_option('general' ,'predb_active')):	
+				self.cgen['predb_active'] = cst_parser.getint('general', 'predb_active')
+
 
 
 		except Exception as e:
@@ -566,6 +572,9 @@ class CfgSettings:
 		genopt['general_suggestion_verbose']	 = ''
 		genopt['smartsearch_verbose']	 = ''
 		genopt['max_cache_verbose']	 = ''
+		genopt['predb_active_verbose']	 = ''		
+		if(genopt['predb_active'] == 1):
+			genopt['predb_active_verbose']	 = 'checked=yes'
 		if(genopt['general_https'] == 1):
 			genopt['general_https_verbose']	 = 'checked=yes'
 		if(genopt['general_suggestion'] == 1):

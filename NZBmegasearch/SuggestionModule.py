@@ -54,6 +54,7 @@ class SuggestionResponses:
 		self.best_k	= cgen['trends_qty']
 		self.cgen	= cgen
 		self.logic_expr = re.compile("(?:^|\s)([-+])(\w+)")
+		self.predb_info = []
 		self.tvrage_rqheaders = {
 						'Connection': 'keep-alive;' ,
 						'Cache-Control': 'max-age=0',
@@ -72,10 +73,10 @@ class SuggestionResponses:
 		
 	def ask_predb(self, args):
 	
-		parsed_data = []
+		self.predb_info = []
 		
 		if('q' not in args):
-			return parsed_data
+			return
 		nuqry = args['q'] + ' ' + self.cgen['searchaddontxt']
 		self.qry_nologic = self.logic_expr.sub(" ",nuqry)
 		urlParams = dict( search=self.qry_nologic, rss=1  )			
@@ -87,7 +88,7 @@ class SuggestionResponses:
 		except Exception as e:
 			print e
 			log.critical(str(e))
-			return parsed_data
+			return
 			
 		data = http_result.text
 
@@ -96,7 +97,7 @@ class SuggestionResponses:
 		except Exception as e:
 			print e
 			log.critical(str(e))
-			return parsed_data
+			return  
 		
 		counter = 0
 		#~ elem_title = elem.find("title")
@@ -104,12 +105,11 @@ class SuggestionResponses:
 		for titles in tree.iter('title'):
 			if (counter > 0):
 				p_data = { 'title': titles.text}
-				parsed_data.append(p_data)	
+				self.predb_info.append(p_data)	
 			
 			counter = counter + 1	
 			
-		#~ print parsed_data
-		return 	parsed_data					
+		#~ print self.predb_info
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

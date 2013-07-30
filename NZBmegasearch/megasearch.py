@@ -342,7 +342,27 @@ class DoParallelSearch:
 
 				return 1
 
-				
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+	def matchpredb(self, results, predb_info):		
+		
+		for i in xrange(len(results)):
+			results[i]['predb']  = 0			
+			
+			if('title' in results[i]):
+				#~ best match test
+				for j in  xrange(len(predb_info)):
+					#~ print predb_info[j]['title']
+					#~ print results[i]['title']
+					#~ print results[i]['title'].find(predb_info[j]['title'])
+					#~ print '-----------------'
+					if(results[i]['title'] == predb_info[j]['title']):
+						results[i]['predb']  = 2
+					elif(results[i]['title'].lower().find(predb_info[j]['title'].lower()) != -1):
+						results[i]['predb']  = 1
+			#~ print results[i]['predb']			
+			
+						
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 	def cleanUpResults(self, params):
@@ -354,7 +374,10 @@ class DoParallelSearch:
 		niceResults = []
 		existduplicates = 0
 
-		#~ sorting
+		#~ tries to match predb entries
+		self.matchpredb(results, params['predb'])	
+
+		#~ sorting		
 		if 'order' not in args:
 			results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
 		else:
@@ -366,9 +389,12 @@ class DoParallelSearch:
 				results = sorted(results, key=itemgetter('providertitle'))
 			if	(args['order']=='d'):
 				results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
+			if	(args['order']=='x'):
+				results = sorted(results, key=itemgetter('predb'), reverse=True) 
 			if	(args['order']=='c'):
 				results = sorted(results, key=itemgetter('categ'), reverse=True) 
-				
+	
+						
 		#~ do nice 
 		for i in xrange(len(results)):
 			if(results[i]['ignore'] == 2):
@@ -414,7 +440,8 @@ class DoParallelSearch:
 				'details_deref':'http://www.derefer.me/?'+results[i]['release_comments'],
 				'providerurl':results[i]['provider'],
 				'providertitle':results[i]['providertitle'],
-				'ignore' : results[i]['ignore']
+				'ignore' : results[i]['ignore'],
+				'predb':results[i]['predb']
 			})
 		send2nzbget_exist = None
 		if ('nzbget_url' in self.cgen):
@@ -443,8 +470,8 @@ class DoParallelSearch:
 		#~ ~ ~ ~ ~ ~ ~ ~ ~ 
 		scat = ''
 		if('selcat' in params['args']):
-			scat = params['args']['selcat']
-			
+			scat = params['args']['selcat']		
+									
 		return render_template('main_page.html',results=niceResults, exist=existduplicates, 
 												vr=ver_notify, args=args, nc = svalid, sugg = sugg_list,
 												speed_class_sel = speed_class_sel,

@@ -173,19 +173,23 @@ def search():
 	#~ parallel suggestion and search
 	if(cfgsets.cgen['general_suggestion'] == 1):
 		t1 = threading.Thread(target=sugg.ask, args=(request.args,) )
+	if(cfgsets.cgen['predb_active'] == 1):	
+		t3 = threading.Thread(target=sugg.ask_predb, args=(request.args,)   )
 	t2 = threading.Thread(target=mega_parall.dosearch, args=(request.args,)   )
-	t3 = threading.Thread(target=sugg.ask_predb, args=(request.args,)   )
+	t2.start()
 	if(cfgsets.cgen['general_suggestion'] == 1):
 		t1.start()
-	t2.start()
-	t3.start()
+	if(cfgsets.cgen['predb_active'] == 1):	
+		t3.start()		
 	if(cfgsets.cgen['general_suggestion'] == 1):	
 		t1.join()
+	if(cfgsets.cgen['predb_active'] == 1):		
+		t3.join()
 	t2.join()
-	t3.join()
 
 	params_dosearch = {'args': request.args, 
 						'sugg': sugg.sugg_info, 
+						'predb': sugg.predb_info, 
 						'trend_movie': sugg.movie_trend, 
 						'trend_show': sugg.show_trend, 
 						'ver': cver.ver_notify,

@@ -107,6 +107,7 @@
 			<table class="results" summary="Search Results">
 				<thead>
 					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
+					    <th scope="col" class=predbcell><a href="s?q={{ args['q'] }}&order=x&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>PreDB <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
 					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=c&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Type <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
 					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Size <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
 					    <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Days <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
@@ -132,6 +133,14 @@
 							{%- endif %}
 							
 							<a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a></td>
+						<td class="predbcell">
+							{% if row['predb'] == 2 -%}
+								<img src="static/predb_1st.png" width="16" height="16" class="imgdisplayed"/>
+							{%- endif %}
+							{% if row['predb'] == 1 -%}
+								<img src="static/predb_2nd.png" width="16" height="16" class="imgdisplayed"/>
+							{%- endif %}
+						</td>
 						<td class="sizecell">{{ row['cat'] }}</td>
 						<td class="sizecell">{{ row['filesize'] }}</td>
 						<td class="datecell">{{ row['age'] }}</td>
@@ -148,6 +157,7 @@
 			<table class="results" summary="Detected duplicates">
 				<thead>
 					<tr><th scope="col" class=titlecell><b>Detected duplicates</b></th>
+					    <th scope="col" class=predbcell><b>PreDB</b></th>
 					    <th scope="col" class=sizecell><b>Type</b></th>
 						<th scope="col" class=sizecell><b>Size</b></th>
 						<th scope="col" class=datecell><b>Days</b></th>
@@ -171,6 +181,14 @@
 							{%- endif %}
 							
 							<a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a></td>
+						<td class="predbcell">
+							{% if row['predb'] == 2 -%}
+								<img src="static/predb_1st.png" width="16" height="16" class="imgdisplayed"/>
+							{%- endif %}
+							{% if row['predb'] == 1 -%}
+								<img src="static/predb_2nd.png" width="16" height="16" class="imgdisplayed"/>
+							{%- endif %}
+						</td>
 						<td class="sizecell">{{ row['cat'] }}</td>
 						<td class="sizecell">{{ row['filesize'] }}</td>
 						<td class="datecell">{{ row['age'] }}</td>
