@@ -348,6 +348,7 @@ class DoParallelSearch:
 		
 		for i in xrange(len(results)):
 			results[i]['predb']  = 0			
+			results[i]['predb_lnk']  = ''
 			
 			if('title' in results[i]):
 				#~ best match test
@@ -358,8 +359,10 @@ class DoParallelSearch:
 					#~ print '-----------------'
 					if(results[i]['title'] == predb_info[j]['title']):
 						results[i]['predb']  = 2
+						results[i]['predb_lnk']  = predb_info[j]['link']
 					elif(results[i]['title'].lower().find(predb_info[j]['title'].lower()) != -1):
 						results[i]['predb']  = 1
+						results[i]['predb_lnk']  = predb_info[j]['link']
 			#~ print results[i]['predb']			
 			
 						
@@ -441,7 +444,8 @@ class DoParallelSearch:
 				'providerurl':results[i]['provider'],
 				'providertitle':results[i]['providertitle'],
 				'ignore' : results[i]['ignore'],
-				'predb':results[i]['predb']
+				'predb':results[i]['predb'],
+				'predb_lnk':results[i]['predb_lnk']
 			})
 		send2nzbget_exist = None
 		if ('nzbget_url' in self.cgen):

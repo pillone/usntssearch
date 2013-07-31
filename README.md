@@ -12,7 +12,8 @@ That's more: you can configure to use it with your SB and CP as a unique provide
 * Support for accounts from any Newsnb and Spotweb based provider
 * Support for web-only access to Newsnb websites (in case API is not active)
 * Support for nzb.cc, findnzb.info, ftdworld.net, wombie, omgwtfnzbs, gingadaddy and many others
-* Support for CP, SB, NZB360
+* Support for CP, SB, NZB360, SABNZBD, NZBGET
+* Detects PREDB releases
 * Support for many search categories
 * Retreives trending movies and shows
 * Gives appropriate search suggestions
@@ -21,7 +22,7 @@ That's more: you can configure to use it with your SB and CP as a unique provide
 
 It is written in Python and it works on linux, mac, win. Windows binaries are also available.
 
-**Latest version is 0.43**
+**Latest version is 0.44**
 
 This project makes use of:
 
@@ -78,14 +79,14 @@ This project makes use of:
 ## Updates
 
 
-**Changes in v0.43**
+**Changes in v0.44**
 
-- Bugfix Gingadaddy, thanks to johnnyhopeful, mavenish
-- Bugfix details w some provider, thanks to dr99,  JackDandy
-- Bugfix fanzub thanks JackDandy
-- Bugfix trends thanks usamitysam, gazaz
-- Bugfix error 500 thanks Mochaka
-- Added improved gtignore thanks JackDandy
+- Bugfix obscure 500 error, thanks JackDandy
+- Enhanced css, thanks JackDandy
+- For so many bugfix and suggestions, thanks JackDandy :)
+- Added manual IP option for SABNZB automation
+- Added PREDB matching
+- Added custom permanent search terms, suggestion by JackDandy
 
 More updates are available in changelog.txt
 

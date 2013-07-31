@@ -1,6 +1,25 @@
 Updates
 ================
 
+Changes in v0.44
+
+- Bugfix obscure 500 error, thanks JackDandy
+- Enhanced css, thanks JackDandy
+- For so many bugfix and suggestions, thanks JackDandy :)
+- Added manual IP option for SABNZB automation
+- Added PREDB matching (experimental)
+- Added custom permanent search terms, suggestion by JackDandy
+
+
+Changes in v0.43
+
+- Bugfix Gingadaddy, thanks to johnnyhopeful, mavenish
+- Bugfix details w some provider, thanks to dr99,  JackDandy
+- Bugfix fanzub thanks JackDandy
+- Bugfix trends thanks usamitysam, gazaz
+- Bugfix error 500 thanks Mochaka
+- Added improved gtignore thanks JackDandy
+
 Changes in v0.42
 
 - New support for Omgwtfnzbs

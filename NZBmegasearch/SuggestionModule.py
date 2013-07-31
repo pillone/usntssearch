@@ -99,15 +99,12 @@ class SuggestionResponses:
 			log.critical(str(e))
 			return  
 		
-		counter = 0
-		#~ elem_title = elem.find("title")
-
-		for titles in tree.iter('title'):
-			if (counter > 0):
-				p_data = { 'title': titles.text}
-				self.predb_info.append(p_data)	
-			
-			counter = counter + 1	
+		for elem in tree.iter('item'):
+			elem_title = elem.find("title")
+			elem_link = elem.find("link")
+			if(elem_title is not None and elem_link is not None):
+				p_data = { 'title': elem_title.text, 'link':elem_link.text}
+				self.predb_info.append(p_data)				
 			
 		#~ print self.predb_info
 
