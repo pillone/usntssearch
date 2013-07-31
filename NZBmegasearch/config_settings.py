@@ -299,7 +299,7 @@ class CfgSettings:
 				'sabnzbd_url' : '', 'sabnzbd_api':'',
 				'nzbget_url' : '', 'nzbget_user':'','nzbget_pwd':'',
 				'general_apikey' : '',
-				'predb_active' : 0,
+				'predb_active' : 1,
 				'stats_key' : gen_stats_key, 'motd':gen_motd}
 		self.selectable_speedopt = copy.deepcopy(self.selectable_speedopt_cpy)
 		self.selectable_speedopt[0][1] += ' ['+str(self.cgen['timeout_class'][1])+'s]'
