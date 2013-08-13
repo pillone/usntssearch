@@ -125,8 +125,13 @@
 			<td><label for="sabnzbd_url">Url:</label> <input type="text" name="sabnzbd_url" id="sabnzbd_url" value="{{ genopt['sabnzbd_url'] }}" size="22" class="conftbox"> </td> <td> 
 			<label for="sabnzbd_api">API Key:</label> <input type="text" name="sabnzbd_api" id="sabnzbd_api" value="{{ genopt['sabnzbd_api'] }}" size="22" class="conftbox"></td>
 	</tr>
+
 	<tr>
-		    <td><input type="button" value="Detect megasearch IP/host" onclick="detect_ip()" class="confbttn">   <label for="general_ipaddress"></label></td><td><input type="text" name="general_ipaddress" id="general_ipaddress" value="{{ genopt['general_ipaddress_verbose'] }}" size="14" class="conftbox"> <input type="button" value="Auto" onclick='cfgform.general_ipaddress.value="AUTO"' class="confbttn"></td>	
+		<td> <br>NZBmegasearch IP/host for SabNZB</td><td></td>
+	</tr>
+
+	<tr>
+		<td>IP or host: <label for="general_ipaddress"></label><input type="text" name="general_ipaddress" id="general_ipaddress" value="{{ genopt['general_ipaddress_verbose'] }}" size="14" class="conftbox"></td><td><input type="button" value="Autodetect ({{ cdomainname }})" onclick='cfgform.general_ipaddress.value="AUTO"' class="confbttn"></td>
 	</tr>	
 	
 </tbody></table>
