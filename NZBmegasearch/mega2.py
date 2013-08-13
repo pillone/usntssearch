@@ -222,6 +222,13 @@ def warpme():
 		return res
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
+@app.route('/rss')
+def rss():
+	print request.url
+	return apiresp.dosearch_rss(request.args)
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
 @app.route('/tosab')
 def tosab():
 	return jsonify(code=mega_parall.tosab(request.args, urlparse(request.url) ))

@@ -55,7 +55,9 @@ class ApiResponses:
 		if(conf is not None):
 			self.timeout = conf[0]['timeout']
 			self.cfg= conf	 		
-			
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+		
 	def dosearch(self, arguments, hname):
 		self.args = arguments
 		self.rqurl = hname.scheme+'://'+hname.netloc
@@ -83,6 +85,14 @@ class ApiResponses:
 		return response	
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+	def dosearch_rss(self, arguments):
+		self.args = arguments
+		
+		return render_template('rss.html')
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	
 	def headphones_req(self):	
 		print self.args
 		if(self.args.has_key('album') or self.args.has_key('artist')  or self.args.has_key('track')):
