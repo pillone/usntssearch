@@ -228,10 +228,15 @@
 
 				[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' alt="connect" /><img src="static/cp_logo.png" width="" height="16" alt=""/></a> ]
 				[ <a href='config'><img src="static/options.png" width="" height="16" style='vertical-align: bottom;' alt="config" /></a> ]
-				[ {% if vr['os']  != 'openshift' -%}
-						<a href='restart?sid={{ sid }}' OnClick="return confirm('Do you really want to restart the program?');" class='restartbutton'><img src="static/restart.png" width="" height="16" style='vertical-align: bottom;' alt="restart"/></a>
-				  {%- endif %}
-				 <a href='poweroff?sid={{ sid }}' OnClick="return confirm('Do you really want to halt the program?');"><img src="static/off.png" width="" height="16" style='vertical-align: bottom;' alt="power off"/></a> ]
+  			    {% if cgen['general_restrictopt1'] == 0 -%}
+					[ {% if vr['os']  != 'openshift' -%}
+							<a href='restart?sid={{ sid }}' OnClick="return confirm('Do you really want to restart the program?');" class='restartbutton'><img src="static/restart.png" width="" height="16" style='vertical-align: bottom;' alt="restart"/></a>
+					  {%- endif %}
+					  {% if cgen['general_restrictopt1'] == 0 -%}
+						<a href='poweroff?sid={{ sid }}' OnClick="return confirm('Do you really want to halt the program?');"><img src="static/off.png" width="" height="16" style='vertical-align: bottom;' alt="power off"/></a> 
+					  {%- endif %}						
+					]
+				{%- endif %}	
 				</div>
 			</div>
 		{%- endif %}

@@ -69,12 +69,15 @@ class CfgSettings:
 		parser.set('general', 'smartsearch', '0')
 		parser.set('general', 'cache_active', '0')	
 		parser.set('general', 'general_ipaddress', '')		
-		parser.set('general', 'predb_active', '0')		
+		parser.set('general', 'predb_active', '0')	
+		parser.set('general', 'general_restrictopt1', '0')				
 
 		if (request_form['general_ipaddress'] != 'AUTO'):
 			parser.set('general', 'general_ipaddress', request_form['general_ipaddress'].replace(" ", ""))
 		if (request_form.has_key('https')  == True):
 			parser.set('general', 'general_https', '1')
+		if (request_form.has_key('general_restrictopt1')  == True):
+			parser.set('general', 'general_restrictopt1', '1')
 		if (request_form.has_key('trends')  == True):
 			parser.set('general', 'trends', '1')
 		if (request_form.has_key('sugg')  == True):
@@ -279,8 +282,7 @@ class CfgSettings:
 		gen_trends_qty = parser.getint('general', 'trends_qty')
 		smartsearch = parser.getint('general', 'smartsearch')
 		cache_active = parser.getint('general', 'cache_active')
-		searchaddontxt = parser.get('general', 'searchaddontxt')
-		
+		searchaddontxt = parser.get('general', 'searchaddontxt')		
 		self.cgen = {'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd,
 				'config_user':config_user,
 				'config_pwd':config_pwd,
@@ -299,6 +301,7 @@ class CfgSettings:
 				'sabnzbd_url' : '', 'sabnzbd_api':'',
 				'nzbget_url' : '', 'nzbget_user':'','nzbget_pwd':'',
 				'general_apikey' : '',
+				'general_restrictopt1' : '',
 				'predb_active' : 1,
 				'stats_key' : gen_stats_key, 'motd':gen_motd}
 		self.selectable_speedopt = copy.deepcopy(self.selectable_speedopt_cpy)
@@ -383,6 +386,8 @@ class CfgSettings:
 				self.cgen['general_ipaddress'] = cst_parser.get('general', 'general_ipaddress')
 			if(cst_parser.has_option('general' ,'predb_active')):	
 				self.cgen['predb_active'] = cst_parser.getint('general', 'predb_active')
+			if(cst_parser.has_option('general' ,'general_restrictopt1')):	
+				self.cgen['general_restrictopt1'] = cst_parser.getint('general', 'general_restrictopt1')
 
 
 
@@ -573,10 +578,13 @@ class CfgSettings:
 		genopt['smartsearch_verbose']	 = ''
 		genopt['max_cache_verbose']	 = ''
 		genopt['predb_active_verbose']	 = ''		
+		genopt['general_restrictopt1_verbose']	 = ''				
 		if(genopt['predb_active'] == 1):
 			genopt['predb_active_verbose']	 = 'checked=yes'
 		if(genopt['general_https'] == 1):
 			genopt['general_https_verbose']	 = 'checked=yes'
+		if(genopt['general_restrictopt1'] == 1):
+			genopt['general_restrictopt1_verbose']	 = 'checked=yes'
 		if(genopt['general_suggestion'] == 1):
 			genopt['general_suggestion_verbose']	 = 'checked=yes'
 		if(genopt['general_trend'] == 1):
