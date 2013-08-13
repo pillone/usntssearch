@@ -360,10 +360,10 @@ class DoParallelSearch:
 					#~ print '-----------------'
 					if(results[i]['title'] == predb_info[j]['title']):
 						results[i]['predb']  = 2
-						results[i]['predb_lnk']  = predb_info[j]['link']
+						results[i]['predb_lnk']  = 'http://www.derefer.me/?'+predb_info[j]['link']
 					elif(results[i]['title'].lower().find(predb_info[j]['title'].lower()) != -1):
 						results[i]['predb']  = 1
-						results[i]['predb_lnk']  = predb_info[j]['link']
+						results[i]['predb_lnk']  = 'http://www.derefer.me/?'+predb_info[j]['link']
 			#~ print results[i]['predb']			
 			
 						
