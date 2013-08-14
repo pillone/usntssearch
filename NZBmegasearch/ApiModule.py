@@ -86,10 +86,26 @@ class ApiResponses:
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-	def dosearch_rss(self, arguments):
+	def dosearch_rss(self, arguments, hname):
 		self.args = arguments
+		self.rqurl = hname.scheme+'://'+hname.netloc			
+		addparams = dict(
+						age= '1500',
+						limit='20000',
+						t='search',
+						cat='1000,2000,3000,4000,5000,6000,7000')
 		
-		return render_template('rss.html')
+		rawResults = SearchModule.performSearch('', self.cfg, None, addparams)
+		results = []
+		#~ no cleaning just flatten in one array
+		for provid in xrange(len(rawResults)):
+			for z in xrange(len(rawResults[provid])):
+ 				results.append(rawResults[provid][z])
+
+		self.searchstring = ''
+		self.typesearch = 3
+
+		return self.cleanUpResultsXML(results)
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	
@@ -398,9 +414,15 @@ class ApiResponses:
 		if(self.typesearch == 2):
 			idbinfo = ''
 			kindofreq = kindofreq + ' FS '
+		if(self.typesearch == 3):
+			idbinfo = ''
+			kindofreq = kindofreq + ' RS '
+
 		mssg = kindofreq + self.searchstring + ' ' + str(len(niceResults)) + ' ' +  str(len(results))
 		print mssg
 		log.info (mssg)
-		
-		return render_template('api.html',results=niceResults, num_results=len(niceResults), typeres= self.typesearch, idb = idbinfo)
+		if(self.typesearch == 3):
+			return render_template('rss.html',results=niceResults, num_results=len(niceResults), typeres= self.typesearch, idb = idbinfo)
+		else:
+			return render_template('api.html',results=niceResults, num_results=len(niceResults), typeres= self.typesearch, idb = idbinfo)				
 	

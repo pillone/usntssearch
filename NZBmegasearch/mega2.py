@@ -225,7 +225,7 @@ def warpme():
 @app.route('/rss')
 def rss():
 	print request.url
-	return apiresp.dosearch_rss(request.args)
+	return apiresp.dosearch_rss(request.args, urlparse(request.url))
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
