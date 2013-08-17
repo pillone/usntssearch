@@ -271,7 +271,19 @@ class DeepSearch_one:
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 					
 
+	def search_cat(self, dic_searchopt):
+		
+		return self.search_raw("/browse?t=",dic_searchopt['cat'])
+		
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 					
+
 	def search(self, srchstr):
+		
+		return self.search_raw("/search/", srchstr)
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 					
+
+	def search_raw(self, pagestr, srchstr):
 		if(self.cur_cfg['valid'] == 0):
 			return []
 		
@@ -285,7 +297,7 @@ class DeepSearch_one:
 				return []
 
 		mainurl = self.cur_cfg['url']
-		loginurl = mainurl + "/search/"+srchstr
+		loginurl = mainurl + pagestr+srchstr
 		timestamp_s = time.time()	
 		try:
 			socket.setdefaulttimeout(self.timeout)

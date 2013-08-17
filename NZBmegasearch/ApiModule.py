@@ -95,12 +95,16 @@ class ApiResponses:
 						t='search',
 						cat='1000,2000,3000,4000,5000,6000,7000')
 		
-		rawResults = SearchModule.performSearch('', self.cfg, None, addparams)
+		if('cat' in self.args):
+			addparams['cat'] = self.args['cat']
+			
+		rawResults = SearchModule.performSearch('', self.cfg, self.cfg_ds, addparams)
 		results = []
 		#~ no cleaning just flatten in one array
 		for provid in xrange(len(rawResults)):
-			for z in xrange(len(rawResults[provid])):
- 				results.append(rawResults[provid][z])
+			if(rawResults[provid] is not None):
+				for z in xrange(len(rawResults[provid])):
+					results.append(rawResults[provid][z])
 
 		self.searchstring = ''
 		self.typesearch = 3
@@ -214,7 +218,8 @@ class ApiResponses:
 						t='tvsearch',
 						cat='5040,5030')
 		
-		rawResults = SearchModule.performSearch('', self.cfg, None, addparams)
+		rawResults = SearchModule.performSearch('', self.cfg, self.cfg_ds, addparams)
+		#~ rawResults = SearchModule.performSearch('', self.cfg, None, addparams)
 		results = []
 		#~ no cleaning just flatten in one array
 		for provid in xrange(len(rawResults)):

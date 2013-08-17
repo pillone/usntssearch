@@ -133,7 +133,16 @@ def performSearch(queryString,  cfg, dsearch=None, extraparam=None):
 					t.start()
 					threadHandles.append(t)
 				except Exception as e:
-					print 'Error starting apisearch thread  : ' + str(e)
+					print 'Error starting raw apisearch thread  : ' + str(e)
+		if(dsearch is not None):
+			for index in xrange(len(dsearch.ds)):
+				if(dsearch.ds[index].cur_cfg['valid'] == 1):
+					try:
+						t = threading.Thread(target=performSearchThreadDSRaw, args=(extraparam,lock,dsearch.ds[index]))
+						t.start()
+						threadHandles.append(t)
+					except Exception as e:
+						print 'Error starting raw deepsearch thread  : ' + str(e)			
 
 	else:
 	#~ for standard search
@@ -226,7 +235,21 @@ def performSearchThreadDS(queryString, lock, dsearch_one):
 		lock.release()
 	except Exception as e:
 		print e
- 
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	
+def performSearchThreadDSRaw(extraparam, lock, dsearch_one):
+	
+	
+	localResults = dsearch_one.search_cat(extraparam)
+	lock.acquire()
+	globalResults.append(localResults)
+
+	try:
+		lock.release()
+	except Exception as e:
+		print e
+  
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 # Exception to be raised when a search function is not implemented
