@@ -417,7 +417,15 @@ class DoParallelSearch:
 			
 			if (results[i]['size'] == -1):
 				fsze1 = 'N/A'
-			totdays = (datetime.datetime.today() - datetime.datetime.fromtimestamp(results[i]['posting_date_timestamp'])).days + 1		
+			totdays = int ( (time.time() - results[i]['posting_date_timestamp'])/ (3600*24) )
+			
+			if(totdays == 0):
+				totdays = int ( (time.time() - results[i]['posting_date_timestamp'])/ (3600) )
+				if(totdays < 0):
+					totdays = "0h"
+				else:
+					totdays = str(totdays) + "h"	
+
 			category_str = '' 
 			keynum = len(results[i]['categ'])
 			keycount = 0
