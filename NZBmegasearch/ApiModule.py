@@ -330,18 +330,31 @@ class ApiResponses:
 	def generate_tvserie_nabresponse(self,tvrage_show ):
 		#~ compile string
 		season_num = self.args.get('season',-1, type=int)
+		relaxed_seasonmatch = 0
 		serie_search_str = SearchModule.sanitize_strings(tvrage_show['showtitle'])
 		if(self.args.has_key('ep')):
 			ep_num = self.args.get('ep',-1, type=int)			
 			serie_search_str = serie_search_str + '.s%02d' % season_num + 'e%02d' % ep_num
 		else:	
 			serie_search_str = serie_search_str + '.s%02d' % season_num 
+			relaxed_seasonmatch = 1
+			
 		self.typesearch = 1
 		self.searchstring = serie_search_str
 		#~ compile results				
 		results = SearchModule.performSearch(serie_search_str, self.cfg , self.cfg_ds )		
-		#~ flatten and summarize them
-		cleaned_results = megasearch.summary_results(results,serie_search_str)
+		
+		cleaned_results = []
+		if(relaxed_seasonmatch):
+			#~ no cleaning just flatten in one array
+			for provid in xrange(len(results)):
+				if(results[provid] is not None):
+					for z in xrange(len(results[provid])):
+						cleaned_results.append(results[provid][z])
+		else:
+			#~ flatten and summarize them
+			cleaned_results = megasearch.summary_results(results,serie_search_str)
+		
 		#~ render XML
 		return self.cleanUpResultsXML(cleaned_results)
 
