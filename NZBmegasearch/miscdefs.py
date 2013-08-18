@@ -36,6 +36,37 @@ from operator import itemgetter
 
 log = logging.getLogger(__name__)
 
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+def daemonize():
+	#~ full credits to SICKBEARD
+	
+	# Make a non-session-leader child process
+	try:
+		pid = os.fork()  # @UndefinedVariable - only available in UNIX
+		if pid != 0:
+			sys.exit(0)
+	except OSError, e:
+		raise RuntimeError("1st fork failed: %s [%d]" % (e.strerror, e.errno))
+
+	os.setsid()  # @UndefinedVariable - only available in UNIX
+
+	# Make sure I can read my own files and shut out others
+	prev = os.umask(0)
+	os.umask(prev and int('077', 8))
+
+	# Make the child a session-leader by detaching from the terminal
+	try:
+		pid = os.fork()  # @UndefinedVariable - only available in UNIX
+		if pid != 0:
+			sys.exit(0)
+	except OSError, e:
+		raise RuntimeError("2nd fork failed: %s [%d]" % (e.strerror, e.errno))
+
+	dev_null = file('/dev/null', 'r')
+	os.dup2(dev_null.fileno(), sys.stdin.fileno())
+	log.info("Daemonized using PID " + str(pid))
+    
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 def connectinfo():
 	return render_template('connectinfo.html')

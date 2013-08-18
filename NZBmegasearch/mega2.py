@@ -85,8 +85,9 @@ if(len(sys.argv) > 1):
 
 		if(argv == 'daemon'):
 			print '====== DAEMON MODE ======'
-			if os.fork():
-				sys.exit()
+			#~ if os.fork():
+				#~ sys.exit()
+			miscdefs.daemonize()	
 
 #~ detect if started from gunicorn
 oshift_dirconf = os.getenv('OPENSHIFT_DATA_DIR', '')
