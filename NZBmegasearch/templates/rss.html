@@ -1,0 +1,28 @@
+<rss version="2.0">
+<channel>
+<title>NZBMegasearch feed</title>
+<link>https://github.com/pillone/usntssearch</link>
+<description>
+Latest newsgroup posts as indexed by NZBMegasearch
+</description>
+<copyright>
+A NZB metasearch engine
+</copyright>
+<lastBuildDate>Tue, 13 Aug 2013 18:59:59 GMT</lastBuildDate>
+<ttl>20</ttl>
+
+{% for row in results -%}
+	<item>
+	<title>{{ row['title'] }}</title>
+	<description>
+	{{ row['title'] }} -- NZBMegasearch: {{ row['providertitle'] }}
+	</description>
+	<pubDate>{{ row['age'] }}</pubDate>
+	<link>{{ row['url'] }}</link>
+	</item>
+	
+{%- endfor %}
+
+
+</channel>
+</rss>
