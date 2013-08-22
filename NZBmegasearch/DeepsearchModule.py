@@ -15,6 +15,7 @@
 #~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
 
+
 import re
 import time
 import tempfile
@@ -28,6 +29,7 @@ from urllib2 import urlparse
 import socket
 import locale
 import copy
+import megasearch
 
 log = logging.getLogger(__name__)
 
@@ -43,7 +45,6 @@ def supportedengines ():
 class DeepSearch:
 
 	def __init__(self, cur_cfg, cgen):
-		
 		self.cfg = None
 		self.cgen = cgen
 		self.ds = []
@@ -90,6 +91,7 @@ class DeepSearch:
 class DeepSearch_one:
 	
 	def __init__(self, cur_cfg, cgen):
+		self.definedcat = megasearch.listpossiblesearchoptions()
 		self.br = mechanize.Browser(factory=mechanize.RobustFactory())
 		self.cj = cookielib.LWPCookieJar()
 		self.br.set_cookiejar(self.cj)
@@ -468,8 +470,15 @@ class DeepSearchGinga_one(DeepSearch_one):
 				return []
 						
 		mainurl = self.cur_cfg['url']
-		#~ https://www.gingadaddy.com/nzbbrowse.php?b=2&st=1&k=dog&c=0&g=0&sr=2&o=0
 		
+		#~ category must have asterisk, it messes up the search
+		srchstrnu = srchstr.split('.')
+		
+		for defcats in self.definedcat:
+			if(defcats[0] == srchstrnu[-1]):
+				srchstrnu[-1] = '*'+srchstrnu[-1]
+				srchstr = ".".join(srchstrnu)
+
 		loginurl = mainurl + '/nzbbrowse.php?b=2&st=1&c=0&g=0&sr=2&o=0&k='+srchstr
 		timestamp_s = time.time()	
 		

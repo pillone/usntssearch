@@ -422,9 +422,8 @@ class DoParallelSearch:
 			if(totdays == 0):
 				totdays = int ( (time.time() - results[i]['posting_date_timestamp'])/ (3600) )
 				if(totdays < 0):
-					totdays = "0h"
-				else:
-					totdays = str(totdays) + "h"	
+					totdays = -totdays
+				totdays = str(totdays) + "h"	
 
 			category_str = '' 
 			keynum = len(results[i]['categ'])
