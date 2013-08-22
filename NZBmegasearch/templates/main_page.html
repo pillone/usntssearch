@@ -135,12 +135,12 @@
 
 							{% if row['predb'] == 2 -%}
 							<span class = "predbcell">
-								<a href="{{ row['predb_lnk'] }}"><img src="static/predb_1st.png" width="12" height="12" class="imgdisplayed"/></a>
+								<a href="{{ row['predb_lnk'] }}"><img src="static/predb_1st.png" width="12" height="12" class="imgdisplayed"  title="Entry fully matching a PREDB release" /></a>
 							</span>	
 							{%- endif %}
 							{% if row['predb'] == 1 -%}
 							<span class = "predbcell">
-								<a href="{{ row['predb_lnk'] }}"><img src="static/predb_2nd.png" width="12" height="12" class="imgdisplayed"/></a>
+								<a href="{{ row['predb_lnk'] }}"><img src="static/predb_2nd.png" width="12" height="12" class="imgdisplayed"  title="Entry partially matching a PREDB release"/></a>
 							</span>	
 							{%- endif %}</td>
 
