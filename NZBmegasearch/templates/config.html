@@ -2,11 +2,9 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <title>NZB MegasearcH</title>
-<style type="text/css">
-<!--
-@import url("static/style.css");
--->
-</style>
+	<link rel="stylesheet" type="text/css" href="static/reset2.css" />
+	<link rel="stylesheet" type="text/css" href="static/style.css" />
+	<script type="text/javascript" src="static/jquery.min.js"></script>
 </head>
 <body>
 <form action="/" method="post" name="cfgform">
@@ -217,8 +215,10 @@
 {%- endfor %}
 </tbody></table>
 
+<input type="button" value="Add row"  id="addentry_button" >
 
-<table class="results" summary="Config" style="width: 300px;"><thead>
+
+<table class="results" summary="Config" style="width: 300px;" id="newznab_api_host"><thead>
 <tr><th>#</th><th scope="col">Newznab Host (API)</th><th scope="col">API key</th><th scope="col">Timeout</th><th scope="col">Active</th></tr></thead><tbody>
 {% for c in cfg -%}
 	{% if c['builtin'] == 0-%}
@@ -267,6 +267,7 @@
 			<input type="checkbox" name="valid{{ q }}" id="valid{{ q }}" checked=yes >
 			<label for="valid{{ q }}" class="visuallyhidden">Active</label>
 		</td>
+		</tr>
 {%- endfor %}
 </tbody></table>
 
@@ -324,7 +325,10 @@
 		</td>
 		</tr>
 {%- endfor %}
+ 
+
 </tbody></table>
+
 
 
 <div style="margin: 45px">
@@ -334,6 +338,13 @@
 
 
 	    <script type="text/javascript">
+			
+			$("#addentry_button").click(function () {
+
+
+				$('#newznab_api_host > tbody:last').append('<tr><td>****)</td><td><label for="host****" class="visuallyhidden">Newznab Host (API)</label>		<input type="text" name="host****" id="host****" value="" size="35" class="conftbox"></td>		<td><label for="API****" class="visuallyhidden">API key</label>		<input type="text" name="API****" id="API****" value="" size="35" class="conftbox">		<input type="hidden" name="type****" value="NAB" size="35">		</td>		<td><span>		<label for="selspeed****" class="visuallyhidden">Timeout</label>		<select  name="selspeed****" id="selspeed****"  class="conftsel">			<option value=1 selected>Normal Response [15s]</option><option value=2 >Extensive Response [30s]</option>		</select>		</span></td>		<td>			<input type="checkbox" name="valid****" id="valid****" checked=yes >			<label for="valid****" class="visuallyhidden">Active</label>		</td></tr>');		
+			})
+
 			function detect_ip()
 			{
 				cfgform.general_ipaddress.value="{{ cdomainname }}";
