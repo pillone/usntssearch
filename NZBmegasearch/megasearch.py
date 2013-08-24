@@ -314,6 +314,7 @@ class DoParallelSearch:
 				#~ print send2sab_exist
 
 				urlq = self.cgen['sabnzbd_url']+ '/api'
+				print urlq 
 				urlParams = dict(
 									mode='addurl',
 									name=send2sab_exist+'/'+args['data'],

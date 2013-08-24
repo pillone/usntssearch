@@ -127,7 +127,7 @@
 	</tr>	
 
 	<tr>	
-		<td><input type="checkbox" name="predb_active" id="predb_active" value="1" size="40"  {{ genopt['predb_active_verbose'] }}> <label for="predb_active">PreDB release matching (suggested -- good releases) [experimental]</label></td>
+		<td><input type="checkbox" name="predb_active" id="predb_active" value="1" size="40"  {{ genopt['predb_active_verbose'] }}> <label for="predb_active">PreDB release matching (suggested -- good releases)</label></td>
 	</tr>	
 
 	<tr>	
@@ -222,7 +222,7 @@
 <tr><th>#</th><th scope="col">Newznab Host (API)</th><th scope="col">API key</th><th scope="col">Timeout</th><th scope="col">Active</th></tr></thead><tbody>
 {% for c in cfg -%}
 	{% if c['builtin'] == 0-%}
-		<tr>
+		<tr id='newznab_api_row{{ c['idx']+1 }}'>
 		<td>{{ c['idx']+1 }})</td><td><label for="host{{ c['idx'] }}" class="visuallyhidden">Newznab Host (API)</label>
 		<input type="text" name="host{{ c['idx'] }}" id="host{{ c['idx'] }}" value="{{ c['url'] }}" size="35" class="conftbox"></td>
 		<td><label for="API{{ c['idx'] }}" class="visuallyhidden">API key</label>
@@ -241,33 +241,10 @@
 
 		<td>
 			<input type="checkbox" name="valid{{ c['idx'] }}" id="valid{{ c['idx'] }}"  {{c['valid_verbose'] }} >
+			<input type="button" value="x" onclick="delete_row(0, {{ c['idx']+1 }})" class="confbttn" >
 		</td>
 		</tr>
 	{%- endif %}
-{%- endfor %}
-{% for q in range(cnt,cnt_max) -%}
-		<tr>
-		<td>{{ q+1 }})</td><td><label for="host{{ q }}" class="visuallyhidden">Newznab Host (API)</label>
-		<input type="text" name="host{{ q }}" id="host{{ q }}" value="" size="35" class="conftbox"></td>
-		<td><label for="API{{ q }}" class="visuallyhidden">API key</label>
-		<input type="text" name="API{{ q }}" id="API{{ q }}" value="" size="35" class="conftbox">
-		<input type="hidden" name="type{{ q }}" value="NAB" size="35">
-		</td>
-
-		<td><span>
-		<label for="selspeed{{ q }}" class="visuallyhidden">Timeout</label>
-		<select  name="selspeed{{ q }}" id="selspeed{{ q }}"  class="conftsel">
-			{% for sopt in sel_speedopt_basic -%}
-				<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
-			{%- endfor %}
-		</select>
-		</span></td>
-
-		<td>
-			<input type="checkbox" name="valid{{ q }}" id="valid{{ q }}" checked=yes >
-			<label for="valid{{ q }}" class="visuallyhidden">Active</label>
-		</td>
-		</tr>
 {%- endfor %}
 </tbody></table>
 
@@ -329,21 +306,41 @@
 
 </tbody></table>
 
-
+<input type="hidden" name="no_APInab" id="no_APInab" value="{{ cnt }}" size="10" >
 
 <div style="margin: 45px">
-	<input type="submit" value="Save" onclick="return check_form_correctness()" class="confbttnbig">
+	<input type="submit" value="Save" value="confbttnbig">
 	<input type="button" value="Cancel" onclick="location.href=&#39;\/&#39;;" class="confbttnbig" >
 </div></form>
 
 
 	    <script type="text/javascript">
 			
+			function delete_row(typerow, entrynum)
+			{
+				if (confirm('Are you sure you want to remove this row?')) 
+				{
+					if(typerow == 0)
+					{
+						entry_num_str = '#newznab_api_row'+entrynum
+						$(entry_num_str).remove();
+						$('#no_APInab').val(str2num($('#no_APInab').val()) - 1);
+					}
+				}
+
+			}
+	
+
+			
 			$("#addentry_button").click(function () {
-
-
-				$('#newznab_api_host > tbody:last').append('<tr><td>****)</td><td><label for="host****" class="visuallyhidden">Newznab Host (API)</label>		<input type="text" name="host****" id="host****" value="" size="35" class="conftbox"></td>		<td><label for="API****" class="visuallyhidden">API key</label>		<input type="text" name="API****" id="API****" value="" size="35" class="conftbox">		<input type="hidden" name="type****" value="NAB" size="35">		</td>		<td><span>		<label for="selspeed****" class="visuallyhidden">Timeout</label>		<select  name="selspeed****" id="selspeed****"  class="conftsel">			<option value=1 selected>Normal Response [15s]</option><option value=2 >Extensive Response [30s]</option>		</select>		</span></td>		<td>			<input type="checkbox" name="valid****" id="valid****" checked=yes >			<label for="valid****" class="visuallyhidden">Active</label>		</td></tr>');		
+				$('#no_APInab').val($('#no_APInab').val() + 1);
+				
+				var str1 = '<tr><td>****)</td><td><label for="host****" class="visuallyhidden">Newznab Host (API)</label>		<input type="text" name="host****" id="host****" value="" size="35" class="conftbox"></td>		<td><label for="API****" class="visuallyhidden">API key</label>		<input type="text" name="API****" id="API****" value="" size="35" class="conftbox">		<input type="hidden" name="type****" value="NAB" size="35">		</td>		<td><span>		<label for="selspeed****" class="visuallyhidden">Timeout</label>		<select  name="selspeed****" id="selspeed****"  class="conftsel">			<option value=1 selected>Normal Response [15s]</option><option value=2 >Extensive Response [30s]</option>		</select>		</span></td>		<td>			<input type="checkbox" name="valid****" id="valid****" checked=yes >			<label for="valid****" class="visuallyhidden">Active</label>		</td> </tr> ';
+				var nustr = str1.replace('****', $('#no_APInab').val());
+				$('#newznab_api_host > tbody:last').append(nustr);
 			})
+
+
 
 			function detect_ip()
 			{
