@@ -215,14 +215,12 @@
 {%- endfor %}
 </tbody></table>
 
-<input type="button" value="Add row"  id="addentry_button" >
-
 
 <table class="results" summary="Config" style="width: 300px;" id="newznab_api_host"><thead>
 <tr><th>#</th><th scope="col">Newznab Host (API)</th><th scope="col">API key</th><th scope="col">Timeout</th><th scope="col">Active</th></tr></thead><tbody>
 {% for c in cfg -%}
 	{% if c['builtin'] == 0-%}
-		<tr id='newznab_api_row{{ c['idx']+1 }}'>
+		<tr id='newznab_api_row{{ c['idx']+1}}'>
 		<td>{{ c['idx']+1 }})</td><td><label for="host{{ c['idx'] }}" class="visuallyhidden">Newznab Host (API)</label>
 		<input type="text" name="host{{ c['idx'] }}" id="host{{ c['idx'] }}" value="{{ c['url'] }}" size="35" class="conftbox"></td>
 		<td><label for="API{{ c['idx'] }}" class="visuallyhidden">API key</label>
@@ -246,13 +244,20 @@
 		</tr>
 	{%- endif %}
 {%- endfor %}
+<tr id = 'lastrrow_newznab_api'>
+	<td></td>	
+	<td><input type="button" value="Add server"  id="addentry_button_api"  class="confbttn" ></td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
 </tbody></table>
 
 
-<table class="results" summary="NZConfig_web" style="width: 300px;"><thead>
+<table class="results" summary="NZConfig_web" style="width: 300px;"  id="newznab_web_host"><thead>
 <tr><th>#</th><th scope="col">Newznab Host (Web)</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Timeout</th><th scope="col">Active</th></thead></tr><tbody>
 {% for c in cfg_dp -%}
-		<tr>
+		<tr id = 'newznab_web_row{{ c['idx']+1}}'>
 		<td>{{ c['idx']+1 }})</td><td><label for="ds_host{{ c['idx'] }}" class="visuallyhidden">Newznab Host (Web)</label>
 		<input type="text" name="ds_host{{ c['idx'] }}" id="ds_host{{ c['idx'] }}" value="{{ c['url'] }}" size="40" class="conftbox"></td>
 		<td><label for="ds_usr{{ c['idx'] }}" class="visuallyhidden">Username</label>
@@ -273,45 +278,29 @@
 		<td>
 			<input type="checkbox" name="ds_valid{{ c['idx'] }}" id="ds_valid{{ c['idx'] }}" {{c['valid_verbose'] }} >
 			<label for="ds_valid{{ c['idx'] }}" class="visuallyhidden">Active</label>
+			<input type="button" value="x" onclick="delete_row(1, {{ c['idx']+1 }})" class="confbttn" >			
 		</td>
 		</tr>
 {%- endfor %}
-{% for q in range(cnt_ds,cnt_max) -%}
-		<tr>
-		<td>{{ q+1 }})</td><td><label for="ds_host{{ q }}" class="visuallyhidden">Newznab Host (Web)</label>
-		<input type="text" name="ds_host{{ q }}" id="ds_host{{ q }}" value="" size="40" class="conftbox"></td>
-		<td><label for="ds_usr{{ q }}" class="visuallyhidden">Username</label>
-		<input type="text" name="ds_usr{{ q }}" id="ds_usr{{ q }}" value="" size="18" class="conftbox">
-		<td><label for="ds_pass{{ q }}" class="visuallyhidden">Password</label>
-		<input type="password" name="ds_pass{{ q }}" id="ds_pass{{ q }}" value="" size="18" class="conftbox">
-		<input type="hidden" name="ds_type{{ q }}" value="DSN" size="40">
-		</td>
-
-		<td><span>
-		<label for="ds_selspeed{{ q }}" class="visuallyhidden">Timeout</label>
-		<select name="ds_selspeed{{ q }}" id="ds_selspeed{{ q }}"  class="conftsel">
-			{% for sopt in sel_speedopt_basic -%}
-				<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
-			{%- endfor %}
-		</select>
-		</span></td>
-
-		<td>
-			<input type="checkbox" name="ds_valid{{ q }}" id="ds_valid{{ q }}" checked=yes  >
-			<label for="ds_valid{{ q }}" class="visuallyhidden">Active</label>
-		</td>
-		</tr>
-{%- endfor %}
- 
+<tr id = 'lastrrow_newznab_web'>
+	<td></td>
+	<td><input type="button" value="Add server"  id="addentry_button_web"  class="confbttn" ></td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
 
 </tbody></table>
 
-<input type="hidden" name="no_APInab" id="no_APInab" value="{{ cnt }}" size="10" >
-
 <div style="margin: 45px">
-	<input type="submit" value="Save" value="confbttnbig">
+	<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" >
 	<input type="button" value="Cancel" onclick="location.href=&#39;\/&#39;;" class="confbttnbig" >
-</div></form>
+</div>
+
+<input type="hidden" name="no_APInab" id="no_APInab" value="{{ cnt }}" size="10" >
+<input type="hidden" name="no_WEBnab" id="no_WEBnab" value="{{ cnt_ds }}" size="10" >
+
+</form>
 
 
 	    <script type="text/javascript">
@@ -324,20 +313,34 @@
 					{
 						entry_num_str = '#newznab_api_row'+entrynum
 						$(entry_num_str).remove();
-						$('#no_APInab').val(str2num($('#no_APInab').val()) - 1);
+						$('#no_APInab').val(parseInt($('#no_APInab').val()) - 1);
 					}
+
+					if(typerow == 1)
+					{
+						entry_num_str = '#newznab_web_row'+entrynum
+						$(entry_num_str).remove();
+						$('#no_WEBnab').val(parseInt($('#no_WEBnab').val()) - 1);
+					}
+					
 				}
 
 			}
 	
-
-			
-			$("#addentry_button").click(function () {
-				$('#no_APInab').val($('#no_APInab').val() + 1);
-				
-				var str1 = '<tr><td>****)</td><td><label for="host****" class="visuallyhidden">Newznab Host (API)</label>		<input type="text" name="host****" id="host****" value="" size="35" class="conftbox"></td>		<td><label for="API****" class="visuallyhidden">API key</label>		<input type="text" name="API****" id="API****" value="" size="35" class="conftbox">		<input type="hidden" name="type****" value="NAB" size="35">		</td>		<td><span>		<label for="selspeed****" class="visuallyhidden">Timeout</label>		<select  name="selspeed****" id="selspeed****"  class="conftsel">			<option value=1 selected>Normal Response [15s]</option><option value=2 >Extensive Response [30s]</option>		</select>		</span></td>		<td>			<input type="checkbox" name="valid****" id="valid****" checked=yes >			<label for="valid****" class="visuallyhidden">Active</label>		</td> </tr> ';
-				var nustr = str1.replace('****', $('#no_APInab').val());
-				$('#newznab_api_host > tbody:last').append(nustr);
+			$("#addentry_button_web").click(function () {
+				var curval = parseInt($('#no_WEBnab').val()) + 1
+				$('#no_WEBnab').val(curval)				
+				var str1 = '<tr id = "newznab_web_rowCHANGETHIS">				<td>CHANGETHIS)</td><td><label for="ds_hostCHANGETHIS" class="visuallyhidden">Newznab Host (Web)</label>		<input type="text" name="ds_hostCHANGETHIS" id="ds_hostCHANGETHIS" value="" size="40" class="conftbox"></td>		<td><label for="ds_usrCHANGETHIS" class="visuallyhidden">Username</label>		<input type="text" name="ds_usrCHANGETHIS" id="ds_usrCHANGETHIS" value="" size="18" class="conftbox">		<td><label for="ds_passCHANGETHIS" class="visuallyhidden">Password</label>		<input type="password" name="ds_passCHANGETHIS" id="ds_passCHANGETHIS" value="" size="18" class="conftbox">		<input type="hidden" name="ds_typeCHANGETHIS" value="DSN" size="40">		</td>		<td><span>		<label for="ds_selspeedCHANGETHIS" class="visuallyhidden">Timeout</label>		<select name="ds_selspeedCHANGETHIS" id="ds_selspeedCHANGETHIS"  class="conftsel">			{% for sopt in sel_speedopt_basic -%}				<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>			{%- endfor %}		</select>		</span></td>		<td>			<input type="checkbox" name="ds_validCHANGETHIS" id="ds_validCHANGETHIS" checked=yes  >			<label for="ds_validCHANGETHIS" class="visuallyhidden">Active</label>			<input type="button" value="x" onclick="delete_row(1, CHANGETHIS)" class="confbttn" >					</td>		</tr>'
+				var nustr = str1.replace(/CHANGETHIS/g, curval.toString());
+				$( nustr).insertBefore('#lastrrow_newznab_web');
+			})
+						
+			$("#addentry_button_api").click(function () {
+				var curval = parseInt($('#no_APInab').val()) + 1
+				$('#no_APInab').val(curval)				
+				var str1 = '<tr id="newznab_api_rowCHANGETHIS"><td>CHANGETHIS)</td><td><label for="hostCHANGETHIS" class="visuallyhidden">Newznab Host (API)</label>		<input type="text" name="hostCHANGETHIS" id="hostCHANGETHIS" value="" size="35" class="conftbox"></td>		<td><label for="APICHANGETHIS" class="visuallyhidden">API key</label>		<input type="text" name="APICHANGETHIS" id="APICHANGETHIS" value="" size="35" class="conftbox">		<input type="hidden" name="typeCHANGETHIS" value="NAB" size="35">		</td>		<td><span>		<label for="selspeedCHANGETHIS" class="visuallyhidden">Timeout</label>		<select  name="selspeedCHANGETHIS" id="selspeedCHANGETHIS"  class="conftsel">			<option value=1 selected>Normal Response [15s]</option><option value=2 >Extensive Response [30s]</option>		</select>		</span></td>		<td>			<input type="checkbox" name="validCHANGETHIS" id="validCHANGETHIS" checked=yes >			<label for="validCHANGETHIS" class="visuallyhidden">Active</label> <input type="button" value="x" onclick="delete_row(0, CHANGETHIS)" class="confbttn" >	</td> </tr> ';
+				var nustr = str1.replace(/CHANGETHIS/g, curval.toString());
+				$( nustr).insertBefore('#lastrrow_newznab_api');
 			})
 
 
