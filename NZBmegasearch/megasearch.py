@@ -31,6 +31,7 @@ import SearchModule
 import logging
 import base64
 import re
+import os
 import copy
 from xmlrpclib import ServerProxy
 import urllib2
@@ -66,6 +67,7 @@ class DoParallelSearch:
 	
 	def __init__(self, conf, cgen, ds, wrp):
 		
+		self.dirconf=  os.getenv('OPENSHIFT_DATA_DIR', '')
 		self.results = []
 		self.cfg = conf
 		self.cgen = cgen
@@ -132,12 +134,16 @@ class DoParallelSearch:
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	
 	def getdomainandprotocol(self, sgetsockname):
-		if(len(sgetsockname)==0):
-			sgetsockname = getdomainext()
-		hprotocol = 'http://'
-		if(self.cgen['general_https']):
-			hprotocol = 'https://'
-		sckname = hprotocol + sgetsockname +':'+ str(self.cgen['portno'])
+		if(len(self.dirconf)):
+			if(len(sgetsockname)==0):
+				sgetsockname = getdomainext()
+			hprotocol = 'http://'
+			if(self.cgen['general_https']):
+				hprotocol = 'https://'
+			sckname = hprotocol + sgetsockname +':'+ str(self.cgen['portno'])
+		else:
+			#~ only SSL encrypted allowed from openshift
+			sckname = 'https://' + sgetsockname			
 		return sckname
 		
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 		
@@ -314,12 +320,12 @@ class DoParallelSearch:
 				#~ print send2sab_exist
 
 				urlq = self.cgen['sabnzbd_url']+ '/api'
-				print urlq 
 				urlParams = dict(
 									mode='addurl',
 									name=send2sab_exist+'/'+args['data'],
 									apikey=self.cgen['sabnzbd_api'],
 								)
+				print args['data']
 				try:				
 					http_result = requests.get(url=urlq, params=urlParams, verify=False, timeout=15)
 				except Exception as e:

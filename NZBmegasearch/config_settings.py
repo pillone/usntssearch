@@ -72,8 +72,11 @@ class CfgSettings:
 		parser.set('general', 'predb_active', '0')	
 		parser.set('general', 'general_restrictopt1', '0')				
 
-		if (request_form['general_ipaddress'] != 'AUTO'):
-			parser.set('general', 'general_ipaddress', request_form['general_ipaddress'].replace(" ", ""))
+		if (request_form['general_ipaddress'] != 'AUTO'):			
+			cip = request_form['general_ipaddress'].replace(" ", "").replace("http://", "").replace("https://", "")
+			if(cip[-1] == '/'):
+				cip = cip[:-1]
+			parser.set('general', 'general_ipaddress', cip)
 		if (request_form.has_key('https')  == True):
 			parser.set('general', 'general_https', '1')
 		if (request_form.has_key('general_restrictopt1')  == True):

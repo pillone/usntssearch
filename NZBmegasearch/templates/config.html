@@ -288,6 +288,7 @@
 	<td></td>
 	<td></td>
 	<td></td>
+	<td></td>
 </tr>
 
 </tbody></table>
@@ -304,29 +305,7 @@
 
 
 	    <script type="text/javascript">
-			
-			function delete_row(typerow, entrynum)
-			{
-				if (confirm('Are you sure you want to remove this row?')) 
-				{
-					if(typerow == 0)
-					{
-						entry_num_str = '#newznab_api_row'+entrynum
-						$(entry_num_str).remove();
-						$('#no_APInab').val(parseInt($('#no_APInab').val()) - 1);
-					}
 
-					if(typerow == 1)
-					{
-						entry_num_str = '#newznab_web_row'+entrynum
-						$(entry_num_str).remove();
-						$('#no_WEBnab').val(parseInt($('#no_WEBnab').val()) - 1);
-					}
-					
-				}
-
-			}
-	
 			$("#addentry_button_web").click(function () {
 				var curval = parseInt($('#no_WEBnab').val()) + 1
 				$('#no_WEBnab').val(curval)				
@@ -334,14 +313,48 @@
 				var nustr = str1.replace(/CHANGETHIS/g, curval.toString());
 				$( nustr).insertBefore('#lastrrow_newznab_web');
 			})
-						
+
 			$("#addentry_button_api").click(function () {
 				var curval = parseInt($('#no_APInab').val()) + 1
 				$('#no_APInab').val(curval)				
 				var str1 = '<tr id="newznab_api_rowCHANGETHIS"><td>CHANGETHIS)</td><td><label for="hostCHANGETHIS" class="visuallyhidden">Newznab Host (API)</label>		<input type="text" name="hostCHANGETHIS" id="hostCHANGETHIS" value="" size="35" class="conftbox"></td>		<td><label for="APICHANGETHIS" class="visuallyhidden">API key</label>		<input type="text" name="APICHANGETHIS" id="APICHANGETHIS" value="" size="35" class="conftbox">		<input type="hidden" name="typeCHANGETHIS" value="NAB" size="35">		</td>		<td><span>		<label for="selspeedCHANGETHIS" class="visuallyhidden">Timeout</label>		<select  name="selspeedCHANGETHIS" id="selspeedCHANGETHIS"  class="conftsel">			<option value=1 selected>Normal Response [15s]</option><option value=2 >Extensive Response [30s]</option>		</select>		</span></td>		<td>			<input type="checkbox" name="validCHANGETHIS" id="validCHANGETHIS" checked=yes >			<label for="validCHANGETHIS" class="visuallyhidden">Active</label> <input type="button" value="x" onclick="delete_row(0, CHANGETHIS)" class="confbttn" >	</td> </tr> ';
 				var nustr = str1.replace(/CHANGETHIS/g, curval.toString());
 				$( nustr).insertBefore('#lastrrow_newznab_api');
-			})
+			})			
+			
+			function delete_row(typerow, entrynum)
+			{
+				if (confirm('Are you sure you want to remove this row?')) 
+				{
+					if(typerow == 0)
+					{
+						entry_num_str = '#newznab_api_row'+entrynum;
+						$(entry_num_str).remove();
+						var rowCount = $('#newznab_api_host tr').length;
+						if(rowCount-2 == 0)
+						{
+							$("#addentry_button_api").click();
+						}
+					}
+
+					if(typerow == 1)
+					{
+						entry_num_str = '#newznab_web_row'+entrynum;
+						$(entry_num_str).remove();
+						var rowCount = $('#newznab_web_host tr').length;
+						if(rowCount-2 == 0)
+						{
+							$("#addentry_button_web").click();
+						}
+
+					}
+					
+				}
+
+			}
+	
+						
+		
 
 
 
