@@ -413,6 +413,13 @@ div#container
 	color: #000000
 }
 
+.conftbox_err {
+	font: 12px Helvetica, Arial, Sans-Serif;
+	border: 5px solid red;
+	color: #000000
+}
+
+
 .confbttn {
 	background:#fff;
 	font: 12px Helvetica, Arial, Sans-Serif;

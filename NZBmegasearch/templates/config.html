@@ -296,6 +296,7 @@
 <div style="margin: 45px">
 	<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" >
 	<input type="button" value="Cancel" onclick="location.href=&#39;\/&#39;;" class="confbttnbig" >
+	<input type="button" value="CHK" onclick="check_serverweb_correctness();;" class="confbttnbig" >
 </div>
 
 <input type="hidden" name="no_APInab" id="no_APInab" value="{{ cnt }}" size="10" >
@@ -373,6 +374,89 @@
 				cfgform.general_apikey.value='';
 			}
 
+			function check_serverapi_correctness()
+			{
+				var rowCount = parseInt($('#no_APInab').val());
+				var ret = true;
+				for (var i=0;i<rowCount;i++)
+				{
+					chkname = '#host'+i;
+					if( $(chkname).length)
+					{
+						var host = $('#host'+i).val().replace(/\s+/g, ' ')	
+						var hostapi = $('#API'+i).val().replace(/\s+/g, ' ')
+						var cb = check_beginning_http(host)
+						$('#host'+(i-1)).removeClass("conftbox_err").addClass("conftbox");
+
+						if ((host.length == 0) && (hostapi.length > 0) || !cb)
+						{
+							$('#host'+i).removeClass("conftbox").addClass("conftbox_err");
+							ret = false;
+						}
+					}
+				}
+				
+				if(ret == false)
+				{
+					alert('ERROR: Newznab Host (API)\nEnter host for all the given APIs\nUrl must begin with http(s)://');
+				}
+				return (ret)
+			}
+
+			function check_serverweb_correctness()
+			{
+				var rowCount = parseInt($('#no_WEBnab').val());
+				var ret = true;
+				for (var i=0;i<rowCount;i++)
+				{
+					
+					var ds_host_l =  $('#ds_host'+i).length
+					var ds_usr_l  =  $('#ds_usr'+i).length
+					var ds_pass_l  = $('#ds_pass'+i).length
+					alert($('#ds_type'+i).length)
+					if( $('#ds_type'+i).length)
+					{
+						
+						var ds_host =  $('#ds_host'+i).val().replace(/\s+/g, ' ')
+						var ds_usr  =  $('#ds_usr'+i).val().replace(/\s+/g, ' ')
+						var ds_pass  = $('#ds_pass'+i).val().replace(/\s+/g, ' ')
+						var cb = check_beginning_http(ds_host)
+						var err = 0
+
+						if(!cb)
+						{
+							err = 1;
+						}
+						if ((ds_pass.length == 0) && (ds_usr.length > 0))
+						{
+							err = 1;
+						}
+						if ((ds_pass.length > 0) && (ds_usr.length == 0))
+						{
+							err = 1;
+						}
+						if ((ds_host.length > 0) && ( (ds_pass.length == 0) && (ds_usr.length == 0)  ) )
+						{
+							err = 1;
+						}
+						if ((ds_host.length == 0) && ( err == 1  ) )
+						{
+							err = 1;
+						}
+						if ((ds_host.length > 0) && ( err == 1  ) )
+						{
+							err = 1;
+						}
+
+						if (err == 1)
+						{
+							alert('ERROR: Newznab Web.\nEnter url, username and password.\nUrl must begin with http(s)://');
+							return false
+						}
+					}
+				}				
+			}
+
 			function check_form_correctness()
 			{
 
@@ -409,6 +493,9 @@
 					alert('ERROR: [SAB url and api] url missing with provided API key.\nUrl must begin with http(s)://');
 					return false
 				}
+				
+				if( check_serverapi_correctness() == false)
+					return false
 
 				{% for c in cfg_bi -%}
 					{% if c['flogin'] == 1-%}
@@ -423,59 +510,7 @@
 					{%- endif %}
 				{%- endfor %}
 
-				{% for q in range(0,cnt_max) -%}
-					<!-- -->
-					var host{{ q }} = cfgform.host{{ q }}.value.replace(/\s+/g, ' ')
-					var hostapi{{ q }} = cfgform.API{{ q }}.value.replace(/\s+/g, ' ')
-					var cb = check_beginning_http(host{{ q }})
-
-					if ((host{{ q }}.length == 0) && (hostapi{{ q }}.length > 0) || !cb)
-					{
-						alert('ERROR: Newznab Host (API) #{{ q+1 }}. Enter url for the given API.\nUrl must begin with http(s)://');
-						return false
-					}
-				{%- endfor %}
-
-				{% for q in range(0,cnt_max) -%}
-					<!-- -->
-					var ds_host{{ q }} = cfgform.ds_host{{ q }}.value.replace(/\s+/g, ' ')
-					var ds_usr{{ q }} = cfgform.ds_usr{{ q }}.value.replace(/\s+/g, ' ')
-					var ds_pass{{ q }} = cfgform.ds_pass{{ q }}.value.replace(/\s+/g, ' ')
-					var cb = check_beginning_http(ds_host{{ q }})
-					var err = 0
-
-					if(!cb)
-					{
-						err = 1;
-					}
-					if ((ds_pass{{ q }}.length == 0) && (ds_usr{{ q }}.length > 0))
-					{
-						err = 1;
-					}
-					if ((ds_pass{{ q }}.length > 0) && (ds_usr{{ q }}.length == 0))
-					{
-						err = 1;
-					}
-					if ((ds_host{{ q }}.length > 0) && ( (ds_pass{{ q }}.length == 0) && (ds_usr{{ q }}.length == 0)  ) )
-					{
-						err = 1;
-					}
-					if ((ds_host{{ q }}.length == 0) && ( err == 1  ) )
-					{
-						err = 1;
-					}
-					if ((ds_host{{ q }}.length > 0) && ( err == 1  ) )
-					{
-						err = 1;
-					}
-
-					if (err == 1)
-					{
-						alert('ERROR: Newznab Web  #{{ q+1 }}. Enter url, username and password.\nUrl must begin with http(s)://');
-						return false
-					}
-
-				{%- endfor %}
+				
 			}
 
 
