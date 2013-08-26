@@ -134,7 +134,7 @@ class DoParallelSearch:
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	
 	def getdomainandprotocol(self, sgetsockname):
-		if(len(self.dirconf)):
+		if(len(self.dirconf)==0):
 			if(len(sgetsockname)==0):
 				sgetsockname = getdomainext()
 			hprotocol = 'http://'

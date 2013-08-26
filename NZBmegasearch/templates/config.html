@@ -217,11 +217,11 @@
 
 
 <table class="results" summary="Config" style="width: 300px;" id="newznab_api_host"><thead>
-<tr><th>#</th><th scope="col">Newznab Host (API)</th><th scope="col">API key</th><th scope="col">Timeout</th><th scope="col">Active</th></tr></thead><tbody>
+<tr><th scope="col">Newznab Host (API)</th><th scope="col">API key</th><th scope="col">Timeout</th><th scope="col">Active</th></tr></thead><tbody>
 {% for c in cfg -%}
 	{% if c['builtin'] == 0-%}
 		<tr id='newznab_api_row{{ c['idx']+1}}'>
-		<td>{{ c['idx']+1 }})</td><td><label for="host{{ c['idx'] }}" class="visuallyhidden">Newznab Host (API)</label>
+		<td><label for="host{{ c['idx'] }}" class="visuallyhidden">Newznab Host (API)</label>
 		<input type="text" name="host{{ c['idx'] }}" id="host{{ c['idx'] }}" value="{{ c['url'] }}" size="35" class="conftbox"></td>
 		<td><label for="API{{ c['idx'] }}" class="visuallyhidden">API key</label>
 		<input type="text" name="API{{ c['idx'] }}" id="API{{ c['idx'] }}" value="{{ c['api'] }}" size="35" class="conftbox">
@@ -245,7 +245,6 @@
 	{%- endif %}
 {%- endfor %}
 <tr id = 'lastrrow_newznab_api'>
-	<td></td>	
 	<td><input type="button" value="Add server"  id="addentry_button_api"  class="confbttn" ></td>
 	<td></td>
 	<td></td>
@@ -255,10 +254,10 @@
 
 
 <table class="results" summary="NZConfig_web" style="width: 300px;"  id="newznab_web_host"><thead>
-<tr><th>#</th><th scope="col">Newznab Host (Web)</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Timeout</th><th scope="col">Active</th></thead></tr><tbody>
+<tr><th scope="col">Newznab Host (Web)</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Timeout</th><th scope="col">Active</th></thead></tr><tbody>
 {% for c in cfg_dp -%}
 		<tr id = 'newznab_web_row{{ c['idx']+1}}'>
-		<td>{{ c['idx']+1 }})</td><td><label for="ds_host{{ c['idx'] }}" class="visuallyhidden">Newznab Host (Web)</label>
+		<td><label for="ds_host{{ c['idx'] }}" class="visuallyhidden">Newznab Host (Web)</label>
 		<input type="text" name="ds_host{{ c['idx'] }}" id="ds_host{{ c['idx'] }}" value="{{ c['url'] }}" size="40" class="conftbox"></td>
 		<td><label for="ds_usr{{ c['idx'] }}" class="visuallyhidden">Username</label>
 		<input type="text" name="ds_usr{{ c['idx'] }}" id="ds_usr{{ c['idx'] }}" value="{{ c['user'] }}" size="18" class="conftbox"></td>
@@ -283,21 +282,19 @@
 		</tr>
 {%- endfor %}
 <tr id = 'lastrrow_newznab_web'>
-	<td></td>
 	<td><input type="button" value="Add server"  id="addentry_button_web"  class="confbttn" ></td>
 	<td></td>
 	<td></td>
 	<td></td>
 	<td></td>
-</tr>
+</tr> 
 
 </tbody></table>
-
-<div style="margin: 45px">
-	<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" >
+<div class='results'>
+	<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
 	<input type="button" value="Cancel" onclick="location.href=&#39;\/&#39;;" class="confbttnbig" >
-	<input type="button" value="CHK" onclick="check_serverweb_correctness();;" class="confbttnbig" >
 </div>
+
 
 <input type="hidden" name="no_APInab" id="no_APInab" value="{{ cnt }}" size="10" >
 <input type="hidden" name="no_WEBnab" id="no_WEBnab" value="{{ cnt_ds }}" size="10" >
@@ -310,7 +307,7 @@
 			$("#addentry_button_web").click(function () {
 				var curval = parseInt($('#no_WEBnab').val()) + 1
 				$('#no_WEBnab').val(curval)				
-				var str1 = '<tr id = "newznab_web_rowCHANGETHIS">				<td>CHANGETHIS)</td><td><label for="ds_hostCHANGETHIS" class="visuallyhidden">Newznab Host (Web)</label>		<input type="text" name="ds_hostCHANGETHIS" id="ds_hostCHANGETHIS" value="" size="40" class="conftbox"></td>		<td><label for="ds_usrCHANGETHIS" class="visuallyhidden">Username</label>		<input type="text" name="ds_usrCHANGETHIS" id="ds_usrCHANGETHIS" value="" size="18" class="conftbox">		<td><label for="ds_passCHANGETHIS" class="visuallyhidden">Password</label>		<input type="password" name="ds_passCHANGETHIS" id="ds_passCHANGETHIS" value="" size="18" class="conftbox">		<input type="hidden" name="ds_typeCHANGETHIS" value="DSN" size="40">		</td>		<td><span>		<label for="ds_selspeedCHANGETHIS" class="visuallyhidden">Timeout</label>		<select name="ds_selspeedCHANGETHIS" id="ds_selspeedCHANGETHIS"  class="conftsel">			{% for sopt in sel_speedopt_basic -%}				<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>			{%- endfor %}		</select>		</span></td>		<td>			<input type="checkbox" name="ds_validCHANGETHIS" id="ds_validCHANGETHIS" checked=yes  >			<label for="ds_validCHANGETHIS" class="visuallyhidden">Active</label>			<input type="button" value="x" onclick="delete_row(1, CHANGETHIS)" class="confbttn" >					</td>		</tr>'
+				var str1 = '<tr id = "newznab_web_rowCHANGETHIS">				<td><label for="ds_hostCHANGETHIS" class="visuallyhidden">Newznab Host (Web)</label>		<input type="text" name="ds_hostCHANGETHIS" id="ds_hostCHANGETHIS" value="" size="40" class="conftbox"></td>		<td><label for="ds_usrCHANGETHIS" class="visuallyhidden">Username</label>		<input type="text" name="ds_usrCHANGETHIS" id="ds_usrCHANGETHIS" value="" size="18" class="conftbox">		<td><label for="ds_passCHANGETHIS" class="visuallyhidden">Password</label>		<input type="password" name="ds_passCHANGETHIS" id="ds_passCHANGETHIS" value="" size="18" class="conftbox">		<input type="hidden" name="ds_typeCHANGETHIS" value="DSN" size="40">		</td>		<td><span>		<label for="ds_selspeedCHANGETHIS" class="visuallyhidden">Timeout</label>		<select name="ds_selspeedCHANGETHIS" id="ds_selspeedCHANGETHIS"  class="conftsel">			{% for sopt in sel_speedopt_basic -%}				<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>			{%- endfor %}		</select>		</span></td>		<td>			<input type="checkbox" name="ds_validCHANGETHIS" id="ds_validCHANGETHIS" checked=yes  >			<label for="ds_validCHANGETHIS" class="visuallyhidden">Active</label>			<input type="button" value="x" onclick="delete_row(1, CHANGETHIS)" class="confbttn" >					</td>		</tr>'
 				var nustr = str1.replace(/CHANGETHIS/g, curval.toString());
 				$( nustr).insertBefore('#lastrrow_newznab_web');
 			})
@@ -318,11 +315,25 @@
 			$("#addentry_button_api").click(function () {
 				var curval = parseInt($('#no_APInab').val()) + 1
 				$('#no_APInab').val(curval)				
-				var str1 = '<tr id="newznab_api_rowCHANGETHIS"><td>CHANGETHIS)</td><td><label for="hostCHANGETHIS" class="visuallyhidden">Newznab Host (API)</label>		<input type="text" name="hostCHANGETHIS" id="hostCHANGETHIS" value="" size="35" class="conftbox"></td>		<td><label for="APICHANGETHIS" class="visuallyhidden">API key</label>		<input type="text" name="APICHANGETHIS" id="APICHANGETHIS" value="" size="35" class="conftbox">		<input type="hidden" name="typeCHANGETHIS" value="NAB" size="35">		</td>		<td><span>		<label for="selspeedCHANGETHIS" class="visuallyhidden">Timeout</label>		<select  name="selspeedCHANGETHIS" id="selspeedCHANGETHIS"  class="conftsel">			<option value=1 selected>Normal Response [15s]</option><option value=2 >Extensive Response [30s]</option>		</select>		</span></td>		<td>			<input type="checkbox" name="validCHANGETHIS" id="validCHANGETHIS" checked=yes >			<label for="validCHANGETHIS" class="visuallyhidden">Active</label> <input type="button" value="x" onclick="delete_row(0, CHANGETHIS)" class="confbttn" >	</td> </tr> ';
+				var str1 = '<tr id="newznab_api_rowCHANGETHIS"> <td><label for="hostCHANGETHIS" class="visuallyhidden">Newznab Host (API)</label>		<input type="text" name="hostCHANGETHIS" id="hostCHANGETHIS" value="" size="35" class="conftbox"></td>		<td><label for="APICHANGETHIS" class="visuallyhidden">API key</label>		<input type="text" name="APICHANGETHIS" id="APICHANGETHIS" value="" size="35" class="conftbox">		<input type="hidden" name="typeCHANGETHIS" value="NAB" size="35">		</td>		<td><span>		<label for="selspeedCHANGETHIS" class="visuallyhidden">Timeout</label>		<select  name="selspeedCHANGETHIS" id="selspeedCHANGETHIS"  class="conftsel">			<option value=1 selected>Normal Response [15s]</option><option value=2 >Extensive Response [30s]</option>		</select>		</span></td>		<td>			<input type="checkbox" name="validCHANGETHIS" id="validCHANGETHIS" checked=yes >			<label for="validCHANGETHIS" class="visuallyhidden">Active</label> <input type="button" value="x" onclick="delete_row(0, CHANGETHIS)" class="confbttn" >	</td> </tr> ';
 				var nustr = str1.replace(/CHANGETHIS/g, curval.toString());
 				$( nustr).insertBefore('#lastrrow_newznab_api');
 			})			
 			
+			$(document).ready(function() {
+				var rowCount = $('#newznab_api_host tr').length;
+				if(rowCount-2 == 0)
+				{
+					$("#addentry_button_api").click();
+				}
+				var rowCountb = $('#newznab_web_host tr').length;
+				if(rowCountb-2 == 0)
+				{
+					$("#addentry_button_web").click();
+				}				
+				
+			});
+
 			function delete_row(typerow, entrynum)
 			{
 				if (confirm('Are you sure you want to remove this row?')) 
@@ -378,7 +389,7 @@
 			{
 				var rowCount = parseInt($('#no_APInab').val());
 				var ret = true;
-				for (var i=0;i<rowCount;i++)
+				for (var i=0;i<=rowCount;i++)
 				{
 					chkname = '#host'+i;
 					if( $(chkname).length)
@@ -386,7 +397,7 @@
 						var host = $('#host'+i).val().replace(/\s+/g, ' ')	
 						var hostapi = $('#API'+i).val().replace(/\s+/g, ' ')
 						var cb = check_beginning_http(host)
-						$('#host'+(i-1)).removeClass("conftbox_err").addClass("conftbox");
+						$('#host'+i).removeClass("conftbox_err").addClass("conftbox");
 
 						if ((host.length == 0) && (hostapi.length > 0) || !cb)
 						{
@@ -395,11 +406,6 @@
 						}
 					}
 				}
-				
-				if(ret == false)
-				{
-					alert('ERROR: Newznab Host (API)\nEnter host for all the given APIs\nUrl must begin with http(s)://');
-				}
 				return (ret)
 			}
 
@@ -407,38 +413,42 @@
 			{
 				var rowCount = parseInt($('#no_WEBnab').val());
 				var ret = true;
-				for (var i=0;i<rowCount;i++)
+				for (var i=0;i<=rowCount;i++)
 				{
 					
 					var ds_host_l =  $('#ds_host'+i).length
-					var ds_usr_l  =  $('#ds_usr'+i).length
-					var ds_pass_l  = $('#ds_pass'+i).length
-					alert($('#ds_type'+i).length)
-					if( $('#ds_type'+i).length)
+					if( ds_host_l )
 					{
-						
 						var ds_host =  $('#ds_host'+i).val().replace(/\s+/g, ' ')
 						var ds_usr  =  $('#ds_usr'+i).val().replace(/\s+/g, ' ')
 						var ds_pass  = $('#ds_pass'+i).val().replace(/\s+/g, ' ')
 						var cb = check_beginning_http(ds_host)
 						var err = 0
+						$('#ds_host'+i).removeClass("conftbox_err").addClass("conftbox");
+						$('#ds_usr'+i).removeClass("conftbox_err").addClass("conftbox");
+						$('#ds_pass'+i).removeClass("conftbox_err").addClass("conftbox");
 
 						if(!cb)
 						{
 							err = 1;
 						}
-						if ((ds_pass.length == 0) && (ds_usr.length > 0))
+						else if ((ds_pass.length == 0) && (ds_usr.length > 0))
 						{
 							err = 1;
 						}
-						if ((ds_pass.length > 0) && (ds_usr.length == 0))
+						else if ((ds_pass.length > 0) && (ds_usr.length == 0))
 						{
 							err = 1;
 						}
-						if ((ds_host.length > 0) && ( (ds_pass.length == 0) && (ds_usr.length == 0)  ) )
+						else if ((ds_host.length > 0) && ( (ds_pass.length == 0) && (ds_usr.length == 0)  ) )
 						{
 							err = 1;
 						}
+						else if ((ds_pass.length > 0) && (ds_usr.length > 0) && (ds_host.length == 0))
+						{
+							err = 1;
+						}	
+						
 						if ((ds_host.length == 0) && ( err == 1  ) )
 						{
 							err = 1;
@@ -450,11 +460,15 @@
 
 						if (err == 1)
 						{
-							alert('ERROR: Newznab Web.\nEnter url, username and password.\nUrl must begin with http(s)://');
-							return false
+							$('#ds_host'+i).removeClass("conftbox").addClass("conftbox_err");
+							$('#ds_usr'+i).removeClass("conftbox").addClass("conftbox_err");
+							$('#ds_pass'+i).removeClass("conftbox").addClass("conftbox_err");
+
+							ret = false
 						}
 					}
-				}				
+				}
+				return(ret);
 			}
 
 			function check_form_correctness()
@@ -494,8 +508,15 @@
 					return false
 				}
 				
-				if( check_serverapi_correctness() == false)
+				var csapi_ret = check_serverapi_correctness();
+				var csweb_ret = check_serverweb_correctness();
+				
+				if( csapi_ret == false || csweb_ret == false)
+				{
+					alert('ERROR: Enter missing info in the red fields.\nUrl must begin with http(s)://');
 					return false
+				}
+					
 
 				{% for c in cfg_bi -%}
 					{% if c['flogin'] == 1-%}

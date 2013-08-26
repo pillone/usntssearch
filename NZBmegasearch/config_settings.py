@@ -108,9 +108,12 @@ class CfgSettings:
 		parser.set('general', 'nzbget_user', request_form['nzbget_user'].replace(" ", ""))
 		parser.set('general', 'nzbget_pwd', request_form['nzbget_pwd'].replace(" ", ""))
 		
+		no_APInab = int(request_form['no_APInab'])+1
+		no_WEBnab = int(request_form['no_WEBnab'])+1
+		
 		#~ custom
 		counter = 1
-		for i in xrange(MAX_PROVIDER_NUMBER):
+		for i in xrange(no_APInab):
 			if (request_form.has_key('host%d' % i)  == True):
 				if(request_form['host%d' % i].replace(" ", "")): 
 					parser.add_section('search_provider%s' % counter)
@@ -155,7 +158,7 @@ class CfgSettings:
 
 		#~ web search
 		counter3 = 1
-		for i in xrange(MAX_PROVIDER_NUMBER):
+		for i in xrange(no_WEBnab):
 			if (request_form.has_key('ds_host%d' % i)  == True):
 				if(request_form['ds_host%d' % i].replace(" ", "")): 
 					parser.add_section('deep_search_provider%s' % counter3)
