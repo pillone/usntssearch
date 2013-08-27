@@ -453,3 +453,49 @@ div#container
 
 .imgdisplayed {
  }
+
+#framecontent{
+font-family: Helvetica, Arial, Sans-Serif;
+font-size: 12px;
+
+position: absolute;
+top: 0;
+bottom: 0; 
+left: 0;
+width: 200px; /*Width of frame div*/
+height: 100%;
+overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
+background: white;
+color: #039
+
+}
+
+#maincontent{
+position: fixed;
+top: 0; 
+left: 150px; /*Set left value to WidthOfFrameDiv*/
+right: 0;
+bottom: 0;
+overflow: auto; 
+}
+
+.innertube{
+margin: 15px; /*Margins for inner DIV inside each DIV (to provide padding)*/
+}
+
+#innertube_cel {
+	font-family: Helvetica, Arial, Sans-Serif;
+	font-size: 12px;
+	font-weight: bold;
+	
+	text-align: left;
+	padding: 5px;
+	
+
+}
+
+
+#innertube_table {
+	margin: 50px auto;
+	padding: 10px;
+}

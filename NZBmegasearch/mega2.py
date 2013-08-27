@@ -57,6 +57,7 @@ def reload_all():
 	apiresp = ApiResponses(cfgsets.cfg, wrp, ds)
 	auth = miscdefs.Auth(cfgsets)
 	
+	print wrp.chash64_decode('XSGjlSq0MAYsuslvuV6x2JljME6A')
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
