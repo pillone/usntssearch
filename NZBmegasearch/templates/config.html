@@ -11,18 +11,30 @@
 <div id="framecontent">
 	<div class="innertube">
 		<div id="innertube_table"> 
-	<table class='innertube_cel'>
+	<table class='tablemenu_fl'>
 		<tbody>
 		<tr>
-			<td id='innertube_cel'>General Options</td>
+			<td ><a href="#tbl00"> Connectivity </a></td>
 		</tr>			
-			<td id='innertube_cel'>RSS feeds</td>
+			<td ><a href="#tbl01">Security </a></td>
 		</tr>			
-			<td id='innertube_cel'>Search and Suggestions</td>			
+			<td ><a href="#tbl02">RSS fields </a></td>
+		</tr>			
+			<td ><a href="#tbl03">Suggestion and Trends </a></td>
+		</tr>			
+			<td ><a href="#tbl04">Search </a></td>
 		</tr>
-			<td id='innertube_cel'>Downloaders integration</td>		
+			<td ><a href="#tbl05">SabNZB Integration </a></td>
 		</tr>
-			<td id='innertube_cel'>NZB servers</td>
+			<td ><a href="#tbl06">NZBGet Integration </a></td>
+		</tr>
+			<td ><a href="#tbl07">Special NZB engines </a></td>
+		</tr>
+			<td ><a href="#tbl08">Other NZB engines </a></td>
+		</tr>
+			<td ><a href="#newznab_api_host">Newznab NZB engines (API) </a></td>
+		</tr>
+			<td ><a href="#newznab_web_host">Newznab NZB engines (WEB) </a></td>
 		</tr>
 		</tbody>		
 	</table>
@@ -30,12 +42,12 @@
 </div>
 
 <div id="maincontent">
-  <div class="innertube">
+  <div class="innertubemain">
 			
 	<form action="/" method="post" name="cfgform">
 
-	<table class="results" summary="Config" style="width: 420px;"><thead>
-	<tr><th scope="col">Connectivity Options (requires restart)</th></tr></thead><tbody>
+	<table class="results" summary="Config" style="width: 420px;" id='tbl00'><thead>
+	<tr><th scope="col" >Connectivity (requires restart)</th></tr></thead><tbody>
 		<tr>
 			{% if openshift_install == False -%}
 			<td><label for="port">Port:</label> <input type="input" name="port" id="port" value="{{ genopt['portno'] }}" size="10" class="conftbox"></td>
@@ -51,9 +63,13 @@
 		</tr>
 	</tbody></table>
 
+	<div class='configsave'>
+		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+	</div>
 
-	<table class="results" summary="security" style="width: 420px;"><thead>
-	<tr><th scope="col">Security Options</th><th></th></tr></thead><tbody>
+
+	<table class="results" summary="security" style="width: 420px;" id='tbl01'><thead>
+	<tr><th scope="col">Security</th><th></th></tr></thead><tbody>
 		<tr>
 			<td> Restrict access</td><td></td>
 		</tr>
@@ -91,8 +107,11 @@
 
 	</tbody></table>
 
+	<div class='configsave'>
+		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+	</div>
 
-	<table class="results" summary="Suggestion" style="width: 420px;"><thead>
+	<table class="results" summary="Suggestion" style="width: 420px;" id='tbl02'><thead>
 	<tr><th scope="col">RSS feeds</th></tr></thead><tbody>
 		<tr>
 			<td>Url: nameofyourhost:port/rss</td>
@@ -102,7 +121,7 @@
 		</tr>
 	</table>
 
-	<table class="results" summary="Suggestion" style="width: 420px;"><thead>
+	<table class="results" summary="Suggestion" style="width: 420px;" id='tbl03'><thead>
 	<tr><th scope="col">Suggestions and Trends</th></tr></thead><tbody>
 		<tr>
 				<td><input type="checkbox" name="trends" id="trends" {{ genopt['general_trend_verbose'] }} ><label for="trends">Movie and Show Trends Active</label></td>
@@ -127,8 +146,11 @@
 
 	</tbody></table>
 
-	<table class="results" summary="ssopt" style="width: 420px;"><thead>
-	<tr><th scope="col">Search Options</th></tr></thead><tbody>
+	<div class='configsave'>
+		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+	</div>
+	<table class="results" summary="ssopt" style="width: 420px;"  id='tbl04'><thead>
+	<tr><th scope="col">Search</th></tr></thead><tbody>
 		<tr>
 				<td>Default category:  
 					<span>
@@ -160,8 +182,11 @@
 		</tr>	
 
 	</tbody></table>
-	 
-	<table class="results" summary="SendtoSAB" style="width: 420px;"><thead>
+
+	<div class='configsave'>
+		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+	</div>	 
+	<table class="results" summary="SendtoSAB" style="width: 420px;" id='tbl05'><thead>
 	<tr><th scope="col">SabNZB Integration</th><th></th></tr></thead><tbody>
 		<tr>
 				<td><label for="sabnzbd_url">Url:</label> <input type="text" name="sabnzbd_url" id="sabnzbd_url" value="{{ genopt['sabnzbd_url'] }}" size="22" class="conftbox"> </td> <td> 
@@ -178,7 +203,11 @@
 		
 	</tbody></table>
 
-	<table class="results" summary="SendtoNZBGet" style="width: 420px;"><thead>
+	<div class='configsave'>
+		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+	</div>
+	
+	<table class="results" summary="SendtoNZBGet" style="width: 420px;" id='tbl06'><thead>
 	<tr><th scope="col">NZBGet Integration</th> <th></th> <th></th>  <th></th></tr></thead><tbody>
 		<tr>
 				<td><label for="nzbget_url">Host:Port :</label> </td> 
@@ -195,9 +224,12 @@
 
 	</tbody></table>
 
+	<div class='configsave'>
+		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+	</div>
 
-	<table class="results" summary="Config" style="width: 420px;"><thead>
-	<tr><th scope="col">Specially supported engines</th></tr></thead><tbody>
+	<table class="results" summary="Config" style="width: 420px;" id='tbl07'><thead>
+	<tr><th scope="col">Specially supported NZB engines</th></tr></thead><tbody>
 	{% for c in cfg_bi -%}
 		{% if c['flogin'] == 0-%}
 		<tr>
@@ -212,8 +244,12 @@
 	{%- endfor %}
 	</tbody></table>
 
-	<table class="results" summary="Config" style="width: 420px;"><thead>
-	<tr><th scope="col">Other supported engines </th><th></th><th></th><th></th><th></th></tr></thead><tbody>
+	<div class='configsave'>
+		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+	</div>
+	
+	<table class="results" summary="Config" style="width: 420px;" id='tbl08'><thead>
+	<tr><th scope="col">Other supported NZB engines</th><th></th><th></th><th></th><th></th></tr></thead><tbody>
 	{% for c in cfg_bi -%}
 		{% if c['flogin'] == 1-%}
 		<tr>
@@ -240,6 +276,10 @@
 	{%- endfor %}
 	</tbody></table>
 
+
+	<div class='configsave'>
+		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+	</div>
 
 	<table class="results" summary="Config" style="width: 300px;" id="newznab_api_host"><thead>
 	<tr><th scope="col">Newznab Host (API)</th><th scope="col">API key</th><th scope="col">Timeout</th><th scope="col">Active</th></tr></thead><tbody>
@@ -278,6 +318,10 @@
 	</tbody></table>
 
 
+	<div class='configsave'>
+		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+	</div>
+
 	<table class="results" summary="NZConfig_web" style="width: 300px;"  id="newznab_web_host"><thead>
 	<tr><th scope="col">Newznab Host (Web)</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Timeout</th><th scope="col">Active</th></thead></tr><tbody>
 	{% for c in cfg_dp -%}
@@ -315,9 +359,8 @@
 	</tr> 
 
 	</tbody></table>
-	<div class='results'>
+	<div class='configsave'>
 		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
-		<input type="button" value="Cancel" onclick="location.href=&#39;\/&#39;;" class="confbttnbig" >
 	</div>
 
 
