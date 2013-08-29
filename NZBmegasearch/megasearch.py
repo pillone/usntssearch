@@ -190,7 +190,7 @@ class DoParallelSearch:
 			return self.results
 						
 		self.cleancache()
-		self.resultsraw = self.chkforcache(self.wrp.chash64_encode(self.qry_nologic), speed_class_sel)
+		self.resultsraw = self.chkforcache(self.wrp.chash64_encode(SearchModule.sanitize_strings(self.qry_nologic)), speed_class_sel)
 		if( self.resultsraw is None):
 			self.resultsraw = SearchModule.performSearch(self.qry_nologic, self.cfg, self.ds )
 			
@@ -476,16 +476,17 @@ class DoParallelSearch:
 			speed_class_sel = int(args['tm'])
 		
 		#~ save for caching
-		if(self.cgen['cache_active'] == 1 and len(self.resultsraw)>0):
-			if(len(self.collect_info) < self.cgen['max_cache_qty']):
-				if(self.chkforcache(self.wrp.chash64_encode(self.qry_nologic), speed_class_sel) is None):
-					collect_all = {}
-					collect_all['searchstr'] = self.wrp.chash64_encode(self.qry_nologic)
-					collect_all['tstamp'] =  time.time()
-					collect_all['resultsraw'] = self.resultsraw		
-					collect_all['speedclass'] = speed_class_sel		
-					self.collect_info.append(collect_all)
-					#~ print 'Result added to the cache list'
+		if(self.resultsraw is not None):
+			if(self.cgen['cache_active'] == 1 and len(self.resultsraw)>0):
+				if(len(self.collect_info) < self.cgen['max_cache_qty']):
+					if(self.chkforcache(self.wrp.chash64_encode(SearchModule.sanitize_strings(self.qry_nologic)), speed_class_sel) is None):						
+						collect_all = {}
+						collect_all['searchstr'] = self.wrp.chash64_encode(SearchModule.sanitize_strings(self.qry_nologic))
+						collect_all['tstamp'] =  time.time()
+						collect_all['resultsraw'] = self.resultsraw		
+						collect_all['speedclass'] = speed_class_sel		
+						self.collect_info.append(collect_all)
+						#~ print 'Result added to the cache list'
 		#~ ~ ~ ~ ~ ~ ~ ~ ~ 
 		scat = ''
 		if('selcat' in params['args']):
