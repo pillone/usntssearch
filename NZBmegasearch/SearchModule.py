@@ -188,7 +188,8 @@ def sanitize_html(value):
 def sanitize_strings(value):
 	if(len(value)):
 		value = sanitize_html(value).lower()
-		value = unicodedata.normalize('NFKD',value).encode('ascii', 'ignore')
+		if(isinstance(value, unicode)):
+			value = unicodedata.normalize('NFKD',value).encode('ascii', 'ignore')
 		value = re.compile("[^A-Za-z0-99]").sub(" ",value)
 		value = " ".join(value.split()).replace(" ", ".") 
 		#~ print value
