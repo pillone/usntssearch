@@ -5,13 +5,17 @@
 	<link rel="stylesheet" type="text/css" href="static/reset2.css" />
 	<link rel="stylesheet" type="text/css" href="static/style.css" />
 	<script type="text/javascript" src="static/jquery.min.js"></script>
+	<script type=text/javascript>
+		var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+	</script>
+
 </head>
 <body>
 	
 <div id="framecontent">
 	<div class="innertube">
 		<div id="innertube_table"> 
-			<img src="static/title.png" width="180" height="" alt="NZBmegasearcH"/>
+			<a href="main"><img src="static/title.png" width="180" height="" alt="NZBmegasearcH"/></a>
 			</br>
 
 	<table class='tablemenu_fl'>
@@ -47,7 +51,7 @@
 <div id="maincontent">
   <div class="innertubemain">
 			
-	<form action="/" method="post" name="cfgform">
+	<form action="/" method="post" name="cfgform" id = "cfgform">
 
 	<table class="results" summary="Config" style="width: 420px;" id='tbl00'><thead>
 	<tr><th scope="col" >Connectivity (requires restart)</th></tr></thead><tbody>
@@ -67,7 +71,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+		<input type="button" value="Save" value="confbttnbig" class="confbttnbig">
 	</div>
 
 
@@ -111,7 +115,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
 	</div>
 
 	<table class="results" summary="Suggestion" style="width: 420px;" id='tbl02'><thead>
@@ -150,7 +154,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
 	</div>
 	<table class="results" summary="ssopt" style="width: 420px;"  id='tbl04'><thead>
 	<tr><th scope="col">Search</th></tr></thead><tbody>
@@ -187,7 +191,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
 	</div>	 
 	<table class="results" summary="SendtoSAB" style="width: 420px;" id='tbl05'><thead>
 	<tr><th scope="col">SabNZB Integration</th><th></th></tr></thead><tbody>
@@ -207,7 +211,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
 	</div>
 	
 	<table class="results" summary="SendtoNZBGet" style="width: 420px;" id='tbl06'><thead>
@@ -228,7 +232,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
 	</div>
 
 	<table class="results" summary="Config" style="width: 420px;" id='tbl07'><thead>
@@ -248,7 +252,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
 	</div>
 	
 	<table class="results" summary="Config" style="width: 420px;" id='tbl08'><thead>
@@ -281,7 +285,7 @@
 
 
 	<div class='configsave'>
-		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
 	</div>
 
 	<table class="results" summary="Config" style="width: 300px;" id="newznab_api_host"><thead>
@@ -322,7 +326,7 @@
 
 
 	<div class='configsave'>
-		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
 	</div>
 
 	<table class="results" summary="NZConfig_web" style="width: 300px;"  id="newznab_web_host"><thead>
@@ -363,7 +367,7 @@
 
 	</tbody></table>
 	<div class='configsave'>
-		<input type="submit" value="Save" value="confbttnbig" class="confbttnbig" onclick="return check_form_correctness();;">
+		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
 	</div>
 
 
@@ -375,6 +379,31 @@
 </div>
 	    <script type="text/javascript">
 
+		$(".confbttnbig").click(function () {
+				$('.confbttnbig').val('Saving...')				
+
+				if(check_form_correctness() == false)
+				{
+					$('.confbttnbig').val('Save')
+					return
+				}	
+													
+				$.post($SCRIPT_ROOT + "/saveconfig", $("#cfgform").serialize(),
+				  function(data){
+						if(data.code == 1)
+						{
+							$('.confbttnbig').val('Save')
+						}
+						if(data.code == 0)
+						{
+							$('.confbttnbig').val('Error Saving')
+						}
+						
+
+				  }, "json");
+  
+			})
+								
 			$("#addentry_button_web").click(function () {
 				var curval = parseInt($('#no_WEBnab').val()) + 1
 				$('#no_WEBnab').val(curval)				
@@ -544,7 +573,6 @@
 
 			function check_form_correctness()
 			{
-
 				var port_v = cfgform.port.value;
 				chk1 = /^\d+$/.test(port_v);
 				if(!chk1 || (chk1==true && (parseInt(port_v)> 65535 ||  parseInt(port_v)< 1024 )) )
@@ -602,7 +630,7 @@
 					{%- endif %}
 				{%- endfor %}
 
-				
+				return true
 			}
 
 

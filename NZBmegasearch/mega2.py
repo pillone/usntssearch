@@ -247,10 +247,27 @@ def tosab():
 def tonzbget():
 	return jsonify(code=mega_parall.tonzbget(request.args, urlparse(request.url) ))
 	
-		
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 	
  
-@app.route('/', methods=['GET','POST'])
+@app.route('/saveconfig', methods=['POST'])
+@auth.requires_auth
+def saveconfig():
+	global first_time
+	savedok = 0
+	if request.method == 'POST':
+		#~ just for showing a minimum waiting
+		time.sleep(1)		
+		if(len(request.form) > 0):
+			cfgsets.write(request.form)
+			first_time = 0
+			savedok = 1
+			reload_all()
+			
+	return jsonify(code=savedok)
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 	
+ 
+@app.route('/', methods=['GET'])
 @auth.requires_auth
 def main_index():	
 	#~ flask bug in threads, had to solve like that
@@ -258,10 +275,6 @@ def main_index():
 	#~ ~ 
 	global first_time
 	if(cfgsets.cgen['large_server'] == False):
-		if request.method == 'POST':
-			cfgsets.write(request.form)
-			first_time = 0
-			reload_all()
 
 		if first_time == 1:
 			return cfgsets.edit_config()
