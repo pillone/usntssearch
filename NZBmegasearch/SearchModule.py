@@ -57,15 +57,15 @@ def loadSearchModules(moduleDir = None):
 	searchModuleNames = [];
 	if moduleDir == None:
 		moduleDir = resource_path('SearchModules/')
-	print '>> Loading modules from: ' + moduleDir
+	#~ print '>> Loading modules from: ' + moduleDir
 	for file in os.listdir(moduleDir):
 		if file.endswith('.py') and file != '__init__.py':
 			searchModuleNames.append(file[0:-3])
 	if len(searchModuleNames) == 0:
-		print '>> No search modules found.'
+		#~ print '>> No search modules found.'
 		return
-	else:
-		print '>> Found ' + str(len(searchModuleNames)) + ' modules'
+	#~ else:
+		#~ print '>> Found ' + str(len(searchModuleNames)) + ' modules'
 		
 	searchModuleNames = sorted(searchModuleNames)
 	path = list(sys.path)

@@ -473,7 +473,7 @@ position: absolute;
 top: 0;
 bottom: 0; 
 left: 0;
-width: 230px; /*Width of frame div*/
+width: 260px; /*Width of frame div*/
 height: 100%;
 overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
 background: white;
@@ -484,21 +484,23 @@ color: #039
 #maincontent{
 position: fixed;
 top: 0; 
-left: 230px; /*Set left value to WidthOfFrameDiv*/
+left: 260px; /*Set left value to WidthOfFrameDiv*/
 right: 0;
 bottom: 0;
 overflow: auto; 
+border-left: 2px solid #6678b1;
+
 }
  
 
 .title_tablemenu {
-	margin: 15px 0px 25px 0px;	
+	margin: 12px 0px 15px 0px;	
 }
 
 .tablemenu_fl {
 	font-family: Helvetica, Arial, Sans-Serif;
 	font-size: 14px;
-	margin: 0px 0px 0px 15px;	
+	margin: 0px 0px 0px 25px;	
 	color: #039;
 }
 
@@ -527,7 +529,7 @@ overflow: auto;
 	font-family: Helvetica, Arial, Sans-Serif;
 	font-size: 12px;
 	background: #fff;
-	margin:0px 0px 50px 45px;
+	margin:0px 0px 50px 30px;
 	width: 90%;
 	border-collapse: collapse;
 	text-align: left;
@@ -539,7 +541,7 @@ overflow: auto;
 	font-family: Helvetica, Arial, Sans-Serif;
 	font-size: 12px;
 	background: #fff;
-	margin: 5px 45px 25px 45px;
+	margin: 5px 45px 25px 30px;
 	width: 90%;
 	border-collapse: collapse;
 	text-align: left;
