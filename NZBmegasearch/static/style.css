@@ -301,8 +301,17 @@ div#container
 {
 	border-bottom: 1px solid #ccc;
 	color: #669;
-	padding: 2px 2px;
+	padding: 2px 2px;	
 }
+
+.results a {
+   text-decoration: none;
+}
+
+.results a:hover  {
+   text-decoration: underline;
+}
+
 .results tbody tr:hover td
 {
 	color: #009;
