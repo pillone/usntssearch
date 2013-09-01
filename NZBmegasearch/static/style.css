@@ -484,37 +484,41 @@ color: #039
 #maincontent{
 position: fixed;
 top: 0; 
-left: 150px; /*Set left value to WidthOfFrameDiv*/
+left: 230px; /*Set left value to WidthOfFrameDiv*/
 right: 0;
 bottom: 0;
 overflow: auto; 
 }
+ 
 
-.innertube{
-margin: 15px; /*Margins for inner DIV inside each DIV (to provide padding)*/
-}
-
-.innertubemain{
-margin: 60px; /*Margins for inner DIV inside each DIV (to provide padding)*/
+.title_tablemenu {
+	margin: 15px 0px 25px 0px;	
 }
 
 .tablemenu_fl {
 	font-family: Helvetica, Arial, Sans-Serif;
-	font-size: 12px;
-	font-weight: bold;
+	font-size: 14px;
+	margin: 0px 0px 0px 15px;	
+	color: #039;
 }
 
 .tablemenu_fl td{
 	text-align: left;
-	padding: 5px;
+	padding: 2px;
+}
+
+.tablemenu_fl_a {
+    text-decoration: none;
 }
 
 .tablemenu_fl tbody tr:hover {
 	background: #f0f0f0 none;
+    text-decoration: underline;
+	
 }
 
 #innertube_table {
-	margin: 50px auto;
+	margin: 0px 0px 0px 0px;
 	padding: 10px;
 }
 
@@ -523,8 +527,42 @@ margin: 60px; /*Margins for inner DIV inside each DIV (to provide padding)*/
 	font-family: Helvetica, Arial, Sans-Serif;
 	font-size: 12px;
 	background: #fff;
-	margin:0px 0px 0px 45px;
+	margin:0px 0px 50px 45px;
 	width: 90%;
 	border-collapse: collapse;
 	text-align: left;
 }
+
+
+.config_table_opts
+{
+	font-family: Helvetica, Arial, Sans-Serif;
+	font-size: 12px;
+	background: #fff;
+	margin: 5px 45px 25px 45px;
+	width: 90%;
+	border-collapse: collapse;
+	text-align: left;
+}
+.config_table_opts th
+{
+	font-size: 14px;
+	font-weight: normal;
+	color: #039;
+	padding: 2px 2px;
+	border-bottom: 2px solid #6678b1;
+}
+.config_table_opts td
+{
+	border-bottom: 1px solid #ccc;
+	color: #669;
+	padding: 2px 2px;
+}
+.config_table_opts tbody tr:hover td
+{
+	color: #009;
+}
+.config_table_opts tbody tr:hover {
+	background: #f0f0f0 none;
+}
+ 
