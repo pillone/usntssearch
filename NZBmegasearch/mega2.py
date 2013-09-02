@@ -57,6 +57,13 @@ def reload_all():
 	apiresp = ApiResponses(cfgsets.cfg, wrp, ds)
 	auth = miscdefs.Auth(cfgsets)
 	
+	#~ strongily = 'http://www.newshost.co.za/nzb/86c/Breaking.Bad.S05E12.720p.HDTV.x264-EVOLVE.nzb'
+	#~ last_slash = strongily.rfind('/')
+	#~ nzb_xt = strongily.lower().rfind('.nzb')
+	#~ if(last_slash != -1 and nzb_xt != -1 ):
+		#~ strongily_xt = strongily[last_slash+1:nzb_xt] + '.nzb'
+		#~ print '['+strongily_xt+']'
+
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
 print motd
@@ -161,7 +168,26 @@ def static_from_root():
     return send_from_directory(app.static_folder, request.path[1:])
 			
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
- 
+#~ FUTURE USE
+#~ @app.route('/t2', methods=['GET'])
+#~ @auth.requires_auth
+#~ def progress():
+	#~ strst = ' '
+	#~ if (mega_parall.resultsraw != None):
+		#~ for provid in xrange(len(mega_parall.resultsraw)):
+			#~ if (mega_parall.resultsraw[provid] != None):
+				#~ strst = strst + ' ' + str(provid) + ' ' + str(len(mega_parall.resultsraw[provid]))
+	#~ return strst
+ #~ 
+#~ 
+#~ @app.route('/t1', methods=['GET'])
+#~ @auth.requires_auth
+#~ def tsearch():
+	#~ t2 = threading.Thread(target=mega_parall.dosearch, args=(request.args,)   )
+	#~ t2.start()
+	#~ return 'aa'
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
 
 @app.route('/s', methods=['GET'])
 @auth.requires_auth

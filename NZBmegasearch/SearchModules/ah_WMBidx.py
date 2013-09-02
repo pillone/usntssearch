@@ -33,17 +33,26 @@ class ah_WMBidx(SearchModule):
 		self.login = 0
 		self.inapi = 1
 		self.api_catsearch = 1
+		self.cookie = {}
+
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def search_raw(self, queryopt, cfg):		
 		return self.search(queryopt, cfg)
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
+	
+	def dologin(self, cfg):	
+		# does nothing, it fakes login and fixes sab error with filename
+		self.cookie = {'FTDWSESSID' : 'Blub.blub'}
+		return True
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+		
 	# Perform a search using the given query string
 	def search(self, queryString, cfg):
 		urlParams = dict(
             sec= '',
-            fr= 'true'	)
+            fr= 'false'	)
  
    		parsed_data = self.parse_xmlsearch_special(urlParams, cfg['timeout'])	
 
@@ -88,6 +97,8 @@ class ah_WMBidx(SearchModule):
 			elem_title = elem.find("title")
 			elem_url = elem.find("enclosure")
 			elem_pubdate = elem.find("pubDate")
+			elem_pubdate = elem.find("description")			
+			 (Size:1173 Mb)
 			len_elem_pubdate = len(elem_pubdate.text)
 			#~ 03/22/2013 17:36
 			elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate-6], "%m/%d/%Y %H:%M").timetuple())
@@ -109,9 +120,14 @@ class ah_WMBidx(SearchModule):
 						#~ print '=========='
 			if(len(category_found) == 0):
 				category_found['N/A'] = 1
-			
+
+			titletxt = elem_title.text
+			rttf = titletxt.rfind(' nzb')
+			if(rttf != -1):
+				titletxt = titletxt [0:rttf]
+									
 			d1 = { 
-				'title': elem_title.text,
+				'title': titletxt,
 				'poster': elem_poster,
 				'size': -1,
 				'url': elem_url.attrib['url'],
@@ -122,6 +138,7 @@ class ah_WMBidx(SearchModule):
 				'categ':category_found,
 				'ignore':0,
 				'provider':self.baseURL,
+				'req_pwd':self.typesrch,
 				'providertitle':self.name
 			}
 

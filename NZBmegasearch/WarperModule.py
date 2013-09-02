@@ -125,7 +125,6 @@ class Warper:
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def beam_localwarp(self, urltouse):
-
 		return redirect(urltouse, 302)
 
 		
@@ -183,7 +182,9 @@ class Warper:
 				return -1
  		
 		fcontent = response.read()
+		
 		#~ print response.info()
+		
 		f=tempfile.NamedTemporaryFile(delete=False)
 		f.write(fcontent)
 		f.close()
@@ -195,12 +196,23 @@ class Warper:
 		except Exception as e:
 			print 'Cannot remove temporary NZB file' 
 		
+		riff_never = True
 		for i in xrange(len(response.info().headers)):
 			if(response.info().headers[i].find('Content-Encoding')  != -1):
 				fresponse.headers["Content-Encoding"] = 'gzip'
 			riff = response.info().headers[i].find('Content-Disposition')
 			if( riff != -1):
+				riff_never = False
 				fresponse.headers["Content-Disposition"] = response.info().headers[i][riff+21:len(response.info().headers[i])].strip()
+		
+		#~ conservative case -- nothing found
+		if(riff_never == True):
+			last_slash = urltouse.rfind('/')
+			nzb_xt = urltouse.lower().rfind('.nzb')
+			if(last_slash != -1 and nzb_xt != -1 ):
+				fresponse.headers["Content-Disposition"] = 'attachment; filename="'+urltouse[last_slash+1:nzb_xt] + '.nzb"' 
+				#~ print '['+fresponse.headers["Content-Disposition"]+']'
+
 		return fresponse	
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -246,4 +258,7 @@ class Warper:
 				response = self.beam_notenc(decodedurl)
 
 			log.info ('WARPNGD: ' + decodedurl)	
+			
+			#~ print response.headers
+			
 			return response	

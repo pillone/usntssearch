@@ -102,7 +102,7 @@ def loadSearchModules(moduleDir = None):
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	
 # Perform a search using all available modules
-def performSearch(queryString,  cfg, dsearch=None, extraparam=None):
+def performSearch(queryString,  cfg, dsearch=None, extraparam=None, stoppingthreads=1):
 		
 	queryString = queryString.strip()
 	queryString = sanitize_strings(queryString)
@@ -170,8 +170,10 @@ def performSearch(queryString,  cfg, dsearch=None, extraparam=None):
 					except Exception as e:
 						print 'Error starting deepsearch thread  : ' + str(e)
 
-	for t in threadHandles:
-		t.join()
+
+	if(stoppingthreads):
+		for t in threadHandles:
+			t.join()
 
 	return globalResults
 
