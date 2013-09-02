@@ -35,7 +35,6 @@ class ah_WMBidx(SearchModule):
 		self.api_catsearch = 1
 		self.cookie = {}
 
-
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def search_raw(self, queryopt, cfg):		
 		return self.search(queryopt, cfg)
@@ -97,8 +96,8 @@ class ah_WMBidx(SearchModule):
 			elem_title = elem.find("title")
 			elem_url = elem.find("enclosure")
 			elem_pubdate = elem.find("pubDate")
-			elem_pubdate = elem.find("description")			
-			 (Size:1173 Mb)
+			elem_descrip = elem.find("description")
+			elem_category = elem.find("category")
 			len_elem_pubdate = len(elem_pubdate.text)
 			#~ 03/22/2013 17:36
 			elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate-6], "%m/%d/%Y %H:%M").timetuple())
@@ -106,30 +105,24 @@ class ah_WMBidx(SearchModule):
 
 			elem_guid = elem.find("guid")
 			release_details = self.baseURL
-			for attr in elem.iter('newznab_attr'):
-				if('name' in attr.attrib):
-					if (attr.attrib['name'] == 'poster'): 
-						elem_poster = attr.attrib['value']
-					if (attr.attrib['name'] == 'category'):
-						val = attr.attrib['value']
-						if(val in self.category_inv):
-							category_found[self.category_inv[val]] = 1
-						#~ print elem_title.text	
-						#~ print val	
-						#~ print category_found
-						#~ print '=========='
-			if(len(category_found) == 0):
-				category_found['N/A'] = 1
+			category_found[elem_category.text] = 1
 
+			#~ removes stray ' nzb' comment
 			titletxt = elem_title.text
 			rttf = titletxt.rfind(' nzb')
 			if(rttf != -1):
 				titletxt = titletxt [0:rttf]
+			
+			rttf2a = elem_descrip.text.rfind('Size:');
+			rttf2b = elem_descrip.text.rfind('Mb)');
+			sizetxt = -1
+			if(rttf2a != -1 and rttf2b != -1 ):
+				sizetxt = int (elem_descrip.text[rttf2a+5:rttf2b]) * 1000000
 									
 			d1 = { 
 				'title': titletxt,
 				'poster': elem_poster,
-				'size': -1,
+				'size': sizetxt,
 				'url': elem_url.attrib['url'],
 				'filelist_preview': '',
 				'group': '',
