@@ -35,7 +35,8 @@ class ai_FTDworld(SearchModule):
 		self.cookie = {}
 		self.api_catsearch = 0
 		self.cfg = {}
-		
+		self.returncode = 0
+				
 	def dologin(self, cfg):			
 		loginurl='http://ftdworld.net/api/login.php'
 		urlParams = dict(

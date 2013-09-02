@@ -34,6 +34,8 @@ class Newznab(SearchModule):
 		self.builtin = 0
 		self.inapi = 1
 		self.api_catsearch = 1
+		self.returncode = 0
+		
 		self.agent_headers = {	'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1' }	
 		
 		self.categories = {'Console': {'code':[1000,1010,1020,1030,1040,1050,1060,1070,1080], 'pretty': 'Console'},
@@ -56,7 +58,8 @@ class Newznab(SearchModule):
 			for i in xrange(len(self.categories[key]['code'])):
 				val = self.categories[key]['code'][i]
 				self.category_inv[str(val)] = prettyval
-		#~ print self.category_inv
+
+
 	
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def search_raw(self, queryopt, cfg):
@@ -89,3 +92,25 @@ class Newznab(SearchModule):
 		self.name = humanprovider.replace("www.", "")
 		parsed_data = self.parse_xmlsearch(urlParams, cfg['timeout'])			
 		return parsed_data		
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	
+	def checkreturn(self, data):
+
+		limitpos = data.encode('utf-8').find('<error code="500"')
+		if(limitpos != -1):
+			mssg = 'ERROR: Download/Search limit reached ' + self.queryURL
+			limitpos_comment = data.encode('utf-8').find('description="')
+			if(limitpos_comment != -1):
+				mssg = data.encode('utf-8')[limitpos_comment+1:]
+			log.error (mssg)
+		limitpos = data.encode('utf-8').find('<error code="100"')				
+		if(limitpos != -1):
+			mssg = 'ERROR: Incorrect user credentials ' + self.queryURL
+			limitpos_comment = data.encode('utf-8').find('description="')
+			if(limitpos_comment != -1):
+				mssg = data.encode('utf-8')[limitpos_comment+1:]
+			log.error (mssg)
+		
+		dadasdasdreturn	
+

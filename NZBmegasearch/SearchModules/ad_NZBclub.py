@@ -34,6 +34,7 @@ class ad_NZBclub(SearchModule):
 		self.login = 0
 		self.inapi = 1
 		self.api_catsearch = 0
+		self.returncode = 0
 		self.agent_headers = {	'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1' }	
 		self.categories = {'Console': {'code':[], 'pretty': 'Console'},
 							'Movie' : {'code': [], 'pretty': 'Movie'},
@@ -156,11 +157,9 @@ class ad_NZBclub(SearchModule):
 
 			parsed_data.append(d1)
 			
-		#~ that's dirty but effective
-		if(	len(parsed_data) == 0 and len(data) < 100):
-			limitpos = data.encode('utf-8').find('<error code="500"')
-			if(limitpos != -1):
-				mssg = 'ERROR: Download/Search limit reached ' + self.queryURL
-				print mssg
-				log.error (mssg)
+			#~ that's dirty but effective
+			self.returncode = 0
+			if(	len(parsed_data) == 0 and len(data) < 100):
+				self.returncode = checkreturn(self, cfg)
+			
 		return parsed_data		

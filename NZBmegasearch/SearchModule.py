@@ -370,12 +370,11 @@ class SearchModule(object):
 
 			parsed_data.append(d1)
 			
+
 		#~ that's dirty but effective
+		self.returncode = 0
 		if(	len(parsed_data) == 0 and len(data) < 100):
-			limitpos = data.encode('utf-8').find('<error code="500"')
-			if(limitpos != -1):
-				mssg = 'ERROR: Download/Search limit reached ' + self.queryURL
-				print mssg
-				log.error (mssg)
+			self.returncode = checkreturn(self, cfg)
+
 		return parsed_data		
 
