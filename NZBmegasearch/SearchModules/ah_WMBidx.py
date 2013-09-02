@@ -96,28 +96,43 @@ class ah_WMBidx(SearchModule):
 			elem_title = elem.find("title")
 			elem_url = elem.find("enclosure")
 			elem_pubdate = elem.find("pubDate")
+			
 			elem_descrip = elem.find("description")
 			elem_category = elem.find("category")
-			len_elem_pubdate = len(elem_pubdate.text)
+			
+			if(elem_title is None or elem_url is None or elem_pubdate is None):
+				continue
+							
 			#~ 03/22/2013 17:36
-			elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate-6], "%m/%d/%Y %H:%M").timetuple())
+			len_elem_pubdate = len(elem_pubdate.text)
+			
+			try:
+				elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate-6], "%m/%d/%Y %H:%M").timetuple())
+			except Exception as e:
+				elem_postdate =  283996800
+				
 			elem_poster = ''
 
 			elem_guid = elem.find("guid")
 			release_details = self.baseURL
-			category_found[elem_category.text] = 1
 
+			if(elem_category is not None):
+				category_found[elem_category.text] = 1
+			else:	
+				category_found['N/A'] = 1
+			
 			#~ removes stray ' nzb' comment
 			titletxt = elem_title.text
 			rttf = titletxt.rfind(' nzb')
 			if(rttf != -1):
 				titletxt = titletxt [0:rttf]
-			
-			rttf2a = elem_descrip.text.rfind('Size:');
-			rttf2b = elem_descrip.text.rfind('Mb)');
-			sizetxt = -1
-			if(rttf2a != -1 and rttf2b != -1 ):
-				sizetxt = int (elem_descrip.text[rttf2a+5:rttf2b]) * 1000000
+
+			sizetxt = -1	
+			if(elem_descrip is not None):
+				rttf2a = elem_descrip.text.rfind('Size:');
+				rttf2b = elem_descrip.text.rfind('Mb)');
+				if(rttf2a != -1 and rttf2b != -1 ):
+					sizetxt = int (elem_descrip.text[rttf2a+5:rttf2b]) * 1000000
 									
 			d1 = { 
 				'title': titletxt,
