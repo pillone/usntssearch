@@ -23,7 +23,6 @@ class ah_WMBidx(SearchModule):
 	# Set up class variables
 	def __init__(self, configFile=None):
 		super(ah_WMBidx, self).__init__()
-		# Parse config file		
 		self.name = 'Wombie'
 		self.typesrch = 'WBX'
 		self.queryURL = 'http://www.newshost.co.za/rss/'
@@ -34,6 +33,7 @@ class ah_WMBidx(SearchModule):
 		self.inapi = 1
 		self.api_catsearch = 1
 		self.cookie = {}
+		
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	def search_raw(self, queryopt, cfg):		
@@ -154,9 +154,10 @@ class ah_WMBidx(SearchModule):
 
 			
 			#~ that's dirty but effective
-			self.returncode = 0
+			self.returncode = self.default_retcode
 			if(	len(parsed_data) == 0 and len(data) < 100):
 				self.returncode = checkreturn(self, cfg)
-			
+			self.returncode[2] = self.baseURL				
+			self.returncode[3] = timestamp_e - timestamp_s
 			return parsed_data
 

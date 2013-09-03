@@ -109,10 +109,11 @@ def performSearch(queryString,  cfg, dsearch=None, extraparam=None, stoppingthre
 	#~ print queryString
 	
 	# Perform the search using every module
-	global globalResults
+	global globalResults, globalReturns
 	if 'loadedModules' not in globals():
 		loadSearchModules()
 	globalResults = []
+	globalReturns = []
 	threadHandles = []
 	lock = threading.Lock()
 
@@ -221,7 +222,8 @@ def performSearchThread(queryString, neededModule, lock, cfg):
 	localResults = neededModule.search(queryString, cfg)
 	lock.acquire()
 	globalResults.append(localResults)
-
+	globalReturns.append(neededModule.returncode)
+	
 	try:
 		lock.release()
 	except Exception as e:
@@ -273,6 +275,9 @@ class SearchModule(object):
 		self.baseURL = ''
 		self.nzbDownloadBaseURL = ''
 		self.apiKey = ''
+		self.returncode = []
+		self.default_retcode=[200, 'Ok', 0, 'providername' ]
+
 
 	# Show the configuration options for this module
 	def configurationHTML(self):
@@ -371,10 +376,13 @@ class SearchModule(object):
 			parsed_data.append(d1)
 			
 
+		print self.baseURL
 		#~ that's dirty but effective
-		self.returncode = 0
+		self.returncode = self.default_retcode
 		if(	len(parsed_data) == 0 and len(data) < 100):
 			self.returncode = checkreturn(self, cfg)
+		self.returncode[2] = self.baseURL				
+		self.returncode[3] = timestamp_e - timestamp_s
 
 		return parsed_data		
 

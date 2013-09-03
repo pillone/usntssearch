@@ -78,7 +78,7 @@ class DoParallelSearch:
 		self.ds = ds			
 		self.wrp = wrp
 		self.sckname = self.getdomainandprotocol(self.cgen['general_ipaddress'])
-
+		self.returncode = []
 		print '>> Base domain and protocol: ' + self.sckname
 	
 		if(self.cfg is not None):
@@ -193,7 +193,8 @@ class DoParallelSearch:
 		self.resultsraw = self.chkforcache(self.wrp.chash64_encode(SearchModule.sanitize_strings(self.qry_nologic)), speed_class_sel)
 		if( self.resultsraw is None):
 			self.resultsraw = SearchModule.performSearch(self.qry_nologic, self.cfg, self.ds )
-			
+			self.returncode = SearchModule.globalReturns
+		print 	self.returncode
 		if( self.cgen['smartsearch'] == 1):
 			#~ smartsearch
 			self.results = summary_results(self.resultsraw, self.qry_nologic, self.logic_items)

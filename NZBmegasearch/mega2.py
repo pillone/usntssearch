@@ -56,13 +56,6 @@ def reload_all():
 	mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds, wrp)
 	apiresp = ApiResponses(cfgsets.cfg, wrp, ds)
 	auth = miscdefs.Auth(cfgsets)
-	
-	#~ strongily = 'http://www.newshost.co.za/nzb/86c/Breaking.Bad.S05E12.720p.HDTV.x264-EVOLVE.nzb'
-	#~ last_slash = strongily.rfind('/')
-	#~ nzb_xt = strongily.lower().rfind('.nzb')
-	#~ if(last_slash != -1 and nzb_xt != -1 ):
-		#~ strongily_xt = strongily[last_slash+1:nzb_xt] + '.nzb'
-		#~ print '['+strongily_xt+']'
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'

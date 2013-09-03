@@ -25,7 +25,6 @@ class Newznab(SearchModule):
 	# Set up class variables
 	def __init__(self, configFile=None):
 		super(Newznab, self).__init__()
-		# Parse config file		
 		self.name = 'Newznab'
 		self.typesrch = 'NAB'
 		self.queryURL = 'xxxx'
@@ -34,8 +33,6 @@ class Newznab(SearchModule):
 		self.builtin = 0
 		self.inapi = 1
 		self.api_catsearch = 1
-		self.returncode = 0
-		
 		self.agent_headers = {	'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1' }	
 		
 		self.categories = {'Console': {'code':[1000,1010,1020,1030,1040,1050,1060,1070,1080], 'pretty': 'Console'},
@@ -97,6 +94,7 @@ class Newznab(SearchModule):
 	
 	def checkreturn(self, data):
 
+		retcode = self.default_retcode
 		limitpos = data.encode('utf-8').find('<error code="500"')
 		if(limitpos != -1):
 			mssg = 'ERROR: Download/Search limit reached ' + self.queryURL
@@ -104,13 +102,15 @@ class Newznab(SearchModule):
 			if(limitpos_comment != -1):
 				mssg = data.encode('utf-8')[limitpos_comment+1:]
 			log.error (mssg)
+			retcode = [500, mssg]
+			
 		limitpos = data.encode('utf-8').find('<error code="100"')				
 		if(limitpos != -1):
 			mssg = 'ERROR: Incorrect user credentials ' + self.queryURL
 			limitpos_comment = data.encode('utf-8').find('description="')
 			if(limitpos_comment != -1):
 				mssg = data.encode('utf-8')[limitpos_comment+1:]
-			log.error (mssg)
-		
-		dadasdasdreturn	
+			log.error (mssg)	
+			retcode = [100, mssg]				
+		return	retcode
 
