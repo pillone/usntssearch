@@ -61,7 +61,7 @@ This project makes use of:
 - Download latest available binary from [usntssearch-binaries/windows] (https://github.com/pillone/usntssearch-binaries/tree/master/windows)
 - There are two binaries avaliable: 
  * [win32_NZBMegasearcH_0.XX-noconsole.zip] (https://github.com/pillone/usntssearch-binaries/raw/master/windows/win32_NZBMegasearcH_0.44-wconsole.zip) runs silently without console output
- * [win32_NZBMegasearcH_0.XX-wconsole.zip] (https://github.com/pillone/usntssearch-binaries/raw/master/windows/win32_NZBMegasearcH_0.44-wconsole.zip) runs with console output
+ * [win32_NZBMegasearcH_0.XX-wconsole.zip] (https://github.com/pillone/usntssearch-binaries/raw/master/windows/win32_NZBMegasearcH_0.44-noconsole.zip) runs with console output
 - Unzip in a folder and click on `mega2.exe`
 - Open browser to `localhost:5000`
 
