@@ -109,11 +109,10 @@ def performSearch(queryString,  cfg, dsearch=None, extraparam=None, stoppingthre
 	#~ print queryString
 	
 	# Perform the search using every module
-	global globalResults, globalReturns
+	global globalResults
 	if 'loadedModules' not in globals():
 		loadSearchModules()
 	globalResults = []
-	globalReturns = []
 	threadHandles = []
 	lock = threading.Lock()
 
@@ -222,7 +221,6 @@ def performSearchThread(queryString, neededModule, lock, cfg):
 	localResults = neededModule.search(queryString, cfg)
 	lock.acquire()
 	globalResults.append(localResults)
-	globalReturns.append(neededModule.returncode)
 	
 	try:
 		lock.release()
@@ -275,8 +273,7 @@ class SearchModule(object):
 		self.baseURL = ''
 		self.nzbDownloadBaseURL = ''
 		self.apiKey = ''
-		self.returncode = []
-		self.default_retcode=[200, 'Ok', 0, 'providername' ]
+		self.default_retcode=[200, 'Ok', 0]
 
 
 	# Show the configuration options for this module
@@ -291,7 +288,7 @@ class SearchModule(object):
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-	def parse_xmlsearch(self, urlParams, tout): 
+	def parse_xmlsearch(self, urlParams, tout, tcfg = None): 
 		parsed_data = []
 		#~ print self.queryURL  + ' ' + urlParams['apikey']
 		timestamp_s = time.time()
@@ -302,7 +299,8 @@ class SearchModule(object):
 		except Exception as e:
 			mssg = self.queryURL + ' -- ' + str(e)
 			print mssg
-			log.critical(mssg)
+			log.critical(mssg)			
+			tcfg['retcode'] = [600, 'Server timeout', tout]
 			return parsed_data
 			
 		timestamp_e = time.time()	
@@ -375,14 +373,14 @@ class SearchModule(object):
 
 			parsed_data.append(d1)
 			
-
-		print self.baseURL
+		
 		#~ that's dirty but effective
-		self.returncode = self.default_retcode
-		if(	len(parsed_data) == 0 and len(data) < 100):
-			self.returncode = checkreturn(self, cfg)
-		self.returncode[2] = self.baseURL				
-		self.returncode[3] = timestamp_e - timestamp_s
+		if(tcfg is not  None):
+			returncode = self.default_retcode
+			if(	len(parsed_data) == 0 and len(data) < 300):
+				returncode = self.checkreturn(data)
+			returncode[2] = timestamp_e - timestamp_s
+			tcfg['retcode'] = copy.deepcopy(returncode)
 
 		return parsed_data		
 

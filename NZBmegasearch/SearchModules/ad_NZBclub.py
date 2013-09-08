@@ -19,7 +19,6 @@ from SearchModule import *
 import urllib
 import time
 
-# Search on Newznab
 class ad_NZBclub(SearchModule):
 	# Set up class variables
 	def __init__(self, configFile=None):
@@ -34,7 +33,6 @@ class ad_NZBclub(SearchModule):
 		self.login = 0
 		self.inapi = 1
 		self.api_catsearch = 0
-		self.returncode = 0
 		self.agent_headers = {	'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1' }	
 		self.categories = {'Console': {'code':[], 'pretty': 'Console'},
 							'Movie' : {'code': [], 'pretty': 'Movie'},
@@ -66,16 +64,13 @@ class ad_NZBclub(SearchModule):
             sp= 1,
             ns= 1	)
          
-		parsed_data = self.parse_xmlsearch_special(urlParams, cfg['timeout'])	
-		
-		#~ for i in xrange(len(parsed_data)):
-			#~ parsed_data[i]['url'] = urllib.quote(parsed_data[i]['url'], safe='/:' )
+		parsed_data = self.parse_xmlsearch_special(urlParams, cfg['timeout'], cfg)	
 
 		return parsed_data
 	
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-	def parse_xmlsearch_special(self, urlParams, tout): 
+	def parse_xmlsearch_special(self, urlParams, tout, cfg): 
 		parsed_data = []
 		timestamp_s = time.time()	
 
@@ -86,8 +81,7 @@ class ad_NZBclub(SearchModule):
 			mssg = self.queryURL + ' -- ' + str(e)
 			print mssg
 			log.critical(mssg)
-			#~ error_rlimit = str(e.args[0]).find('Max retries exceeded')
-			#~ print error_rlimit
+			tcfg['retcode'] = [600, 'Server timeout', tout]
 			return parsed_data
 
 		timestamp_e = time.time()
@@ -101,6 +95,7 @@ class ad_NZBclub(SearchModule):
 			tree = ET.fromstring(data.encode('utf-8'))
 		except Exception as e:
 			print e
+			tcfg['retcode'] = [700, 'Server responded in unexpected format', timestamp_e - timestamp_s]			
 			return parsed_data
 
 		#~ successful parsing
@@ -157,9 +152,10 @@ class ad_NZBclub(SearchModule):
 
 			parsed_data.append(d1)
 			
-			#~ that's dirty but effective
-			self.returncode = 0
-			if(	len(parsed_data) == 0 and len(data) < 100):
-				self.returncode = checkreturn(self, cfg)
-			
+			returncode = self.default_retcode
+			if(	len(parsed_data) == 0 and len(data) < 300):
+				returncode = self.checkreturn(data)
+			returncode[2] = timestamp_e - timestamp_s
+			tcfg['retcode'] = copy.deepcopy(returncode)
+						
 		return parsed_data		

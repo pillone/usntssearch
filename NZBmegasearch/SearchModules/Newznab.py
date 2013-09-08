@@ -87,30 +87,32 @@ class Newznab(SearchModule):
 		#~ homemade lazy stuff
 		humanprovider = urlparse.urlparse(cfg['url']).hostname			
 		self.name = humanprovider.replace("www.", "")
-		parsed_data = self.parse_xmlsearch(urlParams, cfg['timeout'])			
+		parsed_data = self.parse_xmlsearch(urlParams, cfg['timeout'], cfg)			
 		return parsed_data		
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	
 	def checkreturn(self, data):
 
+		
+	
 		retcode = self.default_retcode
 		limitpos = data.encode('utf-8').find('<error code="500"')
 		if(limitpos != -1):
-			mssg = 'ERROR: Download/Search limit reached ' + self.queryURL
+			mssg = 'Download/Search limit reached ' + self.queryURL
 			limitpos_comment = data.encode('utf-8').find('description="')
 			if(limitpos_comment != -1):
-				mssg = data.encode('utf-8')[limitpos_comment+1:]
+				mssg = data.encode('utf-8')[limitpos_comment+13:]
 			log.error (mssg)
-			retcode = [500, mssg]
+			retcode = [500, sanitize_strings(mssg), 0]
 			
 		limitpos = data.encode('utf-8').find('<error code="100"')				
 		if(limitpos != -1):
-			mssg = 'ERROR: Incorrect user credentials ' + self.queryURL
+			mssg = 'Incorrect user credentials ' + self.queryURL
 			limitpos_comment = data.encode('utf-8').find('description="')
 			if(limitpos_comment != -1):
-				mssg = data.encode('utf-8')[limitpos_comment+1:]
+				mssg = data.encode('utf-8')[limitpos_comment+13:]
 			log.error (mssg)	
-			retcode = [100, mssg]				
+			retcode = [100, sanitize_strings(mssg),0]			
 		return	retcode
 

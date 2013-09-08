@@ -193,8 +193,12 @@ class DoParallelSearch:
 		self.resultsraw = self.chkforcache(self.wrp.chash64_encode(SearchModule.sanitize_strings(self.qry_nologic)), speed_class_sel)
 		if( self.resultsraw is None):
 			self.resultsraw = SearchModule.performSearch(self.qry_nologic, self.cfg, self.ds )
-			self.returncode = SearchModule.globalReturns
-		print 	self.returncode
+			#~ case of cache to add
+			for cfg_t in self.cfg:
+				if('retcode' in cfg_t):
+					print cfg_t['retcode']
+
+
 		if( self.cgen['smartsearch'] == 1):
 			#~ smartsearch
 			self.results = summary_results(self.resultsraw, self.qry_nologic, self.logic_items)

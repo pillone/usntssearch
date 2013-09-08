@@ -64,6 +64,11 @@ print motd
 DEBUGFLAG = False
 LARGESERVER = False
 
+logsdir = SearchModule.resource_path('logs/')
+if(len(os.getenv('OPENSHIFT_DATA_DIR', ''))):
+	logsdir = os.environ.get('OPENSHIFT_DATA_DIR')
+
+
 if(len(sys.argv) > 1):
 	for argv in sys.argv:
 		if(argv == 'help'):
@@ -84,9 +89,7 @@ if(len(sys.argv) > 1):
 
 		if(argv == 'daemon'):
 			print '====== DAEMON MODE ======'
-			#~ if os.fork():
-				#~ sys.exit()
-			miscdefs.daemonize()	
+			miscdefs.daemonize(logsdir)	
 
 #~ detect if started from gunicorn
 oshift_dirconf = os.getenv('OPENSHIFT_DATA_DIR', '')
@@ -95,7 +98,6 @@ if( __name__ == 'mega2' and len(oshift_dirconf)==0):
 	LARGESERVER = True
 	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
 cver = miscdefs.ChkVersion(DEBUGFLAG) 
 print '>> version: '+ str(cver.ver_notify['curver'])
 motd = motd  + ' v.'+str(cver.ver_notify['curver']) + 'large_server: ' + str(LARGESERVER) + ' debug: ' + str(DEBUGFLAG)
@@ -107,9 +109,6 @@ if (cfgsets.cfg is None or cfgsets.cfg_deep is None ):
 	first_time = 1
 	'>> It will be configured'	
 
-logsdir = SearchModule.resource_path('logs/')
-if(len(os.getenv('OPENSHIFT_DATA_DIR', ''))):
-	logsdir = os.environ.get('OPENSHIFT_DATA_DIR')
 certdir = SearchModule.resource_path('certificates/')
 log = logging.getLogger() 
 handler = logging.handlers.RotatingFileHandler(logsdir+'nzbmegasearch.log', maxBytes=cfgsets.cgen['log_size'], backupCount=cfgsets.cgen['log_backupcount']) 

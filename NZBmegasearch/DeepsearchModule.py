@@ -135,16 +135,21 @@ class DeepSearch_one:
 		if(str(e).find("Errno 111") != -1):
 			print "Wrong url or site down " + self.baseURL
 			log.warning("Wrong url or site down " + self.baseURL)
+			self.cur_cfg['retcode'] = [700, 'Server responded in unexpected format', self.timeout]
 			return 111
 		if(str(e).find("timed out") != -1):
 			print "Too much time to respond "  + self.baseURL
 			log.warning("Too much time to respond "  + self.baseURL)
+			self.cur_cfg['retcode'] = [600, 'Server timeout', self.timeout]			
 			return 500
 		if(str(e).find("HTTP Error 302") != -1):
 			log.warning("Fetched exception login: " + str(e) + self.baseURL)
+			self.cur_cfg['retcode'] = [100, 'Incorrect user credentials', self.timeout]			
+
 			return 302
 		print "Fetched exception: "  + self.baseURL + str(e)
 		log.warning("Fetched exception: "  + self.baseURL + str(e))
+		self.cur_cfg['retcode'] = [400, 'Generic server error', self.timeout]		
 		return 440
 
 

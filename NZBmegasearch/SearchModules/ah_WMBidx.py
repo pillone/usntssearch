@@ -53,13 +53,13 @@ class ah_WMBidx(SearchModule):
             sec= '',
             fr= 'false'	)
  
-   		parsed_data = self.parse_xmlsearch_special(urlParams, cfg['timeout'])	
+   		parsed_data = self.parse_xmlsearch_special(urlParams, cfg['timeout'], cfg)
 
 		return parsed_data
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 		
-	def parse_xmlsearch_special(self, urlParams, tout): 
+	def parse_xmlsearch_special(self, urlParams, tout, tcfg): 
 		parsed_data = []
 		#~ print self.queryURL  + ' ' + urlParams['apikey']
 		timestamp_s = time.time()	
@@ -71,8 +71,7 @@ class ah_WMBidx(SearchModule):
 			mssg = self.queryURL + ' -- ' + str(e)
 			print mssg
 			log.critical(mssg)
-			#~ error_rlimit = str(e.args[0]).find('Max retries exceeded')
-			#~ print error_rlimit
+			tcfg['retcode'] = [600, 'Server timeout', tout]
 			return parsed_data
 		
 		timestamp_e = time.time()
@@ -151,13 +150,12 @@ class ah_WMBidx(SearchModule):
 			}
 
 			parsed_data.append(d1)
-
 			
-			#~ that's dirty but effective
-			self.returncode = self.default_retcode
-			if(	len(parsed_data) == 0 and len(data) < 100):
-				self.returncode = checkreturn(self, cfg)
-			self.returncode[2] = self.baseURL				
-			self.returncode[3] = timestamp_e - timestamp_s
+			returncode = self.default_retcode
+			if(	len(parsed_data) == 0 and len(data) < 300):
+				returncode = self.checkreturn(data)
+			returncode[2] = timestamp_e - timestamp_s
+			tcfg['retcode'] = copy.deepcopy(returncode)
+
 			return parsed_data
 

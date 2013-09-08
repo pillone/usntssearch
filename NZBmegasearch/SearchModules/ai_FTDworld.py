@@ -35,7 +35,6 @@ class ai_FTDworld(SearchModule):
 		self.cookie = {}
 		self.api_catsearch = 0
 		self.cfg = {}
-		self.returncode = 0
 				
 	def dologin(self, cfg):			
 		loginurl='http://ftdworld.net/api/login.php'
@@ -69,19 +68,21 @@ class ai_FTDworld(SearchModule):
 		except Exception as e:
 			print e
 			log.critical(str(e))
+			tcfg['retcode'] = [600, 'Server timeout', tout]			
 			return []
 		
 		timestamp_e = time.time()
 		log.info('TS ' + self.baseURL + " " + str(timestamp_e - timestamp_s))
 
-
 		try:
 			dataglob = http_result.json()
 		except Exception as e:
 			print e
+			tcfg['retcode'] = [700, 'Server responded in unexpected format', timestamp_e - timestamp_s]			
 			return []
 		
 		if('data' not in dataglob ):
+			tcfg['retcode'] = [701, 'Server responded in unexpected format', timestamp_e - timestamp_s]						
 			return []
 		data = dataglob['data'];	
 				
