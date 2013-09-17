@@ -109,7 +109,8 @@ class DeepSearch_one:
 		self.basic_sz = 1024*1024
 		#~ self.dologin()
 		self.typesrch = 'DSNINIT'
-	
+		self.default_retcode=[200, 'Ok', 0]
+
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	@classmethod
 	def basics(self):
@@ -150,6 +151,7 @@ class DeepSearch_one:
 		print "Fetched exception: "  + self.baseURL + str(e)
 		log.warning("Fetched exception: "  + self.baseURL + str(e))
 		self.cur_cfg['retcode'] = [400, 'Generic server error', self.timeout]		
+		
 		return 440
 
 
@@ -299,6 +301,7 @@ class DeepSearch_one:
 		#~ WIN: it seems to have issue in win32
 		# locale.setlocale( locale.LC_ALL, 'en_US.utf8' )
 		
+		self.cur_cfg['retcode']  = self.default_retcode
 		if	(self.chkcookie() == False):
 			if(self.dologin() == False):
 				return []
@@ -319,7 +322,8 @@ class DeepSearch_one:
 		data = res.get_data()  
 		timestamp_e = time.time()
 		log.info('TS ' + mainurl + " " + str(timestamp_e - timestamp_s))
-
+		self.cur_cfg['retcode'][2]  = timestamp_e - timestamp_s
+		
 		soup = beautifulsoup.BeautifulSoup(data)
 
 	#~ def searchDBG(self, srchstr):
@@ -470,6 +474,7 @@ class DeepSearchGinga_one(DeepSearch_one):
 		
 		socket.setdefaulttimeout(self.timeout)
 
+		self.cur_cfg['retcode']  = self.default_retcode
 		if	(self.chkcookie() == False):
 			if(self.dologin() == False):
 				return []
@@ -500,7 +505,7 @@ class DeepSearchGinga_one(DeepSearch_one):
 		data = res.get_data()  
 		timestamp_e = time.time()
 		log.info('TS ' + mainurl + " " + str(timestamp_e - timestamp_s))
-		
+		self.cur_cfg['retcode'][2]  = timestamp_e - timestamp_s
 
 		#~ def searchDBG(self, srchstr):
 		#~ handler = open('test.html').read()

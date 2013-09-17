@@ -198,6 +198,13 @@ class DoParallelSearch:
 				if('retcode' in cfg_t):
 					print cfg_t['retcode']
 
+			for cfg_ds_base in self.ds.ds:
+				if('retcode' in cfg_ds_base.cur_cfg):
+					print cfg_ds_base.cur_cfg['retcode']
+			
+			#~ for index in xrange(len(self.ds.ds)):
+				#~ if('retcode' in self.ds.ds[index].cur_cfg):
+					#~ print self.ds.ds[index].cur_cfg['retcode']
 
 		if( self.cgen['smartsearch'] == 1):
 			#~ smartsearch
