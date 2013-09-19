@@ -116,7 +116,7 @@ class ah_WMBidx(SearchModule):
 			release_details = self.baseURL
 
 			if(elem_category is not None):
-				category_found[elem_category.text] = 1
+				category_found[elem_category.text.title()] = 1
 			else:	
 				category_found['N/A'] = 1
 			
@@ -151,11 +151,12 @@ class ah_WMBidx(SearchModule):
 
 			parsed_data.append(d1)
 			
-			returncode = self.default_retcode
-			if(	len(parsed_data) == 0 and len(data) < 300):
-				returncode = self.checkreturn(data)
-			returncode[2] = timestamp_e - timestamp_s
-			tcfg['retcode'] = copy.deepcopy(returncode)
+		#~ print d1
+		returncode = self.default_retcode
+		if(	len(parsed_data) == 0 and len(data) < 300):
+			returncode = self.checkreturn(data)
+		returncode[2] = timestamp_e - timestamp_s
+		tcfg['retcode'] = copy.deepcopy(returncode)
 
-			return parsed_data
+		return parsed_data
 
