@@ -284,7 +284,7 @@ div#container
 	font-family: Helvetica, Arial, Sans-Serif;
 	font-size: 12px;
 	background: #fff;
-	margin: 50px 45px 25px 45px;
+	margin: 5px 45px 25px 45px;
 	width: 90%;
 	border-collapse: collapse;
 	text-align: left;
@@ -402,7 +402,7 @@ div#container
 }
 
 .alert-box {
-    color:#555;
+    color: #039;
     font: 12px Helvetica, Arial, Sans-Serif;
 	padding:5px 0px;
 	margin: 0px 0px 0px 45px;
@@ -412,12 +412,17 @@ div#container
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
+	border: 0px;
+	text-align: left;
 }
 
 .alert-box_info {
-    alert-box
    	width: 400px;
-
+	border: 0px;
+	text-align: left;
+	margin: 5px 0px 0px 45px;
+	display:none;
+	color: #039;
 }
 
 .alert-box span {
@@ -425,10 +430,6 @@ div#container
 	text-transform:uppercase;
 }
 
-.success {
-background:#e9ffd9 url('http://i.imgur.com/Z2dChip.png') no-repeat 10px 50%;
-border:1px solid #a6ca8a;
-}
 
 
 .visuallyhidden {

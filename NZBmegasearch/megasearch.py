@@ -79,6 +79,8 @@ class DoParallelSearch:
 		self.wrp = wrp
 		self.sckname = self.getdomainandprotocol(self.cgen['general_ipaddress'])
 		self.returncode = []
+		self.returncode_fine = {}
+		
 		print '>> Base domain and protocol: ' + self.sckname
 	
 		if(self.cfg is not None):
@@ -193,19 +195,8 @@ class DoParallelSearch:
 		self.resultsraw = self.chkforcache(self.wrp.chash64_encode(SearchModule.sanitize_strings(self.qry_nologic)), speed_class_sel)
 		if( self.resultsraw is None):
 			self.resultsraw = SearchModule.performSearch(self.qry_nologic, self.cfg, self.ds )
-			#~ case of cache to add
-			for cfg_t in self.cfg:
-				if('retcode' in cfg_t):
-					print cfg_t['retcode']
-
-			for cfg_ds_base in self.ds.ds:
-				if('retcode' in cfg_ds_base.cur_cfg):
-					print cfg_ds_base.cur_cfg['retcode']
+			self.prepareretcode();
 			
-			#~ for index in xrange(len(self.ds.ds)):
-				#~ if('retcode' in self.ds.ds[index].cur_cfg):
-					#~ print self.ds.ds[index].cur_cfg['retcode']
-
 		if( self.cgen['smartsearch'] == 1):
 			#~ smartsearch
 			self.results = summary_results(self.resultsraw, self.qry_nologic, self.logic_items)
@@ -217,7 +208,35 @@ class DoParallelSearch:
 					if (self.resultsraw[provid][z]['title'] != None):
 						self.results.append(self.resultsraw[provid][z])
 
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+		
+	def prepareretcode(self):
+		self.returncode_fine = {}
+		rcode = []
+		
+		for cfg_t in self.cfg:
+			if('retcode' in cfg_t):
+				rcode.append(cfg_t['retcode'])
 
+		for cfg_ds_base in self.ds.ds:
+			if('retcode' in cfg_ds_base.cur_cfg):
+				rcode.append(cfg_ds_base.cur_cfg['retcode'])
+				#~ print cfg_ds_base.cur_cfg['retcode']
+		
+		codesuccess = 1
+		rr_codesuccess = []
+		for rr in rcode:
+			rr_msg = ''
+			if(rr[0] == 200):
+				rr_msg = "SUCCESS (200): "+rr[3]+" responded in "+'%.1f' % rr[2] + "s"
+			else:
+				codesuccess = 0
+				rr_msg = "<p style='color:red'> ERROR ("+str(rr[0])+") :"+rr[1] + ' (' + rr[3]+')</p>'
+			rr_codesuccess.append(rr_msg)
+			#~ self.returncode_fine['info'].append(rr_msg)	
+				
+		self.returncode_fine['info'] = sorted(rr_codesuccess,reverse=True) 
+		self.returncode_fine['code'] = codesuccess
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 		
 	def renderit(self,params):
@@ -253,6 +272,7 @@ class DoParallelSearch:
 								cgen = self.cgen,
 								trend_show = params['trend_show'], trend_movie = params['trend_movie'], debug_flag = params['debugflag'],
 								large_server = self.cgen['large_server'],
+								servercode_return = [],
 								sstring  = "", selectable_opt = possibleopt, search_opt = searchopt_local,  motd = self.cgen['motd'], sid = params['sid'])
 		
 	
@@ -518,6 +538,7 @@ class DoParallelSearch:
 												selectable_opt = params['selectable_opt'],
 												search_opt =  params['search_opt'],
 												sid = params['sid'],
+												servercode_return = self.returncode_fine,
 												large_server = self.cgen['large_server'],
 												motd = params['motd'] )
 

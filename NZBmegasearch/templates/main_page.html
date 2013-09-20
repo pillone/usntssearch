@@ -102,21 +102,26 @@
 				</td>
 
 			</table>
-			<div class="alert-box success"><span>Everything's fine</span></div>
-		
-			<div class="alert-box success"><span>PALU kmom om oim om om omm oim oim oimo </span></div>
+			{% if servercode_return -%}
+				<div class="alert-box" id="alertsuccess">
+					<b>Connectivity:</b> 
+					{% if servercode_return['code'] == 1 -%}
+						<img src="static/ok.png">
+					{%- else %}	
+						<img src="static/error.png">				
+					{% endif %}
+				</div>
 
-<!--
-		<div class="expandable-panel" id="cp-1">
-			<div class="expandable-panel-heading">
-				Content heading 1<span class="icon-close-open"></span>
-			 </div>
-			<div class="expandable-panel-content">
-				<p>Panel HTML...</p>
+				<div class="alert-box alert-box_info " id="alertinfo">
+
+					{% for scode in servercode_return['info'] -%}
+						{{ scode|safe}} <br>
+					{%- endfor %}				
+			{% endif %}
+				
+			
 			</div>
-		</div>
--->
-
+			
 			{% if results -%}
 
 			<table class="results" summary="Search Results">
@@ -271,6 +276,7 @@
 		</div>
 
 	    <script type="text/javascript">
+		var serverinfo = 0;
 
 	    $(document).ready(function() {
 
@@ -292,6 +298,20 @@
 
 								});
 				return false;
+
+			});
+			
+			$("#alertsuccess").click(function () {
+				if(serverinfo == 0)
+				{
+					$("#alertinfo").show();
+					serverinfo = 1;
+				}
+				else
+				{
+					$("#alertinfo").hide();
+					serverinfo = 0;
+				}
 
 			});
 			

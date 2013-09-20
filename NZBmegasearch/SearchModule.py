@@ -273,7 +273,7 @@ class SearchModule(object):
 		self.baseURL = ''
 		self.nzbDownloadBaseURL = ''
 		self.apiKey = ''
-		self.default_retcode=[200, 'Ok', 0]
+		self.default_retcode=[200, 'Ok', 0, 'none']
 
 
 	# Show the configuration options for this module
@@ -380,6 +380,7 @@ class SearchModule(object):
 			if(	len(parsed_data) == 0 and len(data) < 300):
 				returncode = self.checkreturn(data)
 			returncode[2] = timestamp_e - timestamp_s
+			returncode[3] = self.name
 			tcfg['retcode'] = copy.deepcopy(returncode)
 
 		return parsed_data		
