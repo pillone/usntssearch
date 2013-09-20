@@ -68,7 +68,7 @@ class ai_FTDworld(SearchModule):
 		except Exception as e:
 			print e
 			log.critical(str(e))
-			tcfg['retcode'] = [600, 'Server timeout', tout]			
+			cfg['retcode'] = [600, 'Server timeout', tout,self.name]			
 			return []
 		
 		timestamp_e = time.time()
@@ -78,11 +78,11 @@ class ai_FTDworld(SearchModule):
 			dataglob = http_result.json()
 		except Exception as e:
 			print e
-			tcfg['retcode'] = [700, 'Server responded in unexpected format', timestamp_e - timestamp_s]			
+			cfg['retcode'] = [700, 'Server responded in unexpected format', timestamp_e - timestamp_s,self.name]			
 			return []
 		
 		if('data' not in dataglob ):
-			tcfg['retcode'] = [701, 'Server responded in unexpected format', timestamp_e - timestamp_s]						
+			cfg['retcode'] = [701, 'Server responded in unexpected format', timestamp_e - timestamp_s,self.name]						
 			return []
 		data = dataglob['data'];	
 				
@@ -103,4 +103,6 @@ class ai_FTDworld(SearchModule):
 							'providertitle':self.name
 							}
 			parsed_data.append(d1)
+		cfg['retcode'] = [200, 'ok', timestamp_e - timestamp_s, self.name]			
+
 		return parsed_data

@@ -21,8 +21,6 @@ import urllib
 # Search on NZBx.co
 class al_OMGwtf(SearchModule):
 	
-	#~ http://api.omgwtfnzbs.org/json/?search=ubuntu&user=dvdasacd&api=1f4fccbe606a8032e9a12528a9b07115
-	 
 	# Set up class variables
 	def __init__(self):
 		super(al_OMGwtf, self).__init__()
@@ -87,7 +85,7 @@ class al_OMGwtf(SearchModule):
 		except Exception as e:
 			print e
 			log.critical(str(e))
-			tcfg['retcode'] = [600, 'Server timeout', tout]			
+			cfg['retcode'] = [600, 'Server timeout', tout]			
 			return []
 
 		timestamp_e = time.time()
@@ -97,14 +95,14 @@ class al_OMGwtf(SearchModule):
 			data = http_result.json()
 		except Exception as e:
 			print e
-			tcfg['retcode'] = [700, 'Server responded in unexpected format', timestamp_e - timestamp_s]						
+			cfg['retcode'] = [700, 'Server responded in unexpected format', timestamp_e - timestamp_s]						
 			return []
 			
 		parsed_data = []
 					
 		if ('notice' in data):
 			log.info('Wrong api/pass ' + self.baseURL + " " + str(timestamp_e - timestamp_s))
-			tcfg['retcode'] = [100, 'Incorrect user credentials', timestamp_e - timestamp_s]			
+			cfg['retcode'] = [100, 'Incorrect user credentials', timestamp_e - timestamp_s]			
 			
 			return []
 		for i in xrange(len(data)):
@@ -134,6 +132,14 @@ class al_OMGwtf(SearchModule):
 				}
 
 				parsed_data.append(d1)
-		tcfg['retcode'] = copy.deepcopy(self.default_retcode)				
+
+
+		if(cfg is not  None):
+			returncode = self.default_retcode
+			if(	len(parsed_data) == 0 and len(data) < 300):
+				returncode = self.checkreturn(data)
+			returncode[2] = timestamp_e - timestamp_s
+			returncode[3] = self.name
+			cfg['retcode'] = copy.deepcopy(returncode)
 		
 		return parsed_data

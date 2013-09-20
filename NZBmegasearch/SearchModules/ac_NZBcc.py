@@ -77,7 +77,7 @@ class ac_NZBcc(SearchModule):
 		except Exception as e:
 			print e
 			log.critical(str(e))
-			tcfg['retcode'] = [600, 'Server timeout', tout]
+			cfg['retcode'] = [600, 'Server timeout', tout, self.name]
 			return []
 
 		timestamp_e = time.time()
@@ -161,6 +161,6 @@ class ac_NZBcc(SearchModule):
 			#~ inc = inc +1 
 			#~ print "=======" +str(inc)
 
-		tcfg['retcode'] = [200, 'ok', timestamp_e - timestamp_s]
+		cfg['retcode'] = [200, 'ok', timestamp_e - timestamp_s, self.name]
 
 		return parsed_data
