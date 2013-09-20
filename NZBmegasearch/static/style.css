@@ -121,9 +121,12 @@ div#container
 	font-family: Helvetica, Arial, Sans-Serif;
 	color: #039;
     margin: 45px 160px;
-	width: 60%;
+	width: 70%;
 	text-align: left;
 }
+
+
+
 .titlemain {
 	width: 450px;
 	margin: 0px auto;
@@ -415,6 +418,24 @@ div#container
 	border: 0px;
 	text-align: left;
 }
+
+.boxed_paragraph{
+	font-size: 14px;
+	font-family: Helvetica, Arial, Sans-Serif;
+	color: #039;
+	width: 100%;
+	text-align: left;
+
+	border-collapse: collapse;
+	border: 1px solid #ccc;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	background: #FAFAFA
+
+}
+
+
 
 .alert-box_info {
    	width: 400px;

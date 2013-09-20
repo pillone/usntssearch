@@ -180,6 +180,11 @@ def static_from_root():
 	#~ return 'aa'
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
+@app.route('/log', methods=['GET'])
+@auth.requires_auth
+def log():
+	return miscdefs.logviewer(logsdir);
+
 
 @app.route('/s', methods=['GET'])
 @auth.requires_auth

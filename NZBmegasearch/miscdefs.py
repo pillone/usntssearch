@@ -34,7 +34,26 @@ import datetime
 import json
 from operator import itemgetter
 
+#~ max visualized
+LOG_MAXLINES = 500
+	
 log = logging.getLogger(__name__)
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+def logviewer(logsdir):
+	filename=logsdir+'nzbmegasearch.log'
+
+
+	array1 = []
+	count = 0
+	for line in reversed(open(filename).readlines()):
+		if(count > LOG_MAXLINES):
+			break
+		array1.append(line.decode('utf-8').rstrip())
+		count = count + 1
+    
+    
+	return(render_template('loginfo.html', loginfo =array1 ))
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
