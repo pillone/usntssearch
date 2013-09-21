@@ -60,7 +60,8 @@ def listpossiblesearchoptions():
 							['PS3','PS3',''],
 							['ANDROID','Android',''],
 							['MOBI','Ebook (mobi)',''],
-							['EPUB','Ebook (epub)',''] ]
+							['EPUB','Ebook (epub)',''],
+							['FLAC','Audio FLAC',''] ]
 	return possibleopt						
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 class DoParallelSearch:
