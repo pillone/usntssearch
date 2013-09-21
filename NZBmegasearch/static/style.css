@@ -420,8 +420,8 @@ div#container
 }
 
 .boxed_paragraph{
-	font-size: 14px;
-	font-family: Helvetica, Arial, Sans-Serif;
+	font-size: 12px;
+	font-family: Courier;
 	color: #039;
 	width: 100%;
 	text-align: left;
@@ -432,10 +432,10 @@ div#container
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	background: #FAFAFA
-
 }
 
 
+p.dense {line-height:1.5}
 
 .alert-box_info {
    	width: 400px;

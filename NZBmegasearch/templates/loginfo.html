@@ -13,9 +13,11 @@
 				<div  class="headers_singleparagraph">Log Viewer </div>
 				</p>
 				<div  class="boxed_paragraph">
-				{% for lgi in loginfo -%}
-					{{ lgi}} <br>
-				{% endfor %}
+				<p class="dense">
+					{% for lgi in loginfo -%}
+						{{ lgi}} <br>
+					{% endfor %}
+				</p>	
 				</div>
 			
 			</div>

@@ -44,7 +44,26 @@ except ImportError as exc:
 sessionid_string = base64.urlsafe_b64encode(os.urandom(10)).replace('-','').replace('=','').replace('/','').replace('+','')
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
- 	
+def loginit():
+	log = logging.getLogger() 
+	handler = logging.handlers.RotatingFileHandler(logsdir+'nzbmegasearch.log', maxBytes=cfgsets.cgen['log_size'], backupCount=cfgsets.cgen['log_backupcount']) 
+	log.setLevel(logging.INFO) 
+	formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+	handler.setFormatter(formatter)
+	log.addHandler(handler)
+	log.info(motd)
+
+	#~ HOOK INTO STDOUT CONSOLE
+	stdout_logger = logging.getLogger('TERMINAL')
+	sl = miscdefs.StreamToLogger(stdout_logger, logging.INFO)
+	sys.stdout = sl
+
+	stderr_logger = logging.getLogger('TERMINAL_ERR')
+	sl = miscdefs.StreamToLogger(stderr_logger, logging.ERROR)
+	sys.stderr = sl
+	
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
 def reload_all():
 	print '>> Bootstrapping...'
 	global cfgsets, sugg, ds, mega_parall, wrp, apiresp, auth
@@ -67,7 +86,6 @@ LARGESERVER = False
 logsdir = SearchModule.resource_path('logs/')
 if(len(os.getenv('OPENSHIFT_DATA_DIR', ''))):
 	logsdir = os.environ.get('OPENSHIFT_DATA_DIR')
-
 
 if(len(sys.argv) > 1):
 	for argv in sys.argv:
@@ -103,6 +121,9 @@ print '>> version: '+ str(cver.ver_notify['curver'])
 motd = motd  + ' v.'+str(cver.ver_notify['curver']) + 'large_server: ' + str(LARGESERVER) + ' debug: ' + str(DEBUGFLAG)
 cfgsets = config_settings.CfgSettings()
 first_time = 0
+#~ init logger
+log = loginit()
+#~ bootstrap
 reload_all()
 
 if (cfgsets.cfg is None or cfgsets.cfg_deep is None ):
@@ -110,13 +131,6 @@ if (cfgsets.cfg is None or cfgsets.cfg_deep is None ):
 	'>> It will be configured'	
 
 certdir = SearchModule.resource_path('certificates/')
-log = logging.getLogger() 
-handler = logging.handlers.RotatingFileHandler(logsdir+'nzbmegasearch.log', maxBytes=cfgsets.cgen['log_size'], backupCount=cfgsets.cgen['log_backupcount']) 
-log.setLevel(logging.INFO) 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-log.addHandler(handler)
-log.info(motd)
 templatedir = SearchModule.resource_path('templates')
 app = Flask(__name__, template_folder=templatedir)	 
 

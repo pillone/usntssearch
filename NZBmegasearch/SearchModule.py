@@ -73,7 +73,7 @@ def loadSearchModules(moduleDir = None):
 
 	# Import the modules that the user has enabled
 	mssg = '>> Importing: ' + ', '.join(searchModuleNames)
-	print mssg
+	#~ print mssg
 	log.info (mssg)
 
 	try:
