@@ -105,9 +105,11 @@
 			{% if servercode_return -%}
 				<div class="alert-box" id="alertsuccess">
 					<b>Connectivity:</b> 
-					{% if servercode_return['code'] == 1 -%}
+					{% if servercode_return['code'] == 2 -%}
+						cache hit :)
+					{% elif servercode_return['code'] == 1 -%}
 						<img src="static/ok.png">
-					{%- else %}	
+					{% elif servercode_return['code'] == 0 -%}
 						<img src="static/error.png">				
 					{% endif %}
 				</div>

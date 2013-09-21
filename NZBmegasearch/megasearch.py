@@ -193,6 +193,8 @@ class DoParallelSearch:
 			return self.results
 						
 		self.cleancache()
+		#~ cache hit, no server report
+		self.returncode_fine['code'] = 2
 		self.resultsraw = self.chkforcache(self.wrp.chash64_encode(SearchModule.sanitize_strings(self.qry_nologic)), speed_class_sel)
 		if( self.resultsraw is None):
 			self.resultsraw = SearchModule.performSearch(self.qry_nologic, self.cfg, self.ds )

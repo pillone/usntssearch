@@ -300,7 +300,7 @@ class SearchModule(object):
 			mssg = self.queryURL + ' -- ' + str(e)
 			print mssg
 			log.critical(mssg)			
-			tcfg['retcode'] = [600, 'Server timeout', tout]
+			tcfg['retcode'] = [600, 'Server timeout', tout, self.name]
 			return parsed_data
 			
 		timestamp_e = time.time()	
