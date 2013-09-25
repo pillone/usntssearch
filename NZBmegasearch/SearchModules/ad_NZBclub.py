@@ -81,7 +81,7 @@ class ad_NZBclub(SearchModule):
 			mssg = self.queryURL + ' -- ' + str(e)
 			print mssg
 			log.critical(mssg)
-			tcfg['retcode'] = [600, 'Server timeout', tout]
+			cfg['retcode'] = [600, 'Server timeout', tout]
 			return parsed_data
 
 		timestamp_e = time.time()
@@ -95,7 +95,7 @@ class ad_NZBclub(SearchModule):
 			tree = ET.fromstring(data.encode('utf-8'))
 		except Exception as e:
 			print e
-			tcfg['retcode'] = [700, 'Server responded in unexpected format', timestamp_e - timestamp_s]			
+			cfg['retcode'] = [700, 'Server responded in unexpected format', timestamp_e - timestamp_s]			
 			return parsed_data
 
 		#~ successful parsing
@@ -157,6 +157,6 @@ class ad_NZBclub(SearchModule):
 				returncode = self.checkreturn(data)
 			returncode[2] = timestamp_e - timestamp_s
 			returncode[3] = self.name
-			tcfg['retcode'] = copy.deepcopy(returncode)
+			cfg['retcode'] = copy.deepcopy(returncode)
 						
 		return parsed_data		
