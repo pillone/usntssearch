@@ -80,7 +80,8 @@ def reload_all():
 motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
 print motd
 
-DEBUGFLAG = False
+#~ DEBUGFLAG = False
+DEBUGFLAG = True
 LARGESERVER = False
 
 logsdir = SearchModule.resource_path('logs/')
