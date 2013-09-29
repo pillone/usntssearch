@@ -386,6 +386,27 @@ div#container
 	overflow: hidden;
 }
 
+.text-red {
+    font: 12px Helvetica, Arial, Sans-Serif;
+    color: red;
+}
+
+.noentry_warn {
+    color: #039;
+    font: bold 12px Helvetica, Arial, Sans-Serif;
+	padding:5px 0px;
+	margin: 0px 0px 0px 45px;
+	width: 600px;
+	border-collapse: collapse;
+	border: 1px solid #ccc;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	border: 0px;
+	text-align: left;
+}
+
+
 .alert-flex, .alert-red {
     width: 150px;
     font: bold 14px Helvetica, Arial, Sans-Serif;
@@ -438,7 +459,7 @@ div#container
 p.dense {line-height:1.5}
 
 .alert-box_info {
-   	width: 400px;
+   	width: 600px;
 	border: 0px;
 	text-align: left;
 	margin: 5px 0px 0px 45px;

@@ -85,7 +85,7 @@ class al_OMGwtf(SearchModule):
 		except Exception as e:
 			print e
 			log.critical(str(e))
-			cfg['retcode'] = [600, 'Server timeout', tout]			
+			cfg['retcode'] = [600, 'Server timeout', tout, self.name]
 			return []
 
 		timestamp_e = time.time()
@@ -95,14 +95,14 @@ class al_OMGwtf(SearchModule):
 			data = http_result.json()
 		except Exception as e:
 			print e
-			cfg['retcode'] = [700, 'Server responded in unexpected format', timestamp_e - timestamp_s]						
+			cfg['retcode'] = [700, 'Server responded in unexpected format', timestamp_e - timestamp_s, self.name]
 			return []
 			
 		parsed_data = []
 					
 		if ('notice' in data):
 			log.info('Wrong api/pass ' + self.baseURL + " " + str(timestamp_e - timestamp_s))
-			cfg['retcode'] = [100, 'Incorrect user credentials', timestamp_e - timestamp_s]			
+			cfg['retcode'] = [100, 'Incorrect user credentials', timestamp_e - timestamp_s, self.name]			
 			
 			return []
 		for i in xrange(len(data)):

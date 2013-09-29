@@ -231,10 +231,11 @@ class DoParallelSearch:
 		for rr in rcode:
 			rr_msg = ''
 			if(rr[0] == 200):
-				rr_msg = "SUCCESS (200): "+rr[3]+" responded in "+'%.1f' % rr[2] + "s"
+				rr_msg = "SUCCESS (200): "+rr[3]+" responded in "+'%.1f' % rr[2] + "s  <br>"
 			else:
 				codesuccess = 0
-				rr_msg = "<p style='color:red'> ERROR ("+str(rr[0])+") :"+rr[1] + ' (' + rr[3]+')</p>'
+				rr_msg = "<p class='text-red'> ERROR ("+str(rr[0])+") :"+rr[1] + ' (' + rr[3]+')</p>'
+				#~ rr_msg = "ERROR ("+str(rr[0])+") :"+rr[1] + ' (' + rr[3]+')'
 			rr_codesuccess.append(rr_msg)
 			#~ self.returncode_fine['info'].append(rr_msg)	
 				

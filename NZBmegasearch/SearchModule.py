@@ -118,19 +118,24 @@ def performSearch(queryString,  cfg, dsearch=None, extraparam=None, stoppingthre
 
 	#~ prepare cpy modules (thread safety), not nice
 	neededModules = []
+	neededModules_LUT = [None]*len(cfg)
 	for index in xrange(len(cfg)):
 		for module in loadedModules:
 			if( module.typesrch == cfg[index]['type']):
 				neededModules.append(copy.copy(module))
+				neededModules_LUT[index] = len(neededModules)-1
 
 	#~ for SB autodiscovery, uses all the possible providers
 	if (extraparam is not None):
 		for index in xrange(len(cfg)):
 			rval = (neededModules[index].api_catsearch and cfg[index]['valid'] > 0)
+			if (neededModules_LUT[index] is None):
+				rval = False	
 
 			if(rval == True):
 				try:
-					t = threading.Thread(target=performSearchThreadRaw, args=(extraparam,neededModules[index],lock,cfg[index]))
+					module_idx = neededModules_LUT[index]
+					t = threading.Thread(target=performSearchThreadRaw, args=(extraparam,neededModules[module_idx],lock,cfg[index]))
 					t.start()
 					threadHandles.append(t)
 				except Exception as e:
@@ -150,11 +155,14 @@ def performSearch(queryString,  cfg, dsearch=None, extraparam=None, stoppingthre
 		for index in xrange(len(cfg)):
 			rval = False
 			if (((dsearch is not None) and (cfg[index]['valid'] == 2)) or (cfg[index]['valid'] == 1)):
-				rval = True			
+				rval = True	
+			if (neededModules_LUT[index] is None):
+				rval = False	
+			
 			if(rval == True):
 				try:
-					#~ print neededModule 
-					t = threading.Thread(target=performSearchThread, args=(queryString,neededModules[index],lock,cfg[index]))
+					module_idx = neededModules_LUT[index]
+					t = threading.Thread(target=performSearchThread, args=(queryString,neededModules[module_idx],lock,cfg[index]))
 					t.start()
 					threadHandles.append(t)
 				except Exception as e:

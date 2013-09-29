@@ -117,13 +117,18 @@
 				<div class="alert-box alert-box_info " id="alertinfo">
 
 					{% for scode in servercode_return['info'] -%}
-						{{ scode|safe}} <br>
+						{{ scode|safe}}
 					{%- endfor %}				
+				</div>	
+				
+				{%- if results is none %}
+					<div class='noentry_warn'>
+						Your search did not match any documents
+					</div>	
+				{% endif %}
+
 			{% endif %}
 				
-			
-			</div>
-			
 			{% if results -%}
 
 			<table class="results" summary="Search Results">

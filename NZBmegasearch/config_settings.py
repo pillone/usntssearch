@@ -43,10 +43,30 @@ class CfgSettings:
 		self.read_conf_general()
 		self.read_conf_custom()
 		self.read_conf_deepsearch()
+		self.filter_obsolete_providers()
 		
 	def	reset(self):
 		self.cfg = []
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+	def	filter_obsolete_providers(self):
 		
+		#~ avoids obsolete modules to appear in the search routine
+		#~ this is an additional safety measure
+		if 'loadedModules' not in globals():
+			SearchModule.loadSearchModules()
+		
+		saved_cfg = []
+		for index in xrange(len(self.cfg)):
+			index_found = False
+			for module in SearchModule.loadedModules:
+				if( module.typesrch == self.cfg[index]['type']):
+					index_found = True
+			if(index_found is True):
+				saved_cfg.append(self.cfg[index])
+		self.cfg = copy.deepcopy(saved_cfg)
+						
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 	def	write(self, request_form):
@@ -307,7 +327,7 @@ class CfgSettings:
 				'sabnzbd_url' : '', 'sabnzbd_api':'',
 				'nzbget_url' : '', 'nzbget_user':'','nzbget_pwd':'',
 				'general_apikey' : '',
-				'general_restrictopt1' : '',
+				'general_restrictopt1' : 0,
 				'predb_active' : 1,
 				'stats_key' : gen_stats_key, 'motd':gen_motd}
 		self.selectable_speedopt = copy.deepcopy(self.selectable_speedopt_cpy)

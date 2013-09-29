@@ -84,7 +84,6 @@ class Newznab(SearchModule):
 		self.queryURL = cfg['url'] + '/api'
 		self.baseURL = cfg['url']
 		
-		#~ homemade lazy stuff
 		humanprovider = urlparse.urlparse(cfg['url']).hostname			
 		self.name = humanprovider.replace("www.", "")
 		parsed_data = self.parse_xmlsearch(urlParams, cfg['timeout'], cfg)			
