@@ -111,7 +111,6 @@ class ad_NZBclub(SearchModule):
 			try: 
 				elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate-6], "%a, %d %b %Y %H:%M:%S").timetuple())
 			except Exception as e:
-				#~ if fails..
 				elem_postdate = datetime.datetime.now()
 			
 			elem_poster = ''
@@ -152,11 +151,11 @@ class ad_NZBclub(SearchModule):
 
 			parsed_data.append(d1)
 			
-			returncode = self.default_retcode
-			if(	len(parsed_data) == 0 and len(data) < 300):
-				returncode = self.checkreturn(data)
-			returncode[2] = timestamp_e - timestamp_s
-			returncode[3] = self.name
-			cfg['retcode'] = copy.deepcopy(returncode)
+		returncode = self.default_retcode
+		if(	len(parsed_data) == 0 and len(data) < 300):
+			returncode = self.checkreturn(data)
+		returncode[2] = timestamp_e - timestamp_s
+		returncode[3] = self.name
+		cfg['retcode'] = copy.deepcopy(returncode)
 						
 		return parsed_data		

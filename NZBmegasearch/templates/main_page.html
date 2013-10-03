@@ -108,9 +108,9 @@
 					{% if servercode_return['code'] == 2 -%}
 						cache hit :)
 					{% elif servercode_return['code'] == 1 -%}
-						<img src="static/ok.png">
+						<img src="static/ok.png" onmouseover="this.src='static/ok_hover.png'" onmouseout="this.src='static/ok.png'">
 					{% elif servercode_return['code'] == 0 -%}
-						<img src="static/error.png">				
+						<img src="static/error.png" onmouseover="this.src='static/error_hover.png'"  onmouseout="this.src='static/error.png'">
 					{% endif %}
 				</div>
 
@@ -122,11 +122,26 @@
 				</div>	
 				
 				{%- if not results %}
-					<div class='noentry_warn'>
-						Your search did not match any documents
-					</div>	
+					<table class="results" summary="Search Results">
+						<thead>
+							<tr><th scope="col" class=titlecell><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
+								<th scope="col" class=sizecell><b>Type <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
+								<th scope="col" class=sizecell><b>Size <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
+								<th scope="col" class=datecell><b>Days <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
+								<th scope="col" class=providercell><b>Comments <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
+							</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td class="titlecell"> Your search did not match any documents </td>
+							<td class="sizecell"> </td>
+							<td class="sizecell"> </td>
+							<td class="datecell"> </td>
+							<td class="providercell"> </td>
+						</tr>
+						</tbody>
+					</table>
 				{% endif %}
-
 			{% endif %}
 				
 			{% if results -%}
