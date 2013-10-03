@@ -440,6 +440,10 @@ div#container
 	text-align: left;
 }
 
+.alert-box:hover{
+	color: #378b96;
+}
+
 .boxed_paragraph{
 	font-size: 12px;
 	font-family: Courier;
@@ -467,6 +471,9 @@ p.dense {line-height:1.5}
 	color: #039;
 }
 
+.alert-box_info:hover{
+	color: #039;
+}
 .alert-box span {
 	font-weight:bold;
 	text-transform:uppercase;
