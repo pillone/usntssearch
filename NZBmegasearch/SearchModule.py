@@ -72,9 +72,9 @@ def loadSearchModules(moduleDir = None):
 	sys.path.insert(0, moduleDir)
 
 	# Import the modules that the user has enabled
-	mssg = '>> Importing: ' + ', '.join(searchModuleNames)
+	#~ mssg = '>> Importing: ' + ', '.join(searchModuleNames)
 	#~ print mssg
-	log.info (mssg)
+	#~ log.info (mssg)
 
 	try:
 		for module in searchModuleNames:
