@@ -391,6 +391,11 @@ div#container
     color: red;
 }
 
+.text-green {
+    font: 12px Helvetica, Arial, Sans-Serif;
+    color: #009933;
+}
+
 .noentry_warn {
     color: #039;
     font: bold 12px Helvetica, Arial, Sans-Serif;

@@ -228,19 +228,20 @@ class DoParallelSearch:
 		
 		codesuccess = 1
 		rr_codesuccess = []
+		nofail = 0
 		for rr in rcode:
 			rr_msg = ''
 			if(rr[0] == 200):
-				rr_msg = "SUCCESS (200): "+rr[3]+" responded in "+'%.1f' % rr[2] + "s  <br>"
+				rr_msg = "<p class='text-green'>SUCCESS (200): "+rr[3]+" responded in "+'%.1f' % rr[2] + "s</p>"
 			else:
 				codesuccess = 0
-				rr_msg = "<p class='text-red'> ERROR ("+str(rr[0])+") :"+rr[1] + ' (' + rr[3]+')</p>'
-				#~ rr_msg = "ERROR ("+str(rr[0])+") :"+rr[1] + ' (' + rr[3]+')'
+				rr_msg = "<p class='text-red'>ERROR ("+str(rr[0])+"): "+rr[1] + ' (' + rr[3]+')</p>'
+				nofail = nofail + 1
 			rr_codesuccess.append(rr_msg)
-			#~ self.returncode_fine['info'].append(rr_msg)	
 				
 		self.returncode_fine['info'] = sorted(rr_codesuccess,reverse=True) 
 		self.returncode_fine['code'] = codesuccess
+		self.returncode_fine['summary'] = str(len(rr_codesuccess)) +  ' total ('+ str(nofail)+' failed, ' +str(len(rr_codesuccess)-nofail) +' successful)'
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 		
 	def renderit(self,params):
