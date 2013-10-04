@@ -424,7 +424,9 @@ class DeepSearchGinga_one(DeepSearch_one):
 		if	( self.chkcookie() == True):
 			return True
 		mainurl = self.cur_cfg['url']
-		loginurl = mainurl + "/index.php"
+		#~ loginurl = mainurl + "/index.php"
+		#~ more robust
+		loginurl = mainurl + "/login"
 		
 		#~ print "Logging in: " + mainurl
 		#~ log.info("Logging in: " + mainurl)
