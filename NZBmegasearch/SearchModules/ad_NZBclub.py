@@ -95,7 +95,7 @@ class ad_NZBclub(SearchModule):
 			tree = ET.fromstring(data.encode('utf-8'))
 		except Exception as e:
 			print e
-			cfg['retcode'] = [700, 'Server responded in unexpected format', timestamp_e - timestamp_s,self.name]			
+			cfg['retcode'] = [250, 'Server responded with no results or with an unexpected format', timestamp_e - timestamp_s,self.name]			
 			return parsed_data
 
 		#~ successful parsing
