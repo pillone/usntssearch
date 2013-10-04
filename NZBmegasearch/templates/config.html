@@ -47,7 +47,7 @@
 </div>
 
 <div id="maincontent">
-	<form action="/" method="post" name="cfgform" id = "cfgform">
+	<form action="{{ genopt['revproxy'] }}/" method="post" name="cfgform" id = "cfgform">
 
 	<table class="config_table_opts" summary="Config" style="width: 420px;" id='tbl00'><thead>
 	<tr><th scope="col" >Connectivity (requires restart)</th></tr></thead><tbody>
@@ -64,6 +64,9 @@
 			<td><input type="checkbox" name="https" id="https" {{ genopt['general_https_verbose'] }}><label for="https">HTTPS Enabled</label></td>
 			{%- endif %}
 		</tr>
+		<tr>
+			<td><label for="revproxy">Reverse proxy dir (<a href='https://github.com/pillone/usntssearch/issues/65'>example</a>):</label> <input type="input" name="revproxy" id="revproxy" value="{{ genopt['revproxy'] }}" size="15" class="conftbox"></td>
+		</tr>	
 	</tbody></table>
 
 	<div class='configsave'>

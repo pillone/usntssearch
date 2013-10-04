@@ -21,7 +21,7 @@
 			</div>
 
 			<div  class="titlemain"><img src="static/title.png" width="387" height="" alt="NZBmegasearcH"/></div>
-			<form action="/s" method="get" class="form-wrapper-01">
+			<form action="{{ cgen['revproxy'] }}/s" method="get" class="form-wrapper-01">
 			<table><tr>
 					<td>
 						<label for="search" class="visuallyhidden">Search</label>
@@ -306,7 +306,7 @@
 				var addressValue = $(this).attr("name");
 				$('img[name="'+addressValue+'_img"]').attr("src", 'static/loadingicon.gif')
 
-				 $.getJSON($SCRIPT_ROOT + '/tosab',
+				 $.getJSON($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/tosab',
 							{data: $('input[name="'+addressValue+'"]').val(), },
 							function(data) {
 								if(data.code == 1)
@@ -341,7 +341,7 @@
 				var addressValue = $(this).attr("name");
 				$('img[name="'+addressValue+'_img"]').attr("src", 'static/loadingicon.gif')
 
-				 $.getJSON($SCRIPT_ROOT + '/tonzbget',
+				 $.getJSON($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/tonzbget',
 							{data: $('input[name="'+addressValue+'"]').val(), },
 							function(data) {
 								if(data.code == 1)

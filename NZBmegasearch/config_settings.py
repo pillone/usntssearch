@@ -91,6 +91,7 @@ class CfgSettings:
 		parser.set('general', 'general_ipaddress', '')		
 		parser.set('general', 'predb_active', '0')	
 		parser.set('general', 'general_restrictopt1', '0')				
+		
 
 		if (request_form['general_ipaddress'] != 'AUTO'):			
 			cip = request_form['general_ipaddress'].replace(" ", "").replace("http://", "").replace("https://", "")
@@ -111,6 +112,12 @@ class CfgSettings:
 			parser.set('general', 'predb_active', '1')
 		if (request_form.has_key('cache_active')  == True):
 			parser.set('general', 'cache_active', request_form['cache_active'])
+
+		revproxy =  request_form['revproxy'].replace(" ", "")
+		if(len(revproxy)):
+			if(revproxy[-1] == '/'):
+				revproxy = revproxy[:-1]
+		parser.set('general', 'revproxy', revproxy)
 
 		sab_url = request_form['sabnzbd_url'].replace(" ", "")
 		if(len(sab_url)):
@@ -309,6 +316,7 @@ class CfgSettings:
 		smartsearch = parser.getint('general', 'smartsearch')
 		cache_active = parser.getint('general', 'cache_active')
 		searchaddontxt = parser.get('general', 'searchaddontxt')		
+		revproxy = parser.get('general', 'revproxy')
 		self.cgen = {'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd,
 				'config_user':config_user,
 				'config_pwd':config_pwd,
@@ -329,6 +337,7 @@ class CfgSettings:
 				'general_apikey' : '',
 				'general_restrictopt1' : 0,
 				'predb_active' : 1,
+				'revproxy':revproxy,
 				'stats_key' : gen_stats_key, 'motd':gen_motd}
 		self.selectable_speedopt = copy.deepcopy(self.selectable_speedopt_cpy)
 		self.selectable_speedopt[0][1] += ' ['+str(self.cgen['timeout_class'][1])+'s]'
@@ -414,6 +423,8 @@ class CfgSettings:
 				self.cgen['predb_active'] = cst_parser.getint('general', 'predb_active')
 			if(cst_parser.has_option('general' ,'general_restrictopt1')):	
 				self.cgen['general_restrictopt1'] = cst_parser.getint('general', 'general_restrictopt1')
+			if(cst_parser.has_option('general' ,'revproxy')):	
+				self.cgen['revproxy'] = cst_parser.get('general', 'revproxy')
 
 
 
