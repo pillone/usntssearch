@@ -315,6 +315,14 @@ div#container
    text-decoration: underline;
 }
 
+.results tbody tr {
+	background: #FFFFFF;
+}
+
+.results tbody tr:nth-child(2n) {
+	background: #F0F0F0;
+}
+
 .results tbody tr:hover td
 {
 	color: #009;
