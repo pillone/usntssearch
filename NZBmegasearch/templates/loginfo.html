@@ -3,26 +3,36 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>NZB MegasearcH</title>
+		<link rel="stylesheet" type="text/css" href="static/reset2.css" />		
 		<link rel="stylesheet" type="text/css" href="static/style.css" />
 	</head>
 	<body>
-		<div id="container"> 
 		
-			<div  class="singleparagraph">
-				<p>
-				<div  class="headers_singleparagraph">Log Viewer </div>
-				</p>
+	<div id="framecontent">
+		<div class='title_tablemenu'>
+				<a href="main"><img src="static/title.png" width="230" height="" alt="NZBmegasearcH"/></a>
+		</div>
+
+		<table class='tablemenu_fl'>
+			<tbody>
+			<tr>
+				<td ><a href="#tbl00" class='tablemenu_fl_a'> >> Log </a></td>
+			</tr>			
+			</tbody>		
+		</table>
+	</div>
+
+	<div id="maincontent">
+
+		<div id="container"> 
 				<div  class="boxed_paragraph">
 				<p class="dense">
 					{% for lgi in loginfo -%}
 						{{ lgi}} <br>
 					{% endfor %}
 				</p>	
-				</div>
-			
-			</div>
-				
+				</div>			
 		</div>
-		<div class="topright_tight"><a href= "main">[Back]</a></div>
+	</div>	
 	</body>
 </html>

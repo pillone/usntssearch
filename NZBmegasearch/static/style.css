@@ -470,6 +470,14 @@ div#container
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	background: #FAFAFA
+	
+	
+	background: #fff;
+	margin: 5px 45px 25px 30px;
+	width: 90%;
+	border-collapse: collapse;
+	text-align: left;
+	
 }
 
 
