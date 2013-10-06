@@ -106,7 +106,7 @@ class ah_WMBidx(SearchModule):
 			len_elem_pubdate = len(elem_pubdate.text)
 			
 			try:
-				elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate-6], "%m/%d/%Y %H:%M").timetuple())
+				elem_postdate =  time.mktime(datetime.datetime.strptime(elem_pubdate.text[0:len_elem_pubdate], "%m/%d/%Y %I:%M:%S %p").timetuple())
 			except Exception as e:
 				elem_postdate =  283996800
 				
