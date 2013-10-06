@@ -86,7 +86,7 @@ class SuggestionResponses:
 		try:
 			http_result = requests.get(url=urlpredb, params=urlParams, verify=False, timeout=self.timeout,  headers=self.tvrage_rqheaders)
 		except Exception as e:
-			print e
+			#~ print e
 			log.critical(str(e))
 			return
 			
@@ -95,7 +95,7 @@ class SuggestionResponses:
 		try:
 			tree = ET.fromstring(data.encode('utf-8'))
 		except Exception as e:
-			print e
+			#~ print e
 			log.critical(str(e))
 			return  
 		
@@ -242,7 +242,7 @@ class SuggestionResponses:
 		try:
 			http_result = requests.get(url=url_tvrage, params=urlParams, verify=False, timeout=self.timeout,  headers=self.tvrage_rqheaders)
 		except Exception as e:
-			print e
+			#~ print e
 			log.critical(str(e))
 			return parsed_data
 		
@@ -251,7 +251,7 @@ class SuggestionResponses:
 		try:
 			tree = ET.fromstring(data.encode('utf-8'))
 		except Exception as e:
-			print e
+			#~ print e
 			log.critical(str(e))
 			return parsed_data
 
@@ -299,14 +299,14 @@ class SuggestionResponses:
 		try:
 			http_result = requests.get(url=url_imdb, verify=False, timeout=self.timeout)
 		except Exception as e:
-			print e
+			#~ print e
 			log.critical(str(e))
 			return parsed_data
 		
 		try:
 			data = http_result.json()
 		except Exception as e:
-			print e
+			#~ print e
 			log.critical(str(e))
 			return parsed_data
 		
@@ -344,14 +344,14 @@ class SuggestionResponses:
 		try:
 			http_result = requests.get(url=url_imdb, verify=False, timeout=self.timeout)
 		except Exception as e:
-			print e
+			#~ print e
 			log.critical(str(e))
 			return parsed_data
 		
 		try:
 			data = http_result.json()
 		except Exception as e:
-			print e
+			#~ print e
 			log.critical(str(e))
 			return parsed_data
 		
@@ -432,14 +432,14 @@ class SuggestionResponses:
 		try:
 			http_result = requests.get(url=url_imdb , params=urlParams, verify=False, timeout=self.timeout)
 		except Exception as e:
-			print e
+			#~ print e
 			log.critical(str(e))
 			return parsed_data
 		
 		try:
 			datablob = http_result.json()
 		except Exception as e:
-			print e
+			#~ print e
 			log.critical(str(e))
 			return parsed_data
 		
