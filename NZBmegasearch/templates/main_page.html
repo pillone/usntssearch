@@ -22,6 +22,21 @@
 
 			<div  class="titlemain"><img src="static/title.png" width="387" height="" alt="NZBmegasearcH"/></div>
 			<form action="{{ cgen['revproxy'] }}/s" method="get" class="form-wrapper-01">
+			
+						<input type="text" id="search" placeholder="" name="q" value="{{ sstring }}">
+						<select class="selcatstlye" name="selcat" id="selcat">
+							<option value="" selected>No categ.</option>
+							{% for sopt in selectable_opt -%}
+								<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
+							{%- endfor %}
+						</select>
+			
+			<div>
+				<input type="hidden" name="tm" id="tm" value="1">
+				<input type="submit" class="gray" value='Search' onclick='$("#tm").attr("value", "1");'>
+				<input type="submit" class="gray" value='Search Extensive' onclick='$("#tm").attr("value", "2");'>
+			</div>
+<!--
 			<table><tr>
 					<td>
 						<label for="search" class="visuallyhidden">Search</label>
@@ -52,6 +67,7 @@
 					</td>
 					</tr>
 			</table>
+-->
 			</form>
 
 			<div class ="suggarea_macro">
