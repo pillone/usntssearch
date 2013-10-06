@@ -366,12 +366,30 @@ class DeepSearch_one:
 			for tt2 in tt.attrs:
 				#~ print tt2[1]
 				if('title' in tt2):
+					#~ print tt2[1]
 					tstamp.append( time.mktime(datetime.datetime.strptime(tt2[1], "%Y-%m-%d %H:%M:%S").timetuple()) )
+					break;
 
+		#~ print 'tit' + str(len(titles))
+		#~ print 'tst' + str(len(tstamp)	)	
+		#~ print 'url' + str(len(nzburls))
+		#~ print 'det' + str(len(rdetails))
+		#~ print 'sz' + str(len(bytesize))
+		#~ for i in xrange(len(tstamp)):
+			#~ print str(i) + ' ' + str(tstamp[i])
+		#~ for i in xrange(len(rdetails)):
+			#~ print str(i) + ' ' + rdetails[i]['href']
+		
+		skipts = 1
+		if(len(tstamp) % len(titles) == 0):
+			skipts = len(tstamp) / len(titles)
+			if(skipts < 1):
+				return []
+			
 		if(len(titles) != len(nzburls)):
 			return []
-		if(len(titles) != len(tstamp)):
-			return []
+		#~ if(len(titles) != len(tstamp)):
+			#~ return []
 		if(len(titles) != len(rdetails)):
 			return []
 		if(len(titles) != len(bytesize)):
@@ -392,7 +410,7 @@ class DeepSearch_one:
 				'url': self.baseURL + '/' + nzburls[i]['href'],
 				'filelist_preview': '',
 				'group': 'N/A',
-				'posting_date_timestamp': tstamp[i],
+				'posting_date_timestamp': tstamp[i*skipts],
 				'release_comments': self.baseURL  + rdetails[i]['href'],
 				'categ':category_found,
 				'ignore':0,
