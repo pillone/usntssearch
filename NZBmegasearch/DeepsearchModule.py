@@ -183,7 +183,6 @@ class DeepSearch_one:
 		try:
 			socket.setdefaulttimeout(self.timeout)
 			self.br.open(loginurl)
-			#~ print loginurl			
 		except Exception as e:
 			print str(e)
 			self.mech_error_generic(e)
@@ -260,7 +259,7 @@ class DeepSearch_one:
 					if(len(allTD)):
 						info['grabs_total'] =  ''.join(allTD[0].findAll(text=True))
 
-		print info		
+		#~ print info		
 		return info
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 					
@@ -341,6 +340,7 @@ class DeepSearch_one:
 		catname = []
 		for catn in catname_raw:
 			catcont = catn.findAll(text=True)
+			print catcont
 			for catn1 in catcont:
 				catcont_idx = catn1.find('">')
 				if( catcont_idx != -1):
@@ -370,21 +370,20 @@ class DeepSearch_one:
 					tstamp.append( time.mktime(datetime.datetime.strptime(tt2[1], "%Y-%m-%d %H:%M:%S").timetuple()) )
 					break;
 
+		#~ deep debug
 		#~ print 'tit' + str(len(titles))
 		#~ print 'tst' + str(len(tstamp)	)	
 		#~ print 'url' + str(len(nzburls))
 		#~ print 'det' + str(len(rdetails))
 		#~ print 'sz' + str(len(bytesize))
-		#~ for i in xrange(len(tstamp)):
-			#~ print str(i) + ' ' + str(tstamp[i])
-		#~ for i in xrange(len(rdetails)):
-			#~ print str(i) + ' ' + rdetails[i]['href']
+		#~ print 'cat' + str(len(catname))
 		
 		skipts = 1
-		if(len(tstamp) % len(titles) == 0):
-			skipts = len(tstamp) / len(titles)
-			if(skipts < 1):
-				return []
+		if(len(titles)):
+			if(len(tstamp) % len(titles) == 0):
+				skipts = len(tstamp) / len(titles)
+				if(skipts < 1):
+					return []
 			
 		if(len(titles) != len(nzburls)):
 			return []
