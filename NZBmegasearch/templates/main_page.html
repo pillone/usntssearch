@@ -22,52 +22,20 @@
 
 			<div  class="titlemain"><img src="static/title.png" width="387" height="" alt="NZBmegasearcH"/></div>
 			<form action="{{ cgen['revproxy'] }}/s" method="get" class="form-wrapper-01">
-			
-						<input type="text" id="search" placeholder="" name="q" value="{{ sstring }}">
-						<select class="selcatstlye" name="selcat" id="selcat">
-							<option value="" selected>No categ.</option>
-							{% for sopt in selectable_opt -%}
-								<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
-							{%- endfor %}
-						</select>
-			
-			<div>
-				<input type="hidden" name="tm" id="tm" value="1">
-				<input type="submit" class="gray" value='Search' onclick='$("#tm").attr("value", "1");' id='submit_button1'>
-				<input type="submit" class="gray" value='Search Extensive' onclick='$("#tm").attr("value", "2");' id='submit_button2'>
-			</div>
-<!--
-			<table><tr>
-					<td>
-						<label for="search" class="visuallyhidden">Search</label>
-						<input type="text" id="search" placeholder="" name="q" value="{{ sstring }}">
-						<span>
-						<label for="selcat" class="visuallyhidden">Category</label>
-						<select class="selcatstlye" name="selcat" id="selcat">
-							<option value="" selected>No categ.</option>
-							{% for sopt in selectable_opt -%}
-								<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
-							{%- endfor %}
-						</select>
-						</span>
-						<table><tr><td class='searchkind'>number of indices:</td>
-							<td>
-							<span class="switch switch-two candy blue">
-							{% for srchopt in search_opt -%}
-								<input id="search_option{{ srchopt[1] }}" name="tm" type="radio" value="{{ srchopt[1] }}" {{ srchopt[2] }}>
-								<label for="search_option{{ srchopt[1] }}" onclick="">{{ srchopt[0] }}</label>
 
-							{%- endfor %}
-							<span class="slide-button"></span>
-							</span>
-							</td></tr></table>
-					</td>
-					<td style='width: 42px;'>
-						<input type="submit" value="Go" id="submit">
-					</td>
-					</tr>
-			</table>
--->
+					<input type="text" id="search" placeholder="" name="q" value="{{ sstring }}">
+					<select class="selcatstlye" name="selcat" id="selcat">
+						<option value="" selected>No categ.</option>
+						{% for sopt in selectable_opt -%}
+							<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
+						{%- endfor %}
+					</select>
+					<div>
+						<input type="hidden" name="tm" id="tm" value="1">
+						<input type="submit" class="gray" value='Search' onclick='$("#tm").attr("value", "1");' id='submit_button1'>
+						<input type="submit" class="gray" value='Search Extensive' onclick='$("#tm").attr("value", "2");' id='submit_button2'>
+					</div>
+	
 			</form>
 
 			<div class ="suggarea_macro">
