@@ -426,7 +426,7 @@ class DeepSearchGinga_one(DeepSearch_one):
 		mainurl = self.cur_cfg['url']
 		#~ loginurl = mainurl + "/index.php"
 		#~ more robust
-		loginurl = mainurl + "/login"
+		loginurl = mainurl + "/index.php"
 		
 		#~ print "Logging in: " + mainurl
 		#~ log.info("Logging in: " + mainurl)
