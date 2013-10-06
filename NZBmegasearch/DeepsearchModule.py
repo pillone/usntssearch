@@ -336,13 +336,21 @@ class DeepSearch_one:
 		tstamp_raw = soup.findAll('td', {'class': 'less mid'})
 		rdetails = soup.findAll('a', {'title': 'View details'})
 		sz_raw = soup.findAll('td', {'class': 'less right'})
+		catname_raw = soup.findAll('td', {'class': 'less'})
+
+		catname = []
+		for catn in catname_raw:
+			catcont = catn.findAll(text=True)
+			for catn1 in catcont:
+				catcont_idx = catn1.find('">')
+				if( catcont_idx != -1):
+					catname.append(catn1[catcont_idx+2:len(catn1)].replace('>','-').capitalize())
 
 		bytesize = []
 		for sz1 in sz_raw:
 			#~ rawline = str(sz1).split()
 			for sz2 in sz1.findAll(text=True):
 				sz2s =  sz2.split()
-				
 
 				if(len(sz2s) == 2):
 					#~ print sz2s[1].lower()
@@ -368,9 +376,15 @@ class DeepSearch_one:
 			return []
 		if(len(titles) != len(bytesize)):
 			return []
-			
-
+		
 		for i in xrange(len(titles)):
+			category_found= {}
+
+			if(len(catname) == len(titles)):
+				category_found[catname[i]] = 1
+			else:	
+				category_found['N/A'] = 1
+
 			d1 = {
 				'title': ''.join(titles[i].findAll(text=True)),
 				'poster': 'poster',
@@ -380,7 +394,7 @@ class DeepSearch_one:
 				'group': 'N/A',
 				'posting_date_timestamp': tstamp[i],
 				'release_comments': self.baseURL  + rdetails[i]['href'],
-				'categ':{'N/A':1},
+				'categ':category_found,
 				'ignore':0,
 				'req_pwd':self.typesrch,
 				'provider':self.baseURL,
