@@ -174,25 +174,7 @@ def legal():
 def static_from_root():
     return send_from_directory(app.static_folder, request.path[1:])
 			
-#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-#~ FUTURE USE
-#~ @app.route('/t2', methods=['GET'])
-#~ @auth.requires_auth
-#~ def progress():
-	#~ strst = ' '
-	#~ if (mega_parall.resultsraw != None):
-		#~ for provid in xrange(len(mega_parall.resultsraw)):
-			#~ if (mega_parall.resultsraw[provid] != None):
-				#~ strst = strst + ' ' + str(provid) + ' ' + str(len(mega_parall.resultsraw[provid]))
-	#~ return strst
- #~ 
-#~ 
-#~ @app.route('/t1', methods=['GET'])
-#~ @auth.requires_auth
-#~ def tsearch():
-	#~ t2 = threading.Thread(target=mega_parall.dosearch, args=(request.args,)   )
-	#~ t2.start()
-	#~ return 'aa'
+ 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/log', methods=['GET'])

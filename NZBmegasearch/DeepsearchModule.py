@@ -133,20 +133,19 @@ class DeepSearch_one:
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 	def mech_error_generic (self, e):
-		if(str(e).find("Errno 111") != -1):
+		if(str(e).lower().find("errno 111") != -1):
 			#~ print "Wrong url or site down " + ' ' + self.baseURL
 			log.warning("Wrong url or site down "  + self.baseURL)
 			self.cur_cfg['retcode'] = [700, 'Server responded in unexpected format', self.timeout, self.name]
 			return 111
-		if(str(e).find("timed out") != -1):
+		if(str(e).lower().find("timed out") != -1):
 			#~ print "Too much time to respond "  + ' ' + self.baseURL
 			log.warning("Too much time to respond - "  + self.baseURL)
 			self.cur_cfg['retcode'] = [600, 'Server timeout', self.timeout, self.name]			
 			return 500
-		if(str(e).find("HTTP Error 302") != -1):
+		if(str(e).lower().find("http error 302") != -1):
 			log.warning("Fetched exception login: " + str(e) + ' - ' + self.baseURL)
 			self.cur_cfg['retcode'] = [100, 'Incorrect user credentials', self.timeout, self.name]			
-
 			return 302
 		#~ print "Fetched exception: "  + self.baseURL + ' ' + str(e)
 		log.warning("Fetched exception: "  + self.baseURL + ' - ' + str(e))
@@ -179,12 +178,11 @@ class DeepSearch_one:
 		#~ print "Logging in: " + mainurl
 		log.info("Logging in: " + mainurl)
 
-		
 		try:
 			socket.setdefaulttimeout(self.timeout)
 			self.br.open(loginurl)
 		except Exception as e:
-			print str(e)
+			#~ print str(e)
 			self.mech_error_generic(e)
 			return False
 		
@@ -205,14 +203,19 @@ class DeepSearch_one:
 		try:
 			response2 = self.br.submit()
 		except Exception as e:
-			if(str(e).find("timed out") != -1):
-				log.warning("Down or timeout: " + mainurl)
+
+			if(str(e).lower().find("timed out") != -1):
+				log.warning("Too much time to respond - "  + self.baseURL)
+				self.cur_cfg['retcode'] = [600, 'Server timeout', self.timeout, self.name]			
 				#~ print "Down or timeout"
 				return False
-			if(str(e).find("HTTP Error 302") == -1):
+			if(str(e).lower().find("http error 302") == -1):
 				#~ print "Fetched exception login: " + str(e) 	
-				log.warning("Fetched exception login: " + str(e) + mainurl)
+				#~ print str(e).find("HTTP Error 302")
+				log.warning("Fetched server error: " + str(e) + ' - ' + self.baseURL)
+				self.cur_cfg['retcode'] = [400, 'Generic server error', self.timeout, self.name]
 				return False
+				
  
 		return True		
 
@@ -304,7 +307,6 @@ class DeepSearch_one:
 		if	(self.chkcookie() == False):
 			if(self.dologin() == False):
 				return []
-
 		mainurl = self.cur_cfg['url']
 		loginurl = mainurl + pagestr+srchstr
 		timestamp_s = time.time()	
@@ -312,12 +314,10 @@ class DeepSearch_one:
 			socket.setdefaulttimeout(self.timeout)
 			res = self.br.open(loginurl)
 		except Exception as e:
-			self.mech_error_generic(e)
 			eret = self.mech_error_generic(e)
 			if(eret == 302):
 				self.reset_cookies()
 			return []	
-
 		data = res.get_data()  
 		timestamp_e = time.time()
 		log.info('TS ' + mainurl + " " + str(timestamp_e - timestamp_s))
@@ -340,7 +340,6 @@ class DeepSearch_one:
 		catname = []
 		for catn in catname_raw:
 			catcont = catn.findAll(text=True)
-			print catcont
 			for catn1 in catcont:
 				catcont_idx = catn1.find('">')
 				if( catcont_idx != -1):

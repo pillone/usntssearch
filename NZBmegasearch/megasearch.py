@@ -191,6 +191,10 @@ class DoParallelSearch:
 		if(self.qry_nologic.replace(" ", "") == ""):
 			self.results = []
 			return self.results
+
+
+		for index in xrange(len(self.ds.ds)):
+			print 'CHECK WEBPROVIDER URL: ' + str(self.ds.ds[index].cur_cfg['url']) + ' VALID: '  + str(self.ds.ds[index].cur_cfg['valid'])
 						
 		self.cleancache()
 		#~ cache hit, no server report
