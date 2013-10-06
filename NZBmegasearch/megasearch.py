@@ -468,6 +468,8 @@ class DoParallelSearch:
 				if(totdays < 0):
 					totdays = -totdays
 				totdays = str(totdays) + "h"	
+			else:
+				totdays = str(totdays) + "d"
 
 			category_str = '' 
 			keynum = len(results[i]['categ'])
