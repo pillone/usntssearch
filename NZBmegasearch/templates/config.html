@@ -70,7 +70,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="button" value="Save" value="confbttnbig" class="confbttnbig">
+		<input type="button" value="Save" value="confbttnbig" class="gray graysmall">
 	</div>
 
 
@@ -114,7 +114,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
+		<input type="button" value="Save" value="confbttnbig" class="gray graysmall">
 	</div>
 
 	<table class="config_table_opts" summary="Suggestion" style="width: 420px;" id='tbl02'><thead>
@@ -153,7 +153,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
+		<input type="button" value="Save" value="confbttnbig" class="gray graysmall">
 	</div>
 	<table class="config_table_opts" summary="ssopt" style="width: 420px;"  id='tbl04'><thead>
 	<tr><th scope="col">Search</th></tr></thead><tbody>
@@ -190,7 +190,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
+		<input type="button" value="Save" value="confbttnbig" class="gray graysmall">
 	</div>	 
 	<table class="config_table_opts" summary="SendtoSAB" style="width: 420px;" id='tbl05'><thead>
 	<tr><th scope="col">SabNZB Integration</th><th></th></tr></thead><tbody>
@@ -210,7 +210,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
+		<input type="button" value="Save" value="confbttnbig" class="gray graysmall">
 	</div>
 	
 	<table class="config_table_opts" summary="SendtoNZBGet" style="width: 420px;" id='tbl06'><thead>
@@ -231,7 +231,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
+		<input type="button" value="Save" value="confbttnbig" class="gray graysmall">
 	</div>
 
 	<table class="config_table_opts" summary="Config" style="width: 420px;" id='tbl07'><thead>
@@ -251,7 +251,7 @@
 	</tbody></table>
 
 	<div class='configsave'>
-		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
+		<input type="button" value="Save" value="confbttnbig" class="gray graysmall">
 	</div>
 	
 	<table class="config_table_opts" summary="Config" style="width: 420px;" id='tbl08'><thead>
@@ -284,7 +284,7 @@
 
 
 	<div class='configsave'>
-		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
+		<input type="button" value="Save" value="confbttnbig" class="gray graysmall" >
 	</div>
 
 	<table class="config_table_opts" summary="Config" style="width: 300px;" id="newznab_api_host"><thead>
@@ -325,7 +325,7 @@
 
 
 	<div class='configsave'>
-		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
+		<input type="button" value="Save" value="confbttnbig" class="gray graysmall">
 	</div>
 
 	<table class="config_table_opts" summary="NZConfig_web" style="width: 300px;"  id="newznab_web_host"><thead>
@@ -366,7 +366,7 @@
 
 	</tbody></table>
 	<div class='configsave'>
-		<input type="button" value="Save" value="confbttnbig" class="confbttnbig" >
+		<input type="button" value="Save" value="confbttnbig" class="gray graysmall">
 	</div>
 
 
@@ -377,12 +377,12 @@
 </div>
 	    <script type="text/javascript">
 
-		$(".confbttnbig").click(function () {
-				$('.confbttnbig').val('Saving...')				
+		$('.gray, .graysmall').click(function() {
+				$('.gray, .graysmall').val('Saving...')				
 
 				if(check_form_correctness() == false)
 				{
-					$('.confbttnbig').val('Save')
+					$('.gray, .graysmall').val('Save')
 					return
 				}	
 													
@@ -390,11 +390,11 @@
 				  function(data){
 						if(data.code == 1)
 						{
-							$('.confbttnbig').val('Save')
+							$('.gray, .graysmall').val('Save')
 						}
 						if(data.code == 0)
 						{
-							$('.confbttnbig').val('Error Saving')
+							$('.gray, .graysmall').val('Error Saving')
 						}
 						
 
