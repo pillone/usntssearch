@@ -32,8 +32,13 @@ class CfgSettings:
 	
 	# Set up class variables
 	def __init__(self):
-		self.dirconf=  os.getenv('OPENSHIFT_DATA_DIR', '')
-
+		self.dirconf_oshift =  os.getenv('OPENSHIFT_DATA_DIR', '')
+		self.dirconf_local = os.path.dirname(os.path.realpath(__file__))+'/'
+		if(len(self.dirconf_oshift)):
+			self.dirconf = self.dirconf_oshift
+		else:
+			self.dirconf = 	self.dirconf_local
+			
 		self.selectable_speedopt = [ ['1', 'Normal Response',''],
 									 ['2','Extensive Response','']]
 		self.selectable_speedopt_cpy = copy.deepcopy(self.selectable_speedopt)
@@ -636,7 +641,7 @@ class CfgSettings:
 
 
 		openshift_install = False
-		if(len(self.dirconf)):
+		if(len(self.dirconf_oshift)):
 			openshift_install = True
 		return render_template('config.html', cfg=cffile, cfg_dp=cdsfile_toshow1,  cnt=count,  cnt_ds=count_ds, genopt = genopt, 
 												selectable_opt = possibleopt,

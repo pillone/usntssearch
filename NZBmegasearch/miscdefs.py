@@ -252,6 +252,7 @@ class ChkVersion:
  
 	def __init__(self, debugflag=False):
 		self.dirconf=  os.getenv('OPENSHIFT_DATA_DIR', '')
+		self.dirconf_local = os.path.dirname(os.path.realpath(__file__))+'/'
 		self.ver_notify = ver_notify= { 'chk':-1, 
 									'curver': -1,
 									'os':-1}
@@ -280,8 +281,11 @@ class ChkVersion:
 	
 	def chk_local_ver(self): 
 		verify_str = '80801102808011028080110280801102'
-
-		with open(self.dirconf+'vernum.num') as f:
+		
+		usedir = self.dirconf_local
+		if (len(self.dirconf)):
+			usedir = self.dirconf
+		with open(usedir+'vernum.num') as f:
 			content = f.readlines()
 		vals = content[0].split(' ')
 		if(vals[0] == verify_str):
