@@ -231,36 +231,34 @@ class ApiResponses:
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 	
-	def imdb_movieinfo(self, mid):	
-		parsed_data = {'movietitle': '',
+		def imdb_movieinfo(self, mid):  
+			parsed_data = {'movietitle': '',
 						'year': '1900'}
 
-		url_imdb  = 'http://imdbapi.org/'
-		urlParams = dict( id= 'tt' + mid)
-		#~ loading
-		try:
-			http_result = requests.get(url=url_imdb , params=urlParams, verify=False, timeout=self.timeout)
-		except Exception as e:
-			print e
-			log.critical(str(e))
+			url_imdb  = 'http://omdbapi.com/'
+			urlParams = dict( i= 'tt' + mid)
+
+			try:
+				http_result = requests.get(url=url_imdb ,  params=urlParams, verify=False, timeout=self.timeout)
+			except Exception as e:
+				log.critical(str(e))
 			return parsed_data
-		
-		try:
-			data = http_result.json()
-		except Exception as e:
-			print e
-			log.critical(str(e))	
+
+			try:
+				data = http_result.json()
+			except Exception as e:
+				log.critical(str(e))    
 			return parsed_data
-		#~ print data 	
-		
-		if('error' in data):
-			return parsed_data
-		
-		parsed_data = { 'movietitle': data['title'],
-						'year': str(data['year'])}
-		#~ print parsed_data
+
+			if('error' in data or 'Error' in data):
+				return parsed_data
+
+			parsed_data = { 'movietitle': data['Title'],
+						'year': str(data['Year'])}
+			print parsed_data
 
 		return parsed_data
+      
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 
