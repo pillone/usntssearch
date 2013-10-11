@@ -63,14 +63,15 @@ class CfgSettings:
 			SearchModule.loadSearchModules()
 		
 		saved_cfg = []
-		for index in xrange(len(self.cfg)):
-			index_found = False
-			for module in SearchModule.loadedModules:
-				if( module.typesrch == self.cfg[index]['type']):
-					index_found = True
-			if(index_found is True):
-				saved_cfg.append(self.cfg[index])
-		self.cfg = copy.deepcopy(saved_cfg)
+		if(self.cfg is not None):
+			for index in xrange(len(self.cfg)):
+				index_found = False
+				for module in SearchModule.loadedModules:
+					if( module.typesrch == self.cfg[index]['type']):
+						index_found = True
+				if(index_found is True):
+					saved_cfg.append(self.cfg[index])
+			self.cfg = copy.deepcopy(saved_cfg)
 						
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
