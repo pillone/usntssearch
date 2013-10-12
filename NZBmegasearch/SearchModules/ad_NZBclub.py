@@ -79,7 +79,7 @@ class ad_NZBclub(SearchModule):
 					
 		except Exception as e:
 			mssg = self.queryURL + ' -- ' + str(e)
-			print mssg
+			#~ print mssg
 			log.critical(mssg)
 			cfg['retcode'] = [600, 'Server timeout', tout,self.name]
 			return parsed_data
