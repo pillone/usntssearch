@@ -177,7 +177,7 @@ class ApiResponses:
 	def couchpotato_req(self):	
 	
 		if(self.args.has_key('imdbid')):
-			# print 'requested movie ID'
+			print 'requested movie ID'
 			#~ request imdb
 			#~ http://deanclatworthy.com/imdb/?id=tt1673434
 			#~ http://imdbapi.org/?id=tt1673434
@@ -237,26 +237,24 @@ class ApiResponses:
 
 		url_imdb  = 'http://omdbapi.com/'
 		urlParams = dict( i= 'tt' + mid)
-
+			
 		try:
 			http_result = requests.get(url=url_imdb ,  params=urlParams, verify=False, timeout=self.timeout)
 		except Exception as e:
 			log.critical(str(e))
-		return parsed_data
+			return parsed_data
 
 		try:
 			data = http_result.json()
 		except Exception as e:
 			log.critical(str(e))    
-		return parsed_data
+			return parsed_data
 
 		if('error' in data or 'Error' in data):
 			return parsed_data
 
 		parsed_data = { 'movietitle': data['Title'],
 					'year': str(data['Year'])}
-		#~ print parsed_data
-		
 		return parsed_data
       
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
