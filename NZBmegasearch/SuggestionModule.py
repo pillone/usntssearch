@@ -406,7 +406,7 @@ class SuggestionResponses:
 		#~ trivial heuristic on release date and popularity
 		movieinfo_sorted = sorted(movieinfo, key=itemgetter('release_date'), reverse=True) 
 		ntocheck = min(len(movieinfo_sorted), self.best_k)
-		movieinfo_sorted_final = sorted(movieinfo_sorted[0:ntocheck-1], key=itemgetter('rating_count'), reverse=True) 
+		movieinfo_sorted_final = sorted(movieinfo_sorted[0:ntocheck], key=itemgetter('rating_count'), reverse=True) 
 		return movieinfo_sorted_final
 		
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -430,6 +430,7 @@ class SuggestionResponses:
 						tech=0)
 		#~ loading
 		try:
+			print url_imdb
 			http_result = requests.get(url=url_imdb , params=urlParams, verify=False, timeout=self.timeout)
 		except Exception as e:
 			#~ print e
