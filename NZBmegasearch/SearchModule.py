@@ -35,16 +35,18 @@ log = logging.getLogger(__name__)
 def resource_path(relative_path):
 	dirconf_oshift =  os.getenv('OPENSHIFT_DATA_DIR', '')
 	dirconf_local = os.path.dirname(os.path.realpath(__file__))+'/'
-	if(len(dirconf_oshift)):
-		dirconf = dirconf_oshift
-	else:
-		dirconf = 	dirconf_local
 
 	try:
 		base_path = sys._MEIPASS
 	except Exception:
         #~ base_path = os.path.abspath(".")
 		base_path = os.path.abspath(dirconf_local)
+
+	if(len(dirconf_oshift)):
+		dirconf = dirconf_oshift
+		base_path = os.path.abspath(".")
+	else:
+		dirconf = 	dirconf_local
         
 	retstr = os.path.join(base_path, relative_path)    
 
