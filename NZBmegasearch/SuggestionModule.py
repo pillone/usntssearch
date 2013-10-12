@@ -410,73 +410,52 @@ class SuggestionResponses:
 		return movieinfo_sorted_final
 		
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
- 
+
 	def imdb_titlemovieinfo(self):	
 		parsed_data = []
 						
-		url_imdb  = 'http://imdbapi.org/'
-		urlParams = dict( title = self.search_str,
-						type='json',
-						plot='simple',
-						episode=0,
-						limit=50,
-						yg=0,
-						mt='none',
-						lang='en-US',
-						offset='',
-						aka='simple',
-						release='simple',
-						business=0,
-						tech=0)
-		#~ loading
+		url_imdb  = 'http://omdbapi.com/'
+		urlParams = dict( s = self.search_str)
 		try:
-			print url_imdb
 			http_result = requests.get(url=url_imdb , params=urlParams, verify=False, timeout=self.timeout)
 		except Exception as e:
-			#~ print e
 			log.critical(str(e))
 			return parsed_data
 		
 		try:
 			datablob = http_result.json()
 		except Exception as e:
-			#~ print e
 			log.critical(str(e))
 			return parsed_data
 		
 		#~ no movie found
-		if('code' in datablob):
+		if(('Error' in datablob) or ('Search' not in datablob)):
 			mssg = 'IMDB sugg not found [' + self.search_str + ']'
-			print mssg
 			log.warning(mssg)
-
 			return parsed_data
 
-		for i in xrange(len(datablob)):
-			data = datablob[i]
+		for i in xrange(len(datablob['Search'])):
+			data = datablob['Search'][i]
+			print data
 			toprocess = 1
 			
-			if ('release_date' not in data ):
+			if ('Year' not in data ):
 				toprocess = 0
-			if('year' not in data):
-				toprocess = 0
-			if('title' not in data):
+			if('Title' not in data):
 				toprocess = 0
 			
 			imdb_url = ''	
 			rating = 0
 	
-			if('imdb_url' in data):
-				imdb_url = data['imdb_url']
-			if('rating_count' in data ):
-				rating = data['rating_count']
+			if('imdbID' in data):
+				imdb_url = data['imdbID']
 
 			if (toprocess):
-				p_data = { 'title': data['title'],
-							'rating_count': rating,
-								'year': str(data['year']),
+				p_data = { 'title': data['Title'],
+							'rating_count': 0,
+								'year': str(data['Year']),
 								'imdb_url': imdb_url,
-								'release_date':data['release_date'],
+								'release_date':data['Year'],
 								'valid': 1}
 				
 				#~ print p_data
@@ -484,4 +463,5 @@ class SuggestionResponses:
 				parsed_data.append(p_data)
 
 		return parsed_data
+		
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

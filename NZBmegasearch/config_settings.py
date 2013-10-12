@@ -349,7 +349,7 @@ class CfgSettings:
 		self.selectable_speedopt[0][1] += ' ['+str(self.cgen['timeout_class'][1])+'s]'
 		self.selectable_speedopt[1][1] += ' ['+str(self.cgen['timeout_class'][2])+'s]'
 		#~ self.selectable_speedopt[2][1] += ' ['+str(self.cgen['timeout_class'][2])+'s]'
-
+		
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    
 	
 	def read_conf_custom(self, forcedcustom=''): 
@@ -431,8 +431,6 @@ class CfgSettings:
 				self.cgen['general_restrictopt1'] = cst_parser.getint('general', 'general_restrictopt1')
 			if(cst_parser.has_option('general' ,'revproxy')):	
 				self.cgen['revproxy'] = cst_parser.get('general', 'revproxy')
-
-
 
 		except Exception as e:
 			print str(e)
