@@ -277,7 +277,12 @@ class DoParallelSearch:
 				slctg[2] = 'selected'
 		#~ params['ver']['chk'] = 1
 		#~ params['ver']['os'] = 'openshift'
-		return render_template('main_page.html', vr=params['ver'], nc=self.svalid, sugg = [], 
+		
+		params['trend_show'] = [{'searchstr': 'game.of.thrones.S03E10', 'prettytxt': u'Game of Thrones S03 E10', 'imdb_url': u'http://thetvdb.com/?tab=series&id=121361'}, {'searchstr': 'the.big.bang.theory.S07E04', 'prettytxt': u'The Big Bang Theory S07 E04', 'imdb_url': u'http://thetvdb.com/?tab=series&id=80379'}, {'searchstr': 'breaking.bad.S05E16', 'prettytxt': u'Breaking Bad S05 E16', 'imdb_url': u'http://thetvdb.com/?tab=series&id=81189'}, {'searchstr': 'dexter.S08E12', 'prettytxt': u'Dexter S08 E12', 'imdb_url': u'http://thetvdb.com/?tab=series&id=79349'}, {'searchstr': 'how.i.met.your.mother.S09E04', 'prettytxt': u'How I Met Your Mother S09 E04', 'imdb_url': u'http://thetvdb.com/?tab=series&id=75760'}] 
+		params['trend_movie'] = [{'searchstr': 'the.frozen.ground.2013', 'prettytxt': u'The Frozen Ground(2013)', 'imdb_url': u'http://www.imdb.com/title/tt2005374'}, {'searchstr': 'the.mortal.instruments.city.of.bones.2013', 'prettytxt': u'The Mortal Instrumen..(2013)', 'imdb_url': u'http://www.imdb.com/title/tt1538403'}, {'searchstr': 'rush.2013', 'prettytxt': u'Rush(2013)', 'imdb_url': u'http://www.imdb.com/title/tt1979320'}, {'searchstr': 'i.spit.on.your.grave.2.2013', 'prettytxt': u'I Spit on Your Grave 2(2013)', 'imdb_url': u'http://www.imdb.com/title/tt2537176'}] 
+		sugg_list = [{'searchstr': 'the.frozen.ground.2013', 'prettytxt': u'The Frozen Ground(2013)', 'imdb_url': u'http://www.imdb.com/title/tt2005374'}, {'searchstr': 'the.mortal.instruments.city.of.bones.2013', 'prettytxt': u'The Mortal Instrumen..(2013)', 'imdb_url': u'http://www.imdb.com/title/tt1538403'}, {'searchstr': 'rush.2013', 'prettytxt': u'Rush(2013)', 'imdb_url': u'http://www.imdb.com/title/tt1979320'}, {'searchstr': 'i.spit.on.your.grave.2.2013', 'prettytxt': u'I Spit on Your Grave 2(2013)', 'imdb_url': u'http://www.imdb.com/title/tt2537176'}] 
+
+		return render_template('main_page.html', vr=params['ver'], nc=self.svalid, sugg = sugg_list, 
 								cgen = self.cgen,
 								trend_show = params['trend_show'], trend_movie = params['trend_movie'], debug_flag = params['debugflag'],
 								large_server = self.cgen['large_server'],
@@ -534,7 +539,12 @@ class DoParallelSearch:
 		scat = ''
 		if('selcat' in params['args']):
 			scat = params['args']['selcat']		
-									
+
+		params['trend_show'] = [{'searchstr': 'game.of.thrones.S03E10', 'prettytxt': u'Game of Thrones S03 E10', 'imdb_url': u'http://thetvdb.com/?tab=series&id=121361'}, {'searchstr': 'the.big.bang.theory.S07E04', 'prettytxt': u'The Big Bang Theory S07 E04', 'imdb_url': u'http://thetvdb.com/?tab=series&id=80379'}, {'searchstr': 'breaking.bad.S05E16', 'prettytxt': u'Breaking Bad S05 E16', 'imdb_url': u'http://thetvdb.com/?tab=series&id=81189'}, {'searchstr': 'dexter.S08E12', 'prettytxt': u'Dexter S08 E12', 'imdb_url': u'http://thetvdb.com/?tab=series&id=79349'}, {'searchstr': 'how.i.met.your.mother.S09E04', 'prettytxt': u'How I Met Your Mother S09 E04', 'imdb_url': u'http://thetvdb.com/?tab=series&id=75760'}] 
+		params['trend_movie'] = [{'searchstr': 'the.frozen.ground.2013', 'prettytxt': u'The Frozen Ground(2013)', 'imdb_url': u'http://www.imdb.com/title/tt2005374'}, {'searchstr': 'the.mortal.instruments.city.of.bones.2013', 'prettytxt': u'The Mortal Instrumen..(2013)', 'imdb_url': u'http://www.imdb.com/title/tt1538403'}, {'searchstr': 'rush.2013', 'prettytxt': u'Rush(2013)', 'imdb_url': u'http://www.imdb.com/title/tt1979320'}, {'searchstr': 'i.spit.on.your.grave.2.2013', 'prettytxt': u'I Spit on Your Grave 2(2013)', 'imdb_url': u'http://www.imdb.com/title/tt2537176'}] 
+		sugg_list = [{'searchstr': 'the.frozen.ground.2013', 'prettytxt': u'The Frozen Ground(2013)', 'imdb_url': u'http://www.imdb.com/title/tt2005374'}, {'searchstr': 'the.mortal.instruments.city.of.bones.2013', 'prettytxt': u'The Mortal Instrumen..(2013)', 'imdb_url': u'http://www.imdb.com/title/tt1538403'}, {'searchstr': 'rush.2013', 'prettytxt': u'Rush(2013)', 'imdb_url': u'http://www.imdb.com/title/tt1979320'}, {'searchstr': 'i.spit.on.your.grave.2.2013', 'prettytxt': u'I Spit on Your Grave 2(2013)', 'imdb_url': u'http://www.imdb.com/title/tt2537176'}] 
+
+
 		return render_template('main_page.html',results=niceResults, exist=existduplicates, 
 												vr=ver_notify, args=args, nc = svalid, sugg = sugg_list,
 												speed_class_sel = speed_class_sel,

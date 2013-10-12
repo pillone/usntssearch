@@ -80,8 +80,7 @@ def reload_all():
 motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
 print motd
 
-#~ DEBUGFLAG = False
-DEBUGFLAG = True
+DEBUGFLAG = False
 LARGESERVER = False
 
 logsdir = SearchModule.resource_path('logs/')
@@ -119,7 +118,7 @@ if( __name__ == 'mega2' and len(oshift_dirconf)==0):
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 cver = miscdefs.ChkVersion(DEBUGFLAG) 
 print '>> version: '+ str(cver.ver_notify['curver'])
-motd = motd  + ' v.'+str(cver.ver_notify['curver']) + 'large_server: ' + str(LARGESERVER) + ' debug: ' + str(DEBUGFLAG)
+motd = motd  + ' v.'+str(cver.ver_notify['curver']) + ' large_server: ' + str(LARGESERVER) + ' debug: ' + str(DEBUGFLAG)
 cfgsets = config_settings.CfgSettings()
 first_time = 0
 #~ init logger
@@ -356,4 +355,4 @@ if __name__ == "__main__":
 		ctx.use_privatekey_file(certdir+'server.key')
 		ctx.use_certificate_file(certdir+'server.crt')
 	
-	app.run(host=chost,port=cfgsets.cgen['portno'], debug = DEBUGFLAG, ssl_context=ctx)
+	app.run(host=chost,port=cfgsets.cgen['portno'], debug = True, ssl_context=ctx)

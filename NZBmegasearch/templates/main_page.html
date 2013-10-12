@@ -40,52 +40,64 @@
 
 			<div class ="suggarea_macro">
 
+				<div class ="suggcontainer">
+ das
 					{% if   trend_movie -%}
-					<table class ="trend_table">
-						<tr>	<TH COLSPAN="2" style="text-align: right;">
-						  <div class='alert-flex'> Movies Trending</div>
-						</TH></tr>
+					<table class="config_table_opts sugg_table_modifier"><thead>
+						<tr><th scope="col">Movies Trending</th><th></th></tr></thead>
+						<tbody>
 						{% for tm in trend_movie -%}
 							<tr>
-							<td  class ="suggarea_title"> <a href="s?q={{ tm['searchstr'] }}" class='sugglinx'> {{ tm['prettytxt'] }} </a></td>
-							<td class ="suggarea_imbd"> <a href="http://www.dereferer.org/?{{ tm['imdb_url'] }}" > <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a> </td>
+								<td>
+									<a href="http://www.dereferer.org/?{{ tm['imdb_url'] }}" > <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a> 
+									<a href="s?q={{ tm['searchstr'] }}" class='sugglinx'> {{ tm['prettytxt'] }} </a>
+									
+								</td>
 							</tr>
 						{%- endfor %}
-					</table>
+						</tbody>
+					</table>							
 					{%- endif %}
-
-					{% if trend_show -%}
-					<table class ="trend_table"  >
-						<tr>	<TH COLSPAN="2" style="text-align: right;">
-						<div class='alert-flex'> Shows Trending</div>
-						</TH></tr>
+					
+					
+					{% if   trend_movie -%}
+					<table class="config_table_opts sugg_table_modifier"><thead>
+						<tr><th scope="col">Shows Trending</th><th></th></tr></thead>
+						<tbody>
 						{% for ts in trend_show -%}
 							<tr>
-							<td  class ="suggarea_title"> <a href="s?q={{ ts['searchstr'] }}" class='sugglinx'> {{ ts['prettytxt'] }} </a></td>
-							<td class ="suggarea_imbd"> <a href="http://www.dereferer.org/?{{ ts['imdb_url'] }}"> <img src="static/tvdb.gif" width="16" height="16" alt="tvdb" /> </a> </td>
+								<td>
+									<a href="http://www.dereferer.org/?{{ ts['imdb_url'] }}"> <img src="static/tvdb.gif" width="16" height="16" alt="tvdb" /> </a>
+									<a href="s?q={{ ts['searchstr'] }}" class='sugglinx'> {{ ts['prettytxt'] }} </a>									
+								</td>
 							</tr>
 						{%- endfor %}
-					</table>
+						</tbody>
+					</table>							
 					{%- endif %}
+		 
 
-					{%  if   sugg -%}
-					<table class ="suggarea_table"  >
-						<tr>	<TH COLSPAN="2" style="text-align: right;">
-						<div class='alert-red'>Did you mean ... </div>
-						</TH></tr>
+					{% if   sugg -%}
+					<table class="config_table_opts sugg_table_modifier"><thead>
+						<tr><th scope="col">Did you mean...</th><th></th></tr></thead>
+						<tbody>
 						{% for sl in sugg -%}
 							<tr>
-							<td  class ="suggarea_title"> <a href="s?q={{ sl['searchstr'] }}"  style="color:#ff0000;" class='sugglinx'> {{ sl['prettytxt'] }} </a></td>
-							<td class ="suggarea_imbd"> <a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a> </td>
+								<td>
+								<a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a>
+								<a href="s?q={{ sl['searchstr'] }}"  style="color:#ff0000;" class='sugglinx'> {{ sl['prettytxt'] }} </a>
+								</td>
 							</tr>
 						{%- endfor %}
-					</table>
+						</tbody>
+					</table>							
 					{%- endif %}
-
-
+					
 				</td>
 
 			</table>
+			</div>
+			
 			{% if servercode_return -%}
 				<div class="alert-box" id="alertsuccess">
 					<b>Connectivity:</b> 

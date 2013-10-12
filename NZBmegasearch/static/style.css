@@ -141,6 +141,10 @@ div#container
 }
 
 
+.suggcontainer {
+		margin: 20px auto;
+}
+
 .suggarea_macro {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;
@@ -413,6 +417,10 @@ div#container
 	text-align: left;
 }
 
+.sugg_table_modifier {
+    width: 220px !important;
+    float: left  !important;
+}
 
 .alert-flex, .alert-red {
     width: 150px;

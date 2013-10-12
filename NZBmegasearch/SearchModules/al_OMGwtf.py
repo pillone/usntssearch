@@ -38,21 +38,30 @@ class al_OMGwtf(SearchModule):
 		self.caption_login_pwd = 'api'
 		self.returncode = 0
 											 
-		self.categories = {'Console': {'code':[1000,1010,1020,1030,1040,1050,1060,1070,1080], 'pretty': 'Console'},
-							'Movie' : {'code': [2000, 2010, 2020], 'pretty': 'Movie'},
-							'Movie_HD' : {'code': [2040, 2050, 2060], 'pretty': 'Movie - HD'},
-							'Movie_SD' : {'code': [2030], 'pretty': 'Movie - SD'},
-							'Audio' : {'code': [3000, 3010, 3020, 3030, 3040], 'pretty': 'Audio'},
-							'PC' : {'code': [4000, 4010, 4020, 4030, 4040, 4050, 4060, 4070], 'pretty': 'PC'},
-							'TV' : {'code': [5000, 5010, 5020, 5050, 5060, 5070, 5080], 'pretty': 'TV'},
-							'TV_SD' : {'code': [5030], 'pretty': 'TV - SD'},
-							'TV_HD' : {'code': [5040], 'pretty': 'TV - HD'},
-							'XXX' : {'code': [6000, 6010, 6020, 6030, 6040, 6050, 6060], 'pretty': 'XXX'},
-							'Other' : {'code': [7000, 7010], 'pretty': 'Other'},
-							'Ebook' : {'code': [7020], 'pretty': 'Ebook'},
-							'Comics' : {'code': [7030], 'pretty': 'Comics'}
+		self.categories = {	'Movie' : {'code': [18], 'pretty': 'Movie'},
+							'Movie_HD' : {'code': [16], 'pretty': 'Movie - HD'},
+							'Movie_SD' : {'code': [15], 'pretty': 'Movie - SD'},
+							'Movie_DVD' : {'code': [17], 'pretty': 'Movie - DVD'},
+							'TV' : {'code': [21], 'pretty': 'TV'},
+							'TV_SD' : {'code': [19], 'pretty': 'TV - SD'},
+							'TV_HD' : {'code': [20], 'pretty': 'TV - HD'},
+							'Other' : {'code': [11], 'pretty': 'Other'},
+							'Ebook' : {'code': [9], 'pretty': 'Ebook'},
+							'Audiobook' : {'code': [29], 'pretty': 'Audiobook'},
+							'Extrapar' : {'code': [10], 'pretty': 'Extra Pars'},
+							'GamesPC' : {'code': [12], 'pretty': 'Games - PC'},
+							'GamesMAC' : {'code': [13], 'pretty': 'Games - Mac'},
+							'GamesOth' : {'code': [14], 'pretty': 'Games'},
+							'AppsPC' : {'code': [1], 'pretty': 'Apps - PC'},
+							'AppsMAC' : {'code': [2], 'pretty': 'Apps - Mac'},
+							'AppsLnx' : {'code': [4], 'pretty': 'Apps - Linux'},
+							'AppsPhone' : {'code': [5], 'pretty': 'Apps - Phone'},
+							'AppsOther' : {'code': [6], 'pretty': 'Apps'},
+							'MusicMp3' : {'code': [7], 'pretty': 'Music - MP3'},
+							'MusicMVID' : {'code': [8], 'pretty': 'Music - MVID'},
+							'MusicMVID' : {'code': [22], 'pretty': 'Music - FLAC'},							
+							'MusicOther' : {'code': [3], 'pretty': 'Music'}
 							} 
-							
 		self.category_inv= {}
 		for key in self.categories.keys():
 			prettyval = self.categories[key]['pretty']
