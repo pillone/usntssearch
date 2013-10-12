@@ -137,7 +137,7 @@ app = Flask(__name__, template_folder=templatedir)
 SearchModule.loadSearchModules()
 if(DEBUGFLAG):
 	cfgsets.cgen['general_trend'] = 0
-	#~ cfgsets.cgen['general_suggestion'] = 0
+	cfgsets.cgen['general_suggestion'] = 0
 	print '====== DEBUGFLAG MUST BE SET TO FALSE BEFORE DEPLOYMENT ======'
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
