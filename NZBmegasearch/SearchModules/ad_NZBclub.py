@@ -86,8 +86,7 @@ class ad_NZBclub(SearchModule):
 
 		timestamp_e = time.time()
 		log.info('TS ' + self.baseURL + " " + str(timestamp_e - timestamp_s))
-
-					
+		
 		data = http_result.text
 		data = data.replace("<newznab:attr", "<newznab_attr")
 
@@ -95,7 +94,7 @@ class ad_NZBclub(SearchModule):
 			tree = ET.fromstring(data.encode('utf-8'))
 		except Exception as e:
 			print e
-			cfg['retcode'] = [250, 'Server responded with no results or with an unexpected format', timestamp_e - timestamp_s,self.name]			
+			cfg['retcode'] = [250, 'Server responded with an unexpected format', timestamp_e - timestamp_s,self.name]			
 			return parsed_data
 
 		#~ successful parsing
