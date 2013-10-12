@@ -16,10 +16,6 @@
 	</head>
 	<body>
 		<div id="container">
-			<div class="alert-info-silent">
-			{{ motd|safe  }}
-			</div>
-
 			<div  class="titlemain"><img src="static/title.png" width="387" height="" alt="NZBmegasearcH"/></div>
 			<form action="{{ cgen['revproxy'] }}/s" method="get" class="form-wrapper-01">
 
@@ -39,65 +35,68 @@
 			</form>
 
 			<div class ="suggarea_macro">
-
-				<div class ="suggcontainer">
- das
+				
+				<table class="sugg_table">
+					<tr>
 					{% if   trend_movie -%}
-					<table class="config_table_opts sugg_table_modifier"><thead>
-						<tr><th scope="col">Movies Trending</th><th></th></tr></thead>
-						<tbody>
-						{% for tm in trend_movie -%}
-							<tr>
-								<td>
-									<a href="http://www.dereferer.org/?{{ tm['imdb_url'] }}" > <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a> 
-									<a href="s?q={{ tm['searchstr'] }}" class='sugglinx'> {{ tm['prettytxt'] }} </a>
-									
-								</td>
-							</tr>
-						{%- endfor %}
-						</tbody>
-					</table>							
+					<td class='sugg_table_td'>
+						<table class="config_table_opts sugg_table_modifier"><thead>
+							<tr><th scope="col">Movies Trending</th><th></th></tr></thead>
+							<tbody>
+							{% for tm in trend_movie -%}
+								<tr>
+									<td>
+										<a href="http://www.dereferer.org/?{{ tm['imdb_url'] }}" > <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a> 
+										<a href="s?q={{ tm['searchstr'] }}" class='sugglinx'> {{ tm['prettytxt'] }} </a>
+										
+									</td>
+								</tr>
+							{%- endfor %}
+							</tbody>
+						</table>							
+					</td>		
 					{%- endif %}
-					
+				
 					
 					{% if   trend_movie -%}
-					<table class="config_table_opts sugg_table_modifier"><thead>
-						<tr><th scope="col">Shows Trending</th><th></th></tr></thead>
-						<tbody>
-						{% for ts in trend_show -%}
-							<tr>
-								<td>
-									<a href="http://www.dereferer.org/?{{ ts['imdb_url'] }}"> <img src="static/tvdb.gif" width="16" height="16" alt="tvdb" /> </a>
-									<a href="s?q={{ ts['searchstr'] }}" class='sugglinx'> {{ ts['prettytxt'] }} </a>									
-								</td>
-							</tr>
-						{%- endfor %}
-						</tbody>
-					</table>							
+					<td class='sugg_table_td'>
+						<table class="config_table_opts sugg_table_modifier"><thead>
+							<tr><th scope="col">Shows Trending</th><th></th></tr></thead>
+							<tbody>
+							{% for ts in trend_show -%}
+								<tr>
+									<td>
+										<a href="http://www.dereferer.org/?{{ ts['imdb_url'] }}"> <img src="static/tvdb.gif" width="16" height="16" alt="tvdb" /> </a>
+										<a href="s?q={{ ts['searchstr'] }}" class='sugglinx'> {{ ts['prettytxt'] }} </a>									
+									</td>
+								</tr>
+							{%- endfor %}
+							</tbody>
+						</table>
+					</td>
 					{%- endif %}
 		 
 
 					{% if   sugg -%}
-					<table class="config_table_opts sugg_table_modifier"><thead>
-						<tr><th scope="col">Did you mean...</th><th></th></tr></thead>
-						<tbody>
-						{% for sl in sugg -%}
-							<tr>
-								<td>
-								<a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a>
-								<a href="s?q={{ sl['searchstr'] }}"  style="color:#ff0000;" class='sugglinx'> {{ sl['prettytxt'] }} </a>
-								</td>
-							</tr>
-						{%- endfor %}
-						</tbody>
-					</table>							
+					<td class='sugg_table_td'>
+						<table class="config_table_opts sugg_table_modifier"><thead>
+							<tr><th scope="col">Did you mean...</th><th></th></tr></thead>
+							<tbody>
+							{% for sl in sugg -%}
+								<tr>
+									<td>
+									<a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a>
+									<a href="s?q={{ sl['searchstr'] }}"  style="color:#ff0000;" class='sugglinx'> {{ sl['prettytxt'] }} </a>
+									</td>
+								</tr>
+							{%- endfor %}
+							</tbody>
+						</table>							
+					</td>
 					{%- endif %}
-					
-				</td>
-
-			</table>
-			</div>
-			
+				</tr>
+				</table>
+				
 			{% if servercode_return -%}
 				<div class="alert-box" id="alertsuccess">
 					<b>Connectivity:</b> 

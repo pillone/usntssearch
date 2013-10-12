@@ -76,7 +76,7 @@
 
 	<table class="config_table_opts" summary="security" style="width: 420px;" id='tbl01'><thead>
 	<tr><th scope="col">Security</th><th></th></tr></thead><tbody>
-		<tr>
+		<tr class='config_table_opts_nonhover'>
 			<td> Restrict access</td><td></td>
 		</tr>
 
@@ -85,7 +85,7 @@
 			
 		</tr>
 
-		<tr>
+		<tr class='config_table_opts_nonhover'>
 			<td> <br>Authentication (optional) </td><td></td>
 		</tr>
 
@@ -94,8 +94,8 @@
 				<td><label for="general_pwd">Pass:</label> <input type="password" name="general_pwd" id="general_pwd" value="{{ genopt['general_pwd'] }}" size="18" class="conftbox"></td>
 		</tr>
 
-		<tr>
-			<td> <br>Config-page authentication (optional) </td><td></td>
+		<tr class='config_table_opts_nonhover'>
+			<td > <br>Config-page authentication (optional) </td><td></td>
 		</tr>
 
 		<tr>
@@ -103,7 +103,7 @@
 				<td><label for="config_pwd">Pass:</label> <input type="password" name="config_pwd" id="config_pwd" value="{{ genopt['config_pwd'] }}" size="18" class="conftbox"></td>
 		</tr>
 
-		<tr>
+		<tr class='config_table_opts_nonhover'>
 			<td> <br>API key for SB, CP connection (optional)</td><td></td>
 		</tr>
 
@@ -119,10 +119,10 @@
 
 	<table class="config_table_opts" summary="Suggestion" style="width: 420px;" id='tbl02'><thead>
 	<tr><th scope="col">RSS feeds</th></tr></thead><tbody>
-		<tr>
+		<tr class='config_table_opts_nonhover'>
 			<td>Url: nameofyourhost:port/rss</td>
 		</tr>
-		<tr>
+		<tr class='config_table_opts_nonhover'>
 			<td>Url per category: nameofyourhost:port/rss?cat=<a href='http://newznab.readthedocs.org/en/latest/misc/api/#predefined-categories'>XXXX</a></td>
 		</tr>
 	</table>
@@ -199,7 +199,7 @@
 				<label for="sabnzbd_api">API Key:</label> <input type="text" name="sabnzbd_api" id="sabnzbd_api" value="{{ genopt['sabnzbd_api'] }}" size="22" class="conftbox"></td>
 		</tr>
 
-		<tr>
+		<tr class='config_table_opts_nonhover'>
 			<td> <br>NZBmegasearch IP/host for SabNZB</td><td></td>
 		</tr>
 

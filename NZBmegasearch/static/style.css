@@ -134,15 +134,12 @@ div#container
 
 .titlemain {
 	width: 450px;
-	margin: 0px auto;
-	padding: 0px;
 	text-align: center;
-
-}
-
-
-.suggcontainer {
-		margin: 20px auto;
+	padding: 8px 35px 8px 14px;
+	margin: 40px auto;
+	margin-bottom: 18px;
+	margin-top: 60px;
+	
 }
 
 .suggarea_macro {
@@ -417,9 +414,27 @@ div#container
 	text-align: left;
 }
 
+.sugg_table {
+	margin: 5px 45px 25px 45px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 70%;
+	border-collapse: collapse;
+	text-align: center;
+	padding: 0px;
+}
+
+.sugg_table_td
+{
+	color: #669;
+	vertical-align:top;
+}
+
 .sugg_table_modifier {
     width: 220px !important;
-    float: left  !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    margin-top:0px !important;
 }
 
 .alert-flex, .alert-red {
@@ -677,7 +692,11 @@ border-left: 2px solid #6678b1;
 	color: #009;
 }
 .config_table_opts tbody tr:hover {
-	background: #f0f0f0 none;
+	background: #F2F5A9 none;
+}
+
+.config_table_opts_nonhover:hover {
+	background: #FFFFFF none !important;
 }
  
 
