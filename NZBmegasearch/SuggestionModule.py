@@ -436,7 +436,7 @@ class SuggestionResponses:
 
 		for i in xrange(len(datablob['Search'])):
 			data = datablob['Search'][i]
-			print data
+			#~ print data
 			toprocess = 1
 			
 			if ('Year' not in data ):

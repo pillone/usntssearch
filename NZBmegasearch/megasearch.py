@@ -192,7 +192,7 @@ class DoParallelSearch:
 			self.results = []
 			return self.results
 
-
+		print 'TYPE OF SEARCH: '+str(speed_class_sel)
 		for index in xrange(len(self.ds.ds)):
 			print 'CHECK WEBPROVIDER URL: ' + str(self.ds.ds[index].cur_cfg['url']) + ' VALID: '  + str(self.ds.ds[index].cur_cfg['valid'])
 						
