@@ -1,0 +1,326 @@
+/**
+  * Kanso - Semantic Flat Buttons
+  * Author & copyright (c) 2013: Kris Olszewski
+  * Mertize Icons by Alessio Atzeni
+  * Support: IE8+
+  * 
+  * Repo: https://github.com/KrisOlszewski/Kanso/
+  */
+.button {
+  display: inline-block;
+  width: 180px;
+  margin-left: 60px;
+  margin-right: 53px;
+  margin-bottom: 50px;
+  padding: 7px 14px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  color: #ffffff;
+  vertical-align: middle;
+  text-align: center;
+  font-weight: bold;
+  font-size: 13px;
+  font-family: Arial, "Lucida Grande", sans-serif;
+  line-height: 1.5384615384615385;
+  cursor: pointer;
+  outline: none;
+  background-color: #378b96;
+  border-color: #378b96;
+  -webkit-transition: all 0.15s ease-in-out;
+  -moz-transition: all 0.15s ease-in-out;
+  -o-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.button:hover,
+.button:focus {
+  background-color: #56c6c6;
+  border-color: #56c6c6;
+}
+.button.is-active,
+.button:active {
+  background-color: #2c3138;
+  border-color: #2c3138;
+}
+.button.is-disabled,
+.button[disabled] {
+  background-color: #707c8d;
+  border-color: #707c8d;
+}
+.button:hover,
+.button:focus {
+  color: #ffffff;
+}
+.button.is-disabled,
+.button[disabled] {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+.button.is-primary {
+  background-color: #3bafda;
+  border-color: #3bafda;
+}
+.button.is-primary:hover,
+.button.is-primary:focus {
+  background-color: #66c1e2;
+  border-color: #66c1e2;
+}
+.button.is-primary.is-active,
+.button.is-primary:active {
+  background-color: #2494be;
+  border-color: #2494be;
+}
+.button.is-primary.is-disabled,
+.button.is-primary[disabled] {
+  background-color: #91d2ea;
+  border-color: #91d2ea;
+}
+.button.is-secondary {
+  background-color: #967adc;
+  border-color: #967adc;
+}
+.button.is-secondary:hover,
+.button.is-secondary:focus {
+  background-color: #b6a2e7;
+  border-color: #b6a2e7;
+}
+.button.is-secondary.is-active,
+.button.is-secondary:active {
+  background-color: #7652d1;
+  border-color: #7652d1;
+}
+.button.is-secondary.is-disabled,
+.button.is-secondary[disabled] {
+  background-color: #d6cbf1;
+  border-color: #d6cbf1;
+}
+.button.is-tertiary {
+  background-color: #d770ad;
+  border-color: #d770ad;
+}
+.button.is-tertiary:hover,
+.button.is-tertiary:focus {
+  background-color: #e298c4;
+  border-color: #e298c4;
+}
+.button.is-tertiary.is-active,
+.button.is-tertiary:active {
+  background-color: #cc4896;
+  border-color: #cc4896;
+}
+.button.is-tertiary.is-disabled,
+.button.is-tertiary[disabled] {
+  background-color: #edc0db;
+  border-color: #edc0db;
+}
+.button.is-success {
+  background-color: #8cc152;
+  border-color: #8cc152;
+}
+.button.is-success:hover,
+.button.is-success:focus {
+  background-color: #a5ce78;
+  border-color: #a5ce78;
+}
+.button.is-success.is-active,
+.button.is-success:active {
+  background-color: #72a53b;
+  border-color: #72a53b;
+}
+.button.is-success.is-disabled,
+.button.is-success[disabled] {
+  background-color: #bedc9d;
+  border-color: #bedc9d;
+}
+.button.is-danger {
+  background-color: #da4453;
+  border-color: #da4453;
+}
+.button.is-danger:hover,
+.button.is-danger:focus {
+  background-color: #e26f7a;
+  border-color: #e26f7a;
+}
+.button.is-danger.is-active,
+.button.is-danger:active {
+  background-color: #c42737;
+  border-color: #c42737;
+}
+.button.is-danger.is-disabled,
+.button.is-danger[disabled] {
+  background-color: #eb99a1;
+  border-color: #eb99a1;
+}
+.button.is-warning {
+  background-color: #f6bb42;
+  border-color: #f6bb42;
+}
+.button.is-warning:hover,
+.button.is-warning:focus {
+  background-color: #f8cd73;
+  border-color: #f8cd73;
+}
+.button.is-warning.is-active,
+.button.is-warning:active {
+  background-color: #f4a911;
+  border-color: #f4a911;
+}
+.button.is-warning.is-disabled,
+.button.is-warning[disabled] {
+  background-color: #fbdea3;
+  border-color: #fbdea3;
+}
+.button.is-link {
+  background-color: transparent;
+  border-color: transparent;
+  color: #3bafda;
+}
+.button.is-link:hover,
+.button.is-link:focus,
+.button.is-link.is-active,
+.button.is-link:active {
+  background-color: transparent;
+  color: #434a54;
+}
+.button.is-link.is-disabled,
+.button.is-link[disabled] {
+  background-color: transparent;
+  color: #707c8d;
+}
+.button.is-block {
+  display: block;
+  width: 100%;
+}
+.button.is-block + .is-block {
+  margin-top: 10px;
+}
+.button.has-icon {
+  padding: 7px;
+}
+.button.has-icon.has-text {
+  padding: 7px 10px 7px 7px;
+}
+.button.has-icon.has-text [class^="icon-"],
+.button.has-icon.has-text [class*=" icon-"] {
+  margin-right: 7px;
+}
+input.button,
+button.button {
+  font-weight: normal;
+  width: auto;
+}
+input.button.is-block,
+button.button.is-block {
+  width: 100%;
+}
+.button-group-row:after,
+.button-group-row:before {
+  display: table;
+  content: '';
+  line-height: 0;
+}
+.button-group-row:after {
+  clear: both;
+}
+.button-group {
+  position: relative;
+  display: block;
+  float: left;
+}
+.button-group + .button-group {
+  margin-left: 40px;
+}
+.button-group.push-right {
+  float: right;
+}
+.button-group > .button {
+  display: block;
+  float: left;
+  margin-right: 5px;
+}
+.button-group > .button:last-child {
+  margin-right: 0;
+}
+[class^="icon-"],
+[class*=" icon-"] {
+  display: inline-block;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  background-image: url(../images/icon-sprite.png);
+  background-repeat: no-repeat;
+  vertical-align: top;
+  text-indent: 20px;
+  font: 0/0 a;
+}
+.icon-search {
+  background-position: 0 0;
+}
+.icon-check {
+  background-position: -20px 0;
+}
+.icon-plus {
+  background-position: -40px 0;
+}
+.icon-minus {
+  background-position: -60px 0;
+}
+.icon-cross {
+  background-position: -80px 0;
+}
+.icon-help {
+  background-position: -100px 0;
+}
+.icon-pin {
+  background-position: -120px 0;
+}
+.icon-cloud {
+  background-position: -140px 0;
+}
+.icon-arrow-left {
+  background-position: -160px 0;
+}
+.icon-arrow-right {
+  background-position: -180px 0;
+}
+.icon-arrow-up {
+  background-position: -200px 0;
+}
+.icon-arrow-down {
+  background-position: -220px 0;
+}
+.icon-attachment {
+  background-position: -240px 0;
+}
+.icon-chat {
+  background-position: -260px 0;
+}
+.icon-config {
+  background-position: -280px 0;
+}
+.icon-tool {
+  background-position: -300px 0;
+}
+.icon-phone {
+  background-position: -320px 0;
+}
+.icon-minimize {
+  background-position: -340px 0;
+}
+.icon-maximize {
+  background-position: -360px 0;
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+  [class^="icon-"],
+  [class*=" icon-"] {
+    -webkit-background-size: 380px 20px;
+    -moz-background-size: 380px 20px;
+    -o-background-size: 380px 20px;
+    background-size: 380px 20px;
+    background-image: url(../images/icon-sprite@2x.png);
+  }
+}

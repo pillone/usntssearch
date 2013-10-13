@@ -7,7 +7,14 @@
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/buttons.css">
+	<script type="text/javascript" src="javascripts/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/fancybox/jquery.fancybox-1.3.4.pack.js"></script>    
     <script src="javascripts/scale.fix.js"></script>
+	
+	<link rel="stylesheet" href="javascripts/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+
+    
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <!--[if lt IE 9]>
@@ -17,13 +24,25 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1><img src="images/title.png"></h1>
+        <h1><img src="images/title.png" class='title_displayed'></h1>
+<!--
         <p>Aggregate NZB search results from the internet</p>
+-->
+<!--
         <p class="view"><a href="https://github.com/pillone/usntssearch">View the Project on GitHub <small>pillone/usntssearch</small></a></p>
+-->
+<!--
         <ul>
+-->
+<!--
           <li><a href="https://github.com/pillone/usntssearch">Clone from <strong>GitHub</strong></a></li>
+-->
+<!--
           <li><a href="https://github.com/pillone/usntssearch/zipball/master">Download for <strong>Windows</strong></a></li>
+-->
+<!--
         </ul>
+-->
       </header>
       <section>
         <h1>
@@ -34,12 +53,15 @@
 
 <p><strong>NZBmegasearcH collects all your (not only) newznab-based accounts to one place. It is your meta-search engine and your SB, CP unique NZB provider.</strong><br>
 
+<p>
+	<a id="img_search" href="images/megasearch.png"><img src="images/megasearch.png" alt=""/ height=350 class='img_displayed'></a>
+</p>
+
+
+<a class="button has-icon has-text"><i class="icon-arrow-down"></i>Linux, Mac (source)</a>
+<a class="button has-icon has-text"><i class="icon-arrow-down"></i>Windows</a>
 
 <!--
-Are you tired to open multiple browser windows for searching with different sites and cross-checking the results? Well, this is the solution for you. 
--->
-
-
 <p><em>Features</em>:</p>
 
 <ul>
@@ -55,7 +77,9 @@ Are you tired to open multiple browser windows for searching with different site
 <li>SSL and user identification supported</li>
 </ul>
 
+-->
 
+<!--
 <p><em>This project uses</em>:</p>
 
 <ul>
@@ -66,6 +90,7 @@ Are you tired to open multiple browser windows for searching with different site
 <li><a href="http://wwwsearch.sourceforge.net/mechanize/">Mechanize</a></li>
 <li><a href="https://launchpad.net/pyopenssl/">PyOpenSSL</a></li>
 </ul>
+-->
       </section>
     </div>
     <footer>
@@ -74,5 +99,24 @@ Are you tired to open multiple browser windows for searching with different site
     </footer>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
+    
+	    <script type="text/javascript"> 
+
+
+		$(document).ready(function() {
+
+		/* This is basic - uses default settings */
+		
+		$("a#img_search").fancybox();
+		
+		/* Using custom settings */
+		
+		
+	});
+
+		</script>
+		
   </body>
+		
+
 </html>

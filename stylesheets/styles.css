@@ -354,3 +354,17 @@ footer p + p {
     content: 'at http://github.com/';
   }
 }
+
+.img_displayed {
+    display: block;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-left: auto;
+    margin-right: auto }
+
+.title_displayed {
+	width: 387px;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    margin-left: auto;
+    margin-right: auto }
