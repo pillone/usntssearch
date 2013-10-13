@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>NZB Metasearch by pillone</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/buttons.css">
+	<script type="text/javascript" src="javascripts/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/fancybox/jquery.fancybox-1.3.4.pack.js"></script>    
+    <script src="javascripts/scale.fix.js"></script>
+	
+	<link rel="stylesheet" href="javascripts/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><img src="images/title.png" ></h1>
+        <p> <em><a href='index.html'> Main </a> &#149; <a href='features.html'>Features</a> &#149; <a href='install_cloud.html'>Install on the cloud </a> &#149; <a href='install_home.html'> Install at home</a>  </em></p>
+
+        <ul>
+          <li><a href="https://github.com/pillone/usntssearch">Clone from <strong>GitHub</strong></a></li>
+
+        </ul>
+      </header>
+      <section>
+
+<p><strong><em>Cloud installation (free and anonymous)</em></strong>:</p>
+
+<p>We use OpenShift, a cloud computing platform from Red Hat. It is really an easy job to use it.<br>
+These are the advantages of a cloud-installed NZBMegasearch:
+
+<ul>
+<li> it is always online, no need to start it from your computer</li>
+<li> it is connected on a crazy fast network (less waiting time)</li>
+<li> it is free</li>
+<li> it is HTTPS enabled and password protected </li>
+</ul>
+Note: This kind of installation does not support heavy traffic/load. It is designed only for personal usage (or small groups).
+</p>
+
+
+<p><strong><em>Content</em></strong>:</p>
+
+<ul>
+<li> <a href='#step0'>STEP 0: Tools needed</a> </li>
+<li> <a href='#step1'>STEP 1: Register on Openshift</a></li>
+<li> <a href='#step2'>STEP 2: Create your site on Openshift</a></li>
+<li> <a href='#step3'>STEP 3: Install NZBMegasearch on the cloud</a></li>
+<li> <a href='#step4'>STEP ??: Update NZBMegasearch (when updates are available :] )</a></li>
+</ul>
+
+
+
+<p><strong><em><a name="step0" style='color: #000000;'>STEP 0: Tools needed</a></em></strong>:</p>
+<p>Install:</p>
+<ul>
+<li> <a href='https://www.openshift.com/developers/rhc-client-tools-install'>Git and Rhc: step-by-step install (Linux, Win, Mac)</a></li>
+<li> Windows users only: a SSH client (in Linux/Mac is installed by default) </li>
+</ul>
+
+<p><strong><em><a name="step1" style='color: #000000;'>STEP 1: Register on Openshift</a></em></strong>:</p>
+<p>A valid email is required:</p>
+<ul>
+<li> <a href='https://www.openshift.com'>Register on Openshift</a></li>
+</ul>
+
+
+<p><strong><em><a name="step2" style='color: #000000;'>STEP 2: Create your site on Openshift</a></em></strong>:</p>
+<p>Go to console, make a folder, enter in it and type:</p>
+<ul>
+<li> <span class='text-code'>$ rhc app create flask python-2.7 </span> <br>
+This will take few minutes. The tool will ask for a 'namespace', part of the domain name of your online install. <br>E.g.: If you enter 'dog'. Your url on the cloud will be: 
+<span class='text-code'>flask-dog.rhcloud.com</span>
+</li>
+</ul>
+<p>Continue on the console:</p>
+<ul>
+<li> <span class='text-code'> cd flask  </span> </li>
+<li> <span class='text-code'> git remote add upstream -m master git://github.com/openshift/flask-example.git  </span> </li>
+<li> <span class='text-code'> $ git pull -s recursive -X theirs upstream master</span> </li>
+<li> <span class='text-code'> $ git push</span> </li>
+</ul>
+<p>You can now check out that everything has been correctly installed by opening with your browser at <span class='text-code'>http://flask-dog.rhcloud.com/</span></p>
+
+
+<p><strong><em><a name="step3" style='color: #000000;'>STEP 3: Install NZBMegasearch on the cloud</a></em></strong>:</p>
+
+
+<p>Go to console:</p>
+<ul>
+<li> Run <span class='text-code'>rhc app show</span> and copy the SSH address <br>
+Something like: <span class='text-code'>ssh 123456890123456890@flask-dog.rhcloud.com</span>
+</li>
+</ul>
+
+<p>Issue the command:</p>
+<ul>
+<li> <span class='text-code'>$ ssh 12361287362187368713621@flask-dog.rhcloud.com</span>
+</li>
+</ul>
+
+
+<p>If everything went fine, you are now logged in the Openshift cloud and you should be presented this kind of prompt:</p>
+<ul>
+<li> <span class='text-code'>[flask-dog.rhcloud.com 123456890123456890]\></span>
+</li>
+</ul>
+
+
+<p>On the remote server prompt (shortened for visibility), type:</p>
+<ul>
+<li> <span class='text-code'>[flask-dog.rhcloud.com]\> cd app-root/repo/wsgi/</span>
+<li> <span class='text-code'>[flask-dog.rhcloud.com]\> git clone https://github.com/pillone/usntssearch.git</span>
+<li> <span class='text-code'>[flask-dog.rhcloud.com]\> cd usntssearch/NZBmegasearch/openshift</span>
+<li> <span class='text-code'>[flask-dog.rhcloud.com]\> ./install_openshift.sh</span>
+<li> <span class='text-code'>[flask-dog.rhcloud.com]\> ctl_app restart</span>
+</li>
+</ul>
+then select 1 (python-2.7) to start
+
+<p>You can now check out that everything has been correctly installed by visiting:</p>
+<ul>
+<li> <span class='text-code'>http://flask-dog.rhcloud.com/</span>
+</li>
+</ul>
+
+<p>Note: the DEFAULT username and password are: <br>
+ User: <span class='text-code'>NZBMadmin</span> Pwd: <span class='text-code'>NZBMadmin</span> ... that I strongly suggest to change ;)</p>
+
+<p>Remember to:</p>
+<ul>
+<li> Configure all your options, as a standard NZBMegasearch install </li>
+<li> Disconnect from SSH and remove your directory flask on your hard drive </li>
+</ul>
+
+<p><span class='text-highlight'>THAT'S IT! You have successfully installed NZBMegasearch on the cloud!</span></p>
+
+<p><strong><em><a name="step4" style='color: #000000;'>STEP ??: Update NZBMegasearch</a></em></strong>:</p>
+<p>In case updates are available (via notification in NZBMegasearch), you need to:</p>
+<ul>
+<li> Log in <span class='text-code'>ssh 12361287362187368713621@flask-dog.rhcloud.com</span> </li>
+</ul>
+
+<p> and on the remote prompt:</p>
+
+<ul>
+<li>  <span class='text-code'>[flask-dog.rhcloud.com]\> cd app-root/repo/wsgi/usntssearch/NZBmegasearch/openshift</span> </li>
+<li> <span class='text-code'>[flask-dog.rhcloud.com]\> ./install_openshift.sh</span> </li>
+<li> <span class='text-code'>[flask-dog.rhcloud.com]\> ctl_app restart</span> </li>
+</ul>
+
+<p> Disconnect from SSH.<br><span class='text-highlight'>THAT'S IT! You have successfully updated NZBMegasearch!</span></p>
+
+
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/pillone">pillone</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+    
+	    <script type="text/javascript"> 
+
+
+		$(document).ready(function() {
+
+		/* This is basic - uses default settings */
+		
+		$("a#img_search").fancybox();
+		
+		/* Using custom settings */
+		
+		
+	});
+
+		</script>
+		
+  </body>
+		
+
+</html>

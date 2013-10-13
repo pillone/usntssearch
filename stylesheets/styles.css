@@ -362,9 +362,14 @@ footer p + p {
     margin-left: auto;
     margin-right: auto }
 
-.title_displayed {
-	width: 387px;
-    margin-top: 20px;
-    margin-bottom: 0px;
-    margin-left: auto;
-    margin-right: auto }
+.text-code {
+	font-family:courier new, courier, monospace;
+	font-size: 12px;
+	border: 1px solid #E6E6E6;
+	background-color:#FAFAFA;
+    }
+    
+
+.text-highlight {
+	color:#B40431;
+    }    
