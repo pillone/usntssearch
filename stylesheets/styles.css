@@ -108,12 +108,12 @@ header ul {
   height: 38px;
   padding: 1px 0;
   background: #5198DF;
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #77b9fb), color-stop(100%, #3782cd));
-  background: -webkit-linear-gradient(#77b9fb, #3782cd);
-  background: -moz-linear-gradient(#77b9fb, #3782cd);
-  background: -o-linear-gradient(#77b9fb, #3782cd);
-  background: -ms-linear-gradient(#77b9fb, #3782cd);
-  background: linear-gradient(#77b9fb, #3782cd);
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #378b96), color-stop(100%, #56c6c6));
+  background: -webkit-linear-gradient(#378b96, #56c6c6);
+  background: -moz-linear-gradient(#378b96, #56c6c6);
+  background: -o-linear-gradient(#378b96, #56c6c6);
+  background: -ms-linear-gradient(#378b96, #56c6c6);
+  background: linear-gradient(#378b96, #56c6c6);
   border-radius: 5px;
   -webkit-box-shadow: inset rgba(255, 255, 255, 0.45) 0 1px 0, inset rgba(0, 0, 0, 0.2) 0 -1px 0;
   -moz-box-shadow: inset rgba(255, 255, 255, 0.45) 0 1px 0, inset rgba(0, 0, 0, 0.2) 0 -1px 0;
