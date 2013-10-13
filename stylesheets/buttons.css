@@ -251,7 +251,7 @@ button.button.is-block {
   padding: 0;
   width: 20px;
   height: 20px;
-  background-image: url(../images/icon-sprite.png);
+  background-image: url(images/icon-sprite.png);
   background-repeat: no-repeat;
   vertical-align: top;
   text-indent: 20px;
@@ -321,6 +321,6 @@ button.button.is-block {
     -moz-background-size: 380px 20px;
     -o-background-size: 380px 20px;
     background-size: 380px 20px;
-    background-image: url(../images/icon-sprite@2x.png);
+    background-image: url(images/icon-sprite@2x.png);
   }
 }
