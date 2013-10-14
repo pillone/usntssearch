@@ -253,6 +253,9 @@ class DoParallelSearch:
 				if(rr[3] in self.res_results):
 					rr_msg = rr_msg + ", valid results: "+ str(self.res_results [rr[3]][1]) + "/" + str(self.res_results [rr[3]][0]) +"</p>"
 					rr_msg_complete['numentry'] = self.res_results [rr[3]][1]
+				else:
+					rr_msg = rr_msg + ", no results </p>"	
+					rr_msg_complete['numentry'] = 0
 				rr_msg = rr_msg + "</p>"
 			else:
 				codesuccess = 0
