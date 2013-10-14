@@ -103,8 +103,11 @@ class DoParallelSearch:
 		
 		self.logic_expr = re.compile("(?:^|\s)([-+])(\w+)")
 		self.possibleopt = listpossiblesearchoptions()
-		self.searchopt = [ 	['Normal ['+str(self.svalid_speed[1]) + ']', 1,''],
-							['Extensive ['+str(self.svalid_speed[2]) + ']', 2,'']]
+		#~ self.searchopt = [ 	['Normal ['+str(self.svalid_speed[1]) + ']', 1,''],
+							#~ ['Extensive ['+str(self.svalid_speed[2]) + ']', 2,'']]
+		self.searchopt = [ 	[str(self.svalid_speed[1]) , 1,''],
+							[str(self.svalid_speed[2]) , 2,'']]
+
 		self.searchopt_cpy = self.searchopt
 		self.possibleopt_cpy = self.possibleopt		
 		self.collect_info = []
@@ -192,9 +195,7 @@ class DoParallelSearch:
 			self.results = []
 			return self.results
 
-		print 'TYPE OF SEARCH: '+str(speed_class_sel)
-		for index in xrange(len(self.ds.ds)):
-			print 'CHECK WEBPROVIDER URL: ' + str(self.ds.ds[index].cur_cfg['url']) + ' VALID: '  + str(self.ds.ds[index].cur_cfg['valid'])
+		log.info('TYPE OF SEARCH: '+str(speed_class_sel))
 						
 		self.cleancache()
 		#~ cache hit, no server report

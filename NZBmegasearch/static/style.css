@@ -715,8 +715,11 @@ button.gray, a.gray, input[type=submit].gray {
 
 .graybig {
     padding: 10px 10px;
-    margin: 30px;
-    width: 130px;
+    margin-left: 60px;
+    margin-right: 65px;
+    margin-top: 50px;
+    margin-bottom: 0px;
+    width: 125px;
 }
 
 .gray {
@@ -765,4 +768,43 @@ button.gray, a.gray, input[type=submit].gray {
     -webkit-box-shadow: inset 0 0 2px 4px #f1f1f1, 0 1px 0 0 #eeeeee;
     -moz-box-shadow: inset 0 0 2px 4px #f1f1f1, 0 1px 0 0 #eeeeee;
     box-shadow: inset 0 0 2px 4px #f1f1f1, 0 1px 0 0 #eeeeee;
+}
+
+a.tooltips {
+  position: relative;
+  display: inline;
+  transition-delay:0s;
+}
+a.tooltips span {
+  position: absolute;
+  width:160px;
+  color: #FFFFFF;
+  background: #000000;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  visibility: hidden;
+  border-radius: 3px;
+  transition-delay:0s;
+}
+a.tooltips span:after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -8px;
+  width: 0; height: 0;
+  border-top: 8px solid #000000;
+  border-right: 8px solid transparent;
+  border-left: 8px solid transparent;
+  transition-delay:0s;
+}
+a:hover.tooltips span {
+  visibility: visible;
+  opacity: 0.6;
+  bottom: 30px;
+  left: 50%;
+  margin-left: -76px;
+  z-index: 999;
+  transition-delay:500ms;
 }
