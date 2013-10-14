@@ -108,8 +108,9 @@ div#container
 
     /*set the div in the top right corner*/
     position:absolute;
-    top:0;
-    right:0;
+    
+    top:3px;
+    right:0px;
     width:290px;
 }
 
@@ -718,7 +719,7 @@ button.gray, a.gray, input[type=submit].gray {
     margin-left: 60px;
     margin-right: 65px;
     margin-top: 50px;
-    margin-bottom: 0px;
+    margin-bottom: 10px;
     width: 125px;
 }
 

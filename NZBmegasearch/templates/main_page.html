@@ -14,6 +14,41 @@
 
 	</head>
 	<body>
+		{% if large_server  == False -%}
+			<div class="topright_tight">
+				{% if vr['chk']  == 1 and vr['os']  == 'linux' -%}
+				[ <a href='restart?sid={{ sid }}'>
+						<span style='color: #ff0000'>Autoupdate Now!</span>
+				</a> ]
+				{%- else %}
+					[ <a href='https://github.com/pillone/usntssearch'>
+						{% if vr['chk']  == 1 -%}
+							<span style='color: #ff0000'>Update Now!</span>
+						{%- endif %}
+						{% if vr['chk']  == -1 -%}
+							<span style='color: #ff0000'>Error checking updates</span>
+						{%- endif %}
+						{% if vr['chk']  == 0 -%}
+							Github
+						{%- endif %}
+					</a> ]
+				{%- endif %}
+				[ <a href= "connect"><img src="static/sb_cp.png" width="" height="16" style='vertical-align: bottom;' alt="connect" /></a> ]
+				[ <a href= "log"><img src="static/log.png" width="16" height="16" style='vertical-align: bottom;' alt="log" /></a> ]
+				[ <a href='config'><img src="static/options.png" width="" height="16" style='vertical-align: bottom;' alt="config" /></a> ]
+  			    {% if cgen['general_restrictopt1'] == 0 -%}
+					[ {% if vr['os']  != 'openshift' -%}
+							<a href='restart?sid={{ sid }}' OnClick="return confirm('Do you really want to restart the program?');" class='restartbutton'><img src="static/restart.png" width="" height="16" style='vertical-align: bottom;' alt="restart"/></a>
+					  {%- endif %}
+					  {% if cgen['general_restrictopt1'] == 0 -%}
+						<a href='poweroff?sid={{ sid }}' OnClick="return confirm('Do you really want to halt the program?');"><img src="static/off.png" width="" height="16" style='vertical-align: bottom;' alt="power off"/></a> 
+					  {%- endif %}						
+					]
+				{%- endif %}	
+				</div>
+		{%- endif %}
+
+
 		<div id="container">
 			<div  class="titlemain"><img src="static/title.png" width="387" height="" alt="NZBmegasearcH"/></div>
 			<form action="{{ cgen['revproxy'] }}/s" method="get" class="form-wrapper-01">
@@ -45,9 +80,8 @@
 							{% for tm in trend_movie -%}
 								<tr>
 									<td>
-										<a href="http://www.dereferer.org/?{{ tm['imdb_url'] }}" > <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a> 
-										<a href="s?q={{ tm['searchstr'] }}" class='sugglinx'> {{ tm['prettytxt'] }} </a>
-										
+										<a href="http://www.dereferer.org/?{{ tm['imdb_url'] }}" ><img src="static/imdb.png" width="16" height="16" alt="IMDb" /></a> 
+										&nbsp;<a href="s?q={{ tm['searchstr'] }}" class='sugglinx'>{{ tm['prettytxt'] }}</a>
 									</td>
 								</tr>
 							{%- endfor %}
@@ -65,8 +99,8 @@
 							{% for ts in trend_show -%}
 								<tr>
 									<td>
-										<a href="http://www.dereferer.org/?{{ ts['imdb_url'] }}"> <img src="static/tvdb.gif" width="16" height="16" alt="tvdb" /> </a>
-										<a href="s?q={{ ts['searchstr'] }}" class='sugglinx'> {{ ts['prettytxt'] }} </a>									
+										<a href="http://www.dereferer.org/?{{ ts['imdb_url'] }}"><img src="static/thetvdb16.png" width="16" height="16" alt="tvdb" /></a>
+										&nbsp;<a href="s?q={{ ts['searchstr'] }}" class='sugglinx'>{{ ts['prettytxt'] }}</a>
 									</td>
 								</tr>
 							{%- endfor %}
@@ -84,8 +118,8 @@
 							{% for sl in sugg -%}
 								<tr>
 									<td>
-									<a href="{{ sl['imdb_url'] }}"> <img src="static/imdb.png" width="16" height="16" alt="IMDb" /> </a>
-									<a href="s?q={{ sl['searchstr'] }}"  style="color:#ff0000;" class='sugglinx'> {{ sl['prettytxt'] }} </a>
+									<a href="{{ sl['imdb_url'] }}"><img src="static/imdb.png" width="16" height="16" alt="IMDb" /></a>
+									 &nbsp;<a href="s?q={{ sl['searchstr'] }}"  style="color:#ff0000;" class='sugglinx'>{{ sl['prettytxt'] }}</a>
 									</td>
 								</tr>
 							{%- endfor %}
@@ -242,41 +276,9 @@
 			{%- endif %}
 
 		</div>
-		{% if large_server  == False -%}
-			<div class="topright_tight">
-				{% if vr['chk']  == 1 and vr['os']  == 'linux' -%}
-				[ <a href='restart?sid={{ sid }}'>
-						<span style='color: #ff0000'>Autoupdate Now!</span>
-				</a> ]
-				{%- else %}
-					[ <a href='https://github.com/pillone/usntssearch'>
-						{% if vr['chk']  == 1 -%}
-							<span style='color: #ff0000'>Update Now!</span>
-						{%- endif %}
-						{% if vr['chk']  == -1 -%}
-							<span style='color: #ff0000'>Error checking updates</span>
-						{%- endif %}
-						{% if vr['chk']  == 0 -%}
-							Github
-						{%- endif %}
-					</a> ]
-				{%- endif %}
-				[ <a href= "connect"><img src="static/sick_logo.png" width="" height="16" style='vertical-align: bottom;' alt="connect" /><img src="static/cp_logo.png" width="" height="16" alt=""/></a> ]
-				[ <a href= "log"><img src="static/log.png" width="16" height="16" style='vertical-align: bottom;' alt="log" /></a> ]
-				[ <a href='config'><img src="static/options.png" width="" height="16" style='vertical-align: bottom;' alt="config" /></a> ]
-  			    {% if cgen['general_restrictopt1'] == 0 -%}
-					[ {% if vr['os']  != 'openshift' -%}
-							<a href='restart?sid={{ sid }}' OnClick="return confirm('Do you really want to restart the program?');" class='restartbutton'><img src="static/restart.png" width="" height="16" style='vertical-align: bottom;' alt="restart"/></a>
-					  {%- endif %}
-					  {% if cgen['general_restrictopt1'] == 0 -%}
-						<a href='poweroff?sid={{ sid }}' OnClick="return confirm('Do you really want to halt the program?');"><img src="static/off.png" width="" height="16" style='vertical-align: bottom;' alt="power off"/></a> 
-					  {%- endif %}						
-					]
-				{%- endif %}	
-				</div>
-			</div>
-		{%- endif %}
+	</div>
 
+		
 		{% if large_server  == True -%}
 			<div class="topright_tight">
 				[ <a href='https://github.com/pillone/usntssearch'> Get NZBMegasearch Github</a>]
