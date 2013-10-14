@@ -81,7 +81,7 @@ class DoParallelSearch:
 		self.sckname = self.getdomainandprotocol(self.cgen['general_ipaddress'])
 		self.returncode = []
 		self.returncode_fine = {}
-		
+		self.res_results = {}
 		print '>> Base domain and protocol: ' + self.sckname
 	
 		if(self.cfg is not None):
@@ -199,28 +199,38 @@ class DoParallelSearch:
 						
 		self.cleancache()
 		#~ cache hit, no server report
+		cachehit = True
 		self.returncode_fine['code'] = 2
 		self.resultsraw = self.chkforcache(self.wrp.chash64_encode(SearchModule.sanitize_strings(self.qry_nologic)), speed_class_sel)
 		if( self.resultsraw is None):
 			self.resultsraw = SearchModule.performSearch(self.qry_nologic, self.cfg, self.ds )
-			self.prepareretcode();
+			cachehit = False
 			
 		if( self.cgen['smartsearch'] == 1):
 			#~ smartsearch
-			self.results = summary_results(self.resultsraw, self.qry_nologic, self.logic_items)
+			self.res_results = {}
+			self.results = summary_results(self.resultsraw, self.qry_nologic, self.logic_items, self.res_results)
 		else:
 			#~ no cleaning just flatten in one array
 			self.results = []
+			self.res_results = {}
+			for provid in xrange(len(self.resultsraw)):
+				self.res_results.append([len(rawResults[provid]), 0])
 			for provid in xrange(len(self.resultsraw)):
 				for z in xrange(len(self.resultsraw[provid])):
 					if (self.resultsraw[provid][z]['title'] != None):
 						self.results.append(self.resultsraw[provid][z])
+
+		#~ server status output
+		if(cachehit == False):
+			self.prepareretcode();
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 		
 	def prepareretcode(self):
 		self.returncode_fine = {}
 		rcode = []
+		rcode_resqty = []
 		
 		for cfg_t in self.cfg:
 			if('retcode' in cfg_t):
@@ -229,22 +239,33 @@ class DoParallelSearch:
 		for cfg_ds_base in self.ds.ds:
 			if('retcode' in cfg_ds_base.cur_cfg):
 				rcode.append(cfg_ds_base.cur_cfg['retcode'])
-				#~ print cfg_ds_base.cur_cfg['retcode']
 		
 		codesuccess = 1
 		rr_codesuccess = []
 		nofail = 0
+		cnt_rcode = 0
 		for rr in rcode:
 			rr_msg = ''
+			rr_msg_complete = {}
+			rr_msg_complete['numentry'] = 10000000
 			if(rr[0] == 200):
-				rr_msg = "<p class='text-green'>SUCCESS (200): "+rr[3]+" responded in "+'%.1f' % rr[2] + "s</p>"
+				rr_msg = "<p class='text-green'>SUCCESS (200): "+rr[3]+" in "+'%.1f' % rr[2] + "s"				
+				if(rr[3] in self.res_results):
+					rr_msg = rr_msg + ", valid results: "+ str(self.res_results [rr[3]][1]) + "/" + str(self.res_results [rr[3]][0]) +"</p>"
+					rr_msg_complete['numentry'] = self.res_results [rr[3]][1]
+				rr_msg = rr_msg + "</p>"
 			else:
 				codesuccess = 0
 				rr_msg = "<p class='text-red'>ERROR ("+str(rr[0])+"): "+rr[1] + ' (' + rr[3]+')</p>'
 				nofail = nofail + 1
-			rr_codesuccess.append(rr_msg)
+			rr_msg_complete['msg'] = rr_msg
+			rr_codesuccess.append(rr_msg_complete)
+			cnt_rcode = cnt_rcode + 1
 				
-		self.returncode_fine['info'] = sorted(rr_codesuccess,reverse=True) 
+		infofine = sorted(rr_codesuccess, key=itemgetter('numentry'), reverse=True) 
+		self.returncode_fine['info'] = []
+		for inffine in infofine:
+			self.returncode_fine['info'].append(inffine['msg'])
 		self.returncode_fine['code'] = codesuccess
 		self.returncode_fine['summary'] = str(len(rr_codesuccess)) +  ' total ('+ str(nofail)+' failed, ' +str(len(rr_codesuccess)-nofail) +' successful)'
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -557,17 +578,23 @@ class DoParallelSearch:
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-def summary_results(rawResults, strsearch, logic_items=[]):
+def summary_results(rawResults, strsearch, logic_items=[],results_stats={}):
 
 	results =[]
 	titles = []
-	sptitle_collection =[]
-
+	sptitle_collection =[]	
+	
+	#~ stats for each provider
+	for provid in xrange(len(rawResults)):
+		if (len(rawResults[provid])):
+			results_stats[ str(rawResults[provid][0]['providertitle']) ] = [len(rawResults[provid]), 0]
+		
 	#~ all in one array
 	for provid in xrange(len(rawResults)):
 		for z in xrange(len(rawResults[provid])):
 			if (rawResults[provid][z]['title'] != None):
 				rawResults[provid][z]['title'] = SearchModule.sanitize_html(rawResults[provid][z]['title'])
+				rawResults[provid][z]['provid'] = provid
 				title = SearchModule.sanitize_strings(rawResults[provid][z]['title'])
 				titles.append(title)
 				sptitle_collection.append(Set(title.split(".")))
@@ -626,10 +653,14 @@ def summary_results(rawResults, strsearch, logic_items=[]):
 					results[z]['ignore'] = 2
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	
-	mssg = '[' + strsearch1 + ']'+ ' [' + strsearch + '] ' + str(rcount[0]) + ' ' + str(rcount[1]) + ' ' + str(rcount[2])
-	print mssg
+	mssg = 'Overall search stats: [' + strsearch1 + ']'+ ' [' + strsearch + '] ' + str(rcount[0]) + ' ' + str(rcount[1]) + ' ' + str(rcount[2])
 	log.info (mssg)
+	
 
+	for z in xrange(len(results)):
+		if(results[z]['ignore'] != 2):
+			results_stats[ str(results[z]['providertitle']) ][1] = results_stats[ str(results[z]['providertitle']) ][1] + 1
+	print results_stats
 	return results
 	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
