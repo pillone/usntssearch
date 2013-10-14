@@ -7,8 +7,9 @@ NZBmegasearcH collects all your (not only) newznab-based accounts to one place. 
 
 ## [Go to NZBmegasearcH website](http://pillone.github.io/usntssearch/)
 
-A special thanks for beta-testing goes to **JackDandy**. 
-Thanks to all the other users that submitted a bug report or a enhancement request.
+A special thanks to **JackDandy** for beta-testing. 
+
+Thanks to all the users that submitted a bug report or a enhancement request.
 
 ## Updates
 
