@@ -334,7 +334,7 @@ div#container
 
 .sizecell {
 	width: 10%;
-	text-align: center;
+	text-align: right;
 }
 
 .predbcell {
@@ -343,13 +343,13 @@ div#container
 }
 
 .datecell {
-	width: 10%;
-	text-align: center;
+	width: 8%;
+	text-align: right;
 }
 
 .providercell {
-	width: 10%;
-	text-align: center;	
+	width: 12%;
+	text-align: right;	
 }
 
 
