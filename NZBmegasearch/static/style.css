@@ -431,6 +431,11 @@ div#container
 	vertical-align:top;
 }
 
+.sugg_table_td img {
+	vertical-align: middle;
+	padding:0 0 4px
+}
+
 .sugg_table_modifier {
     width: 220px !important;
     margin-left:auto !important;
