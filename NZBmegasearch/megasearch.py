@@ -521,7 +521,7 @@ class DoParallelSearch:
 				'url_encr':'warp?x='+qryforwarp,
 				'title':results[i]['title'],
 				'filesize':fsze1,
-				'cat' : category_str,
+				'cat' : category_str.upper(),
 				'age':totdays,
 				'details':results[i]['release_comments'],
 				'details_deref':'http://www.derefer.me/?'+results[i]['release_comments'],
