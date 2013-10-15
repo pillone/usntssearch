@@ -389,7 +389,7 @@ class DoParallelSearch:
 				urlq = self.cgen['sabnzbd_url']+ '/api'
 				urlParams = dict(
 									mode='addurl',
-									name=send2sab_exist+'/'+args['data'],
+									name=send2sab_exist+self.cgen['revproxy']+'/'+args['data'],
 									apikey=self.cgen['sabnzbd_api'],
 								)
 				print args['data']
