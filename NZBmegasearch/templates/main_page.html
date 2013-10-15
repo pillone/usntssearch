@@ -302,7 +302,7 @@
 				$('img[name="'+addressValue+'_img"]').attr("src", 'static/loadingicon.gif')
 
 				 $.getJSON($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/tosab',
-							{data: $('input[name="'+addressValue+'"]').val(), },
+							{data: '{{ cgen['revproxy'] }}'+'/'+$('input[name="'+addressValue+'"]').val(), },
 							function(data) {
 								if(data.code == 1)
 								{

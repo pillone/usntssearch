@@ -36,12 +36,13 @@ log = logging.getLogger(__name__)
 class ApiResponses:
 
 	# Set up class variables
-	def __init__(self, conf, wrp, ds):
+	def __init__(self, conf, cgen, wrp, ds):
 		self.response = []
 		self.serie_string = ''
 		self.typesearch = ''
 		self.wrp = wrp
 		self.cfg_ds = ds
+		self.cgen = cgen
 		self.tvrage_rqheaders = {
 								'Connection': 'keep-alive;' ,
 								'Cache-Control': 'max-age=0',
