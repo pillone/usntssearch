@@ -215,7 +215,8 @@ class DoParallelSearch:
 			self.results = []
 			self.res_results = {}
 			for provid in xrange(len(self.resultsraw)):
-				self.res_results.append([len(rawResults[provid]), 0])
+				if (len(self.resultsraw[provid])):
+					self.res_results[ str(self.resultsraw[provid][0]['providertitle']) ] = [len(self.resultsraw[provid]), 0]
 			for provid in xrange(len(self.resultsraw)):
 				for z in xrange(len(self.resultsraw[provid])):
 					if (self.resultsraw[provid][z]['title'] != None):
@@ -611,10 +612,24 @@ def summary_results(rawResults, strsearch, logic_items=[],results_stats={}):
 		findone = 0 
 		results[z]['ignore'] = 0			
 		intrs = strsearch1_collection.intersection(sptitle_collection[z])
-		if ( len(intrs) ==  len(strsearch1_collection)):			
+		if ( len(intrs) ==  len(strsearch1_collection)):
 			findone = 1
 		else:
 			results[z]['ignore'] = 2
+			#~ relax the search ~ 0.45
+			unmatched_terms_search = strsearch1_collection.difference(intrs)
+			unmatched_count = 0
+			for mst in unmatched_terms_search:
+				my_list = [i for i in sptitle_collection[z] if i.find(mst) == 0]
+				if(len(my_list)):
+					unmatched_count = unmatched_count + 1		
+				if(unmatched_count == len(unmatched_terms_search)):
+					findone = 1
+					results[z]['ignore'] = 0
+				#~ print unmatched_terms_search
+				#~ print unmatched_count
+				#~ print unmatched_terms_search
+
 
 		#~ print strsearch1_collection
 		#~ print intrs
