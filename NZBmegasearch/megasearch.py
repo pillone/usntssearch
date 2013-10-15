@@ -663,7 +663,6 @@ def summary_results(rawResults, strsearch, logic_items=[],results_stats={}):
 	for z in xrange(len(results)):
 		if(results[z]['ignore'] != 2):
 			results_stats[ str(results[z]['providertitle']) ][1] = results_stats[ str(results[z]['providertitle']) ][1] + 1
-	print results_stats
 	return results
 	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 

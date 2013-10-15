@@ -548,13 +548,23 @@ class DeepSearchGinga_one(DeepSearch_one):
 		nzburlsdiv = soup.findAll('div', {'class': 'dlnzb'})
 		tstampdiv = soup.findAll('div', {'class': 'pstdat'})
 		szdiv =  soup.findAll('abbr', {'title': 'Total size of articles'})
+		catdiv =  soup.findAll('a', {'class': 'catimg'})
 
 		titles = []
 		rdetails = []
 		nzburls = []
 		tstamp = []
 		bytesize = []
+		categr = []
 		
+		for tl in catdiv:
+			fall_tt = tl['title'].find('Show all in: ')
+			if(fall_tt != -1):
+				categr.append(tl['title'][fall_tt+13:])
+			else:
+				categr=[]
+				break
+
 		for tl in titlesdiv:
 			all_a = tl.findAll("a")
 			titles.append(''.join(all_a[0].findAll(text=True)))
@@ -589,9 +599,16 @@ class DeepSearchGinga_one(DeepSearch_one):
 			return []
 		if(len(titles) != len(bytesize)):
 			return []
-			
+		if(len(categr) != len(titles)):
+			categr =  []
 
 		for i in xrange(len(titles)):
+			category_found= {}			
+			if(len(categr)):
+				category_found[categr[i]] = 1
+			else:	
+				category_found['N/A'] = 1
+
 			d1 = {
 				'title': titles[i],
 				'poster': 'poster',
@@ -601,7 +618,7 @@ class DeepSearchGinga_one(DeepSearch_one):
 				'group': 'N/A',
 				'posting_date_timestamp': tstamp[i],
 				'release_comments': self.baseURL + rdetails[i],
-				'categ':{'N/A':1},
+				'categ':category_found,
 				'ignore':0,
 				'req_pwd':self.typesrch,
 				'provider':self.baseURL,
