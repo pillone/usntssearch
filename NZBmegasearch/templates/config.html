@@ -318,8 +318,8 @@
 	<tr id = 'lastrrow_newznab_api'>
 		<td><input type="button" value="Add server"  id="addentry_button_api"  class="confbttn" ></td>
 		<td></td>
-		<td></td>
-		<td></td>
+		<td style='text-align: right;'>All </span></td>
+		<td><input type="checkbox" name="all_newznab_api" id="all_newznab_api"></td>
 	</tr>
 	</tbody></table>
 
@@ -360,8 +360,8 @@
 		<td><input type="button" value="Add server"  id="addentry_button_web"  class="confbttn" ></td>
 		<td></td>
 		<td></td>
-		<td></td>
-		<td></td>
+		<td style='text-align: right;'>All </span></td>
+		<td><input type="checkbox" name="all_newznab_web" id="all_newznab_web"></td>
 	</tr> 
 
 	</tbody></table>
@@ -401,7 +401,24 @@
 				  }, "json");
   
 			})
-								
+				
+			$("#all_newznab_web").click(function () {
+				var curval = parseInt($('#no_WEBnab').val()) + 1
+				state_to_set = $('#all_newznab_web').is(':checked');
+				for (var i=0; i< curval; i++)
+				{
+					$('#ds_valid'+i).prop('checked', state_to_set);
+				}
+			})	
+			$("#all_newznab_api").click(function () {
+				var curval = parseInt($('#no_APInab').val()) + 1
+				state_to_set = $('#all_newznab_api').is(':checked');
+				for (var i=0; i< curval; i++)
+				{
+					$('#valid'+i).prop('checked', state_to_set);
+				}
+			})
+	
 			$("#addentry_button_web").click(function () {
 				var curval = parseInt($('#no_WEBnab').val()) + 1
 				$('#no_WEBnab').val(curval)				
@@ -413,7 +430,7 @@
 			$("#addentry_button_api").click(function () {
 				var curval = parseInt($('#no_APInab').val()) + 1
 				$('#no_APInab').val(curval)				
-				var str1 = '<tr id="newznab_api_rowCHANGETHIS"> <td><label for="hostCHANGETHIS" class="visuallyhidden">Newznab Host (API)</label>		<input type="text" name="hostCHANGETHIS" id="hostCHANGETHIS" value="" size="35" class="conftbox"></td>		<td><label for="APICHANGETHIS" class="visuallyhidden">API key</label>		<input type="text" name="APICHANGETHIS" id="APICHANGETHIS" value="" size="35" class="conftbox">		<input type="hidden" name="typeCHANGETHIS" value="NAB" size="35">		</td>		<td><span>		<label for="selspeedCHANGETHIS" class="visuallyhidden">Timeout</label>		<select  name="selspeedCHANGETHIS" id="selspeedCHANGETHIS"  class="conftsel">			<option value=1 selected>Normal Response [15s]</option><option value=2 >Extensive Response [30s]</option>		</select>		</span></td>		<td>			<input type="checkbox" name="validCHANGETHIS" id="validCHANGETHIS" checked=yes >			<label for="validCHANGETHIS" class="visuallyhidden">Active</label> <input type="button" value="x" onclick="delete_row(0, CHANGETHIS)" class="confbttn" >	</td> </tr> ';
+				var str1 = '<tr id="newznab_api_rowCHANGETHIS"> <td><label for="hostCHANGETHIS" class="visuallyhidden">Newznab Host (API)</label>		<input type="text" name="hostCHANGETHIS" id="hostCHANGETHIS" value="" size="35" class="conftbox"></td>		<td><label for="APICHANGETHIS" class="visuallyhidden">API key</label>		<input type="text" name="APICHANGETHIS" id="APICHANGETHIS" value="" size="35" class="conftbox">		<input type="hidden" name="typeCHANGETHIS" value="NAB" size="35">		</td>		<td><span>		<label for="selspeedCHANGETHIS" class="visuallyhidden">Timeout</label>		<select  name="selspeedCHANGETHIS" id="selspeedCHANGETHIS"  class="conftsel">	{% for sopt in sel_speedopt_basic -%}				<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>			{%- endfor %}	</select>		</span></td>		<td>			<input type="checkbox" name="validCHANGETHIS" id="validCHANGETHIS" checked=yes >			<label for="validCHANGETHIS" class="visuallyhidden">Active</label> <input type="button" value="x" onclick="delete_row(0, CHANGETHIS)" class="confbttn" >	</td> </tr> ';
 				var nustr = str1.replace(/CHANGETHIS/g, curval.toString());
 				$( nustr).insertBefore('#lastrrow_newznab_api');
 			})			
