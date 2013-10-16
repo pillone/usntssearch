@@ -61,8 +61,8 @@
 					</select>
 					<div>
 						<input type="hidden" name="tm" id="tm" value="1">
-						<a class="tooltips" href="#"><input type="submit" class="gray graybig" value='Search' onclick='$("#tm").attr("value", "1");' id='submit_button1'><span>{{ search_opt[0][0] }} providers, 15s timeout</span></a>
-						<a class="tooltips" href="#"><input type="submit" class="gray graybig" value='Search Extended' onclick='$("#tm").attr("value", "2");' id='submit_button2'><span>{{ search_opt[1][0] }} providers, 30s timeout</span></a>
+						<a class="tooltips" href="#"><input type="submit" class="gray graybig" value='Search' onclick='$("#tm").attr("value", "1");' id='submit_button1'><span>{{ search_opt[0][0] }} providers, {{cgen['timeout_class'][1]}}s timeout</span></a>
+						<a class="tooltips" href="#"><input type="submit" class="gray graybig" value='Search Extended' onclick='$("#tm").attr("value", "2");' id='submit_button2'><span>{{ search_opt[1][0] }} providers, {{cgen['timeout_class'][2]}}s timeout</span></a>
 					</div>
 	
 			</form>
@@ -356,7 +356,7 @@
 
 			$('#submit_button1').click(function() {
 
-				$.blockUI({ message: '<h1>.:: PLEASE WAIT ::.</h1><br><h2>Scanning {{ search_opt[0][0] }} providers</h2><h3>This may take up to 15s</h3>', css: {
+				$.blockUI({ message: '<h1>.:: PLEASE WAIT ::.</h1><br><h2>Scanning {{ search_opt[0][0] }} providers</h2><h3>This may take up to {{cgen['timeout_class'][1]}}s</h3>', css: {
 					border: 'none',
 					padding: '15px',
 					backgroundColor: '#000',
@@ -370,7 +370,7 @@
             
    			$('#submit_button2').click(function() {
 
-				$.blockUI({ message: '<h1>.:: PLEASE WAIT ::.</h1><br><h2>Scanning {{ search_opt[1][0] }} providers</h2><h3>This may take up to 30s</h3>', css: {
+				$.blockUI({ message: '<h1>.:: PLEASE WAIT ::.</h1><br><h2>Scanning {{ search_opt[1][0] }} providers</h2><h3>This may take up to {{cgen['timeout_class'][2]}}s</h3>', css: {
 					border: 'none',
 					padding: '15px',
 					backgroundColor: '#000',
@@ -385,7 +385,7 @@
 
             $('.sugglinx').click(function() {
 
-				$.blockUI({ message: '<h1>.:: PLEASE WAIT ::.</h1><br><h2>Scanning {{ search_opt[0][0] }} providers</h2><h3>This may take up to 15s</h3>', css: {
+				$.blockUI({ message: '<h1>.:: PLEASE WAIT ::.</h1><br><h2>Scanning {{ search_opt[0][0] }} providers</h2><h3>This may take up to {{cgen['timeout_class'][1]}}s</h3>', css: {
 					border: 'none',
 					padding: '15px',
 					backgroundColor: '#000',

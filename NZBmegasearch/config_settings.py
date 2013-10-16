@@ -40,7 +40,7 @@ class CfgSettings:
 			self.dirconf = 	self.dirconf_local
 			
 		self.selectable_speedopt = [ ['1', 'Normal Response',''],
-									 ['2','Extensive Response','']]
+									 ['2','Slow Response','']]
 		self.selectable_speedopt_cpy = copy.deepcopy(self.selectable_speedopt)
 		self.cgen = []
 		self.cfg = []
