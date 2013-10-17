@@ -34,6 +34,9 @@ class CfgSettings:
 	def __init__(self):
 		self.dirconf_oshift =  os.getenv('OPENSHIFT_DATA_DIR', '')
 		self.dirconf_local = os.path.dirname(os.path.realpath(__file__))+'/'
+		if getattr(sys, 'frozen', False):
+			self.dirconf_local = os.path.dirname(sys.executable)+'/'
+
 		if(len(self.dirconf_oshift)):
 			self.dirconf = self.dirconf_oshift
 		else:

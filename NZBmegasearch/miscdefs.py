@@ -253,9 +253,12 @@ class ChkVersion:
 	def __init__(self, debugflag=False):
 		self.dirconf=  os.getenv('OPENSHIFT_DATA_DIR', '')
 		self.dirconf_local = os.path.dirname(os.path.realpath(__file__))+'/'
-		self.ver_notify = ver_notify= { 'chk':-1, 
-									'curver': -1,
-									'os':-1}
+		if getattr(sys, 'frozen', False):
+			self.dirconf_local = os.path.dirname(sys.executable)+'/'
+
+		self.ver_notify = { 'chk':-1, 
+							'curver': -1,
+							'os':-1}
 		self.chk_update_ts = 0
 		self.chk_update_refreshrate = 3600 * 4
 		if(debugflag == False):

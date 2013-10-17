@@ -35,6 +35,8 @@ log = logging.getLogger(__name__)
 def resource_path(relative_path):
 	dirconf_oshift =  os.getenv('OPENSHIFT_DATA_DIR', '')
 	dirconf_local = os.path.dirname(os.path.realpath(__file__))+'/'
+	if getattr(sys, 'frozen', False):
+		self.dirconf_local = os.path.dirname(sys.executable)+'/'
 
 	try:
 		base_path = sys._MEIPASS
