@@ -37,7 +37,7 @@ header, section, footer {
 }
 
 a {
-  color: #069;
+  color: #378b96;
   text-decoration: none;
 }
 
@@ -82,7 +82,7 @@ header.without-description h1 {
 header p {
   margin: 0;
   color: #61778B;
-  width: 300px;
+  width: 410px;
   font-size: 13px;
 }
 header p.view {
