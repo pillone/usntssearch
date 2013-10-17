@@ -7,7 +7,7 @@ NZBmegasearcH collects all your (not only) newznab-based accounts to one place. 
 
 ## [Go to NZBmegasearcH website](http://pillone.github.io/usntssearch/)
 
-A special thanks to **JackDandy** for beta-testing. 
+A special thanks to **JackDandy, duckduckquack** for beta-testing. 
 
 Thanks to all the users that submitted a bug report or a enhancement request.
 
@@ -15,8 +15,10 @@ Thanks to all the users that submitted a bug report or a enhancement request.
 
 **Changes in v0.45**
 
-- ...
-- blabla
+- Major UI update
+- Major config update, new options, more flexibility
+- Many improvements in search, category detection
+- Many improvements for CP, SB communication
 
 More updates are available in changelog.txt
 

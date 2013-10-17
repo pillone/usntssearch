@@ -1,6 +1,103 @@
 Updates
 ================
 
+Changes in v0.45
+
+- select all/none in provider's list
+- CSS fix for duckduck
+- a bit shorter timeouts, should help CP and SB for not dropping the connection w mega templates are parametrized for time
+- proposed softer search algo
+- proper revproxy patches
+- revproxy patches suggested by zenofx
+- whitespacing style, than JackDandy
+- missing imgs
+- categories all uppercase
+- better column align html result table
+- added categories in gingadaddy
+- small bug in ordering
+- retreives also # collected entries for each provider
+- css and html style update, thanks JackDandy
+- space in readme
+- almost fixed readme. need to work now.
+- decent tooltips, with some delay
+- doublecheck w JackDandy
+- updated readme
+- fixes movie requests
+- timeout comment on NZBclub
+- NZBclub criptic results
+- missing log icon
+- openshift update
+- reactivated sugg flag for debug
+- suggestions now also work with omdbapi
+- fixed movie selection bug
+- Finally restiled trends and shows
+- omgwtfw special category lookup addedd
+- imdbapi is defunct, thanks reddit user petrichor8 for the fix
+- fixes bug in filter_obsolete_providers
+- Now it can start from whichever directory
+- uniformed button style in config
+- small fix in style
+- Verbose check for JD
+- robustifies web-based parsing
+- improved compatibility with some non standard web-based nabs
+- Managed to retreive categories in most of web-based nab providers
+- more accurate release time on wombie (they switched to 12h PM/AM date)
+- better age display in results (d -- days, h -- hours)
+- yellow field highlight in results
+- wait message appearing now also with the new  buttons
+- Gingadaddy new website fix
+- removed unuseful double error output
+- lighter search interface. Finally found a way to remove the buttons.
+- improved log visibility
+- rows with alternating colors, inspired by PeterBeard
+- summary of results
+- less annoying log for import modules
+- reverse proxy support
+- Improved exception messages for web-based nab
+- Solves web search login issue
+- style for onhover
+- NZBclub fix for return code (stray space) added hover for connection info
+- no results output string
+- fixes for server msg return
+- enforce debug flag for the RC
+- NZBclub server return message bug, thanks JackDandy
+- added cache hit notification - bug fix for server return
+- Added FLAC category
+- Improved logviewer Silent output, all logged
+- logviewer
+- NZBcc bug on notification solved
+- Error notification starts to work
+- Deepsearch also supports reports
+- Merge branch 'McGriddle-master' into unstable
+- added dereferer url to imdb trends
+- Update README.md
+- Readme win Raw link addedd
+- Progress in server response report
+- beginning of user reporting
+- Improving error handling
+- Improve error handling wombie
+- Improved wombie's search module - Improved wombie's categories
+- implemented clien-side workaround for wombie and filename without names that appear as warp?blablla in SAB
+- A nicer result table in search (underline appears only on hover)
+- Added CSS border between fake frames in cofnig
+- da101174e385e8286d665463e3be1c804cdae5ce Improving CSS for config
+- Fixed unicode bug when searching through Newsznab API
+- Config save button does not return on the mainpage (SABNZBD style) - Fixed internal server error when submitting config
+- Unicode sanitation - Further config tweaks
+- Better config
+- Bug on oshift ip redirect
+- Infinite server add jscript
+- Improved Gingadaddy search
+- When search returns a  0day, it tells how many hours ago
+- Improved season based API search  (relaxed assumptions)
+- Improved daemonization for Optiware NAS
+- Improved web-based SB autoupdate - RSS feeds now also web-based - RSS support categories
+- Derefer addedd to predb
+- Config add Hide restart/reboot buttons
+- Easier config for sabnzb integration
+- Some duplicates did not redirect to sab
+
+
 Changes in v0.44
 
 - Bugfix obscure 500 error, thanks JackDandy
