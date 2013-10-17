@@ -30,15 +30,14 @@ a {
 
 
 .selcatstlye{
-	border: 1px solid #ccc;
-	height: 40px;
-	padding: 0px;
+	border: 2px solid #E0E0E0;
+	height: 41px;
+	padding-top: 0px;
 
 	font: 16px Arial, Helvetica, sans-serif;
 	background:#ffffff;
 
 	color: #669;
-	text-align: right;
 }
 
 .selcatstlye:hover 
@@ -187,96 +186,26 @@ div#container
 	margin: 20px auto;
 	padding: 5px;
 	overflow: hidden;
-	border-width: 0px;
-	border-style: solid;
-	border-color: #dedede #bababa #aaa #bababa;
-
 }
 
 /*
  text search box #378b96
 */
 .form-wrapper-01 #search {
-	width: 360px;
+	width: 355px;
 	height: 16px;
 	padding: 10px 5px;
 	float: left;
 	font: 16px Arial, Helvetica, sans-serif;
-	border: 1px solid #ccc;
+	border: 2px solid #E0E0E0 ;
 	color: #669;
 }
 
-
-.form-wrapper-01 #search:focus {
-	outline: 0;
-	border-color: #aaa;
-}
-
+ 
 .form-wrapper-01 #search:hover {
 	border: 2px solid #ccc;
 }
-
-.form-wrapper-01 #search::-webkit-input-placeholder {
-	color: #999;
-	font-weight: normal;
-	font: 16px Arial, Helvetica, sans-serif;
-	font-style:italic;
-	color: #378b96
-}
-
-.form-wrapper-01 #search:-moz-placeholder {
-	color: #999;
-	font-weight: normal;
-	font-size:14px;
-	font-style:italic;
-}
-
-.form-wrapper-01 #search:-ms-input-placeholder {
-	color: #999;
-	font-weight: normal;
-	font-size:14px;
-	font-style:italic;
-}
-
-/*
- button
-*/
-.form-wrapper-01 #submit {
-	height: 33px;
-	width: 160px;
-
-	background:#FAFAFA;
-	font: 14px Arial, Helvetica, sans-serif;
-	border: 1px solid #ccc;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-	color: #669;
-	margin: 40px;
-}
-
-.form-wrapper-01 #submit:hover,
-.form-wrapper-01 #submit:focus {
-	border: 2px solid #ccc;
-}
-
-.form-wrapper-01 #submit:active {
-	outline: 0;
-}
-
-.form-wrapper-01 #submit::-moz-focus-inner {
-	border: 0;
-}
-
-#search {
-	width: 230px; /*--- we will change this width on hover effect ---*/
-	height: 20px;
-	padding: 10px 5px;
-	float: right;
-	font:  bold 16px Arial, Helvetica, sans-serif;
-	border: 1px solid #ccc;
-}
-
+ 
 /* Results Table Styles */
 .results
 {
