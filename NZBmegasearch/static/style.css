@@ -751,11 +751,12 @@ a:hover.tooltips span {
 */
 .dropdown dd, .dropdown dt, .dropdown ul { margin:0px; padding:0px; }
 .dropdown dd { position:relative; }
+
 .dropdown a, .dropdown a:visited { color:#669; text-decoration:none; outline:none;}
 .dropdown a:hover { color:#669;}
 .dropdown dt a:hover, .dropdown dt a:focus { color:#669; border: 2px solid #ccc;}
 /*
-	title #F2F5A9 
+	title of selection 
 */
 .dropdown dt a {
 	background:#ffffff url(http://localhost:5000/static/arrow.png) no-repeat scroll right center; 

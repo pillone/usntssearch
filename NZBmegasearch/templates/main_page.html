@@ -61,21 +61,17 @@
 						{%- endfor %}
 					</select>
 -->
-					<span>
-					<dl id="sample" class="dropdown" id="selcat">
+					<dl id="selcat_ddown" class="dropdown">
 						<dt><a href="#"><span>No categ.</span></a></dt>
 						<dd>
 							<ul>
 								{% for sopt in selectable_opt -%}
-									<li><a href="#">{{ sopt[1] }}</a></li>
+									<li><a href="#">{{ sopt[1] }}<span class="value">{{ sopt[0] }}</span></a></li>									
 								{%- endfor %}
 							</ul>
 						</dd>
 					</dl>
-					</span>
-    
-
-
+					<input type="hidden" name="selcat" id="selcat" value="">
 					<div>
 						<input type="hidden" name="tm" id="tm" value="1">
 						<a class="tooltips" href="#"><input type="submit" class="gray graybig" value='Search' onclick='$("#tm").attr("value", "1");' id='submit_button1'><span>{{ search_opt[0][0] }} providers, {{cgen['timeout_class'][1]}}s timeout</span></a>
@@ -422,13 +418,15 @@
         $(document).ready(function() {
             $(".dropdown dt a").click(function() {
                 $(".dropdown dd ul").toggle();
+                return false;
             });
                         
             $(".dropdown dd ul li a").click(function() {
                 var text = $(this).html();
                 $(".dropdown dt a span").html(text);
                 $(".dropdown dd ul").hide();
-                $("#result").html("Selected value is: " + getSelectedValue("sample"));
+                $("#selcat").attr("value", getSelectedValue("selcat_ddown"));
+                return false;                
             });
                         
             function getSelectedValue(id) {
