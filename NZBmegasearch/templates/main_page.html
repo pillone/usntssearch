@@ -53,12 +53,29 @@
 			<form action="{{ cgen['revproxy'] }}/s" method="get" class="form-wrapper-01">
 
 					<input type="text" id="search" placeholder="" name="q" value="{{ sstring }}">
+<!--
 					<select class="selcatstlye" name="selcat" id="selcat">
 						<option value="" selected>No categ.</option>
 						{% for sopt in selectable_opt -%}
 							<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
 						{%- endfor %}
 					</select>
+-->
+					<span>
+					<dl id="sample" class="dropdown" id="selcat">
+						<dt><a href="#"><span>No categ.</span></a></dt>
+						<dd>
+							<ul>
+								{% for sopt in selectable_opt -%}
+									<li><a href="#">{{ sopt[1] }}</a></li>
+								{%- endfor %}
+							</ul>
+						</dd>
+					</dl>
+					</span>
+    
+
+
 					<div>
 						<input type="hidden" name="tm" id="tm" value="1">
 						<a class="tooltips" href="#"><input type="submit" class="gray graybig" value='Search' onclick='$("#tm").attr("value", "1");' id='submit_button1'><span>{{ search_opt[0][0] }} providers, {{cgen['timeout_class'][1]}}s timeout</span></a>
@@ -401,6 +418,33 @@
 	     
 		</script>
 
+		<script type="text/javascript">
+        $(document).ready(function() {
+            $(".dropdown dt a").click(function() {
+                $(".dropdown dd ul").toggle();
+            });
+                        
+            $(".dropdown dd ul li a").click(function() {
+                var text = $(this).html();
+                $(".dropdown dt a span").html(text);
+                $(".dropdown dd ul").hide();
+                $("#result").html("Selected value is: " + getSelectedValue("sample"));
+            });
+                        
+            function getSelectedValue(id) {
+                return $("#" + id).find("dt a span.value").html();
+            }
+
+            $(document).bind('click', function(e) {
+                var $clicked = $(e.target);
+                if (! $clicked.parents().hasClass("dropdown"))
+                    $(".dropdown dd ul").hide();
+            });
+
+
+        });
+    </script>
+    
 
 	</body>
 </html>
