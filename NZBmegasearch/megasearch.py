@@ -49,7 +49,8 @@ def getdomainext( ):
 
 
 def listpossiblesearchoptions():
-	possibleopt = [ ['1080p', 'HD 1080p',''],
+	possibleopt = [ ['', 'No categ.',''],
+							['1080p', 'HD 1080p',''],
 							['720p','HD 720p',''],
 							['BDRIP','SD BlurayRip',''],
 							['DVDRIP','SD DVDRip',''],
