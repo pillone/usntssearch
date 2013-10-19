@@ -208,7 +208,7 @@
 							{%- endif %}
 							<input type="checkbox" id="smartnzb" name="{{ row['id'] }}">
 							
-							<a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a>
+							<a href= "{{ row['url_encr'] }}" id=nzburl{{ row['id'] }} name='cane'>{{ row['title'] }}</a>
 
 							{% if row['predb'] == 2 -%}
 							<span class = "predbcell">
@@ -307,17 +307,19 @@
 			
 			$("#nzbanalize").click(function () {
 				var allcbox = $('[id^="smartnzb"]')
-				var ids = ''
+				var ids2 = []
 				for ( var i = 0; i < allcbox.length; i++ ) 
 				{
 					if( $(allcbox[i]).is(':checked' ) == true)
 					{
-						ids = $(allcbox[i]).attr("name") + '+'
+						ids2.push($(allcbox[i]).attr("name"));
+						uid = $('#nzburl'+i).text
+						alert(uid);
 					}
 				}
 
 				 $.getJSON($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/smartget',
-							{data: $('input[name="'+ids+'"]').val(), },
+							{data: ids, },
 							function(data) {
 								if(data.code == 1)
 								{

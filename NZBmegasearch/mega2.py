@@ -258,7 +258,7 @@ def rss():
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/smartget')
-def tosab():
+def smartget():
 	print request.args	
 	return 'a'
 
