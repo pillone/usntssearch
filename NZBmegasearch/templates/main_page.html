@@ -72,6 +72,8 @@
 	
 			</form>
 
+			<input type="button" class="gray graybig" value='Analyze' id='nzbanalize'>
+			
 			<div class ="suggarea_macro">
 				
 				<table class="sugg_table">
@@ -204,6 +206,7 @@
 								<input type="hidden" value="{{ row['url_encr'] }}" name=tonzbget_info{{ row['id'] }}>
 								<img src="static/nzb2_16.png" style='vertical-align: middle;' width="16" height="16"/ name=tonzbget_info{{ row['id'] }}_img></a>
 							{%- endif %}
+							<input type="checkbox" id="smartnzb" name="{{ row['id'] }}">
 							
 							<a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a>
 
@@ -301,6 +304,29 @@
 		var serverinfo = 0;
 
 	    $(document).ready(function() {
+			
+			$("#nzbanalize").click(function () {
+				var allcbox = $('[id^="smartnzb"]')
+				var ids = ''
+				for ( var i = 0; i < allcbox.length; i++ ) 
+				{
+					if( $(allcbox[i]).is(':checked' ) == true)
+					{
+						ids = $(allcbox[i]).attr("name") + '+'
+					}
+				}
+
+				 $.getJSON($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/smartget',
+							{data: $('input[name="'+ids+'"]').val(), },
+							function(data) {
+								if(data.code == 1)
+								{
+									alert( 'bla')
+								}
+					});
+
+
+			});
 
  			$("a#tosab_lnk").click(function () {
 				var addressValue = $(this).attr("name");
