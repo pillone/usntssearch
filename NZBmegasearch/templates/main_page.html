@@ -51,12 +51,18 @@
 			<form action="{{ cgen['revproxy'] }}/s" method="get" class="form-wrapper-01">
 
 					<input type="text" id="search" placeholder="" name="q" value="{{ sstring }}">
-					<select class="selcatstlye" name="selcat" id="selcat">
-						<option value="" selected>No categ.</option>
-						{% for sopt in selectable_opt -%}
-							<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
-						{%- endfor %}
-					</select>
+					<dl id="selcat_ddown" class="dropdown">
+						<dt><a href="#"><span id='ddown_selid'>No categ.</span></a></dt>
+						<dd>
+							<ul>
+								{% for sopt in selectable_opt -%}
+									<li><a href="#">{{ sopt[1] }}<span class="value">{{ sopt[0] }}</span></a></li>
+								{%- endfor %}
+							</ul>
+						</dd>
+					</dl>
+					<input type="hidden" name="selcat" id="selcat" value="">
+
 					<div>
 						<input type="hidden" name="tm" id="tm" value="1">
 						<a class="tooltips" href="#"><input type="submit" class="gray graybig" value='Search' onclick='$("#tm").attr("value", "1");' id='submit_button1'><span>{{ search_opt[0][0] }} providers, {{cgen['timeout_class'][1]}}s timeout</span></a>
@@ -399,6 +405,54 @@
 	     
 		</script>
 
+		<script type="text/javascript">
+        $(document).ready(function() {
+
+			var ddown_selarray = [];
+			var ddown_selarray_text = [];
+			var ddown_selarray_code = [];
+			{% for sopt in selectable_opt -%}
+				ddown_selarray.push( "{{ sopt[2] }}" );
+				ddown_selarray_text.push( "{{ sopt[1] }}" );
+				ddown_selarray_code.push( "{{ sopt[0] }}" );
+			{%- endfor %}
+			for ( var i = 0; i < ddown_selarray.length; i++ ) 
+			{
+				if(ddown_selarray[i] == 'selected')
+				{
+					$("#ddown_selid").text(ddown_selarray_text[i]);
+					$("#selcat").attr("value", ddown_selarray_code[i]);
+				}
+			}
+
+	
+            $(".dropdown dt a").click(function() {
+                $(".dropdown dd ul").toggle();
+                return false;
+            });
+                        
+            $(".dropdown dd ul li a").click(function() {
+                var text = $(this).html();
+                $(".dropdown dt a span").html(text);
+                $(".dropdown dd ul").hide();
+                $("#selcat").attr("value", getSelectedValue("selcat_ddown"));
+                return false;                
+            });
+                        
+            function getSelectedValue(id) {
+                return $("#" + id).find("dt a span.value").html();
+            }
+
+            $(document).bind('click', function(e) {
+                var $clicked = $(e.target);
+                if (! $clicked.parents().hasClass("dropdown"))
+                    $(".dropdown dd ul").hide();
+            });
+
+
+        });
+    </script>
+    
 
 	</body>
 </html>
