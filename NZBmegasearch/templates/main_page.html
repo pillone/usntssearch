@@ -317,16 +317,16 @@
 					}
 				}
 
-				 $.getJSON($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/smartget',
-							{data: uid, },
-							function(data) {
-								if(data.code == 1)
-								{
-									alert( 'bla')
-								}
-					});
-
-
+				$.ajax($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/smartget', {
+					data : uid,
+					contentType : 'application/json',
+					type : 'POST',
+					success: function(json, status){
+								alert(json['code'])
+							}
+				});
+     
+	
 			});
 
  			$("a#tosab_lnk").click(function () {

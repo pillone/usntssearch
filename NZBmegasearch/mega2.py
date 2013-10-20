@@ -259,11 +259,11 @@ def rss():
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-@app.route('/smartget')
+@app.route('/smartget', methods=['POST'])
 def smartget():
-	#~ return jsonify(code=getsmartinfo.process( request.args, urlparse(request.url) ))
-	print request.url
-	return getsmartinfo.process( request.args, urlparse(request.url) )
+	jsonret = jsonify(code=getsmartinfo.process( request.data, urlparse(request.url) ))
+	return jsonret
+	#~ return getsmartinfo.process( request.data, urlparse(request.url) )
 	
 
 

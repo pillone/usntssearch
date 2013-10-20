@@ -36,47 +36,60 @@ class GetNZBInfo:
 		self.cfg = conf
 		self.cgen = cgen
 		self.wrp = wrp
-
+		self.nzbdata = []
 		
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-	def process(self, args, parsedurl):
-		
-		
-		if('data' not in args):
-			return 0
-			
-		urls = args['data'].split('=====')
+	def process(self, data, parsedurl):
+				
+		urls = data.split('=====')
 		
 		nzbdata = []
 		
 		#~ download all
-		for url in urls:
-			if(len(url)):
-				nzbdata.append(self.download_hook(url))
-		
-		#~ tthr = []		
 		#~ for url in urls:
 			#~ if(len(url)):
-				#~ tthr.append( threading.Thread(target=self.download_hook, args=(url,) ) )
-				
+				#~ nzbdata.append(self.download_hook(url))
+		tthr = []
+		for url in urls:
+			if(len(url)):
+				tthr.append( threading.Thread(target=self.download_hook, args=(url,) ) )
+		for t in tthr:
+			t.start()
+		for t in tthr:
+			t.join()
+
 		#~ analyze all
 		info_nzbdata = []
 		count = 0
-		for nzbi in nzbdata:
+		for nzbi in self.nzbdata:
 			if(len(nzbi)):
 				info = self.getdetailednzbinfo(nzbi['content'])
 				info['id'] = count
+				info['url'] = nzbi['url']
 				info_nzbdata.append(info)
 				count = count +1
 		
 		#~ rank all
 		ranked = self.whatisbetter(info_nzbdata)
-		if (len(ranked)):
-			return self.sendto(nzbdata[ranked[0]['id']])
-		return []
+		
+		#~ too involved
+		#~ if (len(ranked)):
+			#~ return self.sendto(nzbdata[ranked[0]['id']])
+		return ranked
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+			 #~ $.getJSON($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/smartget',
+							#~ {data: uid, },
+							#~ function(data) {
+								#~ if(data.code == 1)
+								#~ {
+									#~ alert( 'bla')
+								#~ }
+					#~ });
+#~ 
+#~ 
 
 	def sendto(self, datablob):
 		
@@ -104,9 +117,10 @@ class GetNZBInfo:
 		resinfo = {}
 		resinfo['headers']=[]
 		resinfo['content']=[]
+		resinfo['url']=''
 		try:
 			if(len(downloadurl)):
-				#~ print downloadurl
+				resinfo['url']=downloadurl
 				#~ print '=============='
 				myrq = downloadurl.replace("warp?", "")
 				pulrlparse = dict(urlparse.parse_qsl(myrq))		
@@ -127,7 +141,9 @@ class GetNZBInfo:
 							nzbname = rheaders[idxsfind+1:len(rheaders)].replace('"','')
 				
 					resinfo['content'] =  r.content.encode('utf-8')
+					self.nzbdata.append(resinfo)
 					return resinfo
+					
 					#~ with open(nzbname + '.nzb', 'wt') as fp:
 						#~ fp.write(r.content)
 							
@@ -137,12 +153,13 @@ class GetNZBInfo:
 					nzbname = 'nzbfromNZBmegasearcH'
 					if('content-disposition' in res.headers):
 						rheaders = res.headers['content-disposition']
-						rheaders = r.headers['content-disposition']						
+						resinfo['headers'] =  rheaders
 						idxsfind = rheaders.find('=')
 						if(idxsfind != -1):
 							nzbname = rheaders[idxsfind+1:len(rheaders)].replace('"','')
 
 					resinfo['content'] = res.data.encode('utf-8')
+					self.nzbdata.append(resinfo)
 					return resinfo
 					#~ with open(nzbname, 'wt') as fp:
 						#~ fp.write(res.data)				
