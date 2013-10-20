@@ -5,24 +5,23 @@
 		<title>NZB MegasearcH</title>
 		<link rel="stylesheet" type="text/css" href="static/reset2.css" />
 		<link rel="stylesheet" type="text/css" href="static/style.css" />
-		<link rel="stylesheet" type="text/css" href="static/style_dark.css" />
+		<link rel="stylesheet" type="text/css" href="static/style_{{ cgen['theme'] }}.css" />
 		<script type="text/javascript" src="static/jquery.min.js"></script>
 		<script type="text/javascript" src="static/block-ui.js"></script>
 
 		<script type=text/javascript>
 		  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 		</script>
-
 	</head>
 	<body>
 		{% if large_server  == False -%}
 			<div class="topright_tight">
 				{% if vr['chk']  == 1 and vr['os']  == 'linux' -%}
-				[ <a href='restart?sid={{ sid }}'>
+				[ <a href="restart?sid={{ sid }}">
 						<span class="alert-red">Autoupdate Now!</span>
 				</a> ]
 				{%- else %}
-					[ <a href='https://github.com/pillone/usntssearch'>
+					[ <a href="https://github.com/pillone/usntssearch">
 						{% if vr['chk']  == 1 -%}
 							<span class="alert-red">Update Now!</span>
 						{%- endif %}
@@ -33,26 +32,26 @@
 							Github
                        {%- endif %}</a> ]
 				{%- endif %}
-				[&nbsp;<a href= "connect"><img src="static/sb_cp.png" width="" height="16" alt="connect" /></a>&nbsp;]
-				[&nbsp;<a href= "log"><img src="static/log.png" width="16" height="16" alt="log" /></a>&nbsp;]
-				[&nbsp;<a href='config'><img src="static/options.png" width="" height="16" alt="config" /></a>&nbsp;]
+				[&nbsp;<a href="connect"><img src="static/sb_cp.png" width="" height="16" alt="connect" /></a>&nbsp;]
+				[&nbsp;<a href="log"><img src="static/log.png" width="16" height="16" alt="log" /></a>&nbsp;]
+				[&nbsp;<a href="config"><img src="static/options16.png" width="" height="16" alt="config" /></a>&nbsp;]
 				{% if cgen['general_restrictopt1'] == 0
   			    -%}[&nbsp;{% if vr['os']  != 'openshift'
-  			    -%}<a href='restart?sid={{ sid }}' OnClick="return confirm('Do you really want to restart the program?');" class='restartbutton'><img src="static/restart.png" width="" height="16" alt="restart"/></a>{%-
+  			    -%}<a href="restart?sid={{ sid }}" OnClick="return confirm('Do you really want to restart the program?');" class="restartbutton"><img src="static/restart16.png" width="" height="16" alt="restart"/></a>{%-
   			    endif -%}{% if cgen['general_restrictopt1'] == 0
-  			    -%}<a href='poweroff?sid={{ sid }}' OnClick="return confirm('Do you really want to halt the program?');"><img src="static/off.png" width="" height="16" alt="power off"/></a>{%-
+  			    -%}<a href="poweroff?sid={{ sid }}" OnClick="return confirm('Do you really want to halt the program?');"><img src="static/off16.png" width="" height="16" alt="power off"/></a>{%-
   			    endif %}&nbsp;]{%- endif %}	
 				</div>
 		{%- endif %}
 
 
 		<div id="container">
-			<div  class="titlemain"><img src="static/title.png" width="387" height="" alt="NZBmegasearcH"/></div>
+			<div  class="titlemain"><img src="static/title1.png" width="387" height="" alt="NZBmegasearcH"/></div>
 			<form action="{{ cgen['revproxy'] }}/s" method="get" class="form-wrapper-01">
 
 					<input type="text" id="search" placeholder="" name="q" value="{{ sstring }}">
 					<dl id="selcat_ddown" class="dropdown">
-						<dt><a href="#"><span id='ddown_selid'>No categ.</span></a></dt>
+						<dt><a href="#" class="ctrl"><span id="ddown_selid">No categ.</span></a></dt>
 						<dd>
 							<ul>
 								{% for sopt in selectable_opt -%}
@@ -65,8 +64,8 @@
 
 					<div>
 						<input type="hidden" name="tm" id="tm" value="1">
-						<a class="tooltips" href="#"><input type="submit" class="gray graybig" value='Search' onclick='$("#tm").attr("value", "1");' id='submit_button1'><span>{{ search_opt[0][0] }} providers, {{cgen['timeout_class'][1]}}s timeout</span></a>
-						<a class="tooltips" href="#"><input type="submit" class="gray graybig" value='Search Extended' onclick='$("#tm").attr("value", "2");' id='submit_button2'><span>{{ search_opt[1][0] }} providers, {{cgen['timeout_class'][2]}}s timeout</span></a>
+						<a class="tooltips" href="#"><input type="submit" class="gray graybig" value="Search" onclick="$('#tm').attr('value', '1');" id="submit_button1"><span>{{ search_opt[0][0] }} providers, {{cgen['timeout_class'][1]}}s timeout</span></a>
+						<a class="tooltips" href="#"><input type="submit" class="gray graybig" value="Search Extended" onclick="$('#tm').attr('value', '2');" id="submit_button2"><span>{{ search_opt[1][0] }} providers, {{cgen['timeout_class'][2]}}s timeout</span></a>
 					</div>
 	
 			</form>
@@ -76,7 +75,7 @@
 				<table class="sugg_table">
 					<tr>
 					{% if   trend_movie -%}
-					<td class='sugg_table_td'>
+					<td class="sugg_table_td">
 						<table class="config_table_opts sugg_table_modifier"><thead>
 							<tr><th scope="col">Movies Trending</th><th></th></tr></thead>
 							<tbody>
@@ -84,7 +83,7 @@
 								<tr>
 									<td>
 										<a href="http://www.dereferer.org/?{{ tm['imdb_url'] }}" ><img src="static/imdb.png" width="16" height="16" alt="IMDb" /></a> 
-										&nbsp;<a href="s?q={{ tm['searchstr'] }}" class='sugglinx'>{{ tm['prettytxt'] }}</a>
+										&nbsp;<a href="s?q={{ tm['searchstr'] }}" class="sugglinx">{{ tm['prettytxt'] }}</a>
 									</td>
 								</tr>
 							{%- endfor %}
@@ -95,7 +94,7 @@
 				
 					
 					{% if   trend_movie -%}
-					<td class='sugg_table_td'>
+					<td class="sugg_table_td">
 						<table class="config_table_opts sugg_table_modifier"><thead>
 							<tr><th scope="col">Shows Trending</th><th></th></tr></thead>
 							<tbody>
@@ -103,7 +102,7 @@
 								<tr>
 									<td>
 										<a href="http://www.dereferer.org/?{{ ts['imdb_url'] }}"><img src="static/thetvdb16.png" width="16" height="16" alt="tvdb" /></a>
-										&nbsp;<a href="s?q={{ ts['searchstr'] }}" class='sugglinx'>{{ ts['prettytxt'] }}</a>
+										&nbsp;<a href="s?q={{ ts['searchstr'] }}" class="sugglinx">{{ ts['prettytxt'] }}</a>
 									</td>
 								</tr>
 							{%- endfor %}
@@ -114,7 +113,7 @@
 		 
 
 					{% if   sugg -%}
-					<td class='sugg_table_td'>
+					<td class="sugg_table_td">
 						<table class="config_table_opts sugg_table_modifier"><thead>
 							<tr><th scope="col">Did you mean...</th><th></th></tr></thead>
 							<tbody>
@@ -153,25 +152,21 @@
 				</div>	
 				
 				{%- if not results %}
-					<table class="results" summary="Search Results">
-						<thead>
-							<tr><th scope="col" class=titlecell><b>Title</b></a><b class="downarrow">&nbsp;&nbsp;&nbsp;</b></th>
-								<th scope="col" class=sizecell><b>Type</b></a><b class="downarrow">&nbsp;&nbsp;&nbsp;</b></th>
-								<th scope="col" class=sizecell><b>Size</b></a><b class="downarrow">&nbsp;&nbsp;&nbsp;</b></th>
-								<th scope="col" class=datecell><b>Age</b></a><b class="downarrow">&nbsp;&nbsp;&nbsp;</b></th>
-								<th scope="col" class=providercell><b>Comments</b></a><b class="downarrow">&nbsp;&nbsp;&nbsp;</b></th>
-							</tr>
-						</thead>
-						<tbody>
-						<tr>
-							<td class="titlecell"> <p class='text-red'> Your search did not match any documents </p></td>
-							<td class="sizecell"> </td>
-							<td class="sizecell"> </td>
-							<td class="datecell"> </td>
-							<td class="providercell"> </td>
+				<table class="results" summary="Search Results">
+					<thead>
+						<tr><th scope="col" class=titlecell><b>Title</b></a><b class="downarrow">&nbsp;&nbsp;&nbsp;</b></th>
+							<th scope="col" class=sizecell><b>Type</b></a><b class="downarrow">&nbsp;&nbsp;&nbsp;</b></th>
+							<th scope="col" class=sizecell><b>Size</b></a><b class="downarrow">&nbsp;&nbsp;&nbsp;</b></th>
+							<th scope="col" class=datecell><b>Age</b></a><b class="downarrow">&nbsp;&nbsp;&nbsp;</b></th>
+							<th scope="col" class=providercell><b>Comments</b></a><b class="downarrow">&nbsp;&nbsp;&nbsp;</b></th>
 						</tr>
-						</tbody>
-					</table>
+					</thead>
+					<tbody>
+					<tr>
+						<td colspan="5" class="titlecell text-red">Your search did not match any documents</td>
+					</tr>
+					</tbody>
+				</table>
 				{% endif %}
 			{% endif %}
 				
@@ -187,10 +182,10 @@
 					</tr>
 				</thead>
 				<tbody>
+				{% set rowloop = 0 -%}
 				{% for row in results -%}
 					{% if row['ignore'] == 0  -%}
-					<tr>
-
+					<tr{% set rowloop = rowloop + 1 %}{% if rowloop % 2 == 1 %} class="odd"{% endif %}>
 						<td class="titlecell">
 							{% if send2sab_exist   -%}
 								<a href= "" id=tosab_lnk name=tosab_info{{ row['id'] }}>
@@ -239,9 +234,10 @@
 						<th scope="col" class=providercell><b>Comments</b></th></tr>
 				</thead>
 				<tbody>
+				{% set rowloop = 0 -%}
 				{% for row in results -%}
 					{% if row['ignore'] == 1  -%}
-					<tr>
+					<tr{% set rowloop = rowloop + 1 %}{% if rowloop % 2 == 1 %} class="odd"{% endif %}>
 						<td class="titlecell">
 							{% if send2sab_exist   -%}
 								<a href= "" id=tosab_lnk name=tosab_info{{ row['id'] }}>
@@ -284,9 +280,9 @@
 		
 		{% if large_server  == True -%}
 			<div class="topright_tight">
-				[&nbsp;<a href='https://github.com/pillone/usntssearch'>Get NZBMegasearch Github</a>&nbsp;]
-				[&nbsp;<a href='legal'>DMCA</a>&nbsp;]
-				[&nbsp;<a href= "connect"><img width="" height="16" alt="connect" src="static/sb_cp.png"></img></a>&nbsp;]
+				[&nbsp;<a href="https://github.com/pillone/usntssearch">Get NZBMegasearch Github</a>&nbsp;]
+				[&nbsp;<a href="legal">DMCA</a>&nbsp;]
+				[&nbsp;<a href="connect"><img width="" height="16" alt="connect" src="static/sb_cp.png"></img></a>&nbsp;]
 			</div>
 		{%- endif %}
 
@@ -452,7 +448,6 @@
 
         });
     </script>
-    
 
 	</body>
 </html>

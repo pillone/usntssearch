@@ -61,12 +61,14 @@ a
 /*
  text search box #378b96
 */
+.ctrl,
 .form-wrapper-01 #search
 {
 	border: 2px solid #E0E0E0 ;
 	color: #669;
 }
- 
+
+.ctrl:hover,
 .form-wrapper-01 #search:hover {
 	border: 2px solid #ccc;
 }
@@ -107,19 +109,8 @@ a
 }
  
 
-.searchkind
-{
-	background-color: #ffffff;
-	color: #378b96;
-}
-
-.alert-info
-{
-	color: #ffffff;
-	background-color: #a2bcc0;
-}
-
-.text-red
+.text-red,
+td.text-red
 {
     color: red;
 }
@@ -127,13 +118,6 @@ a
 .text-green
 {
     color: #009933;
-}
-
-.noentry_warn
-{
-    color: #039;
-/*	border: 1px solid #ccc;*/
-	border: 0px;
 }
 
 .sugg_table_td
@@ -149,16 +133,13 @@ a
 	border: none 0;
 }
 
-.alert-flex,
 .alert-red
 {
     color: #ffffff;
 }
-.alert-flex
-{
-    background-color: #a2bcc0;
-}
-.didyoumean
+.didyoumean,
+a:visited.didyoumean,
+a:active.didyoumean
 {
     color: #ff0000;
 }
@@ -314,7 +295,7 @@ a
 
 .downarrow 
 {
-	background: transparent url("/static/arrow-down.png") no-repeat 50% 70%;
+	background: transparent url("/static/arrow-down.png") no-repeat scroll 50% 70%;
 	width: 18px;
 	height: 6px;
 	padding: 0;
@@ -336,7 +317,7 @@ a
     background: -o-linear-gradient(top,  #f4f4f4 0%,#f1f1f1 100%); /* Opera 11.10+ */
     background: -ms-linear-gradient(top,  #f4f4f4 0%,#f1f1f1 100%); /* IE10+ */
     background: linear-gradient(top,  #f4f4f4 0%,#f1f1f1 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#f1f1f1',GradientType=0 ); /* IE6-9 */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#f4f4f4", endColorstr="#f1f1f1",GradientType=0 ); /* IE6-9 */
     color: #555;
     text-shadow: 0px 1px 1px rgba(255,255,255,1);
 }
@@ -351,7 +332,7 @@ a
     background: -o-linear-gradient(top,  #f8f8f8 0%,#f1f1f1 100%); /* Opera 11.10+ */
     background: -ms-linear-gradient(top,  #f8f8f8 0%,#f1f1f1 100%); /* IE10+ */
     background: linear-gradient(top,  #f8f8f8 0%,#f1f1f1 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f8f8f8', endColorstr='#f1f1f1',GradientType=0 ); /* IE6-9 */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#f8f8f8", endColorstr="#f1f1f1",GradientType=0 ); /* IE6-9 */
     color: #222; 
     -webkit-box-shadow: 0px 1px 1px 0px rgba(10, 10, 10, 0.4);
     -moz-box-shadow: 0px 1px 1px 0px rgba(10, 10, 10, 0.4);
@@ -384,3 +365,41 @@ a:hover.tooltips span
 {
   opacity: 0.6;
 }
+
+/*
+ taken from http://www.jankoatwarpspeed.com/
+ * all credits to him
+*/
+.dropdown a, .dropdown a:visited { color:#669; }
+.dropdown a:hover { color:#669; }
+.dropdown dt a:hover, .dropdown dt a:focus { color:#669; border-color: #ccc; }
+/*
+  title of selection 
+*/
+.dropdown dt a
+{
+	background: transparent url("/static/arrow-down.png") no-repeat scroll 97% center; 
+	border-color: #E0E0E0;
+	color: #669;  
+}
+
+.dropdown dt a:hover 
+{ 
+	border-color: #ccc;
+}
+
+.dropdown dt a span
+{
+	color: #669;
+}
+/*
+  drop
+*/
+.dropdown dd ul
+{
+	background:#ffffff none repeat scroll 0 0; 
+	border-color:#ccc; 
+	color:#669; 
+}
+
+.dropdown dd ul li a:hover { background-color:#F2F5A9;}

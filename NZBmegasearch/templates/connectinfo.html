@@ -4,35 +4,34 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>NZB MegasearcH</title>
 		<link rel="stylesheet" type="text/css" href="static/style.css" />
+		<link rel="stylesheet" type="text/css" href="static/style_{{ theme }}.css" />
 		<script src="static/overlay.js"></script>
 	</head>
 	<body>
 		<div id="container"> 
 		
-			<div  class="singleparagraph">
-				<p>
-					<div  class="headers_singleparagraph">Connection to SICKBEARD
-					<img src="static/sick_logo.png" width="" height="32" /></div>
-				
-				Sickbeard connectivity is always active.<br>	
-				In Sickbeard: go to Config/Search Providers and add a custom Newznab  provider, no API key needed (unless explicitly set in the <a href='config'>config</a>). <br>				
-				
+			<div class="singleparagraph">
+				<div class="headers_singleparagraph">Connection to SICKBEARD&nbsp;<img src="static/sick_logo.png" width="" height="32" /></div>
+				<p>Sickbeard connectivity is always active.
+					<ul>
+						<li>In Sickbeard: go to Config/Search Providers and add a custom Newznab provider...<br />
+							On build 501 (2013-10-06) or newer enter 0 (zero) else no API key is needed (unless explicitly set in the <a href="config">config</a>)</li>
+					</ul>
+					Below is an example of NZBMegasearcH configured with port 5000
+					<img src="static/cfg_offline.jpg" style="border:10px solid #606060" alt="" width="" height="" />
 				</p>
-				<img src="static/cfg_offline.jpg" width="" height="" /></div>
-				
-				<div  class="singleparagraph">
-				<p>
-					<div  class="headers_singleparagraph">Connection to COUCHPOTATO
-					<img src="static/cp_logo.png" width="" height="32" /></div>
-				
-				Couchpotato connectivity is always active.<br>	
-				In Couchpotato: go to Settings/Providers and add a custom Newznab provider with API key 123 (any key number will work unless explicitly set in the <a href='config'>config</a>). <br>
-				Below is an example of NZBMegasearcH configured with port 5000:
-					 <br>				
-				
+			</div>
+			<div class="singleparagraph">
+				<div class="headers_singleparagraph">Connection to COUCHPOTATO&nbsp;<img src="static/cp_logo.png" width="" height="32" /></div>
+				<p>Couchpotato connectivity is always active.
+					<ul>
+						<li>In Couchpotato: go to Settings/Providers and add a custom Newznab provider...<br />
+						Use API key 123 (any key number will work unless explicitly set in the <a href="config">config</a>)</li>
+					</ul>
+					Below is an example of NZBMegasearcH configured with port 5000
+					<img src="static/cfg_cp_offline.jpg" style="border:10px solid #606060" alt="" width="" height="" />
 				</p>
-				
-				<img src="static/cfg_cp_offline.jpg" width="" height="" /></div>
+			</div>
 
 		</div>
 		<div class="topright_tight"><a href= "main">[Back]</a></div>
