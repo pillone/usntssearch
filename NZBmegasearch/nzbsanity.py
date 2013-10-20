@@ -15,7 +15,9 @@
 #~ along with NZBmegasearch.  If not, see <http://www.gnu.org/licenses/>.
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## #    
 
-from flask import  send_file
+from flask import  Flask, Response, send_file
+import requests
+import logging
 import logging
 import tempfile
 import beautifulsoup
@@ -53,14 +55,20 @@ class GetNZBInfo:
 			if(len(url)):
 				nzbdata.append(self.download_hook(url))
 		
+		#~ tthr = []		
+		#~ for url in urls:
+			#~ if(len(url)):
+				#~ tthr.append( threading.Thread(target=self.download_hook, args=(url,) ) )
+				
 		#~ analyze all
 		info_nzbdata = []
 		count = 0
 		for nzbi in nzbdata:
-			info = self.getdetailednzbinfo(nzbi['content'])
-			info['id'] = count
-			info_nzbdata.append(info)
-			count = count +1
+			if(len(nzbi)):
+				info = self.getdetailednzbinfo(nzbi['content'])
+				info['id'] = count
+				info_nzbdata.append(info)
+				count = count +1
 		
 		#~ rank all
 		ranked = self.whatisbetter(info_nzbdata)
@@ -76,7 +84,7 @@ class GetNZBInfo:
 		f=tempfile.NamedTemporaryFile(delete=False)
 		f.write(fcontent)
 		f.close()
-		
+
 		fresponse = send_file(f.name, mimetype='application/x-nzb;', as_attachment=True, 
 							 attachment_filename='yourmovie.nzb', add_etags=False, cache_timeout=None, conditional=False)
 
@@ -85,8 +93,8 @@ class GetNZBInfo:
 		except Exception as e:
 			print 'Cannot remove temporary NZB file' 
 		
-		fresponse.headers = datablob['headers']
-
+		if(len(datablob['headers'])):
+			fresponse.headers['content-disposition'] = datablob['headers']
 		return fresponse	
 
 		
@@ -109,16 +117,16 @@ class GetNZBInfo:
 				if('Location'   in res.headers):
 					#~ for redirect
 					geturl_rq = res.headers['Location']
-					r = requests.get(geturl_rq)
+					r = requests.get(geturl_rq, verify=False)
 					nzbname = 'nzbfromNZBmegasearcH'
 					if('content-disposition' in r.headers):
 						rheaders = r.headers['content-disposition']
+						resinfo['headers'] =  r.headers['content-disposition']
 						idxsfind = rheaders.find('=')
 						if(idxsfind != -1):
 							nzbname = rheaders[idxsfind+1:len(rheaders)].replace('"','')
 				
-					resinfo['headers'] = res.headers	
-					resinfo['content'] = r.content.encode('utf-8')
+					resinfo['content'] =  r.content.encode('utf-8')
 					return resinfo
 					#~ with open(nzbname + '.nzb', 'wt') as fp:
 						#~ fp.write(r.content)
@@ -129,11 +137,11 @@ class GetNZBInfo:
 					nzbname = 'nzbfromNZBmegasearcH'
 					if('content-disposition' in res.headers):
 						rheaders = res.headers['content-disposition']
+						rheaders = r.headers['content-disposition']						
 						idxsfind = rheaders.find('=')
 						if(idxsfind != -1):
 							nzbname = rheaders[idxsfind+1:len(rheaders)].replace('"','')
 
-					resinfo['headers'] = res.headers	
 					resinfo['content'] = res.data.encode('utf-8')
 					return resinfo
 					#~ with open(nzbname, 'wt') as fp:

@@ -262,6 +262,7 @@ def rss():
 @app.route('/smartget')
 def smartget():
 	#~ return jsonify(code=getsmartinfo.process( request.args, urlparse(request.url) ))
+	print request.url
 	return getsmartinfo.process( request.args, urlparse(request.url) )
 	
 

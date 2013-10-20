@@ -344,7 +344,7 @@ class DoParallelSearch:
 						#~ for redirect
 						log.info('tonzbget: Warp is treated as 302 redirector')
 						geturl_rq = res.headers['Location']
-						r = requests.get(geturl_rq)
+						r = requests.get(geturl_rq, verify=False)
 						nzbname = 'nzbfromNZBmegasearcH'
 						if('content-disposition' in r.headers):
 							rheaders = r.headers['content-disposition']
