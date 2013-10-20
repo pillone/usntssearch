@@ -307,19 +307,18 @@
 			
 			$("#nzbanalize").click(function () {
 				var allcbox = $('[id^="smartnzb"]')
-				var ids2 = []
+				var uid = []
 				for ( var i = 0; i < allcbox.length; i++ ) 
 				{
 					if( $(allcbox[i]).is(':checked' ) == true)
 					{
-						ids2.push($(allcbox[i]).attr("name"));
-						uid = $('#nzburl'+i).text
-						alert(uid);
+						idname = $(allcbox[i]).attr("name");
+						uid.push($('#nzburl'+idname).attr("href"))
 					}
 				}
 
 				 $.getJSON($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/smartget',
-							{data: ids, },
+							{data: uid, },
 							function(data) {
 								if(data.code == 1)
 								{
