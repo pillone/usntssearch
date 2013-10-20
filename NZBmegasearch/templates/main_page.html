@@ -307,13 +307,13 @@
 			
 			$("#nzbanalize").click(function () {
 				var allcbox = $('[id^="smartnzb"]')
-				var uid = []
+				var uid = ''
 				for ( var i = 0; i < allcbox.length; i++ ) 
 				{
 					if( $(allcbox[i]).is(':checked' ) == true)
 					{
 						idname = $(allcbox[i]).attr("name");
-						uid.push($('#nzburl'+idname).attr("href"))
+						uid = uid + $('#nzburl'+idname).attr("href") + '====='
 					}
 				}
 

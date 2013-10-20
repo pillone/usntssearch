@@ -33,6 +33,7 @@ import random
 import time
 import socket
 import base64
+import nzbsanity
 
 openssl_imported = True
 try:
@@ -259,7 +260,10 @@ def rss():
 
 @app.route('/smartget')
 def smartget():
-	print request.args	
+	getsmartinfo = nzbsanity.GetNZBInfo(cfgsets.cfg, cfgsets.cgen, ds, wrp)
+	getsmartinfo.process( request.args, urlparse(request.url) )
+	#~ print request.url
+	#~ print request.args	
 	return 'a'
 
 
