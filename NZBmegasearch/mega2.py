@@ -67,7 +67,7 @@ def loginit():
 
 def reload_all():
 	print '>> Bootstrapping...'
-	global cfgsets, sugg, ds, mega_parall, wrp, apiresp, auth
+	global cfgsets, sugg, ds, mega_parall, wrp, apiresp, auth, getsmartinfo
 	cfgsets = config_settings.CfgSettings()	
 	cfgsets.cgen['large_server'] = LARGESERVER
 	sugg = SuggestionResponses(cfgsets.cfg, cfgsets.cgen)
@@ -75,6 +75,7 @@ def reload_all():
 	wrp = Warper (cfgsets.cgen, cfgsets.cfg, ds)
 	mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds, wrp)
 	apiresp = ApiResponses(cfgsets.cfg, cfgsets.cgen, wrp, ds)
+	getsmartinfo = nzbsanity.GetNZBInfo(cfgsets.cfg, cfgsets.cgen, ds, wrp)
 	auth = miscdefs.Auth(cfgsets)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -260,11 +261,9 @@ def rss():
 
 @app.route('/smartget')
 def smartget():
-	getsmartinfo = nzbsanity.GetNZBInfo(cfgsets.cfg, cfgsets.cgen, ds, wrp)
-	getsmartinfo.process( request.args, urlparse(request.url) )
-	#~ print request.url
-	#~ print request.args	
-	return 'a'
+	#~ return jsonify(code=getsmartinfo.process( request.args, urlparse(request.url) ))
+	return getsmartinfo.process( request.args, urlparse(request.url) )
+	
 
 
 
