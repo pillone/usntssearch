@@ -17,7 +17,7 @@
 
 from flask import  Flask, Response, send_file
 import requests
-import logging
+import threading
 import logging
 import tempfile
 import beautifulsoup
@@ -41,15 +41,12 @@ class GetNZBInfo:
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 	def process(self, data, parsedurl):
-				
+		
+		self.nzbdata = []		
 		urls = data.split('=====')
 		
 		nzbdata = []
-		
-		#~ download all
-		#~ for url in urls:
-			#~ if(len(url)):
-				#~ nzbdata.append(self.download_hook(url))
+
 		tthr = []
 		for url in urls:
 			if(len(url)):
@@ -76,20 +73,10 @@ class GetNZBInfo:
 		#~ too involved
 		#~ if (len(ranked)):
 			#~ return self.sendto(nzbdata[ranked[0]['id']])
+		print 	ranked
 		return ranked
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
-			 #~ $.getJSON($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/smartget',
-							#~ {data: uid, },
-							#~ function(data) {
-								#~ if(data.code == 1)
-								#~ {
-									#~ alert( 'bla')
-								#~ }
-					#~ });
-#~ 
-#~ 
 
 	def sendto(self, datablob):
 		
@@ -114,6 +101,7 @@ class GetNZBInfo:
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 	def download_hook(self, downloadurl):
+
 		resinfo = {}
 		resinfo['headers']=[]
 		resinfo['content']=[]
@@ -126,8 +114,11 @@ class GetNZBInfo:
 				pulrlparse = dict(urlparse.parse_qsl(myrq))		
 				
 				#~ print pulrlparse
-				res = self.wrp.beam(pulrlparse)	
-				
+				#~ create context for threaded download
+				from mega2 import app			
+				with app.test_request_context():
+					from flask import request
+					res = self.wrp.beam(pulrlparse)	
 				if('Location'   in res.headers):
 					#~ for redirect
 					geturl_rq = res.headers['Location']
@@ -143,9 +134,6 @@ class GetNZBInfo:
 					resinfo['content'] =  r.content.encode('utf-8')
 					self.nzbdata.append(resinfo)
 					return resinfo
-					
-					#~ with open(nzbname + '.nzb', 'wt') as fp:
-						#~ fp.write(r.content)
 							
 			
 				else:
@@ -161,16 +149,13 @@ class GetNZBInfo:
 					resinfo['content'] = res.data.encode('utf-8')
 					self.nzbdata.append(resinfo)
 					return resinfo
-					#~ with open(nzbname, 'wt') as fp:
-						#~ fp.write(res.data)				
-
 
 																		
 		except Exception as e:
 			log.info('Error downloading nzb: '+str(e))
-			return []
+			return resinfo
 
-		return []
+		return resinfo
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 	def getdetailednzbinfo(self, data):
@@ -219,11 +204,8 @@ class GetNZBInfo:
 
 	def whatisbetter(self, nzbinfos):
 		
-		nzbinfos_sort = sorted(nzbinfos, key=itemgetter('nofile'), reverse=True) 
-		
+		nzbinfos_sort = sorted(nzbinfos, key=itemgetter('nofile'), reverse=True) 		
 		#~ heuristic works just on pars, for now..
-		#~ for nzbs in nzbinfos_sort:			
-			#~ nzbs['postid'] = []
 		
 		return nzbinfos_sort
 			

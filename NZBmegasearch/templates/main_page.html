@@ -71,8 +71,6 @@
 					</div>
 	
 			</form>
-
-			<input type="button" class="gray graybig" value='Analyze' id='nzbanalize'>
 			
 			<div class ="suggarea_macro">
 				
@@ -179,10 +177,10 @@
 			{% endif %}
 				
 			{% if results -%}
-
+			
 			<table class="results" summary="Search Results">
 				<thead>
-					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
+					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b><input type="button" class="confbttn" value='Download best' id='nzbanalize'></a></th>
 					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=c&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Type <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
 					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Size <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
 					    <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Age <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
@@ -321,9 +319,13 @@
 					data : uid,
 					contentType : 'application/json',
 					type : 'POST',
-					success: function(json, status){
-								alert(json['code'])
-							}
+					success: function(data, textStatus, xhr) {
+						if(jQuery.inArray( "code", data ))
+						{
+							alert(data['code'][0]['url'])
+							$("body").append("<iframe src='" + data['code'][0]['url']+ "' style='display: none;' ></iframe>");
+						}
+					}
 				});
      
 	

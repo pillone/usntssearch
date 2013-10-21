@@ -33,7 +33,6 @@ import random
 import time
 import socket
 import base64
-import nzbsanity
 
 openssl_imported = True
 try:
@@ -125,8 +124,6 @@ cfgsets = config_settings.CfgSettings()
 first_time = 0
 #~ init logger
 log = loginit()
-#~ bootstrap
-reload_all()
 
 if (cfgsets.cfg is None or cfgsets.cfg_deep is None ):
 	first_time = 1
@@ -136,7 +133,11 @@ certdir = SearchModule.resource_path('certificates/')
 templatedir = SearchModule.resource_path('templates')
 app = Flask(__name__, template_folder=templatedir)	 
 
-SearchModule.loadSearchModules()
+#~ bootstrap
+import nzbsanity
+reload_all()
+
+#~ SearchModule.loadSearchModules()
 if(DEBUGFLAG):
 	cfgsets.cgen['general_trend'] = 0
 	cfgsets.cgen['general_suggestion'] = 0
@@ -263,6 +264,7 @@ def rss():
 def smartget():
 	jsonret = jsonify(code=getsmartinfo.process( request.data, urlparse(request.url) ))
 	return jsonret
+	#~ print request.url
 	#~ return getsmartinfo.process( request.data, urlparse(request.url) )
 	
 
