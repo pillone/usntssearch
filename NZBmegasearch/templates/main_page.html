@@ -177,10 +177,13 @@
 			{% endif %}
 				
 			{% if results -%}
-			
+
 			<table class="results" summary="Search Results">
 				<thead>
-					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b><input type="button" class="confbttn" value='Download best' id='nzbanalize'></a></th>
+					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a>
+					<input type="button" class="confbttn" value='Download Best' id='nzbanalize_down'>
+					<input type="button" class="confbttn" value='Deep Analysis' id='nzbanalize_only'>
+					</th>
 					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=c&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Type <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
 					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Size <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
 					    <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Age <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
@@ -206,7 +209,8 @@
 							{%- endif %}
 							<input type="checkbox" id="smartnzb" name="{{ row['id'] }}">
 							
-							<a href= "{{ row['url_encr'] }}" id=nzburl{{ row['id'] }} name='cane'>{{ row['title'] }}</a>
+							<a href= "{{ row['url_encr'] }}" id=nzburl{{ row['id'] }}>{{ row['title'] }}</a> 
+							<span id=nzburl_info{{ row['id'] }} class="text-red"></span>
 
 							{% if row['predb'] == 2 -%}
 							<span class = "predbcell">
@@ -301,34 +305,70 @@
 	    <script type="text/javascript">
 		var serverinfo = 0;
 
-	    $(document).ready(function() {
-			
-			$("#nzbanalize").click(function () {
-				var allcbox = $('[id^="smartnzb"]')
-				var uid = ''
-				for ( var i = 0; i < allcbox.length; i++ ) 
-				{
-					if( $(allcbox[i]).is(':checked' ) == true)
-					{
-						idname = $(allcbox[i]).attr("name");
-						uid = uid + $('#nzburl'+idname).attr("href") + '====='
-					}
-				}
 
-				$.ajax($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/smartget', {
-					data : uid,
-					contentType : 'application/json',
-					type : 'POST',
-					success: function(data, textStatus, xhr) {
-						if(jQuery.inArray( "code", data ))
+		function analysis_select_post()
+		{
+			
+			var allcbox = $('[id^="smartnzb"]')
+			var uid = ''
+			var uid_range = []
+			for ( var i = 0; i < allcbox.length; i++ ) 
+			{
+				if( $(allcbox[i]).is(':checked' ) == true)
+				{
+					idname = $(allcbox[i]).attr("name");
+					uid = uid + $('#nzburl'+idname).attr("href") + '====='
+					uid_range.push(idname)
+				}
+			}
+			uinfo = []
+			uinfo.uid_range = uid_range
+			uinfo.uid = uid
+			return(uinfo)
+		}
+		
+
+		function txrx_nzbinfo(uinfo, mode)
+		{
+			uid_range = uinfo.uid_range
+			uid = uinfo.uid
+			$.ajax($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/smartget', {
+				data : uid,
+				contentType : 'application/json',
+				type : 'POST',
+				success: function(data, textStatus, xhr) {
+					if(jQuery.inArray( "code", data ))
+					{
+						for (var i=0;i<data['code'].length;i++)
 						{
-							alert(data['code'][0]['url'])
+							var textrow_info = 'files: ' + data['code'][i]['nofile'] +' pars: ' + data['code'][i]['pars']							
+							$('#nzburl_info'+uid_range[data['code'][i]['id']]).text('- [ ' + textrow_info+' ]')
+						}
+						
+						if(mode == 'download')
+						{
 							$("body").append("<iframe src='" + data['code'][0]['url']+ "' style='display: none;' ></iframe>");
 						}
 					}
-				});
-     
-	
+				}
+			});
+		}	
+			
+
+			
+	    $(document).ready(function() {
+
+			$("#nzbanalize_only").click(function () {
+				
+				uinfo = analysis_select_post();
+				postdata = txrx_nzbinfo(uinfo,0);
+     	
+			});
+
+			
+			$("#nzbanalize_down").click(function () {
+				uinfo = analysis_select_post();
+				postdata = txrx_nzbinfo(uinfo,'download');
 			});
 
  			$("a#tosab_lnk").click(function () {
