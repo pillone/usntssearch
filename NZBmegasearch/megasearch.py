@@ -42,9 +42,13 @@ log = logging.getLogger(__name__)
 
 def getdomainext( ):
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	s.connect(("8.8.8.8",80))
-	sname = s.getsockname()[0]
-	s.close()
+	try:
+		s.connect(("8.8.8.8",80))
+		sname = s.getsockname()[0]
+		s.close()
+	except Exception as e:
+		print 'Error contacting Google DNS, this is terrible. Detected hostname reverted to 127.0.0.1 '+str(e)
+		sname = '127.0.0.1'
 	return sname
 
 
