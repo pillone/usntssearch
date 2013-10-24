@@ -68,10 +68,9 @@ class ah_WMBidx(SearchModule):
 			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=tout)
 					
 		except Exception as e:
-			mssg = self.queryURL + ' -- ' + str(e)
-			print mssg
-			log.critical(mssg)
-			tcfg['retcode'] = [600, 'Server timeout', tout]
+			log.critical(self.queryURL + ' -- ' + str(e))
+			if(tcfg is not  None):
+				tcfg['retcode'] = [600, 'Server timeout', tout]
 			return parsed_data
 		
 		timestamp_e = time.time()
@@ -157,7 +156,8 @@ class ah_WMBidx(SearchModule):
 			returncode = self.checkreturn(data)
 		returncode[2] = timestamp_e - timestamp_s
 		returncode[3] = self.name
-		tcfg['retcode'] = copy.deepcopy(returncode)
+		if(tcfg is not  None):
+			tcfg['retcode'] = copy.deepcopy(returncode)
 
 		return parsed_data
 

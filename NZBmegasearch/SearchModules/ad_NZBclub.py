@@ -78,10 +78,9 @@ class ad_NZBclub(SearchModule):
 			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=tout, headers= self.agent_headers)
 					
 		except Exception as e:
-			mssg = self.queryURL + ' -- ' + str(e)
-			#~ print mssg
-			log.critical(mssg)
-			cfg['retcode'] = [600, 'Server timeout', tout,self.name]
+			log.critical(self.queryURL + ' -- ' + str(e))
+			if(cfg is not  None):			
+				cfg['retcode'] = [600, 'Server timeout', tout,self.name]
 			return parsed_data
 
 		timestamp_e = time.time()
@@ -93,8 +92,8 @@ class ad_NZBclub(SearchModule):
 		try:
 			tree = ET.fromstring(data.encode('utf-8'))
 		except Exception as e:
-			print e
-			cfg['retcode'] = [250, 'Server responded with an unexpected format', timestamp_e - timestamp_s,self.name]			
+			if(cfg is not  None):
+				cfg['retcode'] = [250, 'Server responded with an unexpected format', timestamp_e - timestamp_s,self.name]			
 			return parsed_data
 
 		#~ successful parsing
@@ -155,6 +154,7 @@ class ad_NZBclub(SearchModule):
 			returncode = self.checkreturn(data)
 		returncode[2] = timestamp_e - timestamp_s
 		returncode[3] = self.name
-		cfg['retcode'] = copy.deepcopy(returncode)
+		if(cfg is not  None):
+			cfg['retcode'] = copy.deepcopy(returncode)
 						
 		return parsed_data		

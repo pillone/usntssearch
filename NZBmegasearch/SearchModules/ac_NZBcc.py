@@ -75,9 +75,9 @@ class ac_NZBcc(SearchModule):
 		try:
 			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=cfg['timeout'], headers= self.agent_headers)
 		except Exception as e:
-			print e
 			log.critical(str(e))
-			cfg['retcode'] = [600, 'Server timeout', tout, self.name]
+			if(cfg is not  None):
+				cfg['retcode'] = [600, 'Server timeout', tout, self.name]
 			return []
 
 		timestamp_e = time.time()
@@ -161,6 +161,7 @@ class ac_NZBcc(SearchModule):
 			#~ inc = inc +1 
 			#~ print "=======" +str(inc)
 
-		cfg['retcode'] = [200, 'ok', timestamp_e - timestamp_s, self.name]
+			if(cfg is not  None):
+				cfg['retcode'] = [200, 'ok', timestamp_e - timestamp_s, self.name]
 
 		return parsed_data

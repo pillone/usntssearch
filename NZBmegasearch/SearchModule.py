@@ -312,10 +312,9 @@ class SearchModule(object):
 			http_result = requests.get(url=self.queryURL, params=urlParams, verify=False, timeout=tout, headers= self.agent_headers)
 					
 		except Exception as e:
-			mssg = self.queryURL + ' -- ' + str(e)
-			print mssg
-			log.critical(mssg)			
-			tcfg['retcode'] = [600, 'Server timeout', tout, self.name]
+			log.critical(self.queryURL + ' -- ' + str(e))
+			if(tcfg is not  None):
+				tcfg['retcode'] = [600, 'Server timeout', tout, self.name]
 			return parsed_data
 			
 		timestamp_e = time.time()	
