@@ -461,9 +461,19 @@ class DoParallelSearch:
 		#~ tries to match predb entries
 		self.matchpredb(results, params['predb'])	
 
+		#~ avoids GMT problems
+		for i in xrange(len(results)):
+			totdays = int ( (time.time() - results[i]['posting_date_timestamp'])/ (3600*24) )			
+			if(totdays == 0):
+				totdays = float ( (time.time() - results[i]['posting_date_timestamp'])/ (3600) )
+				if(totdays < 0):
+					totdays = -totdays
+				totdays =  totdays/100
+			results[i]['posting_date_timestamp_refined'] = float(totdays)
+	
 		#~ sorting		
 		if 'order' not in args:
-			results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
+			results = sorted(results, key=itemgetter('posting_date_timestamp_refined'), reverse=False) 
 		else:
 			if	(args['order']=='t'):
 				results = sorted(results, key=itemgetter('title'))
@@ -472,7 +482,7 @@ class DoParallelSearch:
 			if	(args['order']=='p'):
 				results = sorted(results, key=itemgetter('providertitle'))
 			if	(args['order']=='d'):
-				results = sorted(results, key=itemgetter('posting_date_timestamp'), reverse=True) 
+				results = sorted(results, key=itemgetter('posting_date_timestamp_refined'), reverse=False) 
 			if	(args['order']=='x'):
 				results = sorted(results, key=itemgetter('predb'), reverse=True) 
 			if	(args['order']=='c'):
@@ -497,15 +507,11 @@ class DoParallelSearch:
 			
 			if (results[i]['size'] == -1):
 				fsze1 = 'N/A'
-			totdays = int ( (time.time() - results[i]['posting_date_timestamp'])/ (3600*24) )
-			
-			if(totdays == 0):
-				totdays = int ( (time.time() - results[i]['posting_date_timestamp'])/ (3600) )
-				if(totdays < 0):
-					totdays = -totdays
-				totdays = str(totdays) + "h"	
+			totdays = results[i]['posting_date_timestamp_refined']
+			if(totdays < 1):
+				totdays = str(int(totdays*100)) + "h"	
 			else:
-				totdays = str(totdays) + "d"
+				totdays = str(int(totdays)) + "d"
 
 			category_str = '' 
 			keynum = len(results[i]['categ'])
