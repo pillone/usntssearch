@@ -304,7 +304,17 @@
 
 	    <script type="text/javascript">
 		var serverinfo = 0;
+		var MAXINSPECTSELECT = 5;
 
+		function analysis_unselect_all(uinfo)
+		{
+			var allcbox = $('[id^="smartnzb"]')
+			for (var i=0;i<uinfo.uid_range.length;i++)
+			{
+				$('#nzburl '****************8[ uinfo.uid_range[i] ]).removeAttr('checked');
+			}
+
+		}
 
 		function analysis_select_post()
 		{
@@ -341,7 +351,7 @@
 					{
 						for (var i=0;i<data['code'].length;i++)
 						{
-							var textrow_info = 'files: ' + data['code'][i]['nofile'] +' pars: ' + data['code'][i]['pars']							
+							var textrow_info = 'files: ' + data['code'][i]['nofile'] +' pars: ' + data['code'][i]['pars'] + ' size: ' +data['code'][i]['nbytes'] + ' MB'
 							$('#nzburl_info'+uid_range[data['code'][i]['id']]).text('- [ ' + textrow_info+' ]')
 						}
 						
@@ -361,14 +371,30 @@
 			$("#nzbanalize_only").click(function () {
 				
 				uinfo = analysis_select_post();
-				postdata = txrx_nzbinfo(uinfo,0);
+				if(uinfo.uid_range.lenght > MAXINSPECTSELECT)
+				{
+					alert('Max '+ MAXINSPECTSELECT + ' simultaneous nzb inspections (avoids flooding)')
+				}
+				else
+				{
+					//postdata = txrx_nzbinfo(uinfo,0);
+					analysis_unselect_all(uinfo)
+				}
      	
 			});
 
 			
 			$("#nzbanalize_down").click(function () {
 				uinfo = analysis_select_post();
-				postdata = txrx_nzbinfo(uinfo,'download');
+				if(uinfo.uid_range.lenght > MAXINSPECTSELECT)
+				{
+					alert('Max '+ MAXINSPECTSELECT + ' simultaneous nzb inspections (avoids flooding)')
+				}
+				else
+				{
+					postdata = txrx_nzbinfo(uinfo,'download');
+					analysis_unselect_all(uinfo)
+				}
 			});
 
  			$("a#tosab_lnk").click(function () {

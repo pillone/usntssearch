@@ -164,13 +164,14 @@ class GetNZBInfo:
 		fileinfo  = {}
 		fileinfo['pars'] = 0
 		fileinfo['nofile'] = 0
+		fileinfo['nbytes'] = 0
 		fileinfo['postid'] = []
 		
 		if(len(data)==0):
 			return fileinfo
 			
 		soup = beautifulsoup.BeautifulSoup(data)
-		paperdiv_title = soup.findAll('meta', {'type': 'name'})
+		#~ paperdiv_title = soup.findAll('meta', {'type': 'name'})
 		fileno = soup.findAll('file')
 		
 		for fno in fileno:	
@@ -188,15 +189,23 @@ class GetNZBInfo:
 					s_segs = s.findAll('segment')
 					fsggs = fsggs + len(s_segs)
 					postid = []
-					#~ for s2 in s_segs:
+					for s2 in s_segs:
+						fileinfo['nbytes'] += int (s2['bytes'])
 						#~ curpost = ''.join(s2.findAll(text=True))
 						#~ fileinfo['postid'].append(curpost)
 						#~ postid.append(curpost)
-				filesegs.append([fno['subject'],fsggs,postid,parfile])
+				#~ filesegs.append([fno['subject'],fsggs,postid,parfile])
 			except:
+				fileinfo['pars'] = 0
+				fileinfo['nofile'] = 0
+				fileinfo['nbytes'] = 0
+				fileinfo['postid'] = []
+
 				print "Error, could not parse NZB file"
 				sys.exit()
 		
+		fileinfo['nbytes'] = int(fileinfo['nbytes'] / (1024*1024))
+
 		#~ print 'Num files: ' + str(fileinfo['nofile']) + ' of which repair files ' + str(fileinfo['pars'])
 		return fileinfo
 
