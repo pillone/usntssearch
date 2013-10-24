@@ -47,8 +47,9 @@ def getdomainext( ):
 		sname = s.getsockname()[0]
 		s.close()
 	except Exception as e:
-		print 'Error contacting Google DNS, this is terrible. Detected hostname reverted to 127.0.0.1 '+str(e)
-		sname = '127.0.0.1'
+		print 'Network error, this is terrible. An active connection is needed for nzbmega to work: '+str(e)
+		exit(0)
+		
 	return sname
 
 
