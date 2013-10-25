@@ -306,14 +306,17 @@
 		var serverinfo = 0;
 		var MAXINSPECTSELECT = 5;
 
-		function analysis_unselect_all(uinfo)
+		function analysis_unselect_all()
 		{
 			var allcbox = $('[id^="smartnzb"]')
-			for (var i=0;i<uinfo.uid_range.length;i++)
+			
+			for ( var i = 0; i < allcbox.length; i++ ) 
 			{
-				$('#nzburl '****************8[ uinfo.uid_range[i] ]).removeAttr('checked');
+				if( $(allcbox[i]).is(':checked' ) == true)
+				{
+					$(allcbox[i]).prop('checked',false)
+				}
 			}
-
 		}
 
 		function analysis_select_post()
@@ -369,16 +372,15 @@
 	    $(document).ready(function() {
 
 			$("#nzbanalize_only").click(function () {
-				
 				uinfo = analysis_select_post();
-				if(uinfo.uid_range.lenght > MAXINSPECTSELECT)
+				if(uinfo.uid_range.length > MAXINSPECTSELECT)
 				{
 					alert('Max '+ MAXINSPECTSELECT + ' simultaneous nzb inspections (avoids flooding)')
 				}
 				else
 				{
 					//postdata = txrx_nzbinfo(uinfo,0);
-					analysis_unselect_all(uinfo)
+					analysis_unselect_all()
 				}
      	
 			});
@@ -386,14 +388,14 @@
 			
 			$("#nzbanalize_down").click(function () {
 				uinfo = analysis_select_post();
-				if(uinfo.uid_range.lenght > MAXINSPECTSELECT)
+				if(uinfo.uid_range.length > MAXINSPECTSELECT)
 				{
 					alert('Max '+ MAXINSPECTSELECT + ' simultaneous nzb inspections (avoids flooding)')
 				}
 				else
 				{
 					postdata = txrx_nzbinfo(uinfo,'download');
-					analysis_unselect_all(uinfo)
+					analysis_unselect_all()
 				}
 			});
 
