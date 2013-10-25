@@ -385,8 +385,7 @@
 					$('.gray, .graysmall').val('Save')
 					return
 				}	
-													
-				$.post($SCRIPT_ROOT + "/saveconfig", $("#cfgform").serialize(),
+				$.post($SCRIPT_ROOT +  "{{ genopt['revproxy'] }}/saveconfig", $("#cfgform").serialize(),
 				  function(data){
 						if(data.code == 1)
 						{
