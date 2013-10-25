@@ -77,6 +77,9 @@ def reload_all():
 	getsmartinfo = nzbsanity.GetNZBInfo(cfgsets.cfg, cfgsets.cgen, ds, wrp)
 	auth = miscdefs.Auth(cfgsets)
 
+	msg1 = 'k35aJ3eYRIZihiJ8Jv0CkiG9AfpCSvay4voaSjrfRvoKGCMa4CAqNn6veTMIGToB4cWXAvG9Gvsa4cMi4VJXRKpYAf4rEc6aeTAKJCaiGKmpGnmvAc6iNVBxACQfAcuf4Veqevo0GKP9evWtes=='
+	print wrp.chash64_decode(msg1)
+
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
 print motd
