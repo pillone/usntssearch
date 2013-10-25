@@ -177,7 +177,7 @@ def static_from_root():
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/log', methods=['GET'])
-@auth.requires_auth
+@auth.requires_conf
 def log():
 	return miscdefs.logviewer(logsdir);
 
