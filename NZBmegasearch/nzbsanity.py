@@ -18,6 +18,7 @@
 from flask import  Flask, Response, send_file
 import requests
 import threading
+import os
 import logging
 import tempfile
 import beautifulsoup
@@ -37,8 +38,34 @@ class GetNZBInfo:
 		self.cgen = cgen
 		self.wrp = wrp
 		self.nzbdata = []
+		self.collect_info = []
 		
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+	def checkcache(self, url):
+		for i in xrange(len(self.collect_info)):
+			if(self.collect_info[i]['url'] == url):
+				if(os.path.exists(self.collect_info[i]['fname'])):
+					return i
+		
+		return -1
+		
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+		
+	def cleancache(self):
+		ntime = datetime.datetime.now()
+		cinfon = []	
+		for i in xrange(len(self.collect_info)):
+			dt1 =  (ntime - datetime.datetime.fromtimestamp(self.collect_info[i]['tstamp']))
+			dl = (dt1.days+1) * dt1.seconds
+			#~ remove by overtime
+			if(dl < self.cgen['max_cache_age']*60):
+				cinfon.append(self.collect_info[i])
+		self.collect_info = cinfon		
+			
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
 
 	def process(self, data, parsedurl):
 		
@@ -73,7 +100,7 @@ class GetNZBInfo:
 		#~ too involved
 		#~ if (len(ranked)):
 			#~ return self.sendto(nzbdata[ranked[0]['id']])
-		print 	ranked
+		#~ print 	ranked
 		return ranked
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -101,15 +128,26 @@ class GetNZBInfo:
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 	def download_hook(self, downloadurl):
-
 		resinfo = {}
 		resinfo['headers']=[]
 		resinfo['content']=[]
 		resinfo['url']=''
+
+		#~ try cache hit
+		ret = self.checkcache(downloadurl)
+		if( ret != -1):
+			resinfo = {}
+			with open(self.collect_info[ret]['fname'], 'rt') as fp:
+				resinfo['content'] = fp.read()
+			resinfo['url'] = self.collect_info[ret]['url']
+			resinfo['headers'] = self.collect_info[ret]['headers']
+			print 'Nzb analyzer: cache hit'
+			self.nzbdata.append(resinfo)
+			return resinfo
+		#~ download it
 		try:
 			if(len(downloadurl)):
 				resinfo['url']=downloadurl
-				#~ print '=============='
 				myrq = downloadurl.replace("warp?", "")
 				pulrlparse = dict(urlparse.parse_qsl(myrq))		
 				
@@ -133,11 +171,20 @@ class GetNZBInfo:
 				
 					resinfo['content'] =  r.content.encode('utf-8')
 					self.nzbdata.append(resinfo)
+					
+					#~ saves it for caching
+					f = tempfile.NamedTemporaryFile(delete=False)					
+					cached_info = {}
+					cached_info['url']=resinfo['url']
+					cached_info['headers']=resinfo['headers']
+					cached_info['fname']=f.name
+					f.write(resinfo['content'])
+					f.close()
+					self.collect_info.append(cached_info)
 					return resinfo
 							
 			
 				else:
-					#~ for downloaded TO CHK
 					nzbname = 'nzbfromNZBmegasearcH'
 					if('content-disposition' in res.headers):
 						rheaders = res.headers['content-disposition']
@@ -148,6 +195,16 @@ class GetNZBInfo:
 
 					resinfo['content'] = res.data.encode('utf-8')
 					self.nzbdata.append(resinfo)
+
+					#~ saves it for caching
+					f = tempfile.NamedTemporaryFile(delete=False)					
+					cached_info = {}					
+					cached_info['url']=resinfo['url']
+					cached_info['headers']=resinfo['headers']
+					cached_info['fname']=f.name
+					f.write(resinfo['content'])
+					f.close()
+					self.collect_info.append(cached_info)	
 					return resinfo
 
 																		

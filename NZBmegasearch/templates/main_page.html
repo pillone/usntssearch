@@ -354,8 +354,9 @@
 					{
 						for (var i=0;i<data['code'].length;i++)
 						{
-							var textrow_info = 'files: ' + data['code'][i]['nofile'] +' pars: ' + data['code'][i]['pars'] + ' size: ' +data['code'][i]['nbytes'] + ' MB'
+							var textrow_info = 'files: ' + data['code'][i]['nofile'] +', pars: ' + data['code'][i]['pars'] + ', size: ' +data['code'][i]['nbytes'] + ' MB'
 							$('#nzburl_info'+uid_range[data['code'][i]['id']]).text('- [ ' + textrow_info+' ]')
+							$.unblockUI();
 						}
 						
 						if(mode == 'download')
@@ -375,14 +376,23 @@
 				uinfo = analysis_select_post();
 				if(uinfo.uid_range.length > MAXINSPECTSELECT)
 				{
-					alert('Max '+ MAXINSPECTSELECT + ' simultaneous nzb inspections (avoids flooding)')
+					alert('Max '+ MAXINSPECTSELECT + ' simultaneous nzb inspections (avoids server flooding)')
 				}
 				else
 				{
-					//postdata = txrx_nzbinfo(uinfo,0);
-					analysis_unselect_all()
+					$.blockUI({ message: '<h1>.:: PLEASE WAIT ::.</h1><br><h2>Downloading and analyzing '+ uinfo.uid_range.length +' NZB</h2><h3>This may take up to {{cgen['timeout_class'][2]}}s</h3>', css: {
+					border: 'none',
+					padding: '15px',
+					backgroundColor: '#000',
+					'-webkit-border-radius': '10px',
+					'-moz-border-radius': '10px',
+					opacity: .7,
+					color: '#fff'
+							} });
+
+					postdata = txrx_nzbinfo(uinfo,0);
 				}
-     	
+				analysis_unselect_all()     	
 			});
 
 			
@@ -390,13 +400,22 @@
 				uinfo = analysis_select_post();
 				if(uinfo.uid_range.length > MAXINSPECTSELECT)
 				{
-					alert('Max '+ MAXINSPECTSELECT + ' simultaneous nzb inspections (avoids flooding)')
+					alert('Max '+ MAXINSPECTSELECT + ' simultaneous nzb inspections (avoids server flooding)')
 				}
 				else
 				{
+					$.blockUI({ message: '<h1>.:: PLEASE WAIT ::.</h1><br><h2>Downloading and analyzing '+ uinfo.uid_range.length +' NZB</h2><h3>This may take up to {{cgen['timeout_class'][2]}}s</h3>', css: {
+					border: 'none',
+					padding: '15px',
+					backgroundColor: '#000',
+					'-webkit-border-radius': '10px',
+					'-moz-border-radius': '10px',
+					opacity: .7,
+					color: '#fff'
+							} });
 					postdata = txrx_nzbinfo(uinfo,'download');
-					analysis_unselect_all()
 				}
+				analysis_unselect_all()				
 			});
 
  			$("a#tosab_lnk").click(function () {

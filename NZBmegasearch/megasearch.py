@@ -125,7 +125,7 @@ class DoParallelSearch:
 			if(dl < self.cgen['max_cache_age']*60):
 				cinfon.append(self.collect_info[i])
 			else:
-				print 'removed'	
+				print 'cache entry removed'	
 		self.collect_info = cinfon		
 			
 	def chkforcache(self, qryenc, speedclass):
