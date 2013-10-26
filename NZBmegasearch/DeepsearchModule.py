@@ -283,14 +283,12 @@ class DeepSearch_one:
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 					
 
 	def search_cat(self, dic_searchopt):
-		
 		return self.search_raw("/browse?t=",dic_searchopt['cat'])
 		
 	
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 					
 
 	def search(self, srchstr):
-		
 		return self.search_raw("/search/", srchstr)
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 					
 
@@ -304,6 +302,7 @@ class DeepSearch_one:
 		# locale.setlocale( locale.LC_ALL, 'en_US.utf8' )
 		
 		self.cur_cfg['retcode']  = self.default_retcode
+
 		if	(self.chkcookie() == False):
 			if(self.dologin() == False):
 				return []
@@ -490,14 +489,20 @@ class DeepSearchGinga_one(DeepSearch_one):
 			response2 = self.br.submit()
 		except Exception as e:
 			if(str(e).find("timed out") != -1):
-				print "Down or timeout"
+				log.critical("Gingadaddy: down or timeout");
 				return False
 			if(str(e).find("HTTP Error 302") == -1):
-				print "Fetched exception login: " + str(e) 	
+				log.critical("Gingadaddy: Fetched exception login: " + str(e))
 				return False
 				
 		return True		
-		
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 					
+	def search_cat(self, dic_searchopt):
+		#~ b=1&multicat%5B%5D=66&multicat%5B%5D=67&multicat%5B%5D=75
+		#~ todo: mapping from nab cats to ginga cat not implemented
+		return []
+
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 					
 	
 	def search(self, srchstr):
@@ -523,7 +528,7 @@ class DeepSearchGinga_one(DeepSearch_one):
 
 		loginurl = mainurl + '/nzbbrowse.php?b=2&st=1&c=0&g=0&sr=2&o=0&k='+srchstr
 		timestamp_s = time.time()	
-		
+
 		try:
 			socket.setdefaulttimeout(self.timeout)
 			res = self.br.open(loginurl)
