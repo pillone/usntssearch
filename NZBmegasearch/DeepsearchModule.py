@@ -433,6 +433,7 @@ class DeepSearchGinga_one(DeepSearch_one):
 	def basics(self):
 		self.builtin = 1		
 		self.speed_cl = 2
+		self.extra_cl = 0
 		self.active = 0
 		self.login = 1
 		self.basicurl = 'https://www.gingadaddy.com'
@@ -441,6 +442,7 @@ class DeepSearchGinga_one(DeepSearch_one):
 				'active':self.active,
 				'typesrch': 'DS_GNG',
 				'speed_cl':self.speed_cl,
+				'extra_cl':self.extra_cl,
 				'url':self.basicurl,
 				'login':self.login}
 		return opts

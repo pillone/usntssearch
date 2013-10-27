@@ -288,7 +288,7 @@
 	</div>
 
 	<table class="config_table_opts" summary="Config" style="width: 300px;" id="newznab_api_host"><thead>
-	<tr><th scope="col">Newznab Host (API)</th><th scope="col">API key</th><th scope="col">Timeout</th><th scope="col">Active</th></tr></thead><tbody>
+	<tr><th scope="col">Newznab Host (API)</th><th scope="col">API key</th><th scope="col">Timeout</th><th scope="col">Extra</th><th scope="col">Active</th></tr></thead><tbody>
 	{% for c in cfg -%}
 		{% if c['builtin'] == 0-%}
 			<tr id='newznab_api_row{{ c['idx']+1}}'>
@@ -308,6 +308,14 @@
 			</select>
 			</span></td>
 
+		<td><span>
+			<select name="selextra{{ c['idx'] }}" id="selextra{{ c['idx'] }}"  class="conftsel">
+				{% for sopt in c['selextra_sel'] -%}
+					<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
+				{%- endfor %}
+			</select>
+			</td>
+			
 			<td>
 				<input type="checkbox" name="valid{{ c['idx'] }}" id="valid{{ c['idx'] }}"  {{c['valid_verbose'] }} >
 				<input type="button" value="x" onclick="delete_row(0, {{ c['idx']+1 }})" class="confbttn" >
@@ -329,7 +337,7 @@
 	</div>
 
 	<table class="config_table_opts" summary="NZConfig_web" style="width: 300px;"  id="newznab_web_host"><thead>
-	<tr><th scope="col">Newznab Host (Web)</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Timeout</th><th scope="col">Active</th></thead></tr><tbody>
+	<tr><th scope="col">Newznab Host (Web)</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Timeout</th><th scope="col">Extra</th><th scope="col">Active</th></thead></tr><tbody>
 	{% for c in cfg_dp -%}
 			<tr id = 'newznab_web_row{{ c['idx']+1}}'>
 			<td><label for="ds_host{{ c['idx'] }}" class="visuallyhidden">Newznab Host (Web)</label>
@@ -340,7 +348,7 @@
 			<input type="password" name="ds_pass{{ c['idx'] }}" id="ds_pass{{ c['idx'] }}" value="{{ c['pwd'] }}" size="18" class="conftbox"></td>
 			<input type="hidden" name="ds_type{{ c['idx'] }}" value="DSN" size="40">
 			</td>
-
+			
 			<td><span>
 			<label for="ds_selspeed{{ c['idx'] }}" class="visuallyhidden">Timeout</label>
 			<select  name="ds_selspeed{{ c['idx'] }}" id="ds_selspeed{{ c['idx'] }}"  class="conftsel">
@@ -349,6 +357,16 @@
 				{%- endfor %}
 			</select>
 			</span></td>
+
+			<td>
+			<select  name="ds_selextra{{ c['idx'] }}" id="ds_selextra{{ c['idx'] }}"  class="conftsel">
+				{% for sopt in c['selextra_sel'] -%}
+					<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
+				{%- endfor %}
+			</select>
+			</td>
+
+			
 			<td>
 				<input type="checkbox" name="ds_valid{{ c['idx'] }}" id="ds_valid{{ c['idx'] }}" {{c['valid_verbose'] }} >
 				<label for="ds_valid{{ c['idx'] }}" class="visuallyhidden">Active</label>

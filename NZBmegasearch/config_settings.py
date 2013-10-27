@@ -42,9 +42,9 @@ class CfgSettings:
 		else:
 			self.dirconf = 	self.dirconf_local
 		
-		self.selectable_extra = [ ['1', 'API+Manual',''],
-								  ['2','Manual only',''],
-								  ['3','API only','']]
+		self.selectable_extraopt = [ ['0', 'API+Manual',''],
+								  ['1','Manual only',''],
+								  ['2','API only','']]
 		self.selectable_speedopt = [ ['1', 'Normal Response',''],
 									 ['2','Slow Response','']]
 		self.selectable_speedopt_cpy = copy.deepcopy(self.selectable_speedopt)
@@ -265,6 +265,9 @@ class CfgSettings:
 				spc = self.get_conf_speedopt(parser, i, 'd')
 				if ( spc == -1 ):
 					spc = 1
+				epc = self.get_conf_extraopt(parser, i, 'd')
+				if ( epc == -1 ):
+					epc = 0
 
 				if(parser.has_option('deep_search_provider%d' % (i+1)  , 'type')):	
 					typeds = parser.get('deep_search_provider%d' % (i+1)  , 'type')
@@ -276,6 +279,7 @@ class CfgSettings:
 					  'pwd': parser.get('deep_search_provider%d' % (i+1)  , 'pwd'),
 					  'type': typeds,
 					  'speed_class': spc,
+					  'extra_class': epc,
 					  'valid': int(parser.getint('deep_search_provider%d' % (i+1)  , 'valid')),
 					  }
 				self.cfg_deep.append(d1)
@@ -298,6 +302,17 @@ class CfgSettings:
 		else:
 			return -1		
 
+	def get_conf_extraopt(self, parser, idx, secname):
+
+		if(parser.has_section('extra_option') == True):
+			try:
+				spc1 = parser.getint('extra_option', secname + '%d_extra' % (idx+1))
+				return spc1
+			except Exception as e:
+				print str(e)
+				return -1
+		else:
+			return -1		
 				
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    
 		
@@ -376,11 +391,15 @@ class CfgSettings:
 				spc = self.get_conf_speedopt(cst_parser, i, 's')
 				if ( spc == -1 ):
 					spc = 1
+				epc = self.get_conf_extraopt(cst_parser, i, 's')
+				if ( epc == -1 ):
+					epc = 0
 
 				d1 = {'url': cst_parser.get('search_provider%d' % (i+1)  , 'url'),
 					  'type': cst_parser.get('search_provider%d' % (i+1)  , 'type'),
 					  'api': cst_parser.get('search_provider%d' % (i+1)  , 'api'),
 					  'speed_class': spc,
+					  'extra_class': epc,
 					  'valid':  cst_parser.getint('search_provider%d' % (i+1)  , 'valid'),
 					  'timeout':  self.cgen['default_timeout'],
 					  'builtin': 0
@@ -449,6 +468,9 @@ class CfgSettings:
 				spc = self.get_conf_speedopt(cst_parser, i, 'b')
 				if ( spc == -1 ):
 					spc = 1
+				epc = self.get_conf_extraopt(cst_parser, i, 's')
+				if ( epc == -1 ):
+					epc = 0
 
 				ret = cst_parser.has_option('bi_search_provider%d' % (i+1), 'login')			
 				lgn= ''
@@ -460,6 +482,7 @@ class CfgSettings:
 				d1 = {'valid': cst_parser.getint('bi_search_provider%d' % (i+1)  , 'valid'),
 					  'type': cst_parser.get('bi_search_provider%d' % (i+1)  , 'type'),
 					  'speed_class': spc,
+					  'extra_class': epc,
 					  'login': lgn,
 					  'pwd': pwd,
 					  'timeout':  self.cgen['default_timeout'],
@@ -515,6 +538,7 @@ class CfgSettings:
 						login_name=cffile[i]['login']
 						login_pwd=cffile[i]['pwd']
 						speed_cl = cffile[i]['speed_class']
+						extra_cl = cffile[i]['extra_class']
 						
 				if(module.login == 1):
 					flogin = 1
@@ -528,6 +552,7 @@ class CfgSettings:
 						'url': '',
 						'idx' : count,
 						'speed_class' : speed_cl,
+						'extra_class' : speed_cl,
 						'type' : module.typesrch,
 						'flogin': flogin,
 						'flogin_caption_user': flogin_caption_user,
@@ -546,6 +571,7 @@ class CfgSettings:
 				login_name =  ''
 				login_pwd = ''
 				speed_cl = dsearchmodule['opts']['speed_cl']
+				extra_cl = dsearchmodule['opts']['extra_cl']
 				if(dsearchmodule['opts']['active'] == 0):
 					option=''
 					
@@ -567,6 +593,7 @@ class CfgSettings:
 						'flogin_caption_user': 'login',
 						'flogin_caption_pwd': 'pwd',
 						'speed_class' : speed_cl,
+						'extra_class' : extra_cl,
 						'type' : dsearchmodule['opts']['typesrch'],
 						'flogin': flogin,
 						'loginname': login_name,
@@ -586,11 +613,16 @@ class CfgSettings:
 				count = count + 1
 				sel_speedopt_tmp = copy.deepcopy(self.selectable_speedopt)	
 				sel_speedopt_tmp[cffile[i]['speed_class']-1][2] = 'selected'
+				sel_extraopt_tmp = copy.deepcopy(self.selectable_extraopt)	
+				sel_extraopt_tmp[cffile[i]['extra_class']][2] = 'selected'
 				cffile[i]['selspeed_sel'] =  sel_speedopt_tmp
+				cffile[i]['selextra_sel'] =  sel_extraopt_tmp
 
 		
 		sel_speedopt_basic = copy.deepcopy(self.selectable_speedopt)	
 		sel_speedopt_basic[0][2] = 'selected'
+		sel_extraopt_basic = copy.deepcopy(self.selectable_extraopt)	
+		sel_extraopt_basic[0][2] = 'selected'
 		
 		count_ds=0
 		cdsfile_toshow1 = []
@@ -604,7 +636,12 @@ class CfgSettings:
 				count_ds = count_ds + 1
 				sel_speedopt_tmp = copy.deepcopy(self.selectable_speedopt)	
 				sel_speedopt_tmp[cdsfile[i]['speed_class']-1][2] = 'selected'
+				
+				sel_extraopt_tmp = copy.deepcopy(self.selectable_extraopt)	
+				sel_extraopt_tmp[cdsfile[i]['speed_class']][2] = 'selected'
+
 				cdsfile_toshow['selspeed_sel'] =  sel_speedopt_tmp
+				cdsfile_toshow['selextra_sel'] =  sel_extraopt_tmp
 				cdsfile_toshow1.append(cdsfile_toshow)
 		
 		possibleopt=megasearch.listpossiblesearchoptions()
@@ -649,8 +686,9 @@ class CfgSettings:
 		if(len(self.dirconf_oshift)):
 			openshift_install = True
 		return render_template('config.html', cfg=cffile, cfg_dp=cdsfile_toshow1,  cnt=count,  cnt_ds=count_ds, genopt = genopt, 
-												selectable_opt = possibleopt,
+											  selectable_opt = possibleopt,
 											  sel_speedopt_basic = sel_speedopt_basic,
+											  sel_extraopt_basic = sel_extraopt_basic,
 											  openshift_install = openshift_install,
 											  tnarray = tnarray,
 											  cdomainname = cdomainname,
