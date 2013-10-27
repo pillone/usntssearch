@@ -47,7 +47,7 @@
 </div>
 
 <div id="maincontent">
-	<form action="{{ genopt['revproxy'] }}/" method="post" name="cfgform" id = "cfgform">
+	<form action="/" method="post" name="cfgform" id = "cfgform">
 
 	<table class="config_table_opts" summary="Config" style="width: 420px;" id='tbl00'><thead>
 	<tr><th scope="col" >Connectivity (requires restart)</th></tr></thead><tbody>
@@ -65,7 +65,7 @@
 			{%- endif %}
 		</tr>
 		<tr>
-			<td><label for="revproxy">Reverse proxy dir (<a href='https://github.com/pillone/usntssearch/issues/65'>example</a>):</label> <input type="input" name="revproxy" id="revproxy" value="{{ genopt['revproxy'] }}" size="15" class="conftbox"></td>
+			<td><label for="revproxy">Reverse proxy dir or full url (must include http[s]://):</label> <input type="input" name="revproxy" id="revproxy" value="{{ genopt['revproxy'] }}" size="15" class="conftbox"></td>
 		</tr>	
 	</tbody></table>
 
@@ -385,7 +385,22 @@
 					$('.gray, .graysmall').val('Save')
 					return
 				}	
-				$.post($SCRIPT_ROOT +  "{{ genopt['revproxy'] }}/saveconfig", $("#cfgform").serialize(),
+				
+				// reverse proxying
+				var pathurl = $(location).attr('pathname')
+				var subdir_match = pathurl.lastIndexOf('/config' )
+				var cur_url = ''
+				if(subdir_match == 0)
+				{
+					cur_url = '/saveconfig'
+				}
+				else
+				{
+					cur_url = pathurl.substring(0,pathurl.length-7)+'/saveconfig'
+				}
+				
+				//var cur_url = $SCRIPT_ROOT +  "{{ genopt['revproxy'] }}/saveconfig"
+				$.post(cur_url, $("#cfgform").serialize(),
 				  function(data){
 						if(data.code == 1)
 						{

@@ -389,13 +389,15 @@ class DoParallelSearch:
 		if ('sabnzbd_url' in self.cgen):
 			if(len(self.cgen['sabnzbd_url'])):
 				send2sab_exist = self.sckname
-				#~ send2sab_exist = hname.scheme+'://'+hname.netloc
-				#~ print send2sab_exist
+
+				reportedurl = send2sab_exist+self.cgen['revproxy']+'/'+args['data']
+				if(send2sab_exist.find('http') != -1):
+					reportedurl = self.cgen['revproxy'] +'/'+args['data']
 
 				urlq = self.cgen['sabnzbd_url']+ '/api'
 				urlParams = dict(
 									mode='addurl',
-									name=send2sab_exist+self.cgen['revproxy']+'/'+args['data'],
+									name=reportedurl,
 									apikey=self.cgen['sabnzbd_api'],
 								)
 				print args['data']
