@@ -68,11 +68,25 @@ def listpossiblesearchoptions():
 							['EPUB','Ebook (epub)',''],
 							['FLAC','Audio FLAC',''] ]
 	return possibleopt						
+	
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
 class DoParallelSearch:
 	
 	def __init__(self, conf, cgen, ds, wrp):
-		
+	
+		self.text2cat = [ ['tv','tv'],  
+						  ['movies','movies'], 
+						  ['movie','movies'], 
+						  ['console','consoles'],
+						  ['music','music'], 
+						  ['mp3','music'],
+						  ['flac','music'],
+						  ['ebook','books'],
+						  ['pc','apps'],
+						  ['phone','pda'], 
+						  ['games','games']];
+								
 		self.dirconf=  os.getenv('OPENSHIFT_DATA_DIR', '')
 		self.results = []
 		self.cfg = conf
@@ -118,7 +132,19 @@ class DoParallelSearch:
 		self.collect_info = []
 		self.resultsraw = None
 
+
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+
+	def guesscategory(self, inputcat):
+		inputcat_lower = inputcat.lower()
+		for eachcat in self.text2cat:
+			if(inputcat_lower.find(eachcat[0]) != -1):
+				return eachcat[1]
+		return ''		
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
 	def cleancache(self):
 		ntime = datetime.datetime.now()
 		cinfon = []	
@@ -391,20 +417,26 @@ class DoParallelSearch:
 				send2sab_exist = self.sckname
 
 				reportedurl = send2sab_exist+self.cgen['revproxy']+'/'+args['data']
-				if(send2sab_exist.find('http') != -1):
+				if(self.cgen['revproxy'].find('http') != -1):
 					reportedurl = self.cgen['revproxy'] +'/'+args['data']
-
+				
 				urlq = self.cgen['sabnzbd_url']+ '/api'
 				urlParams = dict(
 									mode='addurl',
 									name=reportedurl,
 									apikey=self.cgen['sabnzbd_api'],
 								)
-				print args['data']
+				if('cat' in args):
+					guessed_cat = self.guesscategory(args['cat'].encode('utf-8'))
+					if(len(guessed_cat)):
+						urlParams['cat']=guessed_cat
+
+				#~ print urlParams
+				#~ print urlq
 				try:				
 					http_result = requests.get(url=urlq, params=urlParams, verify=False, timeout=15)
 				except Exception as e:
-					print 'Error contacting SABNZBD '+str(e)
+					log.error ('Error contacting SABNZBD '+str(e))
 					return 0
 				
 				data = http_result.text
@@ -413,14 +445,10 @@ class DoParallelSearch:
 				if(len(data) < 100):
 					limitpos = data.find('ok')
 					if(limitpos == -1):
-						mssg = 'ERROR: send url to SAB fails #1'
-						print mssg
-						log.error (mssg)
+						log.error ('ERROR: send url to SAB fails #1')
 						return 0
 				else:
-					mssg = 'ERROR: send url to SAB fails #2'
-					print mssg
-					log.error (mssg)
+					log.error ('ERROR: send url to SAB fails #2')
 					return 0
 
 				return 1

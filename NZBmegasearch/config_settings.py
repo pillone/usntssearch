@@ -41,7 +41,10 @@ class CfgSettings:
 			self.dirconf = self.dirconf_oshift
 		else:
 			self.dirconf = 	self.dirconf_local
-			
+		
+		self.selectable_extra = [ ['1', 'API+Manual',''],
+								  ['2','Manual only',''],
+								  ['3','API only','']]
 		self.selectable_speedopt = [ ['1', 'Normal Response',''],
 									 ['2','Slow Response','']]
 		self.selectable_speedopt_cpy = copy.deepcopy(self.selectable_speedopt)

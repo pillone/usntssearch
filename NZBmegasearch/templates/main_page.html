@@ -213,7 +213,7 @@
 							</span>	
 							{%- endif %}</td>
 
-						<td class="sizecell">{{ row['cat'] }}</td>
+						<td class="sizecell" id=tosab_info{{ row['id'] }}_cat>{{ row['cat'] }}</td>
 						<td class="sizecell">{{ row['filesize'] }}</td>
 						<td class="datecell">{{ row['age'] }}</td>
 						<td class="providercell"> <a href= "{{ row['details_deref'] }}">{{ row['providertitle'] }}</a></td>
@@ -300,9 +300,12 @@
  			$("a#tosab_lnk").click(function () {
 				var addressValue = $(this).attr("name");
 				$('img[name="'+addressValue+'_img"]').attr("src", 'static/loadingicon.gif')
-
+				
+				//alert($($(this).attr("name")+'_cat').html())
+				catname = $('#'+$(this).attr("name")+'_cat').html()
+				
 				 $.getJSON($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/tosab',
-							{data: $('input[name="'+addressValue+'"]').val(), },
+							{data: $('input[name="'+addressValue+'"]').val(), cat: catname},
 							function(data) {
 								if(data.code == 1)
 								{
