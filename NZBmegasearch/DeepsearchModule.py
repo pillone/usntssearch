@@ -76,6 +76,13 @@ class DeepSearch:
 			self.ds[i].timeout = self.cgen['default_timeout']
 			self.ds[i].cur_cfg['valid'] = self.cfg[i]['valid']
 
+	def get_dsnumproviders(self, rq_speed_class):
+		count = 0
+		for i in xrange(len(self.ds)):
+			if ( (self.ds[i].cur_cfg['speed_class'] <=  rq_speed_class) and (self.ds[i].cur_cfg['valid'])):
+				count = count + 1
+		return count		
+				
 	def set_extraopt(self, rq_speed_class, searchmode):
 		self.restore()
 

@@ -242,7 +242,7 @@ class CfgSettings:
 						parser.set('deep_search_provider%s' % counter3, 'pwd', bpwd)
 						if(len(blgin) == 0 and len(bpwd) == 0):
 							parser.set('deep_search_provider%s' % counter3, 'valid', '0')
-					parser.set('speed_option', 'd%d_speed_class' % counter3, request_form['bi_host%dextra' %i])	
+					parser.set('speed_option', 'd%d_speed_class' % counter3, request_form['bi_host%dspeed' %i])	
 					parser.set('extra_option', 'd%d_extra_class' % counter3, request_form['bi_host%dextra' %i])	
 					counter3 = counter3 + 1	
 

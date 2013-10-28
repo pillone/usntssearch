@@ -126,7 +126,8 @@ class DoParallelSearch:
 							#~ ['Extensive ['+str(self.svalid_speed[2]) + ']', 2,'']]
 		self.searchopt = [ 	[str(self.svalid_speed[1]) , 1,''],
 							[str(self.svalid_speed[2]) , 2,'']]
-
+		#~ correct the #providers
+		self.get_num_manual_providers()
 		self.searchopt_cpy = self.searchopt
 		self.possibleopt_cpy = self.possibleopt		
 		self.collect_info = []
@@ -195,8 +196,30 @@ class DoParallelSearch:
 			#~ only SSL encrypted allowed from openshift
 			sckname = 'https://' + sgetsockname			
 		return sckname
-		
+
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 		
+
+	def get_num_manual_providers(self):
+
+		count = 0
+		#~ 1 and 2 speed class
+		for speed_class_sel in xrange(1,3):
+			self.cfg = copy.deepcopy(self.cfg_cpy)
+			self.ds.set_extraopt(speed_class_sel, 'manual')
+			self.set_timeout_speedclass(speed_class_sel)
+			self.set_extraopt()				
+			self.searchopt[count][0] = 0
+			for conf in self.cfg :
+				if ( (conf['speed_class'] <=  speed_class_sel) and (conf['valid'])):
+					self.searchopt[count][0] = self.searchopt[count][0] + 1
+			#~ manual + ds manual
+			self.searchopt[count][0] = self.searchopt[count][0] + self.ds.get_dsnumproviders(speed_class_sel)
+			count = count + 1
+		
+		#~ reset all the modification
+		self.cfg = copy.deepcopy(self.cfg_cpy)
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 		
+	
 	def dosearch(self, args):
 		#~ restore originals
 		self.cfg = copy.deepcopy(self.cfg_cpy)
@@ -222,6 +245,7 @@ class DoParallelSearch:
 		self.set_timeout_speedclass(speed_class_sel)
 		#~ manual search Nabbased
 		self.set_extraopt()				
+		
 				
 		if( len(args['q']) == 0 ):
 			if('selcat' in args):
@@ -336,7 +360,7 @@ class DoParallelSearch:
 	def renderit_empty(self,params):	
 		searchopt_local =  copy.deepcopy(self.searchopt)
 		searchopt_local[0][2] = 'checked'
-		
+
 		possibleopt =  copy.deepcopy(self.possibleopt)
 		for slctg in possibleopt:
 			if(slctg[0] == self.cgen['search_default']):
