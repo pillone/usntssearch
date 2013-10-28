@@ -446,7 +446,7 @@ class ApiResponses:
 			kindofreq = kindofreq + ' RS '
 
 		mssg = kindofreq + self.searchstring + ' ' + str(len(niceResults)) + ' ' +  str(len(results))
-		print mssg
+		#~ print mssg
 		log.info (mssg)
 		if(self.typesearch == 3):
 			return render_template('rss.html',results=niceResults, num_results=len(niceResults), typeres= self.typesearch, idb = idbinfo)

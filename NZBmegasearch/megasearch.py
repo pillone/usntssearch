@@ -218,6 +218,7 @@ class DoParallelSearch:
 		
 		#~ reset all the modification
 		self.cfg = copy.deepcopy(self.cfg_cpy)
+		self.ds.restore()
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 		
 	
 	def dosearch(self, args):

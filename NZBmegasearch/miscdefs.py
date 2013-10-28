@@ -86,21 +86,20 @@ def daemonize(logsdir):
 	os.dup2(dev_null.fileno(), sys.stdin.fileno())
 	log.info("Daemonized using PID " + str(pid))
 
+	#~ LEGACY DAEMON LOGGING
 	#~ silences console output
 	#~ sys.stdout = open('tmpdl', 'wt')
-	logging.basicConfig(
-	level=logging.DEBUG,
-	format='%(asctime)s:%(levelname)s:%(name)s:%(message)s',
-	filename=logsdir+'nzbmegasearch_daemon.log',
-	filemode='a')
- 
-	stdout_logger = logging.getLogger('STDOUT')
-	sl = StreamToLogger(stdout_logger, logging.INFO)
-	sys.stdout = sl
-	 
-	stderr_logger = logging.getLogger('STDERR')
-	sl = StreamToLogger(stderr_logger, logging.ERROR)
-	sys.stderr = sl
+	#~ logging.basicConfig(
+	#~ level=logging.DEBUG,
+	#~ format='%(asctime)s:%(levelname)s:%(name)s:%(message)s',
+	#~ filename=logsdir+'nzbmegasearch_daemon.log',
+	#~ filemode='a')
+	#~ stdout_logger = logging.getLogger('STDOUT')
+	#~ sl = StreamToLogger(stdout_logger, logging.INFO)
+	#~ sys.stdout = sl
+	#~ stderr_logger = logging.getLogger('STDERR')
+	#~ sl = StreamToLogger(stderr_logger, logging.ERROR)
+	#~ sys.stderr = sl
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
