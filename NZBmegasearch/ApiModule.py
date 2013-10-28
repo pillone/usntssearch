@@ -240,6 +240,7 @@ class ApiResponses:
  				results.append(rawResults[provid][z])
 
 		self.searchstring = ''
+		self.typesearch = 1		
 		return self.cleanUpResultsXML(results)
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
