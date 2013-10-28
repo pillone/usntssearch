@@ -178,7 +178,7 @@ class SuggestionResponses:
 			movieinfo_trend = self.get_trends_movie()
 			sugg_trend_raw = self.movie_bestmatch(movieinfo_trend)
 			self.movie_trend = self.prepareforquery(sugg_trend_raw)
-			print datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + ' MVT ' + str(len(self.movie_trend))
+			#~ print datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + ' MVT ' + str(len(self.movie_trend))
 			log.info('MVT ' + str(len(self.movie_trend)))
 			
 			if(len(self.movie_trend)):
@@ -200,7 +200,7 @@ class SuggestionResponses:
 				lastepisode = self.get_show_lastepisode(show_trend_raw[i]['tvrage_id'])
 				if(len(lastepisode)):
 					self.show_trend =  self.prepareforquery_show(show_trend_raw[i], lastepisode, self.show_trend)
-			print datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + ' SHT ' + str(len(self.show_trend))
+			#~ print datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + ' SHT ' + str(len(self.show_trend))
 			log.info('SHT ' + str(len(self.show_trend)))
 			
 			if(len(self.show_trend)):			
