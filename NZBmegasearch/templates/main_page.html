@@ -141,12 +141,14 @@
 					{% endif %}
 				</div>
 
+				{% if servercode_return['code'] != 2 -%}
 				<div class="alert-box alert-box_info " id="alertinfo">
-					<b>{{ servercode_return['summary']|safe}}</b></br></br>
-					{% for scode in servercode_return['info'] -%}
-						{{ scode|safe}}
-					{%- endfor %}				
+						<b>{{ servercode_return['summary']|safe}}</b></br></br>
+						{% for scode in servercode_return['info'] -%}
+							{{ scode|safe}}
+						{%- endfor %}				
 				</div>	
+				{% endif %}	
 				
 				{%- if not results %}
 					<table class="results" summary="Search Results">
