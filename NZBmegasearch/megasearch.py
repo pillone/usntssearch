@@ -168,6 +168,19 @@ class DoParallelSearch:
 					rbuff = self.collect_info[i]['resultsraw']
 					break
 		return rbuff		
+	
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+	def set_extraopt(self):
+		for conf in self.cfg :
+			if ( (conf['extra_class'] >  1 ) and (conf['valid'])):
+				conf['valid']  = 0
+		
+	def set_timeout_speedclass(self, speed_class_sel):
+		for conf in self.cfg:
+			if ( (conf['speed_class'] <=  speed_class_sel) and (conf['valid'])):
+				conf['timeout']  = self.cgen['timeout_class'][ speed_class_sel ]
+			else:
+				conf['valid']  = 0
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	
 	def getdomainandprotocol(self, sgetsockname):
@@ -204,16 +217,12 @@ class DoParallelSearch:
 			speed_class_sel = int(args['tm'])
 		
 		#~ speed class deepsearch
-		self.ds.set_timeout_speedclass(speed_class_sel)
+		self.ds.set_extraopt(speed_class_sel, 'manual')
 		#~ speed class Nabbased	
-		for conf in self.cfg :
-			if ( (conf['speed_class'] <=  speed_class_sel) and (conf['valid'])):
-				conf['timeout']  = self.cgen['timeout_class'][ speed_class_sel ]
-				#~ print conf['type'] + " " + str(conf['timeout'] ) + ' ' + str(speed_class_sel )
-			else:
-				conf['valid']  = 0
-		 
-					
+		self.set_timeout_speedclass(speed_class_sel)
+		#~ manual search Nabbased
+		self.set_extraopt()				
+				
 		if( len(args['q']) == 0 ):
 			if('selcat' in args):
 				if(len(args['selcat'])==0):

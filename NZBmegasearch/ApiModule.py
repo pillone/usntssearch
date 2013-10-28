@@ -29,6 +29,7 @@ import base64
 import urllib2
 import os
 import logging
+import copy
 
 log = logging.getLogger(__name__)
 
@@ -56,6 +57,13 @@ class ApiResponses:
 		if(conf is not None):
 			self.timeout = conf[0]['timeout']
 			self.cfg= conf	 		
+			self.cfg_cpy = copy.deepcopy(self.cfg)
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+	def set_extraopt(self):
+		for conf in self.cfg :
+			if ( (conf['extra_class'] ==  1 ) and (conf['valid'])):
+				conf['valid']  = 0
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 		
@@ -63,7 +71,11 @@ class ApiResponses:
 		self.args = arguments
 		self.rqurl = hname.scheme+'://'+hname.netloc
 		print arguments
-		#~ print self.rqurl
+		
+		#~ restore originals
+		self.cfg = copy.deepcopy(self.cfg_cpy)		
+		self.cfg_ds.set_extraopt(None, 'api')
+		self.set_extraopt()				
 
 		if(self.args.has_key('t')):
 			typesearch=self.args['t']

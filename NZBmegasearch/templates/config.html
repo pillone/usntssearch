@@ -244,6 +244,7 @@
 				<input type="hidden" name="bi_host{{ c['idx'] }}" value="{{ c['type'] }}" size="40">
 				<input type="hidden" name="bi_host{{ c['idx'] }}url" value="{{ c['url'] }}" size="40">
 				<input type="hidden" name="bi_host{{ c['idx'] }}speed" value="{{ c['speed_class'] }}" size="40">
+				<input type="hidden" name="bi_host{{ c['idx'] }}extra" value="{{ c['extra_class'] }}" size="40">
 			</td>
 		</tr>
 		{%- endif %}
@@ -264,6 +265,7 @@
 				<input type="hidden" name="bi_host{{ c['idx'] }}" value="{{ c['type'] }}" size="40">
 				<input type="hidden" name="bi_host{{ c['idx'] }}url" value="{{ c['url'] }}" size="40">
 				<input type="hidden" name="bi_host{{ c['idx'] }}speed" value="{{ c['speed_class'] }}" size="40">
+				<input type="hidden" name="bi_host{{ c['idx'] }}extra" value="{{ c['extra_class'] }}" size="40">
 			</td>	
 			<td>
 				<label for="bi_host{{ c['idx'] }}login">{{ c['flogin_caption_user'] }}:</label> 
@@ -308,7 +310,7 @@
 			</select>
 			</span></td>
 
-		<td><span>
+			<td>
 			<select name="selextra{{ c['idx'] }}" id="selextra{{ c['idx'] }}"  class="conftsel">
 				{% for sopt in c['selextra_sel'] -%}
 					<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
@@ -325,6 +327,7 @@
 	{%- endfor %}
 	<tr id = 'lastrrow_newznab_api'>
 		<td><input type="button" value="Add server"  id="addentry_button_api"  class="confbttn" ></td>
+		<td></td>
 		<td></td>
 		<td style='text-align: right;'>All </span></td>
 		<td><input type="checkbox" name="all_newznab_api" id="all_newznab_api"></td>
@@ -376,6 +379,7 @@
 	{%- endfor %}
 	<tr id = 'lastrrow_newznab_web'>
 		<td><input type="button" value="Add server"  id="addentry_button_web"  class="confbttn" ></td>
+		<td></td>
 		<td></td>
 		<td></td>
 		<td style='text-align: right;'>All </span></td>
@@ -454,7 +458,7 @@
 			$("#addentry_button_web").click(function () {
 				var curval = parseInt($('#no_WEBnab').val()) + 1
 				$('#no_WEBnab').val(curval)				
-				var str1 = '<tr id = "newznab_web_rowCHANGETHIS">				<td><label for="ds_hostCHANGETHIS" class="visuallyhidden">Newznab Host (Web)</label>		<input type="text" name="ds_hostCHANGETHIS" id="ds_hostCHANGETHIS" value="" size="40" class="conftbox"></td>		<td><label for="ds_usrCHANGETHIS" class="visuallyhidden">Username</label>		<input type="text" name="ds_usrCHANGETHIS" id="ds_usrCHANGETHIS" value="" size="18" class="conftbox">		<td><label for="ds_passCHANGETHIS" class="visuallyhidden">Password</label>		<input type="password" name="ds_passCHANGETHIS" id="ds_passCHANGETHIS" value="" size="18" class="conftbox">		<input type="hidden" name="ds_typeCHANGETHIS" value="DSN" size="40">		</td>		<td><span>		<label for="ds_selspeedCHANGETHIS" class="visuallyhidden">Timeout</label>		<select name="ds_selspeedCHANGETHIS" id="ds_selspeedCHANGETHIS"  class="conftsel">			{% for sopt in sel_speedopt_basic -%}				<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>			{%- endfor %}		</select>		</span></td>		<td>			<input type="checkbox" name="ds_validCHANGETHIS" id="ds_validCHANGETHIS" checked=yes  >			<label for="ds_validCHANGETHIS" class="visuallyhidden">Active</label>			<input type="button" value="x" onclick="delete_row(1, CHANGETHIS)" class="confbttn" >					</td>		</tr>'
+				var str1 = '<tr id = "newznab_web_rowCHANGETHIS">	<td><label for="ds_hostCHANGETHIS" class="visuallyhidden">Newznab Host (Web)</label><input type="text" name="ds_hostCHANGETHIS" id="ds_hostCHANGETHIS" value="" size="40" class="conftbox"></td><td><label for="ds_usrCHANGETHIS" class="visuallyhidden">Username</label>	<input type="text" name="ds_usrCHANGETHIS" id="ds_usrCHANGETHIS" value="" size="18" class="conftbox">		<td><label for="ds_passCHANGETHIS" class="visuallyhidden">Password</label>		<input type="password" name="ds_passCHANGETHIS" id="ds_passCHANGETHIS" value="" size="18" class="conftbox">		<input type="hidden" name="ds_typeCHANGETHIS" value="DSN" size="40">		</td>		<td><span><label for="ds_selspeedCHANGETHIS" class="visuallyhidden">Timeout</label><select name="ds_selspeedCHANGETHIS" id="ds_selspeedCHANGETHIS"  class="conftsel">			{% for sopt in sel_speedopt_basic -%}				<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>			{%- endfor %}		</select>		</span></td><td><select  name="ds_selextraCHANGETHIS" id="ds_selextraCHANGETHIS"  class="conftsel">{% for sopt in sel_extraopt_basic -%}<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>{%- endfor %}</select></td><td><input type="checkbox" name="ds_validCHANGETHIS" id="ds_validCHANGETHIS" checked=yes  >			<label for="ds_validCHANGETHIS" class="visuallyhidden">Active</label>			<input type="button" value="x" onclick="delete_row(1, CHANGETHIS)" class="confbttn" ></td></tr>'
 				var nustr = str1.replace(/CHANGETHIS/g, curval.toString());
 				$( nustr).insertBefore('#lastrrow_newznab_web');
 			})
@@ -462,7 +466,7 @@
 			$("#addentry_button_api").click(function () {
 				var curval = parseInt($('#no_APInab').val()) + 1
 				$('#no_APInab').val(curval)				
-				var str1 = '<tr id="newznab_api_rowCHANGETHIS"> <td><label for="hostCHANGETHIS" class="visuallyhidden">Newznab Host (API)</label>		<input type="text" name="hostCHANGETHIS" id="hostCHANGETHIS" value="" size="35" class="conftbox"></td>		<td><label for="APICHANGETHIS" class="visuallyhidden">API key</label>		<input type="text" name="APICHANGETHIS" id="APICHANGETHIS" value="" size="35" class="conftbox">		<input type="hidden" name="typeCHANGETHIS" value="NAB" size="35">		</td>		<td><span>		<label for="selspeedCHANGETHIS" class="visuallyhidden">Timeout</label>		<select  name="selspeedCHANGETHIS" id="selspeedCHANGETHIS"  class="conftsel">	{% for sopt in sel_speedopt_basic -%}				<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>			{%- endfor %}	</select>		</span></td>		<td>			<input type="checkbox" name="validCHANGETHIS" id="validCHANGETHIS" checked=yes >			<label for="validCHANGETHIS" class="visuallyhidden">Active</label> <input type="button" value="x" onclick="delete_row(0, CHANGETHIS)" class="confbttn" >	</td> </tr> ';
+				var str1 = '<tr id="newznab_api_rowCHANGETHIS"><td><label for="hostCHANGETHIS" class="visuallyhidden">Newznab Host (API)</label><input type="text" name="hostCHANGETHIS" id="hostCHANGETHIS" value="" size="35" class="conftbox"></td>	<td><label for="APICHANGETHIS" class="visuallyhidden">API key</label> <input type="text" name="APICHANGETHIS" id="APICHANGETHIS" value="" size="35" class="conftbox">	<input type="hidden" name="typeCHANGETHIS" value="NAB" size="35"></td><td><span><label for="selspeedCHANGETHIS" class="visuallyhidden">Timeout</label>	<select  name="selspeedCHANGETHIS" id="selspeedCHANGETHIS"  class="conftsel">{% for sopt in sel_speedopt_basic -%}	<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>{%- endfor %}	</select>		</span></td><td><select name="selextraCHANGETHIS" id="selextraCHANGETHIS"  class="conftsel">{% for sopt in sel_extraopt_basic -%}<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>{%- endfor %}</select></td> <td> <input type="checkbox" name="validCHANGETHIS" id="validCHANGETHIS" checked=yes >			<label for="validCHANGETHIS" class="visuallyhidden">Active</label> <input type="button" value="x" onclick="delete_row(0, CHANGETHIS)" class="confbttn" >	</td> </tr> ';
 				var nustr = str1.replace(/CHANGETHIS/g, curval.toString());
 				$( nustr).insertBefore('#lastrrow_newznab_api');
 			})			

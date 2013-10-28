@@ -76,14 +76,33 @@ class DeepSearch:
 			self.ds[i].timeout = self.cgen['default_timeout']
 			self.ds[i].cur_cfg['valid'] = self.cfg[i]['valid']
 
-	def set_timeout_speedclass(self, rq_speed_class):
+	def set_extraopt(self, rq_speed_class, searchmode):
 		self.restore()
-		for i in xrange(len(self.ds)):
-			if ( (self.ds[i].cur_cfg['speed_class'] <=  rq_speed_class) and (self.ds[i].cur_cfg['valid'])):
-				self.ds[i].timeout = self.cgen['timeout_class'][  rq_speed_class  ]
-				#~ print "DP " + self.ds[i].cur_cfg['url'] + " " + str( self.ds[i].timeout ) + ' ' + str( rq_speed_class )
-			else:
-				self.ds[i].cur_cfg['valid']  = 0
+
+		#~ timeout
+		if(rq_speed_class is not None):
+			for i in xrange(len(self.ds)):
+				if ( (self.ds[i].cur_cfg['speed_class'] <=  rq_speed_class) and (self.ds[i].cur_cfg['valid'])):
+					self.ds[i].timeout = self.cgen['timeout_class'][  rq_speed_class  ]
+				else:
+					self.ds[i].cur_cfg['valid']  = 0
+		#~ extramode
+		if(searchmode is not None):
+			for i in xrange(len(self.ds)):
+				if(searchmode == 'manual'):
+					if ( (self.ds[i].cur_cfg['extra_class'] >  1) and (self.ds[i].cur_cfg['valid'])):
+						self.ds[i].cur_cfg['valid']  = 0
+				elif(searchmode == 'api'):
+					if ( (self.ds[i].cur_cfg['extra_class'] ==  1)  and (self.ds[i].cur_cfg['valid'])):
+						self.ds[i].cur_cfg['valid']  = 0
+
+	#~ def set_timeout_speedclass(self, rq_speed_class):
+		#~ self.restore()
+		#~ for i in xrange(len(self.ds)):
+			#~ if ( (self.ds[i].cur_cfg['speed_class'] <=  rq_speed_class) and (self.ds[i].cur_cfg['valid'])):
+				#~ self.ds[i].timeout = self.cgen['timeout_class'][  rq_speed_class  ]
+			#~ else:
+				#~ self.ds[i].cur_cfg['valid']  = 0
 
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 	

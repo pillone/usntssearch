@@ -86,6 +86,7 @@ class CfgSettings:
 
 		#~ general settings
 		parser.add_section('speed_option')
+		parser.add_section('extra_option')
 		parser.add_section('general')
 		parser.set('general', 'port', request_form['port'].replace(" ", ""))
 		parser.set('general', 'general_user', request_form['general_usr'].replace(" ", ""))
@@ -150,7 +151,7 @@ class CfgSettings:
 		no_APInab = int(request_form['no_APInab'])+1
 		no_WEBnab = int(request_form['no_WEBnab'])+1
 		
-		#~ custom
+		#~ api
 		counter = 1
 		for i in xrange(no_APInab):
 			if (request_form.has_key('host%d' % i)  == True):
@@ -166,6 +167,7 @@ class CfgSettings:
 					if (request_form.has_key('valid%d' % i)  == True):
 						parser.set('search_provider%s' % counter, 'valid', '1')
 					parser.set('speed_option', 's%d_speed_class' % counter, request_form['selspeed%d' %i].replace(" ", ""))
+					parser.set('extra_option', 's%d_extra_class' % counter, request_form['selextra%d' %i].replace(" ", ""))
 					counter = counter + 1
 		parser.set('general', 'numserver', str(counter-1))
 
@@ -191,6 +193,7 @@ class CfgSettings:
 						if(len(blgin) == 0 and len(bpwd) == 0):
 							parser.set('bi_search_provider%s' % counter2, 'valid', '0')
 					parser.set('speed_option', 'b%d_speed_class' % counter2, request_form['bi_host%dspeed' %i])	
+					parser.set('extra_option', 'b%d_extra_class' % counter2, request_form['bi_host%dextra' %i])	
 					counter2 = counter2 + 1	
 		parser.set('general', 'builtin_numserver', str(counter2-1))
 		
@@ -213,6 +216,7 @@ class CfgSettings:
 					if (request_form.has_key('ds_valid%d' % i)  == True):
 						parser.set('deep_search_provider%s' % counter3, 'valid', '1')
 					parser.set('speed_option', 'd%d_speed_class' % counter3, request_form['ds_selspeed%d' %i])
+					parser.set('extra_option', 'd%d_extra_class' % counter3, request_form['ds_selextra%d' %i])
 					counter3 = counter3 + 1
 
 		#~ builtin web search
@@ -238,7 +242,8 @@ class CfgSettings:
 						parser.set('deep_search_provider%s' % counter3, 'pwd', bpwd)
 						if(len(blgin) == 0 and len(bpwd) == 0):
 							parser.set('deep_search_provider%s' % counter3, 'valid', '0')
-					parser.set('speed_option', 'd%d_speed_class' % counter3, request_form['bi_host%dspeed' %i])	
+					parser.set('speed_option', 'd%d_speed_class' % counter3, request_form['bi_host%dextra' %i])	
+					parser.set('extra_option', 'd%d_extra_class' % counter3, request_form['bi_host%dextra' %i])	
 					counter3 = counter3 + 1	
 
 		parser.set('general', 'deep_numserver', str(counter3-1))
@@ -306,7 +311,7 @@ class CfgSettings:
 
 		if(parser.has_section('extra_option') == True):
 			try:
-				spc1 = parser.getint('extra_option', secname + '%d_extra' % (idx+1))
+				spc1 = parser.getint('extra_option', secname + '%d_extra_class' % (idx+1))
 				return spc1
 			except Exception as e:
 				print str(e)
@@ -552,7 +557,7 @@ class CfgSettings:
 						'url': '',
 						'idx' : count,
 						'speed_class' : speed_cl,
-						'extra_class' : speed_cl,
+						'extra_class' : extra_cl,
 						'type' : module.typesrch,
 						'flogin': flogin,
 						'flogin_caption_user': flogin_caption_user,
@@ -638,7 +643,7 @@ class CfgSettings:
 				sel_speedopt_tmp[cdsfile[i]['speed_class']-1][2] = 'selected'
 				
 				sel_extraopt_tmp = copy.deepcopy(self.selectable_extraopt)	
-				sel_extraopt_tmp[cdsfile[i]['speed_class']][2] = 'selected'
+				sel_extraopt_tmp[cdsfile[i]['extra_class']][2] = 'selected'
 
 				cdsfile_toshow['selspeed_sel'] =  sel_speedopt_tmp
 				cdsfile_toshow['selextra_sel'] =  sel_extraopt_tmp
