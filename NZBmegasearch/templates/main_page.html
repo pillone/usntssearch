@@ -354,7 +354,8 @@
 					{
 						for (var i=0;i<data['code'].length;i++)
 						{
-							var textrow_info = 'files: ' + data['code'][i]['nofile'] +', pars: ' + data['code'][i]['pars'] + ', size: ' +data['code'][i]['nbytes'] + ' MB'
+							//var textrow_info = 'files: ' + data['code'][i]['nofile'] +', pars: ' + data['code'][i]['pars'] + ', size: ' +data['code'][i]['nbytes'] + ' MB'
+							var textrow_info = 'RAR: ' + data['code'][i]['rars'] +' | PARS: ' + data['code'][i]['pars'] + ' | NFO: ' +data['code'][i]['nfo'] + ' | SIZE: ' +data['code'][i]['nbytes'] + ' MB'
 							$('#nzburl_info'+uid_range[data['code'][i]['id']]).text('- [ ' + textrow_info+' ]')
 							$.unblockUI();
 						}

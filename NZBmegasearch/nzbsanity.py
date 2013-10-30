@@ -17,6 +17,7 @@
 
 from flask import  Flask, Response, send_file
 import requests
+import re
 import threading
 import os
 import logging
@@ -220,6 +221,8 @@ class GetNZBInfo:
 		filesegs = []
 		fileinfo  = {}
 		fileinfo['pars'] = 0
+		fileinfo['rars'] = 0
+		fileinfo['nfo'] = 0
 		fileinfo['nofile'] = 0
 		fileinfo['nbytes'] = 0
 		fileinfo['postid'] = []
@@ -238,7 +241,17 @@ class GetNZBInfo:
 				fsggs = 0
 				parfile = 0
 				#~ exclude nzb containing links to other nzb
+				val =  re.search(r".r[0-9]{2,4}", fno['subject'], re.I)	
+				if(	val is not None):
+					fileinfo['rars'] = fileinfo['rars'] + 1
+				if (fno['subject'].find('.rar') != -1):
+					fileinfo['rars'] = fileinfo['rars'] + 1
+				if (fno['subject'].find('.nfo') != -1):
+					fileinfo['nfo'] = fileinfo['nfo'] + 1
 				fileinfo['nofile'] = fileinfo['nofile'] + 1
+				if (fno['subject'].find('.rars') != -1):
+					fileinfo['rars'] = fileinfo['rars'] + 1
+	
 				if (fno['subject'].find('.par2') != -1):
 					fileinfo['pars'] = fileinfo['pars'] + 1
 					parfile = 1
@@ -252,14 +265,16 @@ class GetNZBInfo:
 						#~ fileinfo['postid'].append(curpost)
 						#~ postid.append(curpost)
 				#~ filesegs.append([fno['subject'],fsggs,postid,parfile])
-			except:
+			except Exception as e:
 				fileinfo['pars'] = 0
+				fileinfo['rars'] = 0
+				fileinfo['nfo'] = 0
 				fileinfo['nofile'] = 0
 				fileinfo['nbytes'] = 0
 				fileinfo['postid'] = []
 
-				print "Error, could not parse NZB file"
-				sys.exit()
+				log.critical("Error, could not parse NZB file")
+				#~ sys.exit()
 		
 		fileinfo['nbytes'] = int(fileinfo['nbytes'] / (1024*1024))
 
