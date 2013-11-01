@@ -86,9 +86,11 @@ class GetNZBInfo:
 		nzbdata = []
 
 		tthr = []
+		idx = 0
 		for url in urls:
 			if(len(url)):
-				tthr.append( threading.Thread(target=self.download_hook, args=(url,) ) )
+				tthr.append( threading.Thread(target=self.download_hook, args=(url,idx) ) )
+			idx += 1
 		for t in tthr:
 			t.start()
 		for t in tthr:
@@ -100,8 +102,8 @@ class GetNZBInfo:
 		for nzbi in self.nzbdata:
 			if(len(nzbi)):
 				info = self.getdetailednzbinfo(nzbi['content'])
-				info['id'] = count
 				info['url'] = nzbi['url']
+				info['id'] = nzbi['id']
 				info_nzbdata.append(info)
 				count = count +1
 		
@@ -138,12 +140,13 @@ class GetNZBInfo:
 		
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-	def download_hook(self, downloadurl):
+	def download_hook(self, downloadurl, urlidx):
 		resinfo = {}
 		resinfo['headers']=[]
 		resinfo['content']=[]
 		resinfo['url']=''
-
+		resinfo['id'] = urlidx
+		
 		#~ try cache hit
 		ret = self.checkcache(downloadurl)
 		if( ret != -1):
@@ -181,6 +184,7 @@ class GetNZBInfo:
 							nzbname = rheaders[idxsfind+1:len(rheaders)].replace('"','')
 				
 					resinfo['content'] =  r.content.encode('utf-8')
+
 					self.nzbdata.append(resinfo)
 					
 					#~ saves it for caching
@@ -251,21 +255,13 @@ class GetNZBInfo:
 		
 		for fno in fileno:	
 			try:
-				#~ print fno['subject']
 				segs = fno.findAll('segments')		
 				fsggs = 0
 				parfile = 0
-				#~ val =  re.search(r".r[0-9]{2,4}", fno['subject'], re.I)	
+				#~ there is no rar or rarparts chk, many nzb contain just uncompr.files
 				val_sample =  re.search(r"[\.\-]sample", fno['subject'], re.I)	
 				if(	val_sample is not None):
 					continue
-				#~ too brittle, sometimes just raw files
-				#~ if(	val is not None):
-					#~ fileinfo['rars'] = fileinfo['rars'] + 1
-				#~ if (fno['subject'].find('.rar') != -1):
-					#~ fileinfo['rars'] = fileinfo['rars'] + 1
-				#~ elif (fno['subject'].find('.rars') != -1):
-					#~ fileinfo['rars'] = fileinfo['rars'] + 1	
 				if (fno['subject'].find('.nfo') != -1):
 					fileinfo['nfo'] = fileinfo['nfo'] + 1
 				elif (fno['subject'].find('.par2') != -1):
@@ -280,10 +276,6 @@ class GetNZBInfo:
 					postid = []
 					for s2 in s_segs:
 						fileinfo['nbytes'] += int (s2['bytes'])
-						#~ curpost = ''.join(s2.findAll(text=True))
-						#~ fileinfo['postid'].append(curpost)
-						#~ postid.append(curpost)
-				#~ filesegs.append([fno['subject'],fsggs,postid,parfile])
 			except Exception as e:
 				fileinfo['pars'] = 0
 				fileinfo['rars'] = 0
@@ -304,7 +296,7 @@ class GetNZBInfo:
 
 	def whatisbetter(self, nzbinfos):
 		
-		nzbinfos_sort = sorted(nzbinfos, key=itemgetter('nofile'), reverse=True) 		
+		nzbinfos_sort = sorted(nzbinfos, key=itemgetter('pars'), reverse=True) 		
 		#~ heuristic works just on pars, for now..
 		
 		return nzbinfos_sort
