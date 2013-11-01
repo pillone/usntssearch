@@ -247,7 +247,6 @@ class GetNZBInfo:
 			return fileinfo
 			
 		soup = beautifulsoup.BeautifulSoup(data)
-		#~ paperdiv_title = soup.findAll('meta', {'type': 'name'})
 		fileno = soup.findAll('file')
 		
 		for fno in fileno:	
@@ -256,23 +255,25 @@ class GetNZBInfo:
 				segs = fno.findAll('segments')		
 				fsggs = 0
 				parfile = 0
-				val =  re.search(r".r[0-9]{2,4}", fno['subject'], re.I)	
+				#~ val =  re.search(r".r[0-9]{2,4}", fno['subject'], re.I)	
 				val_sample =  re.search(r"[\.\-]sample", fno['subject'], re.I)	
 				if(	val_sample is not None):
 					continue
-				if(	val is not None):
-					fileinfo['rars'] = fileinfo['rars'] + 1
-				if (fno['subject'].find('.rar') != -1):
-					fileinfo['rars'] = fileinfo['rars'] + 1
+				#~ too brittle, sometimes just raw files
+				#~ if(	val is not None):
+					#~ fileinfo['rars'] = fileinfo['rars'] + 1
+				#~ if (fno['subject'].find('.rar') != -1):
+					#~ fileinfo['rars'] = fileinfo['rars'] + 1
+				#~ elif (fno['subject'].find('.rars') != -1):
+					#~ fileinfo['rars'] = fileinfo['rars'] + 1	
 				if (fno['subject'].find('.nfo') != -1):
 					fileinfo['nfo'] = fileinfo['nfo'] + 1
-				fileinfo['nofile'] = fileinfo['nofile'] + 1
-				if (fno['subject'].find('.rars') != -1):
-					fileinfo['rars'] = fileinfo['rars'] + 1
-	
-				if (fno['subject'].find('.par2') != -1):
+				elif (fno['subject'].find('.par2') != -1):
 					fileinfo['pars'] = fileinfo['pars'] + 1
 					parfile = 1
+				else:
+					fileinfo['nofile'] = fileinfo['nofile'] + 1
+					
 				for s in segs:	
 					s_segs = s.findAll('segment')
 					fsggs = fsggs + len(s_segs)
