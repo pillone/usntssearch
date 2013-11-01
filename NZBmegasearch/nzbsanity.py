@@ -17,6 +17,7 @@
 
 from flask import  Flask, Response, send_file
 import requests
+import sys
 import re
 import threading
 import os
@@ -40,6 +41,16 @@ class GetNZBInfo:
 		self.wrp = wrp
 		self.nzbdata = []
 		self.collect_info = []
+		self.MAX_ALLOWED_CACHE = 10000000
+		self.MAX_ALLOWED_CACHE_OVERALL_MEMSZ = 20
+
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+	def checkcache_makespace(self):		
+		#~ crop to max qty
+		if (len(self.collect_info) > self.MAX_ALLOWED_CACHE_OVERALL_MEMSZ):
+			self.collect_info = self.collect_info[2:]
+		
 		
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
@@ -48,7 +59,6 @@ class GetNZBInfo:
 			if(self.collect_info[i]['url'] == url):
 				if(os.path.exists(self.collect_info[i]['fname'])):
 					return i
-		
 		return -1
 		
 
@@ -174,14 +184,17 @@ class GetNZBInfo:
 					self.nzbdata.append(resinfo)
 					
 					#~ saves it for caching
-					f = tempfile.NamedTemporaryFile(delete=False)					
-					cached_info = {}
-					cached_info['url']=resinfo['url']
-					cached_info['headers']=resinfo['headers']
-					cached_info['fname']=f.name
-					f.write(resinfo['content'])
-					f.close()
-					self.collect_info.append(cached_info)
+					#~ saves it for caching in case that filesize < 20M
+					if(len(resinfo['content']) < self.MAX_ALLOWED_CACHE):
+						self.checkcache_makespace()
+						f = tempfile.NamedTemporaryFile(delete=False)					
+						cached_info = {}
+						cached_info['url']=resinfo['url']
+						cached_info['headers']=resinfo['headers']
+						cached_info['fname']=f.name
+						f.write(resinfo['content'])
+						f.close()
+						self.collect_info.append(cached_info)
 					return resinfo
 							
 			
@@ -197,15 +210,18 @@ class GetNZBInfo:
 					resinfo['content'] = res.data.encode('utf-8')
 					self.nzbdata.append(resinfo)
 
-					#~ saves it for caching
-					f = tempfile.NamedTemporaryFile(delete=False)					
-					cached_info = {}					
-					cached_info['url']=resinfo['url']
-					cached_info['headers']=resinfo['headers']
-					cached_info['fname']=f.name
-					f.write(resinfo['content'])
-					f.close()
-					self.collect_info.append(cached_info)	
+					#~ saves it for caching in case that filesize < 20M
+					if(len(resinfo['content']) < self.MAX_ALLOWED_CACHE):
+						self.checkcache_makespace()
+						f = tempfile.NamedTemporaryFile(delete=False)					
+						cached_info = {}					
+						cached_info['url']=resinfo['url']
+						cached_info['headers']=resinfo['headers']
+						cached_info['fname']=f.name
+						f.write(resinfo['content'])
+						f.close()
+						self.collect_info.append(cached_info)	
+
 					return resinfo
 
 																		
@@ -240,8 +256,10 @@ class GetNZBInfo:
 				segs = fno.findAll('segments')		
 				fsggs = 0
 				parfile = 0
-				#~ exclude nzb containing links to other nzb
 				val =  re.search(r".r[0-9]{2,4}", fno['subject'], re.I)	
+				val_sample =  re.search(r"[\.\-]sample", fno['subject'], re.I)	
+				if(	val_sample is not None):
+					continue
 				if(	val is not None):
 					fileinfo['rars'] = fileinfo['rars'] + 1
 				if (fno['subject'].find('.rar') != -1):
