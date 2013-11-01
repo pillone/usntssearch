@@ -181,8 +181,9 @@
 			<table class="results" summary="Search Results">
 				<thead>
 					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a>
-					<input type="button" class="confbttn" value='Download Best' id='nzbanalize_down'>
-					<input type="button" class="confbttn" value='Deep Analysis' id='nzbanalize_only'>
+					<input type="button" class="confbttn" value='Advanced >>' id='nzbanalize' >
+					<input type="button" class="confbttn" value='NZB analysis' id='nzbanalize_only'>
+					<input type="button" class="confbttn" value='Download NZB with most Pars' id='nzbanalize_down'>
 					</th>
 					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=c&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Type <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
 					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Size <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
@@ -207,7 +208,7 @@
 								<input type="hidden" value="{{ row['url_encr'] }}" name=tonzbget_info{{ row['id'] }}>
 								<img src="static/nzb2_16.png" style='vertical-align: middle;' width="16" height="16"/ name=tonzbget_info{{ row['id'] }}_img></a>
 							{%- endif %}
-							<input type="checkbox" id="smartnzb" name="{{ row['id'] }}">
+							<input type="checkbox" id="smartnzb" name="{{ row['id'] }}" class="nzbanalize_cbox">
 							
 							<a href= "{{ row['url_encr'] }}" id=nzburl{{ row['id'] }}>{{ row['title'] }}</a> 
 							<span id=nzburl_info{{ row['id'] }} class="text-red"></span>
@@ -356,7 +357,7 @@
 						{
 							//var textrow_info = 'files: ' + data['code'][i]['nofile'] +', pars: ' + data['code'][i]['pars'] + ', size: ' +data['code'][i]['nbytes'] + ' MB'
 							var textrow_info = 'FILES: ' + data['code'][i]['nofile'] +' | PARS: ' + data['code'][i]['pars'] + ' | NFO: ' +data['code'][i]['nfo'] + ' | SIZE: ' +data['code'][i]['nbytes'] + ' MB'
-							$('#nzburl_info'+uid_range[data['code'][i]['id']]).text('- [ ' + textrow_info+' ]')
+							$('#nzburl_info'+uid_range[data['code'][i]['id']]).text(' [ ' + textrow_info+' ]')
 							$.unblockUI();
 						}
 						
@@ -372,6 +373,16 @@
 
 			
 	    $(document).ready(function() {
+			$("#nzbanalize_only").hide();
+			$("#nzbanalize_down").hide();
+			$(".nzbanalize_cbox").hide();
+
+			$("#nzbanalize").click(function () {
+				$("#nzbanalize_only").show();
+				$("#nzbanalize_down").show();
+				$("#nzbanalize").hide();
+				$(".nzbanalize_cbox").show();
+			});
 
 			$("#nzbanalize_only").click(function () {
 				uinfo = analysis_select_post();
