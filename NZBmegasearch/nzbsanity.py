@@ -155,6 +155,8 @@ class GetNZBInfo:
 				resinfo['content'] = fp.read()
 			resinfo['url'] = self.collect_info[ret]['url']
 			resinfo['headers'] = self.collect_info[ret]['headers']
+			#~ overwrites the old id with the new one
+			resinfo['id'] = urlidx
 			print 'Nzb analyzer: cache hit'
 			self.nzbdata.append(resinfo)
 			return resinfo
