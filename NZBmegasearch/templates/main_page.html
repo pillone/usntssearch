@@ -49,16 +49,21 @@
 
 
 		<div id="container">
-			<div  class="titlemain"><img src="static/title.png" width="387" height="" alt="NZBmegasearcH"/></div>
+			<div  class="titlemain"><a href='\'><img src="static/title.png" width="387" height="" alt="NZBmegasearcH"/></a></div>
 			<form action="{{ cgen['revproxy'] }}/s" method="get" class="form-wrapper-01">
 
 					<input type="text" id="search" placeholder="" name="q" value="{{ sstring }}">
-					<select class="selcatstlye" name="selcat" id="selcat">
-						<option value="" selected>No categ.</option>
-						{% for sopt in selectable_opt -%}
-							<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
-						{%- endfor %}
-					</select>
+					<dl id="selcat_ddown" class="dropdown">
+						<dt><a href="#"><span id='ddown_selid'>No categ.</span></a></dt>
+						<dd>
+							<ul>
+								{% for sopt in selectable_opt -%}
+									<li><a href="#">{{ sopt[1] }}<span class="value">{{ sopt[0] }}</span></a></li>
+								{%- endfor %}
+							</ul>
+						</dd>
+					</dl>
+					<input type="hidden" name="selcat" id="selcat" value="">
 					<div>
 						<input type="hidden" name="tm" id="tm" value="1">
 						<a class="tooltips" href="#"><input type="submit" class="gray graybig" value='Search' onclick='$("#tm").attr("value", "1");' id='submit_button1'><span>{{ search_opt[0][0] }} providers, {{cgen['timeout_class'][1]}}s timeout</span></a>
@@ -66,7 +71,7 @@
 					</div>
 	
 			</form>
-
+			
 			<div class ="suggarea_macro">
 				
 				<table class="sugg_table">
@@ -177,7 +182,11 @@
 
 			<table class="results" summary="Search Results">
 				<thead>
-					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
+					<tr><th scope="col" class=titlecell><a href="s?q={{ args['q'] }}&order=t&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Title <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a>
+					<input type="button" class="confbttn" value='Advanced >>' id='nzbanalize' >
+					<input type="button" class="confbttn" value='NZB analysis' id='nzbanalize_only'>
+					<input type="button" class="confbttn" value='Download NZB with most Pars' id='nzbanalize_down'>
+					</th>
 					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=c&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Type <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
 					    <th scope="col" class=sizecell><a href="s?q={{ args['q'] }}&order=s&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Size <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
 					    <th scope="col" class=datecell><a href="s?q={{ args['q'] }}&order=d&tm={{ speed_class_sel }}&selcat={{ scat }}"><b>Age <img src="static/arrow-down.png" style='vertical-align: middle;' alt="sort"/></b></a></th>
@@ -201,8 +210,10 @@
 								<input type="hidden" value="{{ row['url_encr'] }}" name=tonzbget_info{{ row['id'] }}>
 								<img src="static/nzb2_16.png" style='vertical-align: middle;' width="16" height="16"/ name=tonzbget_info{{ row['id'] }}_img></a>
 							{%- endif %}
+							<input type="checkbox" id="smartnzb" name="{{ row['id'] }}" class="nzbanalize_cbox">
 							
-							<a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a>
+							<a href= "{{ row['url_encr'] }}" id=nzburl{{ row['id'] }}>{{ row['title'] }}</a> 
+							<span id=nzburl_info{{ row['id'] }} class="text-red"></span>
 
 							{% if row['predb'] == 2 -%}
 							<span class = "predbcell">
@@ -296,8 +307,130 @@
 
 	    <script type="text/javascript">
 		var serverinfo = 0;
+		var MAXINSPECTSELECT = 5;
 
+		function analysis_unselect_all()
+		{
+			var allcbox = $('[id^="smartnzb"]')
+			
+			for ( var i = 0; i < allcbox.length; i++ ) 
+			{
+				if( $(allcbox[i]).is(':checked' ) == true)
+				{
+					$(allcbox[i]).prop('checked',false)
+				}
+			}
+		}
+
+		function analysis_select_post()
+		{
+			
+			var allcbox = $('[id^="smartnzb"]')
+			var uid = ''
+			var uid_range = []
+			for ( var i = 0; i < allcbox.length; i++ ) 
+			{
+				if( $(allcbox[i]).is(':checked' ) == true)
+				{
+					idname = $(allcbox[i]).attr("name");
+					uid = uid + $('#nzburl'+idname).attr("href") + '====='
+					uid_range.push(idname)
+				}
+			}
+			uinfo = []
+			uinfo.uid_range = uid_range
+			uinfo.uid = uid
+			return(uinfo)
+		}
+		
+
+		function txrx_nzbinfo(uinfo, mode)
+		{
+			uid_range = uinfo.uid_range
+			uid = uinfo.uid
+			$.ajax($SCRIPT_ROOT + '{{ cgen['revproxy'] }}/smartget', {
+				data : uid,
+				contentType : 'application/json',
+				type : 'POST',
+				success: function(data, textStatus, xhr) {
+					if(jQuery.inArray( "code", data ))
+					{
+						for (var i=0;i<data['code'].length;i++)
+						{
+							//var textrow_info = 'files: ' + data['code'][i]['nofile'] +', pars: ' + data['code'][i]['pars'] + ', size: ' +data['code'][i]['nbytes'] + ' MB'
+							var textrow_info = 'FILES: ' + data['code'][i]['nofile'] +' | PARS: ' + data['code'][i]['pars'] + ' | NFO: ' +data['code'][i]['nfo'] + ' | SIZE: ' +data['code'][i]['nbytes'] + ' MB'
+							$('#nzburl_info'+uid_range[data['code'][i]['id']]).text(' [ ' + textrow_info+' ]')
+							$.unblockUI();
+						}
+						
+						if(mode == 'download')
+						{
+							$("body").append("<iframe src='" + data['code'][0]['url']+ "' style='display: none;' ></iframe>");
+						}
+					}
+				}
+			});
+		}	
+			
+
+			
 	    $(document).ready(function() {
+			$("#nzbanalize_only").hide();
+			$("#nzbanalize_down").hide();
+			$(".nzbanalize_cbox").hide();
+
+			$("#nzbanalize").click(function () {
+				$("#nzbanalize_only").show();
+				$("#nzbanalize_down").show();
+				$("#nzbanalize").hide();
+				$(".nzbanalize_cbox").show();
+			});
+
+			$("#nzbanalize_only").click(function () {
+				uinfo = analysis_select_post();
+				if(uinfo.uid_range.length > MAXINSPECTSELECT)
+				{
+					alert('Max '+ MAXINSPECTSELECT + ' simultaneous nzb inspections (avoids server flooding)')
+				}
+				else
+				{
+					$.blockUI({ message: '<h1>.:: PLEASE WAIT ::.</h1><br><h2>Downloading and analyzing '+ uinfo.uid_range.length +' NZB</h2><h3>This may take up to {{cgen['timeout_class'][2]}}s</h3>', css: {
+					border: 'none',
+					padding: '15px',
+					backgroundColor: '#000',
+					'-webkit-border-radius': '10px',
+					'-moz-border-radius': '10px',
+					opacity: .7,
+					color: '#fff'
+							} });
+
+					postdata = txrx_nzbinfo(uinfo,0);
+				}
+				analysis_unselect_all()     	
+			});
+
+			
+			$("#nzbanalize_down").click(function () {
+				uinfo = analysis_select_post();
+				if(uinfo.uid_range.length > MAXINSPECTSELECT)
+				{
+					alert('Max '+ MAXINSPECTSELECT + ' simultaneous nzb inspections (avoids server flooding)')
+				}
+				else
+				{
+					$.blockUI({ message: '<h1>.:: PLEASE WAIT ::.</h1><br><h2>Downloading and analyzing '+ uinfo.uid_range.length +' NZB</h2><h3>This may take up to {{cgen['timeout_class'][2]}}s</h3>', css: {
+					border: 'none',
+					padding: '15px',
+					backgroundColor: '#000',
+					'-webkit-border-radius': '10px',
+					'-moz-border-radius': '10px',
+					opacity: .7,
+					color: '#fff'
+							} });
+					postdata = txrx_nzbinfo(uinfo,'download');
+				}
+				analysis_unselect_all()				
+			});
 
  			$("a#tosab_lnk").click(function () {
 				var addressValue = $(this).attr("name");
@@ -406,6 +539,54 @@
 	     
 		</script>
 
+		<script type="text/javascript">
+        $(document).ready(function() {
+
+			var ddown_selarray = [];
+			var ddown_selarray_text = [];
+			var ddown_selarray_code = [];
+			{% for sopt in selectable_opt -%}
+				ddown_selarray.push( "{{ sopt[2] }}" );
+				ddown_selarray_text.push( "{{ sopt[1] }}" );
+				ddown_selarray_code.push( "{{ sopt[0] }}" );
+			{%- endfor %}
+			for ( var i = 0; i < ddown_selarray.length; i++ ) 
+			{
+				if(ddown_selarray[i] == 'selected')
+				{
+					$("#ddown_selid").text(ddown_selarray_text[i]);
+					$("#selcat").attr("value", ddown_selarray_code[i]);
+				}
+			}
+
+	
+            $(".dropdown dt a").click(function() {
+                $(".dropdown dd ul").toggle();
+                return false;
+            });
+                        
+            $(".dropdown dd ul li a").click(function() {
+                var text = $(this).html();
+                $(".dropdown dt a span").html(text);
+                $(".dropdown dd ul").hide();
+                $("#selcat").attr("value", getSelectedValue("selcat_ddown"));
+                return false;                
+            });
+                        
+            function getSelectedValue(id) {
+                return $("#" + id).find("dt a span.value").html();
+            }
+
+            $(document).bind('click', function(e) {
+                var $clicked = $(e.target);
+                if (! $clicked.parents().hasClass("dropdown"))
+                    $(".dropdown dd ul").hide();
+            });
+
+
+        });
+    </script>
+    
 
 	</body>
 </html>

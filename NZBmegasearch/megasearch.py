@@ -54,7 +54,8 @@ def getdomainext( ):
 
 
 def listpossiblesearchoptions():
-	possibleopt = [ ['1080p', 'HD 1080p',''],
+	possibleopt = [ ['', 'No categ.',''],
+							['1080p', 'HD 1080p',''],
 							['720p','HD 720p',''],
 							['BDRIP','SD BlurayRip',''],
 							['DVDRIP','SD DVDRip',''],
@@ -156,7 +157,7 @@ class DoParallelSearch:
 			if(dl < self.cgen['max_cache_age']*60):
 				cinfon.append(self.collect_info[i])
 			else:
-				print 'removed'	
+				print 'cache entry removed'	
 		self.collect_info = cinfon		
 			
 	def chkforcache(self, qryenc, speedclass):
@@ -408,7 +409,7 @@ class DoParallelSearch:
 						#~ for redirect
 						log.info('tonzbget: Warp is treated as 302 redirector')
 						geturl_rq = res.headers['Location']
-						r = requests.get(geturl_rq)
+						r = requests.get(geturl_rq, verify=False)
 						nzbname = 'nzbfromNZBmegasearcH'
 						if('content-disposition' in r.headers):
 							rheaders = r.headers['content-disposition']

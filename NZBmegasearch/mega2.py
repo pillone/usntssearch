@@ -66,7 +66,7 @@ def loginit():
 
 def reload_all():
 	print '>> Bootstrapping...'
-	global cfgsets, sugg, ds, mega_parall, wrp, apiresp, auth
+	global cfgsets, sugg, ds, mega_parall, wrp, apiresp, auth, getsmartinfo
 	cfgsets = config_settings.CfgSettings()	
 	cfgsets.cgen['large_server'] = LARGESERVER
 	sugg = SuggestionResponses(cfgsets.cfg, cfgsets.cgen)
@@ -74,6 +74,7 @@ def reload_all():
 	wrp = Warper (cfgsets.cgen, cfgsets.cfg, ds)
 	mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds, wrp)
 	apiresp = ApiResponses(cfgsets.cfg, cfgsets.cgen, wrp, ds)
+	getsmartinfo = nzbsanity.GetNZBInfo(cfgsets.cfg, cfgsets.cgen, ds, wrp)
 	auth = miscdefs.Auth(cfgsets)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -123,8 +124,6 @@ cfgsets = config_settings.CfgSettings()
 first_time = 0
 #~ init logger
 log = loginit()
-#~ bootstrap
-reload_all()
 
 if (cfgsets.cfg is None or cfgsets.cfg_deep is None ):
 	first_time = 1
@@ -134,7 +133,11 @@ certdir = SearchModule.resource_path('certificates/')
 templatedir = SearchModule.resource_path('templates')
 app = Flask(__name__, template_folder=templatedir)	 
 
-SearchModule.loadSearchModules()
+#~ bootstrap
+import nzbsanity
+reload_all()
+
+#~ SearchModule.loadSearchModules()
 if(DEBUGFLAG):
 	cfgsets.cgen['general_trend'] = 0
 	cfgsets.cgen['general_suggestion'] = 0
@@ -253,6 +256,20 @@ def rss():
 				return '[API key protection ACTIVE] API key required'
 	else:
 		return apiresp.dosearch_rss(request.args, urlparse(request.url))
+
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+@app.route('/smartget', methods=['POST'])
+def smartget():
+	jsonret = jsonify(code=getsmartinfo.process( request.data, urlparse(request.url) ))
+	return jsonret
+	#~ print request.url
+	#~ return getsmartinfo.process( request.data, urlparse(request.url) )
+	
+
+
+
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
