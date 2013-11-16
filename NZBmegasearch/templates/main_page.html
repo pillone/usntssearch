@@ -255,7 +255,7 @@
 							{% if send2sab_exist   -%}
 								<a href= "" id=tosab_lnk name=tosab_info{{ row['id'] }}>
 								<input type="hidden" value="{{ row['url_encr'] }}" name=tosab_info{{ row['id'] }}>
-								<img src="static/sab2_16.png" style='vertical-align: middle;' width="16" height="16"/ name=tosab_info{{ row['id'] }}_img>
+								<img src="static/sab2_16.png" style='vertical-align: middle;' width="16" height="16"/ name=tosab_info{{ row['id'] }}_img></a>
 							{%- endif %}
 
 							{% if send2nzbget_exist   -%}
@@ -263,8 +263,10 @@
 								<input type="hidden" value="{{ row['url_encr'] }}" name=tonzbget_info{{ row['id'] }}>
 								<img src="static/nzb2_16.png" style='vertical-align: middle;' width="16" height="16"/ name=tonzbget_info{{ row['id'] }}_img></a>
 							{%- endif %}
+							<input type="checkbox" id="smartnzb" name="{{ row['id'] }}" class="nzbanalize_cbox">
 							
-							<a href= "{{ row['url_encr'] }}">{{ row['title'] }}</a>
+							<a href= "{{ row['url_encr'] }}" id=nzburl{{ row['id'] }}>{{ row['title'] }}</a> 
+							<span id=nzburl_info{{ row['id'] }} class="text-red"></span>
 
 							{% if row['predb'] == 2 -%}
 							<span class = "predbcell">							
