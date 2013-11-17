@@ -18,6 +18,7 @@
 import requests
 import sys
 import base64
+import DeepsearchModule
 from functools import wraps
 from flask import Response,request
 import config_settings
@@ -256,9 +257,8 @@ class ChkServer:
 	def check(self, args):
 		ret = 0
 		
-		#~ server based API
-		print self.cgen['timeout_class']
 		if(('hostname' in args) and ('type' in args)):
+			#~ server based API			
 			if(int(args['type']) == 0):
 				ret = 1
 				urlParams = dict(t='search',q='Ubuntu',o='xml',apikey=args['api'])
@@ -269,10 +269,29 @@ class ChkServer:
 						limitpos = data.encode('utf-8').lower().find('<error code="100"')
 						if(limitpos != -1):
 							return 0
-					
 				except Exception as e:
 					log.critical(queryURL + ' -- ' + str(e))
 					ret = 0
+		
+			#~ server based WEB
+			if(int(args['type']) == 1):
+				
+				cfg_deep_tmp = [{'url': args['hostname'],
+					  'user':args['user'],
+					  'pwd': args['pwd'],
+					  'type': 'DSN',
+					  'speed_class': 2,
+					  'extra_class': 0,
+					  'valid': 1,
+					  }]
+				ds_tmp = DeepsearchModule.DeepSearch(cfg_deep_tmp, self.cgen)
+				ret_bool = ds_tmp.ds[0].search('Ubuntu')
+				
+				if(ret_bool):
+					ret = 1
+				else:	
+					ret = 0
+
 		return ret
 		
 	

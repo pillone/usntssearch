@@ -298,9 +298,9 @@
 			<tr id='newznab_api_row{{ c['idx']+1}}'>
 			<td>
 			<input type="button" value="&#x2315;" onclick="check_provider(0, {{ c['idx'] }})" class="confbttn confbttn_small" id="button_chkprovider{{ c['idx'] }}">
-			<input type="text" name="host{{ c['idx'] }}" id="host{{ c['idx'] }}" value="{{ c['url'] }}" size="30" class="conftbox"></td>
+			<input type="text" name="host{{ c['idx'] }}" id="host{{ c['idx'] }}" value="{{ c['url'] }}" size="30" class="conftbox" onchange="button_chkprovider_reset(0, {{ c['idx'] }});"></td>
 			<td>
-			<input type="text" name="API{{ c['idx'] }}" id="API{{ c['idx'] }}" value="{{ c['api'] }}" size="30" class="conftbox">
+			<input type="text" name="API{{ c['idx'] }}" id="API{{ c['idx'] }}" value="{{ c['api'] }}" size="30" class="conftbox" onchange="button_chkprovider_reset(0, {{ c['idx'] }});">
 			<input type="hidden" name="type{{ c['idx'] }}" value="NAB" size="35">
 			<input type="hidden" name="host{{ c['idx'] }}active" value="1" size="35"></td>
 
@@ -346,12 +346,12 @@
 	{% for c in cfg_dp -%}
 			<tr id = 'newznab_web_row{{ c['idx']+1}}'>
 			<td>
-			<input type="button" value="&#x2315;" onclick="check_provider(1, {{ c['idx'] }})" class="confbttn" >
-			<input type="text" name="ds_host{{ c['idx'] }}" id="ds_host{{ c['idx'] }}" value="{{ c['url'] }}" size="30" class="conftbox"></td>
-			<td><label for="ds_usr{{ c['idx'] }}" class="visuallyhidden">Username</label>
-			<input type="text" name="ds_usr{{ c['idx'] }}" id="ds_usr{{ c['idx'] }}" value="{{ c['user'] }}" size="18" class="conftbox"></td>
-			<td><label for="ds_pass{{ c['idx'] }}" class="visuallyhidden">Password</label>
-			<input type="password" name="ds_pass{{ c['idx'] }}" id="ds_pass{{ c['idx'] }}" value="{{ c['pwd'] }}" size="18" class="conftbox"></td>
+			<input type="button" value="&#x2315;" onclick="check_provider(1, {{ c['idx'] }})" class="confbttn confbttn_small" id="ds_button_chkprovider{{ c['idx'] }}">
+			<input type="text" name="ds_host{{ c['idx'] }}" id="ds_host{{ c['idx'] }}" value="{{ c['url'] }}" size="30" class="conftbox" onchange="button_chkprovider_reset(1, {{ c['idx'] }});"></td>
+			<td>
+			<input type="text" name="ds_usr{{ c['idx'] }}" id="ds_usr{{ c['idx'] }}" value="{{ c['user'] }}" size="18" class="conftbox" onchange="button_chkprovider_reset(1, {{ c['idx'] }});"></td>
+			<td>
+			<input type="password" name="ds_pass{{ c['idx'] }}" id="ds_pass{{ c['idx'] }}" value="{{ c['pwd'] }}" size="18" class="conftbox" onchange="button_chkprovider_reset(1, {{ c['idx'] }});"></td>
 			<input type="hidden" name="ds_type{{ c['idx'] }}" value="DSN" size="40">
 			</td>
 			
@@ -465,7 +465,7 @@
 			$("#addentry_button_web").click(function () {
 				var curval = parseInt($('#no_WEBnab').val()) + 1
 				$('#no_WEBnab').val(curval)				
-				var str1 = '<tr id = "newznab_web_rowCHANGETHIS">	<td><label for="ds_hostCHANGETHIS" class="visuallyhidden">Newznab Host (Web)</label><input type="text" name="ds_hostCHANGETHIS" id="ds_hostCHANGETHIS" value="" size="40" class="conftbox"></td><td><label for="ds_usrCHANGETHIS" class="visuallyhidden">Username</label>	<input type="text" name="ds_usrCHANGETHIS" id="ds_usrCHANGETHIS" value="" size="18" class="conftbox">		<td><label for="ds_passCHANGETHIS" class="visuallyhidden">Password</label>		<input type="password" name="ds_passCHANGETHIS" id="ds_passCHANGETHIS" value="" size="18" class="conftbox">		<input type="hidden" name="ds_typeCHANGETHIS" value="DSN" size="40">		</td>		<td><span><label for="ds_selspeedCHANGETHIS" class="visuallyhidden">Timeout</label><select name="ds_selspeedCHANGETHIS" id="ds_selspeedCHANGETHIS"  class="conftsel">			{% for sopt in sel_speedopt_basic -%}				<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>			{%- endfor %}		</select>		</span></td><td><select  name="ds_selextraCHANGETHIS" id="ds_selextraCHANGETHIS"  class="conftsel">{% for sopt in sel_extraopt_basic -%}<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>{%- endfor %}</select></td><td><input type="checkbox" name="ds_validCHANGETHIS" id="ds_validCHANGETHIS" checked=yes  >			<label for="ds_validCHANGETHIS" class="visuallyhidden">Active</label>			<input type="button" value="x" onclick="delete_row(1, CHANGETHIS)" class="confbttn" ></td></tr>'
+				var str1 = '<tr id = "newznab_web_rowCHANGETHIS"><td><input type="button" value="&#x2315;" onclick="check_provider(1, CHANGETHIS)" class="confbttn confbttn_small" id="ds_button_chkproviderCHANGETHIS">  <input type="text" name="ds_hostCHANGETHIS" id="ds_hostCHANGETHIS" value="" size="30" class="conftbox" onchange="button_chkprovider_reset(1, CHANGETHIS)"></td><td><input type="text" name="ds_usrCHANGETHIS" id="ds_usrCHANGETHIS" value="" size="18" class="conftbox" onchange="button_chkprovider_reset(1, CHANGETHIS)">		<td><input type="password" name="ds_passCHANGETHIS" id="ds_passCHANGETHIS" value="" size="18" class="conftbox" onchange="button_chkprovider_reset(1, CHANGETHIS)">		<input type="hidden" name="ds_typeCHANGETHIS" value="DSN" size="40">		</td>		<td><span><label for="ds_selspeedCHANGETHIS" class="visuallyhidden">Timeout</label><select name="ds_selspeedCHANGETHIS" id="ds_selspeedCHANGETHIS"  class="conftsel">			{% for sopt in sel_speedopt_basic -%}				<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>			{%- endfor %}		</select>		</span></td><td><select  name="ds_selextraCHANGETHIS" id="ds_selextraCHANGETHIS"  class="conftsel">{% for sopt in sel_extraopt_basic -%}<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>{%- endfor %}</select></td><td><input type="checkbox" name="ds_validCHANGETHIS" id="ds_validCHANGETHIS" checked=yes  >			<label for="ds_validCHANGETHIS" class="visuallyhidden">Active</label>			<input type="button" value="x" onclick="delete_row(1, CHANGETHIS)" class="confbttn" ></td></tr>'
 				var nustr = str1.replace(/CHANGETHIS/g, curval.toString());
 				$( nustr).insertBefore('#lastrrow_newznab_web');
 			})
@@ -473,9 +473,10 @@
 			$("#addentry_button_api").click(function () {
 				var curval = parseInt($('#no_APInab').val()) + 1
 				$('#no_APInab').val(curval)				
-				var str1 = '<tr id="newznab_api_rowCHANGETHIS"><td><input type="button" value="&#x2315;" onclick="check_providerCHANGETHIS" class="confbttn confbttn_small" >  <input type="text" name="hostCHANGETHIS" id="hostCHANGETHIS" value="" size="30" class="conftbox"></td><td><input type="text" name="APICHANGETHIS" id="APICHANGETHIS" value="" size="30" class="conftbox"><input type="hidden" name="typeCHANGETHIS" value="NAB" size="35"></td><td><span><select  name="selspeedCHANGETHIS" id="selspeedCHANGETHIS"  class="conftsel">{% for sopt in sel_speedopt_basic -%}	<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>{%- endfor %}	</select>		</span></td><td><select name="selextraCHANGETHIS" id="selextraCHANGETHIS"  class="conftsel">{% for sopt in sel_extraopt_basic -%}<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>{%- endfor %}</select></td> <td> <input type="checkbox" name="validCHANGETHIS" id="validCHANGETHIS" checked=yes >			<label for="validCHANGETHIS" class="visuallyhidden">Active</label> <input type="button" value="x" onclick="delete_row(0, CHANGETHIS)" class="confbttn" >	</td> </tr> ';
+				var str1 = '<tr id="newznab_api_rowCHANGETHIS"><td><input type="button" value="&#x2315;" onclick="check_provider(0,CHANGETHIS)" id="button_chkproviderCHANGETHIS" class="confbttn confbttn_small" >  <input type="text" name="hostCHANGETHIS" id="hostCHANGETHIS" value="" size="30" class="conftbox" onchange="button_chkprovider_reset(0, CHANGETHIS);"></td><td><input type="text" name="APICHANGETHIS" id="APICHANGETHIS" value="" size="30" class="conftbox" onchange="button_chkprovider_reset(CHANGETHIS);"><input type="hidden" name="typeCHANGETHIS" value="NAB" size="35"></td><td><span><select  name="selspeedCHANGETHIS" id="selspeedCHANGETHIS"  class="conftsel">{% for sopt in sel_speedopt_basic -%}	<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>{%- endfor %}	</select>		</span></td><td><select name="selextraCHANGETHIS" id="selextraCHANGETHIS"  class="conftsel">{% for sopt in sel_extraopt_basic -%}<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>{%- endfor %}</select></td> <td> <input type="checkbox" name="validCHANGETHIS" id="validCHANGETHIS" checked=yes >			<label for="validCHANGETHIS" class="visuallyhidden">Active</label> <input type="button" value="x" onclick="delete_row(0, CHANGETHIS)" class="confbttn" >	</td> </tr> ';
 				var nustr = str1.replace(/CHANGETHIS/g, curval.toString());
 				$( nustr).insertBefore('#lastrrow_newznab_api');
+				
 			})			
 			
 			$(document).ready(function() {
@@ -549,7 +550,12 @@
 				var ret = true;
 				for (var i=0;i<=rowCount;i++)
 				{
-					ret = check_serverapi_correctness_single(chkname);
+					ret_tmp = check_serverapi_correctness_single(i);
+					if(ret_tmp == false)
+					{
+						ret = false;
+					}
+					
 				}
 				return (ret)
 			}
@@ -575,6 +581,18 @@
 				return ret
 			}
 
+			function button_chkprovider_reset(type, entrynum)
+			{
+				cname = '#button_chkprovider'
+				if(type == 1)
+				{
+					cname = '#ds_button_chkprovider'
+				}
+				$(cname+entrynum).val($('<i/>').html('&#x2315;').text());
+				$(cname+entrynum).removeClass("confbttn_err")
+				$(cname+entrynum).removeClass("confbttn_ok")
+			}
+
 			function check_provider(typerow, entrynum)
 			{
 				var ret = false
@@ -589,10 +607,34 @@
 					{
 						host = $('#host'+entrynum).val().replace(/\s+/g, ' ')	
 						hostapi = $('#API'+entrynum).val().replace(/\s+/g, ' ')
+						
+						if(host.length == 0 && hostapi.length == 0)
+						{
+							ret = false
+						}
 					}
 					$('#host'+entrynum).removeClass("conftbox_err").addClass("conftbox");
 					$('#API'+entrynum).removeClass("conftbox_err").addClass("conftbox");
+				}		
+				
+				if(typerow == 1)
+				{
+					ret = check_serverweb_correctness_single(entrynum)
 					
+					if(ret)
+					{
+						host = $('#ds_host'+entrynum).val().replace(/\s+/g, ' ')	
+						usr = $('#ds_usr'+entrynum).val().replace(/\s+/g, ' ')
+						pass = $('#ds_pass'+entrynum).val().replace(/\s+/g, ' ')
+
+						if(host.length == 0 && usr.length == 0 && pass.length ==0)
+						{
+							ret = false
+						}
+					}
+					$('#ds_host'+entrynum).removeClass("conftbox_err").addClass("conftbox");
+					$('#ds_usr'+entrynum).removeClass("conftbox_err").addClass("conftbox");
+					$('#ds_pass'+entrynum).removeClass("conftbox_err").addClass("conftbox");
 				}		
 				
 				if(ret)
@@ -614,30 +656,90 @@
 								{
 									if(data.code == 0)
 									{
-										alert('ERROR: Authentification error');
-										if(typerow == 0)
+										//alert('ERROR: Authentification error');
+										bcode = '#button_chkprovider'
+										if(typerow == 1)
 										{
-											
-											//$('#host'+entrynum).removeClass("conftbox").addClass("conftbox_err");
-											//$('#API'+entrynum).removeClass("conftbox").addClass("conftbox_err");
-											
-											$('#button_chkprovider'+entrynum).val($('<i/>').html('&#x2315;').text());
-											$('#button_chkprovider'+entrynum).removeClass("confbttn_ok").addClass("confbttn_err");
+											bcode  = '#ds_button_chkprovider';
 										}
+
+										$(bcode+entrynum).val($('<i/>').html('&#x2315;').text());
+										$(bcode+entrynum).removeClass("confbttn_ok").addClass("confbttn_err");
+										
 									}
 									if(data.code == 1)
 									{
-										if(typerow == 0)
+										bcode = '#button_chkprovider'
+										if(typerow == 1)
 										{
-											$('#button_chkprovider'+entrynum).val($('<i/>').html('&#x2714;').text());
-											$('#button_chkprovider'+entrynum).removeClass("confbttn_err").addClass("confbttn_ok");
+											bcode  = '#ds_button_chkprovider';
 										}
+										$(bcode+entrynum).val($('<i/>').html('&#x2714;').text());
+										$(bcode+entrynum).removeClass("confbttn_err").addClass("confbttn_ok");
+
 									}	
 									$.unblockUI();			
 								});
 				}					
 					
 				
+			}
+
+			function check_serverweb_correctness_single(i)
+			{
+				var ret = true;
+				var ds_host_l =  $('#ds_host'+i).length
+				if( ds_host_l )
+				{
+					var ds_host =  $('#ds_host'+i).val().replace(/\s+/g, ' ')
+					var ds_usr  =  $('#ds_usr'+i).val().replace(/\s+/g, ' ')
+					var ds_pass  = $('#ds_pass'+i).val().replace(/\s+/g, ' ')
+					var cb = check_beginning_http(ds_host)
+					var err = 0
+					$('#ds_host'+i).removeClass("conftbox_err").addClass("conftbox");
+					$('#ds_usr'+i).removeClass("conftbox_err").addClass("conftbox");
+					$('#ds_pass'+i).removeClass("conftbox_err").addClass("conftbox");
+
+					if(!cb)
+					{
+						err = 1;
+					}
+					else if ((ds_pass.length == 0) && (ds_usr.length > 0))
+					{
+						err = 1;
+					}
+					else if ((ds_pass.length > 0) && (ds_usr.length == 0))
+					{
+						err = 1;
+					}
+					else if ((ds_host.length > 0) && ( (ds_pass.length == 0) && (ds_usr.length == 0)  ) )
+					{
+						err = 1;
+					}
+					else if ((ds_pass.length > 0) && (ds_usr.length > 0) && (ds_host.length == 0))
+					{
+						err = 1;
+					}	
+					
+					if ((ds_host.length == 0) && ( err == 1  ) )
+					{
+						err = 1;
+					}
+					if ((ds_host.length > 0) && ( err == 1  ) )
+					{
+						err = 1;
+					}
+
+					if (err == 1)
+					{
+						$('#ds_host'+i).removeClass("conftbox").addClass("conftbox_err");
+						$('#ds_usr'+i).removeClass("conftbox").addClass("conftbox_err");
+						$('#ds_pass'+i).removeClass("conftbox").addClass("conftbox_err");
+
+						ret = false
+					}
+				}				
+				return(ret);
 			}
 			
 			function check_serverweb_correctness()
@@ -646,57 +748,10 @@
 				var ret = true;
 				for (var i=0;i<=rowCount;i++)
 				{
-					
-					var ds_host_l =  $('#ds_host'+i).length
-					if( ds_host_l )
+					ret_tmp = check_serverweb_correctness_single(i)
+					if(ret_tmp == false)
 					{
-						var ds_host =  $('#ds_host'+i).val().replace(/\s+/g, ' ')
-						var ds_usr  =  $('#ds_usr'+i).val().replace(/\s+/g, ' ')
-						var ds_pass  = $('#ds_pass'+i).val().replace(/\s+/g, ' ')
-						var cb = check_beginning_http(ds_host)
-						var err = 0
-						$('#ds_host'+i).removeClass("conftbox_err").addClass("conftbox");
-						$('#ds_usr'+i).removeClass("conftbox_err").addClass("conftbox");
-						$('#ds_pass'+i).removeClass("conftbox_err").addClass("conftbox");
-
-						if(!cb)
-						{
-							err = 1;
-						}
-						else if ((ds_pass.length == 0) && (ds_usr.length > 0))
-						{
-							err = 1;
-						}
-						else if ((ds_pass.length > 0) && (ds_usr.length == 0))
-						{
-							err = 1;
-						}
-						else if ((ds_host.length > 0) && ( (ds_pass.length == 0) && (ds_usr.length == 0)  ) )
-						{
-							err = 1;
-						}
-						else if ((ds_pass.length > 0) && (ds_usr.length > 0) && (ds_host.length == 0))
-						{
-							err = 1;
-						}	
-						
-						if ((ds_host.length == 0) && ( err == 1  ) )
-						{
-							err = 1;
-						}
-						if ((ds_host.length > 0) && ( err == 1  ) )
-						{
-							err = 1;
-						}
-
-						if (err == 1)
-						{
-							$('#ds_host'+i).removeClass("conftbox").addClass("conftbox_err");
-							$('#ds_usr'+i).removeClass("conftbox").addClass("conftbox_err");
-							$('#ds_pass'+i).removeClass("conftbox").addClass("conftbox_err");
-
-							ret = false
-						}
+						ret = false;
 					}
 				}
 				return(ret);
@@ -740,7 +795,6 @@
 				
 				var csapi_ret = check_serverapi_correctness();
 				var csweb_ret = check_serverweb_correctness();
-				
 				if( csapi_ret == false || csweb_ret == false)
 				{
 					alert('ERROR: Enter missing info in the red fields.\nUrl must begin with http(s)://');
