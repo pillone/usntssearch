@@ -486,8 +486,20 @@ p.dense {line-height:1.5}
 	background:#fff;
 	font: 12px Arial, Helvetica, sans-serif;
 	border: 2px solid #ccc;
-	color: #000000
+	color: #000000;
 }
+
+.confbttn_ok {
+	background:#40FF00;
+}
+
+.confbttn_err {
+	background:#FF0000;
+}
+
+.confbttn_small {
+	width: 15px;
+	}
 
 
 .confbttnbig1 {
@@ -604,10 +616,16 @@ border-left: 2px solid #6678b1;
 	font-size: 12px;
 	background: #fff;
 	margin: 5px 45px 25px 30px;
-	width: 90%;
+	width: 780px;
 	border-collapse: collapse;
 	text-align: left;
 }
+
+.config_table_opts_ext
+{
+	width: 840px;
+}
+
 .config_table_opts th
 {
 	font-size: 14px;

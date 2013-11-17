@@ -66,7 +66,7 @@ def loginit():
 
 def reload_all():
 	print '>> Bootstrapping...'
-	global cfgsets, sugg, ds, mega_parall, wrp, apiresp, auth, getsmartinfo
+	global cfgsets, sugg, ds, mega_parall, wrp, apiresp, auth, getsmartinfo, testserver
 	cfgsets = config_settings.CfgSettings()	
 	cfgsets.cgen['large_server'] = LARGESERVER
 	sugg = SuggestionResponses(cfgsets.cfg, cfgsets.cgen)
@@ -76,6 +76,7 @@ def reload_all():
 	apiresp = ApiResponses(cfgsets.cfg, cfgsets.cgen, wrp, ds)
 	getsmartinfo = nzbsanity.GetNZBInfo(cfgsets.cfg, cfgsets.cgen, ds, wrp)
 	auth = miscdefs.Auth(cfgsets)
+	testserver = miscdefs.ChkServer(cfgsets.cgen)
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 motd = '\n\n~*~ ~*~ NZBMegasearcH ~*~ ~*~'
@@ -242,6 +243,12 @@ def warpme():
 		return main_index()
 	else: 	
 		return res
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+@app.route('/serverchk')
+def serverchk():	
+	return jsonify(code=testserver.check(request.args))
+
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
 @app.route('/rss')

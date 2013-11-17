@@ -247,6 +247,38 @@ class DownloadedStats:
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 		
+class ChkServer:
+	def __init__(self, cgen):
+		self.cgen = cgen
+		self.agent_headers = {	'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1' }	
+		
+	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+	def check(self, args):
+		ret = 0
+		
+		#~ server based API
+		print self.cgen['timeout_class']
+		if(('hostname' in args) and ('type' in args)):
+			if(int(args['type']) == 0):
+				ret = 1
+				urlParams = dict(t='search',q='Ubuntu',o='xml',apikey=args['api'])
+				queryURL = args['hostname']+'/api'
+				try:
+					http_result = requests.get(url=queryURL, params=urlParams, verify=False, timeout=self.cgen['timeout_class'][2], headers= self.agent_headers)
+					if(	len(http_result.text) < 300):
+						limitpos = data.encode('utf-8').lower().find('<error code="100"')
+						if(limitpos != -1):
+							return 0
+					
+				except Exception as e:
+					log.critical(queryURL + ' -- ' + str(e))
+					ret = 0
+		return ret
+		
+	
+
+#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+		
 class ChkVersion:
  
 	def __init__(self, debugflag=False):

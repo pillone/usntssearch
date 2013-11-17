@@ -5,6 +5,8 @@
 	<link rel="stylesheet" type="text/css" href="static/reset2.css" />
 	<link rel="stylesheet" type="text/css" href="static/style.css" />
 	<script type="text/javascript" src="static/jquery.min.js"></script>
+	<script type="text/javascript" src="static/block-ui.js"></script>
+	
 	<script type=text/javascript>
 		var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 	</script>
@@ -289,20 +291,20 @@
 		<input type="button" value="Save" value="confbttnbig" class="gray graysmall" >
 	</div>
 
-	<table class="config_table_opts" summary="Config" style="width: 300px;" id="newznab_api_host"><thead>
+	<table class="config_table_opts" summary="Config"  id="newznab_api_host"><thead>
 	<tr><th scope="col">Newznab Host (API)</th><th scope="col">API key</th><th scope="col">Timeout</th><th scope="col">Extra</th><th scope="col">Active</th></tr></thead><tbody>
 	{% for c in cfg -%}
 		{% if c['builtin'] == 0-%}
 			<tr id='newznab_api_row{{ c['idx']+1}}'>
-			<td><label for="host{{ c['idx'] }}" class="visuallyhidden">Newznab Host (API)</label>
-			<input type="text" name="host{{ c['idx'] }}" id="host{{ c['idx'] }}" value="{{ c['url'] }}" size="35" class="conftbox"></td>
-			<td><label for="API{{ c['idx'] }}" class="visuallyhidden">API key</label>
-			<input type="text" name="API{{ c['idx'] }}" id="API{{ c['idx'] }}" value="{{ c['api'] }}" size="35" class="conftbox">
+			<td>
+			<input type="button" value="&#x2315;" onclick="check_provider(0, {{ c['idx'] }})" class="confbttn confbttn_small" id="button_chkprovider{{ c['idx'] }}">
+			<input type="text" name="host{{ c['idx'] }}" id="host{{ c['idx'] }}" value="{{ c['url'] }}" size="30" class="conftbox"></td>
+			<td>
+			<input type="text" name="API{{ c['idx'] }}" id="API{{ c['idx'] }}" value="{{ c['api'] }}" size="30" class="conftbox">
 			<input type="hidden" name="type{{ c['idx'] }}" value="NAB" size="35">
 			<input type="hidden" name="host{{ c['idx'] }}active" value="1" size="35"></td>
 
 			<td><span>
-			<label for="selspeed{{ c['idx'] }}" class="visuallyhidden">Timeout</label>
 			<select name="selspeed{{ c['idx'] }}" id="selspeed{{ c['idx'] }}"  class="conftsel">
 				{% for sopt in c['selspeed_sel'] -%}
 					<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>
@@ -339,12 +341,13 @@
 		<input type="button" value="Save" value="confbttnbig" class="gray graysmall">
 	</div>
 
-	<table class="config_table_opts" summary="NZConfig_web" style="width: 300px;"  id="newznab_web_host"><thead>
+	<table class="config_table_opts config_table_opts_ext" summary="NZConfig_web" id="newznab_web_host"><thead>
 	<tr><th scope="col">Newznab Host (Web)</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Timeout</th><th scope="col">Extra</th><th scope="col">Active</th></thead></tr><tbody>
 	{% for c in cfg_dp -%}
 			<tr id = 'newznab_web_row{{ c['idx']+1}}'>
-			<td><label for="ds_host{{ c['idx'] }}" class="visuallyhidden">Newznab Host (Web)</label>
-			<input type="text" name="ds_host{{ c['idx'] }}" id="ds_host{{ c['idx'] }}" value="{{ c['url'] }}" size="40" class="conftbox"></td>
+			<td>
+			<input type="button" value="&#x2315;" onclick="check_provider(1, {{ c['idx'] }})" class="confbttn" >
+			<input type="text" name="ds_host{{ c['idx'] }}" id="ds_host{{ c['idx'] }}" value="{{ c['url'] }}" size="30" class="conftbox"></td>
 			<td><label for="ds_usr{{ c['idx'] }}" class="visuallyhidden">Username</label>
 			<input type="text" name="ds_usr{{ c['idx'] }}" id="ds_usr{{ c['idx'] }}" value="{{ c['user'] }}" size="18" class="conftbox"></td>
 			<td><label for="ds_pass{{ c['idx'] }}" class="visuallyhidden">Password</label>
@@ -408,6 +411,7 @@
 					return
 				}	
 				
+			
 				// reverse proxying
 				var pathurl = $(location).attr('pathname')
 				var subdir_match = pathurl.lastIndexOf('/config' )
@@ -438,6 +442,9 @@
   
 			})
 				
+	
+
+
 			$("#all_newznab_web").click(function () {
 				var curval = parseInt($('#no_WEBnab').val()) + 1
 				state_to_set = $('#all_newznab_web').is(':checked');
@@ -466,7 +473,7 @@
 			$("#addentry_button_api").click(function () {
 				var curval = parseInt($('#no_APInab').val()) + 1
 				$('#no_APInab').val(curval)				
-				var str1 = '<tr id="newznab_api_rowCHANGETHIS"><td><label for="hostCHANGETHIS" class="visuallyhidden">Newznab Host (API)</label><input type="text" name="hostCHANGETHIS" id="hostCHANGETHIS" value="" size="35" class="conftbox"></td>	<td><label for="APICHANGETHIS" class="visuallyhidden">API key</label> <input type="text" name="APICHANGETHIS" id="APICHANGETHIS" value="" size="35" class="conftbox">	<input type="hidden" name="typeCHANGETHIS" value="NAB" size="35"></td><td><span><label for="selspeedCHANGETHIS" class="visuallyhidden">Timeout</label>	<select  name="selspeedCHANGETHIS" id="selspeedCHANGETHIS"  class="conftsel">{% for sopt in sel_speedopt_basic -%}	<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>{%- endfor %}	</select>		</span></td><td><select name="selextraCHANGETHIS" id="selextraCHANGETHIS"  class="conftsel">{% for sopt in sel_extraopt_basic -%}<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>{%- endfor %}</select></td> <td> <input type="checkbox" name="validCHANGETHIS" id="validCHANGETHIS" checked=yes >			<label for="validCHANGETHIS" class="visuallyhidden">Active</label> <input type="button" value="x" onclick="delete_row(0, CHANGETHIS)" class="confbttn" >	</td> </tr> ';
+				var str1 = '<tr id="newznab_api_rowCHANGETHIS"><td><input type="button" value="&#x2315;" onclick="check_providerCHANGETHIS" class="confbttn confbttn_small" >  <input type="text" name="hostCHANGETHIS" id="hostCHANGETHIS" value="" size="30" class="conftbox"></td><td><input type="text" name="APICHANGETHIS" id="APICHANGETHIS" value="" size="30" class="conftbox"><input type="hidden" name="typeCHANGETHIS" value="NAB" size="35"></td><td><span><select  name="selspeedCHANGETHIS" id="selspeedCHANGETHIS"  class="conftsel">{% for sopt in sel_speedopt_basic -%}	<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>{%- endfor %}	</select>		</span></td><td><select name="selextraCHANGETHIS" id="selextraCHANGETHIS"  class="conftsel">{% for sopt in sel_extraopt_basic -%}<option value={{ sopt[0] }} {{ sopt[2] }}>{{ sopt[1] }}</option>{%- endfor %}</select></td> <td> <input type="checkbox" name="validCHANGETHIS" id="validCHANGETHIS" checked=yes >			<label for="validCHANGETHIS" class="visuallyhidden">Active</label> <input type="button" value="x" onclick="delete_row(0, CHANGETHIS)" class="confbttn" >	</td> </tr> ';
 				var nustr = str1.replace(/CHANGETHIS/g, curval.toString());
 				$( nustr).insertBefore('#lastrrow_newznab_api');
 			})			
@@ -542,24 +549,97 @@
 				var ret = true;
 				for (var i=0;i<=rowCount;i++)
 				{
-					chkname = '#host'+i;
-					if( $(chkname).length)
-					{
-						var host = $('#host'+i).val().replace(/\s+/g, ' ')	
-						var hostapi = $('#API'+i).val().replace(/\s+/g, ' ')
-						var cb = check_beginning_http(host)
-						$('#host'+i).removeClass("conftbox_err").addClass("conftbox");
-
-						if ((host.length == 0) && (hostapi.length > 0) || !cb)
-						{
-							$('#host'+i).removeClass("conftbox").addClass("conftbox_err");
-							ret = false;
-						}
-					}
+					ret = check_serverapi_correctness_single(chkname);
 				}
 				return (ret)
 			}
+			
+			function check_serverapi_correctness_single(i)
+			{
+				chkname = '#host'+i;
+				var ret = true;		
 
+				if( $(chkname).length)
+				{
+					var host = $('#host'+i).val().replace(/\s+/g, ' ')	
+					var hostapi = $('#API'+i).val().replace(/\s+/g, ' ')
+					var cb = check_beginning_http(host)
+					$('#host'+i).removeClass("conftbox_err").addClass("conftbox");
+
+					if ((host.length == 0) && (hostapi.length > 0) || !cb)
+					{
+						$('#host'+i).removeClass("conftbox").addClass("conftbox_err");
+						ret = false;
+					}
+				}
+				return ret
+			}
+
+			function check_provider(typerow, entrynum)
+			{
+				var ret = false
+				var pass = ''
+				var usr = ''
+				var host = ''
+				var hostapi = ''
+				if(typerow == 0)
+				{
+					ret = check_serverapi_correctness_single(entrynum)
+					if(ret)
+					{
+						host = $('#host'+entrynum).val().replace(/\s+/g, ' ')	
+						hostapi = $('#API'+entrynum).val().replace(/\s+/g, ' ')
+					}
+					$('#host'+entrynum).removeClass("conftbox_err").addClass("conftbox");
+					$('#API'+entrynum).removeClass("conftbox_err").addClass("conftbox");
+					
+				}		
+				
+				if(ret)
+				{
+					$.blockUI({ message: '<h1>.:: PLEASE WAIT ::.</h1><br><h2>Checking provider configuration', 
+					css: {
+						border: 'none',
+						padding: '15px',
+						backgroundColor: '#000',
+						'-webkit-border-radius': '10px',
+						'-moz-border-radius': '10px',
+						opacity: .7,
+						color: '#fff'
+						} });
+					 
+					 $.getJSON($SCRIPT_ROOT + '{{ genopt['revproxy'] }}/serverchk',
+								{hostname: host, api: hostapi, user: usr, pwd: pass, type: typerow},
+								function(data) 
+								{
+									if(data.code == 0)
+									{
+										alert('ERROR: Authentification error');
+										if(typerow == 0)
+										{
+											
+											//$('#host'+entrynum).removeClass("conftbox").addClass("conftbox_err");
+											//$('#API'+entrynum).removeClass("conftbox").addClass("conftbox_err");
+											
+											$('#button_chkprovider'+entrynum).val($('<i/>').html('&#x2315;').text());
+											$('#button_chkprovider'+entrynum).removeClass("confbttn_ok").addClass("confbttn_err");
+										}
+									}
+									if(data.code == 1)
+									{
+										if(typerow == 0)
+										{
+											$('#button_chkprovider'+entrynum).val($('<i/>').html('&#x2714;').text());
+											$('#button_chkprovider'+entrynum).removeClass("confbttn_err").addClass("confbttn_ok");
+										}
+									}	
+									$.unblockUI();			
+								});
+				}					
+					
+				
+			}
+			
 			function check_serverweb_correctness()
 			{
 				var rowCount = parseInt($('#no_WEBnab').val());

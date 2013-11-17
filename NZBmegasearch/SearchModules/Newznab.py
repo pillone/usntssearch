@@ -94,7 +94,7 @@ class Newznab(SearchModule):
 	def checkreturn(self, data):
 	
 		retcode = self.default_retcode
-		limitpos = data.encode('utf-8').find('<error code="500"')
+		limitpos = data.encode('utf-8').lower().find('<error code="500"')
 		if(limitpos != -1):
 			mssg = 'Download/Search limit reached ' + self.queryURL
 			limitpos_comment = data.encode('utf-8').find('description="')
@@ -103,7 +103,7 @@ class Newznab(SearchModule):
 			log.error (mssg)
 			retcode = [500, sanitize_strings(mssg).replace(".", " ").capitalize(), 0,'']
 			
-		limitpos = data.encode('utf-8').find('<error code="100"')				
+		limitpos = data.encode('utf-8').lower().find('<error code="100"')				
 		if(limitpos != -1):
 			mssg = 'Incorrect user credentials ' + self.queryURL
 			limitpos_comment = data.encode('utf-8').find('description="')
