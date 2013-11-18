@@ -258,35 +258,63 @@ class ChkServer:
 		ret = 0
 		
 		if(('hostname' in args) and ('type' in args)):
-			#~ server based API			
-			if(int(args['type']) == 0):
+			
+			# Perform the search using every module
+			global globalResults
+			if 'loadedModules' not in globals():
+				SearchModule.loadSearchModules()
+
+
+			#~ specials
+			if(args['type'] == 'OMG'):
 				ret = 1
-				urlParams = dict(t='search',q='Ubuntu',o='xml',apikey=args['api'])
-				queryURL = args['hostname']+'/api'
-				try:
-					http_result = requests.get(url=queryURL, params=urlParams, verify=False, timeout=self.cgen['timeout_class'][2], headers= self.agent_headers)
-					if(	len(http_result.text) < 300):
-						limitpos = data.encode('utf-8').lower().find('<error code="100"')
-						if(limitpos != -1):
-							return 0
-				except Exception as e:
-					log.critical(queryURL + ' -- ' + str(e))
+				cfg_tmp = {'valid': 1,
+					  'type': 'OMG',
+					  'speed_class': 2,
+					  'extra_class': 0,
+					  'login': args['user'],
+					  'pwd': args['pwd'],
+					  'timeout':  self.cgen['timeout_class'][2],
+					  'builtin': 1}
+				for module in SearchModule.loadedModules:
+					if( module.typesrch == 'OMG'):
+						module.search('Ubuntu', cfg_tmp)
+				print cfg_tmp['retcode']		
+				if(cfg_tmp['retcode'][0] != 200):
 					ret = 0
-		
+					
+
+			#~ server based API			
+			if(args['type'] == 'NAB'):			
+				ret = 1
+				cfg_tmp = {'url': args['hostname'],
+					  'type': 'NAB',
+					  'api': args['api'],
+					  'speed_class': 2,
+					  'extra_class': 0,
+					  'valid':  1,
+					  'timeout':  self.cgen['timeout_class'][2],
+					  'builtin': 0 }				
+				for module in SearchModule.loadedModules:
+					if( module.typesrch == 'NAB'):
+						module.search('Ubuntu', cfg_tmp)
+				print cfg_tmp['retcode']		
+				if(cfg_tmp['retcode'][0] != 200):
+					ret = 0
+
 			#~ server based WEB
-			if(int(args['type']) == 1):
+			if(args['type'] == 'DSN' or args['type'] == 'DS_GNG'):
 				
 				cfg_deep_tmp = [{'url': args['hostname'],
 					  'user':args['user'],
 					  'pwd': args['pwd'],
-					  'type': 'DSN',
+					  'type': args['type'],
 					  'speed_class': 2,
 					  'extra_class': 0,
 					  'valid': 1,
 					  }]
 				ds_tmp = DeepsearchModule.DeepSearch(cfg_deep_tmp, self.cgen)
 				ret_bool = ds_tmp.ds[0].search('Ubuntu')
-				
 				if(ret_bool):
 					ret = 1
 				else:	

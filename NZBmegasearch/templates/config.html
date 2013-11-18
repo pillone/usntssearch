@@ -263,9 +263,10 @@
 		{% if c['flogin'] == 1-%}
 		<tr>
 			<td>
+				<input type="button" value="&#x2315;" onclick="check_provider(2, {{ c['idx'] }})" class="confbttn confbttn_small" id="bi_button_chkprovider{{ c['idx'] }}">
 				<input type="checkbox" name="bi_host{{ c['idx'] }}active" id="bi_host{{ c['idx'] }}active" value="1" size="40" {{ c['stchk'] }}> <label for="bi_host{{ c['idx'] }}active">{{ c['humanname'] }}</label>
-				<input type="hidden" name="bi_host{{ c['idx'] }}" value="{{ c['type'] }}" size="40">
-				<input type="hidden" name="bi_host{{ c['idx'] }}url" value="{{ c['url'] }}" size="40">
+				<input type="hidden" name="bi_host{{ c['idx'] }}" id="bi_host{{ c['idx'] }}" value="{{ c['type'] }}" size="40">
+				<input type="hidden" name="bi_host{{ c['idx'] }}url" id="bi_host{{ c['idx'] }}url" value="{{ c['url'] }}" size="40">
 				<input type="hidden" name="bi_host{{ c['idx'] }}speed" value="{{ c['speed_class'] }}" size="40">
 				<input type="hidden" name="bi_host{{ c['idx'] }}extra" value="{{ c['extra_class'] }}" size="40">
 			</td>	
@@ -600,8 +601,10 @@
 				var usr = ''
 				var host = ''
 				var hostapi = ''
+				var type = ''
 				if(typerow == 0)
 				{
+					type = 'NAB'
 					ret = check_serverapi_correctness_single(entrynum)
 					if(ret)
 					{
@@ -616,11 +619,24 @@
 					$('#host'+entrynum).removeClass("conftbox_err").addClass("conftbox");
 					$('#API'+entrynum).removeClass("conftbox_err").addClass("conftbox");
 				}		
+
+				if(typerow == 2)
+				{
+					ret = false
+					host = $('#bi_host'+entrynum+'url').val().replace(/\s+/g, ' ')	
+					type = $('#bi_host'+entrynum).val().replace(/\s+/g, ' ')	
+					usr = $('#bi_host'+entrynum+'login').val().replace(/\s+/g, ' ')	
+					pass = $('#bi_host'+entrynum+'pwd').val().replace(/\s+/g, ' ')
+					if(type.length && usr.length && pass.length)
+					{
+						ret = true
+					}
+				}
 				
 				if(typerow == 1)
 				{
+					type = 'DSN'
 					ret = check_serverweb_correctness_single(entrynum)
-					
 					if(ret)
 					{
 						host = $('#ds_host'+entrynum).val().replace(/\s+/g, ' ')	
@@ -651,7 +667,7 @@
 						} });
 					 
 					 $.getJSON($SCRIPT_ROOT + '{{ genopt['revproxy'] }}/serverchk',
-								{hostname: host, api: hostapi, user: usr, pwd: pass, type: typerow},
+								{hostname: host, api: hostapi, user: usr, pwd: pass, type: type},
 								function(data) 
 								{
 									if(data.code == 0)
