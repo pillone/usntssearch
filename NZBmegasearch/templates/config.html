@@ -670,29 +670,25 @@
 								{hostname: host, api: hostapi, user: usr, pwd: pass, type: type},
 								function(data) 
 								{
+									bcode = '#button_chkprovider'
+									if(typerow == 1)
+									{
+										bcode  = '#ds_button_chkprovider';
+									}
+									if(typerow == 2)
+									{
+										bcode  = '#bi_button_chkprovider';
+									}
+
 									if(data.code == 0)
 									{
-										//alert('ERROR: Authentification error');
-										bcode = '#button_chkprovider'
-										if(typerow == 1)
-										{
-											bcode  = '#ds_button_chkprovider';
-										}
-
 										$(bcode+entrynum).val($('<i/>').html('&#x2315;').text());
 										$(bcode+entrynum).removeClass("confbttn_ok").addClass("confbttn_err");
-										
 									}
 									if(data.code == 1)
 									{
-										bcode = '#button_chkprovider'
-										if(typerow == 1)
-										{
-											bcode  = '#ds_button_chkprovider';
-										}
 										$(bcode+entrynum).val($('<i/>').html('&#x2714;').text());
 										$(bcode+entrynum).removeClass("confbttn_err").addClass("confbttn_ok");
-
 									}	
 									$.unblockUI();			
 								});
