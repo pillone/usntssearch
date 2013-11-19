@@ -173,16 +173,18 @@ class DoParallelSearch:
 	
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	def set_extraopt(self):
-		for conf in self.cfg :
-			if ( (conf['extra_class'] >  1 ) and (conf['valid'])):
-				conf['valid']  = 0
+		if(self.cfg is not None):
+			for conf in self.cfg :
+				if ( (conf['extra_class'] >  1 ) and (conf['valid'])):
+					conf['valid']  = 0
 		
 	def set_timeout_speedclass(self, speed_class_sel):
-		for conf in self.cfg:
-			if ( (conf['speed_class'] <=  speed_class_sel) and (conf['valid'])):
-				conf['timeout']  = self.cgen['timeout_class'][ speed_class_sel ]
-			else:
-				conf['valid']  = 0
+		if(self.cfg is not None):
+			for conf in self.cfg:
+				if ( (conf['speed_class'] <=  speed_class_sel) and (conf['valid'])):
+					conf['timeout']  = self.cgen['timeout_class'][ speed_class_sel ]
+				else:
+					conf['valid']  = 0
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 	
 	def getdomainandprotocol(self, sgetsockname):
@@ -210,9 +212,10 @@ class DoParallelSearch:
 			self.set_timeout_speedclass(speed_class_sel)
 			self.set_extraopt()				
 			self.searchopt[count][0] = 0
-			for conf in self.cfg :
-				if ( (conf['speed_class'] <=  speed_class_sel) and (conf['valid'])):
-					self.searchopt[count][0] = self.searchopt[count][0] + 1
+			if(self.cfg is not None):
+				for conf in self.cfg :
+					if ( (conf['speed_class'] <=  speed_class_sel) and (conf['valid'])):
+						self.searchopt[count][0] = self.searchopt[count][0] + 1
 			#~ manual + ds manual
 			self.searchopt[count][0] = self.searchopt[count][0] + self.ds.get_dsnumproviders(speed_class_sel)
 			count = count + 1

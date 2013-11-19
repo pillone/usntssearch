@@ -166,7 +166,7 @@ class Warper:
 
 		f_name = ''
 		if(dwntype == 0):
-			log.info('WARPNGN Cookie FTD found')
+			#~ log.info('WARPNGN Cookie FTD found')
 			try:
 				opener = urllib2.build_opener()
 				opener.addheaders.append(('Cookie', 'FTDWSESSID='+cookie['FTDWSESSID']))
@@ -176,7 +176,7 @@ class Warper:
 				return retfail
 
 		if(dwntype == 1):
-			log.info('WARPNGN Cookie deep found')
+			#~ log.info('WARPNGN Cookie deep found')
 			response = self.dsearch.ds[deepidx].download(urltouse)
 			if(response == ''):
 				return -1

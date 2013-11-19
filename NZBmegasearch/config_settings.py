@@ -473,7 +473,7 @@ class CfgSettings:
 				spc = self.get_conf_speedopt(cst_parser, i, 'b')
 				if ( spc == -1 ):
 					spc = 1
-				epc = self.get_conf_extraopt(cst_parser, i, 's')
+				epc = self.get_conf_extraopt(cst_parser, i, 'b')
 				if ( epc == -1 ):
 					epc = 0
 
@@ -531,6 +531,7 @@ class CfgSettings:
 				login_name =  ''
 				login_pwd = ''
 				speed_cl = 1
+				extra_cl = 0
 				if(module.active == 0):
 					option=''
 				for i in xrange(len(cffile)):
