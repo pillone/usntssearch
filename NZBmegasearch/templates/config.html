@@ -7,6 +7,11 @@
 	<script type="text/javascript" src="static/jquery.min.js"></script>
 	<script type="text/javascript" src="static/block-ui.js"></script>
 	
+	<script src="static/vex.combined.min.js"></script>
+	<script>vex.defaultOptions.className = 'vex-theme-default';</script>
+	<link rel="stylesheet" href="static/vex.css" />
+	<link rel="stylesheet" href="static/vex-theme-default.css" />
+	
 	<script type=text/javascript>
 		var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 	</script>
@@ -403,6 +408,12 @@
 </div>
 	    <script type="text/javascript">
 
+		window.alert = function(msg){
+			vex.dialog.alert({
+			  message: msg
+			});
+		};
+
 		$('.gray, .graysmall').click(function() {
 				$('.gray, .graysmall').val('Saving...')				
 
@@ -775,7 +786,7 @@
 				chk1 = /^\d+$/.test(port_v);
 				if(!chk1 || (chk1==true && (parseInt(port_v)> 65535 ||  parseInt(port_v)< 1024 )) )
 				{
-					alert('ERROR: [Port] is a number-only field between [1024,65535]');
+					alert('<strong>ERROR</strong>: [Port] is a number-only field between [1024,65535]');
 					return false
 				}
 
@@ -783,7 +794,7 @@
 				var pwd_v = cfgform.general_pwd.value.replace(/\s+/g, ' ')
 				if (((usr_v.length == 0) && (pwd_v.length > 0)) || ((usr_v.length > 0) && (pwd_v.length == 0)))
 				{
-					alert('ERROR: [User and Password] must be either both empty or both filled');
+					alert('<strong>ERROR</strong>: [User and Password] must be either both empty or both filled');
 					return false
 				}
 
@@ -792,7 +803,7 @@
 				var pwdc_v = cfgform.config_pwd.value.replace(/\s+/g, ' ')
 				if (((usrc_v.length == 0) && (pwdc_v.length > 0)) || ((usrc_v.length > 0) && (pwdc_v.length == 0)))
 				{
-					alert('ERROR: [Config User and Password] must be either both empty or both filled');
+					alert('<b>ERROR</b>: [Config User and Password] must be either both empty or both filled');
 					return false
 				}
 
@@ -801,7 +812,7 @@
 				var cb = check_beginning_http(sabnzbd_url_v)
 				if ((sabnzbd_api_v.length > 0) && (sabnzbd_url_v.length == 0) || !cb)
 				{
-					alert('ERROR: [SAB url and api] url missing with provided API key.\nUrl must begin with http(s)://');
+					alert('<b>ERROR</b>: [SAB url and api] url missing with provided API key.</br>Url must begin with http(s)://');
 					return false
 				}
 				
@@ -809,7 +820,7 @@
 				var csweb_ret = check_serverweb_correctness();
 				if( csapi_ret == false || csweb_ret == false)
 				{
-					alert('ERROR: Enter missing info in the red fields.\nUrl must begin with http(s)://');
+					alert('<b>ERROR</b>: Enter missing info in the red fields.</br>Url must begin with http(s)://');
 					return false
 				}
 					
@@ -821,7 +832,7 @@
 						var bi_active_v{{ q }} = cfgform.bi_host{{ c['idx'] }}active.checked
 						if ( ((bi_login_v{{ q }}.length == 0) || (bi_pwd_v{{ q }}.length == 0)) && bi_active_v{{ q }} )
 						{
-							alert('ERROR: Enter user and password for {{ c['humanname'] }}');
+							alert('<b>ERROR</b>: Enter user and password for {{ c['humanname'] }}');
 							return false
 						}
 					{%- endif %}
