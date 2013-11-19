@@ -8,6 +8,11 @@
 		<script type="text/javascript" src="static/jquery.min.js"></script>
 		<script type="text/javascript" src="static/block-ui.js"></script>
 
+		<script src="static/vex.combined.min.js"></script>
+		<script>vex.defaultOptions.className = 'vex-theme-default';</script>
+		<link rel="stylesheet" href="static/vex.css" />
+		<link rel="stylesheet" href="static/vex-theme-default.css" />
+
 		<script type=text/javascript>
 		  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 		</script>
@@ -311,6 +316,12 @@
 		var serverinfo = 0;
 		var MAXINSPECTSELECT = 5;
 
+		window.alert = function(msg){
+			vex.dialog.alert({
+			  message: msg
+			});
+		};
+
 		function analysis_unselect_all()
 		{
 			var allcbox = $('[id^="smartnzb"]')
@@ -390,9 +401,13 @@
 
 			$("#nzbanalize_only").click(function () {
 				uinfo = analysis_select_post();
-				if(uinfo.uid_range.length > MAXINSPECTSELECT)
+				if(uinfo.uid_range.length == 0)
 				{
-					alert('Max '+ MAXINSPECTSELECT + ' simultaneous nzb inspections (avoids server flooding)')
+					alert('Select at least one NZB')
+				}
+				else if(uinfo.uid_range.length > MAXINSPECTSELECT)
+				{
+					alert('Max '+ MAXINSPECTSELECT + ' simultaneous NZB inspections')
 				}
 				else
 				{
@@ -414,9 +429,13 @@
 			
 			$("#nzbanalize_down").click(function () {
 				uinfo = analysis_select_post();
-				if(uinfo.uid_range.length > MAXINSPECTSELECT)
+				if(uinfo.uid_range.length == 0)
 				{
-					alert('Max '+ MAXINSPECTSELECT + ' simultaneous nzb inspections (avoids server flooding)')
+					alert('Select at least one NZB')
+				}
+				else if(uinfo.uid_range.length > MAXINSPECTSELECT)
+				{
+					alert('Max '+ MAXINSPECTSELECT + ' simultaneous NZB inspections')
 				}
 				else
 				{
