@@ -218,7 +218,6 @@
 							<input type="checkbox" id="smartnzb" name="{{ row['id'] }}" class="nzbanalize_cbox">
 							
 							<a href= "{{ row['url_encr'] }}" id=nzburl{{ row['id'] }}>{{ row['title'] }}</a> 
-							<span id=nzburl_info{{ row['id'] }} class="text-red"></span>
 
 							{% if row['predb'] == 2 -%}
 							<span class = "predbcell">
@@ -229,7 +228,9 @@
 							<span class = "predbcell">
 								<a href="{{ row['predb_lnk'] }}"><img src="static/predb_2nd.png" width="12" height="12" class="imgdisplayed"  title="Entry partially matching a PREDB release"/></a>
 							</span>	
-							{%- endif %}</td>
+							{%- endif %}
+							<span id=nzburl_info{{ row['id'] }} class="text-red"></span>
+							</td>
 
 						<td class="sizecell" id=tosab_info{{ row['id'] }}_cat>{{ row['cat'] }}</td>
 						<td class="sizecell">{{ row['filesize'] }}</td>
@@ -271,7 +272,6 @@
 							<input type="checkbox" id="smartnzb" name="{{ row['id'] }}" class="nzbanalize_cbox">
 							
 							<a href= "{{ row['url_encr'] }}" id=nzburl{{ row['id'] }}>{{ row['title'] }}</a> 
-							<span id=nzburl_info{{ row['id'] }} class="text-red"></span>
 
 							{% if row['predb'] == 2 -%}
 							<span class = "predbcell">							
@@ -281,7 +281,9 @@
 							<span class = "predbcell">
 								<a href="{{ row['predb_lnk'] }}"><img src="static/predb_2nd.png" width="12" height="12" class="imgdisplayed"/></a>
 							</span>									
-							{%- endif %}</td>
+							{%- endif %}
+							<span id=nzburl_info{{ row['id'] }} class="text-red"></span>
+							</td>
 
 						<td class="sizecell">{{ row['cat'] }}</td>
 						<td class="sizecell">{{ row['filesize'] }}</td>
