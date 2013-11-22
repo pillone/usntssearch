@@ -81,7 +81,7 @@ class GetNZBInfo:
 	def process(self, data, parsedurl):
 		
 		self.nzbdata = []		
-		urls = data.split('=====')
+		urls = data.split('....')
 		
 		nzbdata = []
 
@@ -110,10 +110,6 @@ class GetNZBInfo:
 		#~ rank all
 		ranked = self.whatisbetter(info_nzbdata)
 		
-		#~ too involved
-		#~ if (len(ranked)):
-			#~ return self.sendto(nzbdata[ranked[0]['id']])
-		#~ print 	ranked
 		return ranked
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -169,10 +165,14 @@ class GetNZBInfo:
 				
 				#~ print pulrlparse
 				#~ create context for threaded download
-				from mega2 import app			
+				from mega2 import app
 				with app.test_request_context():
 					from flask import request
 					res = self.wrp.beam(pulrlparse)	
+				
+				if( (res is None) or (hasattr(res, 'headers') == False) ):
+					return resinfo	
+
 				if('Location'   in res.headers):
 					#~ for redirect
 					geturl_rq = res.headers['Location']

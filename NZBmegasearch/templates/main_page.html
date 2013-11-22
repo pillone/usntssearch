@@ -346,7 +346,7 @@
 				if( $(allcbox[i]).is(':checked' ) == true)
 				{
 					idname = $(allcbox[i]).attr("name");
-					uid = uid + $('#nzburl'+idname).attr("href") + '====='
+					uid = uid + $('#nzburl'+idname).attr("href") + '....'
 					uid_range.push(idname)
 				}
 			}
@@ -368,9 +368,13 @@
 				success: function(data, textStatus, xhr) {
 					if(jQuery.inArray( "code", data ))
 					{
+						if(data['code'] == 0)
+						{
+							$.unblockUI();
+						}
+						
 						for (var i=0;i<data['code'].length;i++)
 						{
-							//var textrow_info = 'files: ' + data['code'][i]['nofile'] +', pars: ' + data['code'][i]['pars'] + ', size: ' +data['code'][i]['nbytes'] + ' MB'
 							var textrow_info = 'FILES: ' + data['code'][i]['nofile'] +' | PARS: ' + data['code'][i]['pars'] + ' | NFO: ' +data['code'][i]['nfo'] + ' | SIZE: ' +data['code'][i]['nbytes'] + ' MB'
 							$('#nzburl_info'+uid_range[data['code'][i]['id']]).text(' [ ' + textrow_info+' ]')
 							$.unblockUI();

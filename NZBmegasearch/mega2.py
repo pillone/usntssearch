@@ -271,12 +271,7 @@ def rss():
 def smartget():
 	jsonret = jsonify(code=getsmartinfo.process( request.data, urlparse(request.url) ))
 	return jsonret
-	#~ print request.url
-	#~ return getsmartinfo.process( request.data, urlparse(request.url) )
 	
-
-
-
 
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
