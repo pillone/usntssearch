@@ -21,6 +21,7 @@ import sys
 import re
 import threading
 import os
+from WarperModule import Warper
 import logging
 import tempfile
 import beautifulsoup
@@ -35,14 +36,17 @@ log = logging.getLogger(__name__)
 		
 class GetNZBInfo:
  
-	def __init__(self, conf, cgen, ds, wrp):
+	def __init__(self, conf, cgen, ds, app):
 		self.cfg = conf
 		self.cgen = cgen
-		self.wrp = wrp
+		self.ds = ds
 		self.nzbdata = []
 		self.collect_info = []
+		self.app = app
 		self.MAX_ALLOWED_CACHE = 10000000
 		self.MAX_ALLOWED_CACHE_OVERALL_MEMSZ = 20
+		
+		self.wrp_localcpy = []
 
 	#~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
@@ -87,8 +91,11 @@ class GetNZBInfo:
 
 		tthr = []
 		idx = 0
+		self.wrp_localcpy = []
 		for url in urls:
 			if(len(url)):
+				wrp = Warper (self.cgen, self.cfg, self.ds)
+				self.wrp_localcpy.append(wrp)
 				tthr.append( threading.Thread(target=self.download_hook, args=(url,idx) ) )
 			idx += 1
 		for t in tthr:
@@ -165,11 +172,11 @@ class GetNZBInfo:
 				
 				#~ print pulrlparse
 				#~ create context for threaded download
-				from mega2 import app
-				with app.test_request_context():
-					from flask import request
-					res = self.wrp.beam(pulrlparse)	
+
 				
+				with self.app.test_request_context():
+					res = self.wrp_localcpy[urlidx].beam(pulrlparse)	
+					
 				if( (res is None) or (hasattr(res, 'headers') == False) ):
 					return resinfo	
 

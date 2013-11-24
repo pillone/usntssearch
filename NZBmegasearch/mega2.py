@@ -74,7 +74,7 @@ def reload_all():
 	wrp = Warper (cfgsets.cgen, cfgsets.cfg, ds)
 	mega_parall = megasearch.DoParallelSearch(cfgsets.cfg, cfgsets.cgen, ds, wrp)
 	apiresp = ApiResponses(cfgsets.cfg, cfgsets.cgen, wrp, ds)
-	getsmartinfo = nzbsanity.GetNZBInfo(cfgsets.cfg, cfgsets.cgen, ds, wrp)
+	getsmartinfo = nzbsanity.GetNZBInfo(cfgsets.cfg, cfgsets.cgen, ds,  app)
 	auth = miscdefs.Auth(cfgsets)
 	testserver = miscdefs.ChkServer(cfgsets.cgen)
 
