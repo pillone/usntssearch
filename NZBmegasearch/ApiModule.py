@@ -277,13 +277,13 @@ class ApiResponses:
 	def tvrage_getshowinfo(self, rid ):	
 		parsed_data = {'showtitle': ''}
 
-		url_tvrage = 'http://www.tvrage.com/feeds/showinfo.php'
+		url_tvrage = 'http://services.tvrage.com/feeds/showinfo.php'
 		urlParams = dict( sid=rid )			
 		#~ loading
 		try:
 			http_result = requests.get(url=url_tvrage, params=urlParams, verify=False, timeout=self.timeout,  headers=self.tvrage_rqheaders)
 		except Exception as e:
-			print e
+			print 'TV-RAGE does not respond -- ',e
 			log.critical(str(e))
 			return parsed_data
 		
@@ -292,7 +292,7 @@ class ApiResponses:
 		try:
 			tree = ET.fromstring(data.encode('utf-8'))
 		except Exception as e:
-			print e
+			print 'TV-RAGE has sintax errors -- ',e
 			log.critical(str(e))
 			return parsed_data
 
