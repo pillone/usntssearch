@@ -559,10 +559,13 @@ class DoParallelSearch:
 						
 		#~ do nice 
 		for i in xrange(len(results)):
+			if(results[i]['posting_date_timestamp_refined'] > self.cgen['daysretention']):
+				continue
+
 			if(results[i]['ignore'] == 2):
 				continue
 				
-			if(results[i]['ignore'] == 1):
+			if(results[i]['ignore'] == 1): 
 				existduplicates = 1
 
 			# Convert sized to smallest SI unit (note that these are powers of 10, not powers of 2, i.e. OS X file sizes rather than Windows/Linux file sizes)

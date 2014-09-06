@@ -26,7 +26,6 @@ import megasearch
 
 MAX_PROVIDER_NUMBER = 20
 
-
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 class CfgSettings:
 	
@@ -95,6 +94,7 @@ class CfgSettings:
 		parser.set('general', 'config_pwd', request_form['config_pwd'].replace(" ", ""))
 		parser.set('general', 'general_apikey', request_form['general_apikey'].replace(" ", ""))
 		parser.set('general', 'searchaddontxt', request_form['searchaddontxt'])
+		parser.set('general', 'daysretention', request_form['daysretention'])
 		parser.set('general', 'general_https', '0')
 		parser.set('general', 'search_suggestions', '0')
 		parser.set('general', 'trends', '0')
@@ -347,13 +347,15 @@ class CfgSettings:
 		gen_trends_qty = parser.getint('general', 'trends_qty')
 		smartsearch = parser.getint('general', 'smartsearch')
 		cache_active = parser.getint('general', 'cache_active')
-		searchaddontxt = parser.get('general', 'searchaddontxt')		
+		searchaddontxt = parser.get('general', 'searchaddontxt')
+		daysretention = parser.getint('general', 'daysretention')		
 		revproxy = parser.get('general', 'revproxy')
 		self.cgen = {'portno': portno, 'general_usr' : gen_user, 'general_pwd' : gen_pwd, 'general_trend' : gen_trd,
 				'config_user':config_user,
 				'config_pwd':config_pwd,
 				'smartsearch':smartsearch,
 				'searchaddontxt':searchaddontxt,
+				'daysretention':daysretention,
 				'general_suggestion' : gen_sugg,
 				'general_https' : gen_https,
 				'cache_active':cache_active,
@@ -453,6 +455,8 @@ class CfgSettings:
 				self.cgen['cache_active'] = cst_parser.getint('general', 'cache_active')
 			if(cst_parser.has_option('general' ,'searchaddontxt')):	
 				self.cgen['searchaddontxt'] = cst_parser.get('general', 'searchaddontxt')
+			if(cst_parser.has_option('general' ,'daysretention')):	
+				self.cgen['daysretention'] = cst_parser.getint('general', 'daysretention')
 			if(cst_parser.has_option('general' ,'general_ipaddress')):	
 				self.cgen['general_ipaddress'] = cst_parser.get('general', 'general_ipaddress')
 			if(cst_parser.has_option('general' ,'predb_active')):	
