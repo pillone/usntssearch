@@ -30,6 +30,7 @@ import urllib2
 import os
 import logging
 import copy
+import time
 
 log = logging.getLogger(__name__)
 
@@ -402,6 +403,17 @@ class ApiResponses:
 		#~ no sorting
 		for i in xrange(len(results)):
 			if(results[i]['ignore'] == 0):
+				# retention
+				totdays = int ( (time.time() - results[i]['posting_date_timestamp'])/ (3600*24) )			
+				if(totdays == 0):
+					totdays = float ( (time.time() - results[i]['posting_date_timestamp'])/ (3600) )
+					if(totdays < 0):
+						totdays = -totdays
+					totdays =  totdays/100.0
+				if(totdays > (float)self.cgen['daysretention']):
+					# print results[i]['posting_date_timestamp']
+					continue
+
 				if (results[i]['url'] is None):
 					results[i]['url'] = ""
 				qryforwarp=self.wrp.chash64_encode(results[i]['url'])

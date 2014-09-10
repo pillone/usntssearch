@@ -7,18 +7,14 @@ NZBmegasearcH collects all your (not only) newznab-based accounts to one place. 
 
 ## [Go to NZBmegasearcH website](http://pillone.github.io/usntssearch/)
 
-A special thanks to **JackDandy, duckduckquack, Riz0** for beta-testing. 
-
 Thanks to all the users that submitted a bug report or a enhancement request.
 
 ## Updates
 
-**Changes in v0.46**
+**Changes in v0.48**
 
-- Extended NZB analysis from search results, displays no. ARCHIVE,PAR2,NFO
-- Smart category download
-- Providers check in config
-- Reverse proxy updates
+- Fix for tvrage 
+- Retention days limit in config
 - Bug fixes
 
 
